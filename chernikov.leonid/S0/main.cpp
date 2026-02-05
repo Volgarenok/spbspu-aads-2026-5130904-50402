@@ -1,6 +1,6 @@
 #include <iostream>
-
+#include "credentials.hpp"
 int main()
 {
-  std::cout << "chernikov.leonid" << "\n";
+  chernikov::out_credentials(std::cout) << "\n";
 }
