@@ -3,6 +3,6 @@
 
 int main()
 {
-  std::cout << "muhamadiarov.insaf\n";
+  muhamadiarov::outCredentials(std::cout) << '\n';;
   return 0;
 }
