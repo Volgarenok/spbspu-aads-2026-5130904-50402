@@ -3,5 +3,5 @@
 
 std::ostream &saldaev::out_credentials(std::ostream &os)
 {
-  return os << "soldaev.lyova";
+  return os << "saldaev.lev";
 }
