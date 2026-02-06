@@ -1,6 +1,7 @@
 #include <iostream>
+#include "credentials.hpp"
 
 int main()
 {
-    std::cout << "saldaev.lev" << "\n";
+  saldaev::out_credentials(std::cout) << '\n';
 }
