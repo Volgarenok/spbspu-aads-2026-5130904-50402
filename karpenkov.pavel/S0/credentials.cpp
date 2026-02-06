@@ -1,4 +1,5 @@
-#include <credentials.hpp>
+#include "credentials.hpp"
+#include <iostream>
 
 std::ostream &karpenkov::out_credentials(std::ostream &out)
 {
