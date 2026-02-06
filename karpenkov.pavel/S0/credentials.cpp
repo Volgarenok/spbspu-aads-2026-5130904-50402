@@ -3,5 +3,5 @@
 
 std::ostream &karpenkov::out_credentials(std::ostream &out)
 {
-  return out << "karpenkpv.pavel";
+  return out << "karpenkov.pavel";
 }
