@@ -3,5 +3,5 @@
 
 std::ostream &strelnikov::out_credentials(std::ostream &os)
 {
-  return os << "strelnikov.matvey";
+  return os << "not strelnikov.matvey";
 }
