@@ -3,5 +3,5 @@
 
 std::ostream &shirokov::out_credentials(std::ostream &out)
 {
-  return out << "shirokov.assenii";
+  return out << "shirokov.arsenii";
 }
