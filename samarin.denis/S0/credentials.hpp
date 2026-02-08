@@ -4,3 +4,4 @@
 namespace samarin {
   std::ostream & out_credentials(std::ostream & os);
 }
+#endif
