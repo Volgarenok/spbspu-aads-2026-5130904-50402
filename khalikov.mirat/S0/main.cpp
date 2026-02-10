@@ -1,6 +1,7 @@
 #include <iostream>
+#include "credentials.hpp"
 
 int main()
 {
-  std::cout << "khalikov.mirat" << "\n";
+  khalikov::out_credentials(std::cout) << "\n";
 }
