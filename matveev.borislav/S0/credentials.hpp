@@ -3,6 +3,6 @@
 #include <iosfwd>
 namespace matveev
 {
-  std::ostream &out_credentials(std::ostream &os);
+  std::ostream & out_credentials(std::ostream &os);
 }
 #endif
