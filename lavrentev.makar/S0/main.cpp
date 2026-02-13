@@ -3,5 +3,5 @@
 
 int main()
 {
-    lavrentev::out_credentials(std::cout) << "\n";
+  lavrentev::out_credentials(std::cout) << "\n";
 }
