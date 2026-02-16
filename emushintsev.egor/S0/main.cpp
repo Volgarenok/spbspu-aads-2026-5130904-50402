@@ -3,5 +3,5 @@
 
 int main()
 {
-    emushintsev::out_credenttials(std::cout) << "\n";
+    emushintsev::out_credentials(std::cout) << "\n";
 }
