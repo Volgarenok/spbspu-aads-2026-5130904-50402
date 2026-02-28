@@ -8,11 +8,11 @@ namespace karpovich
     Node* head;
     Node* tail;
   public:
-    List< T >();
-    List< const T& >;
-    List< T >(List&&)
-    List& operator=(const List&);
-    List& operator=(List&&) noexcept;
+    List();
+    List(const List< T >&);
+    List(List< T >&&)
+    List& operator=(const List< T >&);
+    List& operator=(List< T >&&);
     ~List();
   };
 }
