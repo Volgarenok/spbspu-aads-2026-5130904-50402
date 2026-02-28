@@ -6,7 +6,6 @@ namespace karpovich
   template< class T >
   class List {
     Node* head;
-    Node* tail;
   public:
     List();
     List(const List< T >&);
