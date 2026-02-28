@@ -9,7 +9,7 @@ namespace karpovich
   public:
     List();
     List(const List< T >& other);
-    List(List< T >&& other);
+    List(List< T >&& other) noexcept;
     List& operator=(const List< T >& other);
     List& operator=(List< T >&& other);
     ~List();
@@ -38,17 +38,47 @@ namespace karpovich
     head_(nullptr)
   {
     Node* cur = other.head;
-    while(cur) {
+    while (cur) {
       push_back(cur->val);
       cur = cur->next;
     }
   }
 
   template< class T >
-  List< T >::List(List< T >&& other):
+  List< T >::List(List< T >&& other) noexcept:
     head_(other.head)
   {
     other.head = nullptr;
+  }
+
+  template< class T >
+  List< T >& List< T >::operator=(const List< T >& other)
+  {
+    if (this != other) {
+      clear();
+      Node* cur = other.head;
+      while (cur) {
+        push_back(cur->val);
+      }
+    }
+    return this;
+  }
+
+  template< class T >
+  List< T >& List< T >::operator=(List< T >&& other)
+  {
+    if (this != other) {
+      clear();
+      head = other.head;
+      other.head = nullptr;
+    }
+    return this;
+  }
+
+  template< class T >
+  List< T >::~List()
+  {
+    clear();
   }
 }
 #endif
