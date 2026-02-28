@@ -5,13 +5,13 @@ namespace karpovich
 {
   template< class T >
   class List {
-    Node* head;
+    Node* head_;
   public:
     List();
-    List(const List< T >&);
-    List(List< T >&&)
-    List& operator=(const List< T >&);
-    List& operator=(List< T >&&);
+    List(const List< T >& other);
+    List(List< T >&& other);
+    List& operator=(const List< T >& other);
+    List& operator=(List< T >&& other);
     ~List();
 
     LIter< T > begin();
@@ -26,5 +26,29 @@ namespace karpovich
     void clear();
     size_t size() const;
   };
+
+
+  template< class T >
+  List< T >::List():
+    head_(new Node< T >{T(), nullptr, nullptr})
+  {}
+
+  template< class T >
+  List< T >::List(const List< T >& other):
+    head_(nullptr)
+  {
+    Node* cur = other.head;
+    while(cur) {
+      push_back(cur->val);
+      cur = cur->next;
+    }
+  }
+
+  template< class T >
+  List< T >::List(List< T >&& other):
+    head_(other.head)
+  {
+    other.head = nullptr;
+  }
 }
 #endif

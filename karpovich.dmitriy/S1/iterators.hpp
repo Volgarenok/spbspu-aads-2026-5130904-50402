@@ -11,8 +11,8 @@ namespace karpovich
     T& operator*() const;
     LIter& operator++();
     LIter& operator--();
-    LIter& operator==();
-    LIter& operator!=();
+    bool operator==();
+    bool operator!=();
   };
   template< class T >
   class LCIter {
@@ -22,8 +22,8 @@ namespace karpovich
     T& operator*() const;
     LCIter& operator++();
     LCIter& operator--();
-    LCIter& operator==();
-    LCIter& operator!=();
+    bool operator==();
+    bool& operator!=();
   };
 }
 #endif
