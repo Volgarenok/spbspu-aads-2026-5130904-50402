@@ -76,11 +76,11 @@ void karpovich::output(std::ostream &out, const list_pair_t &names, const List< 
   for (auto row_it = transposed.begin(); row_it != transposed.end(); ++row_it) {
     size_t sum = 0;
     for (auto num_it = (*row_it).begin(); num_it != (*row_it).end(); ++num_it) {
-      sum += *num_it;
       if (*num_it > std::numeric_limits< size_t >::max() - sum) {
         throw std::overflow_error("overflow");
         return;
       }
+      sum += *num_it;
     }
     if (!first) {
       out << ' ';

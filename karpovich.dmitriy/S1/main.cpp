@@ -13,10 +13,12 @@ int main()
     std::cout << "0\n";
     return 0;
   }
-
   karp::transpose(sequences, transposed);
   try {
     karp::output(std::cout, sequences, transposed);
+    if (transposed.size() == 0) {
+      std::cout << "0\n";
+    }
   } catch (std::overflow_error& e) {
     std::cerr << e.what() << '\n';
     return 1;
