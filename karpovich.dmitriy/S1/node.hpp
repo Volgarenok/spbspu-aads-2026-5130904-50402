@@ -1,6 +1,5 @@
 #ifndef NODE_HPP
 #define NODE_HPP
-#include "list.hpp"
 
 namespace karpovich
 {
