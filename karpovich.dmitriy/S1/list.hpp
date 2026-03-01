@@ -1,17 +1,19 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 #include "node.hpp"
+#include "iterators.hpp"
 namespace karpovich
 {
   template< class T >
   class List {
-    Node* head_;
+    Node* fake_;
+    size_t size_;
   public:
     List();
     List(const List< T >& other);
     List(List< T >&& other) noexcept;
     List& operator=(const List< T >& other);
-    List& operator=(List< T >&& other);
+    List& operator=(List< T >&& other) noexcept;
     ~List();
 
     LIter< T > begin();
@@ -30,15 +32,22 @@ namespace karpovich
 
   template< class T >
   List< T >::List():
-    head_(new Node< T >{T(), nullptr, nullptr})
-  {}
+    fake_(new Node< T >{T(), nullptr, nullptr}),
+    size_(0)
+  {
+    fake_->next = fake_;
+    fake_->prev = fake_;
+  }
 
   template< class T >
-  List< T >::List(const List< T >& other):
-    head_(nullptr)
+  List< T >::List(const List< T >& other): 
+    size_(0), 
+    fake_(new Node<T>{T(), nullptr, nullptr}) 
   {
-    Node* cur = other.head;
-    while (cur) {
+    fake_->next = fake_;
+    fake_->prev = fake_;
+    Node<T>* cur = other.fake_->next;
+    while (cur != other.fake_) {
       push_back(cur->val);
       cur = cur->next;
     }
@@ -46,33 +55,39 @@ namespace karpovich
 
   template< class T >
   List< T >::List(List< T >&& other) noexcept:
-    head_(other.head)
+    fake_(other.fake_),
+    size_(other.size_)
   {
-    other.head = nullptr;
+    other.fake_ = new Node<T>{T(), nullptr, nullptr};
+    other.fake_->next = other.fake_;
+    other.fake_->prev = other.fake_;
+    other.size_ = 0;
   }
 
   template< class T >
   List< T >& List< T >::operator=(const List< T >& other)
   {
-    if (this != other) {
+    if (this != &other) {
       clear();
-      Node* cur = other.head;
-      while (cur) {
+      Node* cur = other.fake_->next;
+      while (cur != other.fake_) {
         push_back(cur->val);
+        cur = cur->next;
       }
     }
-    return this;
+    return *this;
   }
 
   template< class T >
-  List< T >& List< T >::operator=(List< T >&& other)
+  List< T >& List< T >::operator=(List< T >&& other) noexcept
   {
-    if (this != other) {
+    if (this != &other) {
       clear();
-      head = other.head;
-      other.head = nullptr;
+      fake_ = other.fake_;
+      size_ = other.size_;
+      other.fake_ = nullptr;
     }
-    return this;
+    return *this;
   }
 
   template< class T >
