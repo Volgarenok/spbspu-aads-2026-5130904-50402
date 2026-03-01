@@ -1,6 +1,6 @@
 #include "process.hpp"
 
-void karpovich::input(std::istream& in, List< std::pair< std::string, List< size_t > > >& list) 
+void karpovich::input(std::istream& in, list_pair_t& list) 
 {
   std::string name;
   while (in >> name) {
@@ -20,7 +20,13 @@ void karpovich::input(std::istream& in, List< std::pair< std::string, List< size
   }
 }
 
+void karpovich::transpose(const list_pair_t& list, list_pair_t& data)
+{
+  size_t max_len = 0;
+  for (auto it = list.begin(); it != list.end(); it++) {
 
+  }
+}
 
 void karpovich::output(std::ostream& out)
 {
