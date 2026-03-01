@@ -25,15 +25,15 @@ void karpovich::transpose(const list_pair_t &list, List< List< size_t > > &data)
 {
   size_t max_len = 0;
   for (auto it = list.begin(); it != list.end(); it++) {
-    if (it->second.size() > max_len) {
-      max_len = it->second.size();
+    if ((*it).second.size() > max_len) {
+      max_len = (*it).second.size();
     }
   }
   for (size_t i = 0; i < max_len; i++) {
     List< size_t > row_numbers;
     for (auto seq_it = list.begin(); seq_it != list.end(); seq_it++) {
-      if (i < seq_it->second.size()) {
-        auto num_it = seq_it->second.begin();
+      if (i < (*seq_it).second.size()) {
+        auto num_it = (*seq_it).second.begin();
         for (size_t j = 0; j < i; ++j) {
           ++num_it;
         }
@@ -49,17 +49,17 @@ void karpovich::transpose(const list_pair_t &list, List< List< size_t > > &data)
 void karpovich::output(std::ostream &out, const list_pair_t &names, const List< List< size_t > > &transposed)
 {
   auto it = names.begin();
-  out << it->first;
+  out << (*it).first;
   for (; it != names.end(); ++it) {
     out << ' ';
-    out << it->first;
+    out << (*it).first;
   }
   out << '\n';
 
   auto row_it = transposed.begin();
-  out << it->first;
+  out << (*it).first;
   for (; row_it != transposed.end(); ++row_it) {
-    for (auto num_it = row_it->begin(); num_it != row_it->end(); num_it++) {
+    for (auto num_it = (*row_it).begin(); num_it != (*row_it).end(); num_it++) {
       out << ' ';
       out << *num_it;
     }
@@ -69,7 +69,7 @@ void karpovich::output(std::ostream &out, const list_pair_t &names, const List< 
   bool first = true;
   for (auto row_it = transposed.begin(); row_it != transposed.end(); row_it++) {
     size_t sum = 0;
-    for (auto num_it = row_it->begin(); num_it != row_it->end(); num_it++) {
+    for (auto num_it = (*row_it).begin(); num_it != (*row_it).end(); num_it++) {
       sum += *num_it;
     }
     if (!first)
