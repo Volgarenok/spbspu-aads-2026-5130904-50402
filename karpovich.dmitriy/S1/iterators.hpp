@@ -12,6 +12,7 @@ namespace karpovich
   public:
     LIter(Node< T >* p);
     T& operator*() const;
+    T* operator->() const;
     LIter& operator++();
     LIter& operator--();
     LIter& operator++(int);
@@ -27,6 +28,7 @@ namespace karpovich
   public:
     LCIter(const Node< T >* p);
     const T& operator*() const;
+    const T* operator->() const;
     LCIter& operator++();
     LCIter& operator--();
     LCIter& operator++(int);
@@ -122,5 +124,14 @@ namespace karpovich
     return *this;
   }
 
+  template < class T > const T* LCIter< T >::operator->() const
+  {
+    return ptr_;
+  }
+
+  template < class T > T* LIter< T >::operator->() const
+  {
+    return ptr_;
+  }
 }
 #endif
