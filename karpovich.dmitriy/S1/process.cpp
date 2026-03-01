@@ -90,8 +90,9 @@ void karpovich::output(std::ostream &out, const list_pair_t &names, const List< 
       sums.push_back(sum);
     }
     for (auto it = sums.begin(); it != sums.end(); it++) {
-      if (!first)
+      if (!first) {
         out << ' ';
+      }
       out << *it;
       first = false;
     }
