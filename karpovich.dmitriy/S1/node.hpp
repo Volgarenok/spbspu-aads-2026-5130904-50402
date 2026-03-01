@@ -8,8 +8,8 @@ namespace karpovich
   struct Node
   {
     T val;
-    List< T >* prev;
     List< T >* next;
+    List< T >* prev;
   };
 }
 #endif

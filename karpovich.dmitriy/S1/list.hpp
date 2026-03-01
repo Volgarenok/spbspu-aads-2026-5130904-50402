@@ -22,8 +22,8 @@ namespace karpovich
     LCIter< T > begin() const;
     LCIter< T > end() const;
 
-    void push_front(const T&);
-    void push_back(const T&);
+    void push_front(const T& val);
+    void push_back(const T& val);
     void pop_front();
     void pop_back();
     void clear();
@@ -120,6 +120,24 @@ namespace karpovich
     fake_->next = fake_;
     fake_->prev = fake_;
     size_ = 0;
+  }
+
+  template < class T >
+  void List< T >::push_back(const T& val)
+  {
+    Node< T >* node = new Node< T >{val, fake_, fake_->prev};
+    fake_->prev->next = node;
+    fake_->prev = node;
+    size_++;
+  }
+
+  template < class T >
+  void List< T >::push_front(const T& val)
+  {
+    Node< T >* node = new Node< T >{val, fake_->next, fake_};
+    fake_->next->prev = node;
+    fake_->next = node;
+    size_++;
   }
 }
 #endif
