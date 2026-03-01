@@ -64,7 +64,8 @@ namespace karpovich
     other.size_ = 0;
   }
 
-  template < class T > List< T >& List< T >::operator=(const List< T >& other)
+  template < class T >
+  List< T >& List< T >::operator=(const List< T >& other)
   {
     if (this != &other) {
       clear();
@@ -77,7 +78,8 @@ namespace karpovich
     return *this;
   }
 
-  template < class T > List< T >& List< T >::operator=(List< T >&& other) noexcept
+  template < class T >
+  List< T >& List< T >::operator=(List< T >&& other) noexcept
   {
     if (this != &other) {
       clear();
@@ -92,10 +94,32 @@ namespace karpovich
     return *this;
   }
 
-  template < class T > List< T >::~List()
+  template < class T >
+  List< T >::~List()
   {
     clear();
     delete fake_;
+  }
+
+  template < class T >
+  size_t List< T >::size() const
+  {
+    return size_;
+  }
+
+  template < class T >
+  void List< T >::clear()
+  {
+    Node< T >* cur = fake_->next;
+    while (cur != fake_)
+    {
+      Node< T >* temp = cur->next;
+      delete cur;
+      cur = temp;
+    }
+    fake_->next = fake_;
+    fake_->prev = fake_;
+    size_ = 0;
   }
 }
 #endif
