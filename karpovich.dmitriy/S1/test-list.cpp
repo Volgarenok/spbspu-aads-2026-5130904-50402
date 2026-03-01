@@ -115,7 +115,8 @@ BOOST_AUTO_TEST_CASE(test_push_back)
   list.push_back(2);
 
   auto it = list.begin();
-  BOOST_CHECK_EQUAL(*it++, 1);
+  BOOST_CHECK_EQUAL(*it, 1);
+  it++;
   BOOST_CHECK_EQUAL(*it, 2);
 }
 
