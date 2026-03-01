@@ -155,5 +155,25 @@ namespace karpovich
     delete temp;
     size_--;
   }
+
+  template < class T > LIter< T > List< T >::begin()
+  {
+    return LIter< T >{fake_->next};
+  }
+
+  template < class T > LIter< T > List< T >::end()
+  {
+    return LIter< T >{fake_};
+  }
+
+  template < class T > LCIter< T > List< T >::begin() const
+  {
+    return LCIter< T >{fake_->next};
+  }
+
+  template < class T > LCIter< T > List< T >::end() const
+  {
+    return LCIter< T >{fake_};
+  }
 }
 #endif
