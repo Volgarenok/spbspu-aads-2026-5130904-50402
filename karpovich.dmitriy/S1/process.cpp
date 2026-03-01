@@ -1,5 +1,7 @@
 #include "process.hpp"
 #include <cstddef>
+#include <limits>
+#include <stdexcept>
 
 void karpovich::input(std::istream &in, list_pair_t &list)
 {
@@ -75,6 +77,10 @@ void karpovich::output(std::ostream &out, const list_pair_t &names, const List< 
     size_t sum = 0;
     for (auto num_it = (*row_it).begin(); num_it != (*row_it).end(); ++num_it) {
       sum += *num_it;
+      if (*num_it > std::numeric_limits< size_t >::max() - sum) {
+        throw std::overflow_error("overflow");
+        return;
+      }
     }
     if (!first) {
       out << ' ';

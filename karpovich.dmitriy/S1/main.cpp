@@ -1,4 +1,5 @@
 #include "process.hpp"
+#include <stdexcept>
 
 int main()
 {
@@ -8,10 +9,14 @@ int main()
   karp::input(std::cin, sequences);
 
   if (sequences.size() == 0) {
-    std::cout << "0\n";
+    std::cout << (*sequences.begin()).first << "\n0\n";
     return 0;
   }
 
   karp::transpose(sequences, transposed);
-  karp::output(std::cout, sequences, transposed);
+  try {
+    karp::output(std::cout, sequences, transposed);
+  } catch (std::overflow_error &) {
+    return 1;
+  }
 }
