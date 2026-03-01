@@ -42,8 +42,8 @@ namespace karpovich
 
   template < class T >
   List< T >::List(const List< T >& other):
-    size_(0),
-    fake_(new Node< T >{T(), nullptr, nullptr})
+    fake_(new Node< T >{T(), nullptr, nullptr}),
+    size_(0)
   {
     fake_->next = fake_;
     fake_->prev = fake_;

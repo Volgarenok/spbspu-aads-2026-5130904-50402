@@ -123,15 +123,5 @@ namespace karpovich
     ptr_ = ptr_->prev;
     return *this;
   }
-
-  template < class T > const T* LCIter< T >::operator->() const
-  {
-    return ptr_;
-  }
-
-  template < class T > T* LIter< T >::operator->() const
-  {
-    return ptr_;
-  }
 }
 #endif
