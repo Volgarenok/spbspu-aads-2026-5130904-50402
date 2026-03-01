@@ -131,5 +131,29 @@ namespace karpovich
     fake_->next = node;
     size_++;
   }
+
+  template < class T > void List< T >::pop_back()
+  {
+    if (size_ == 0) {
+      return;
+    }
+    Node< T >* temp = fake_->prev;
+    temp->prev->next = fake_;
+    fake_->prev = temp->prev;
+    delete temp;
+    size_--;
+  }
+
+  template < class T > void List< T >::pop_front()
+  {
+    if (size_ == 0) {
+      return;
+    }
+    Node< T >* temp = fake_->next;
+    temp->next->prev = fake_;
+    fake_->next = temp->next;
+    delete temp;
+    size_--;
+  }
 }
 #endif

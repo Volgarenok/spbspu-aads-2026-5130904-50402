@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(move_assignment)
 
 BOOST_AUTO_TEST_CASE(push_front)
 {
-  List<int> list;
+  List< int > list;
   list.push_front(1);
   BOOST_CHECK_EQUAL(list.size(), 1);
 
@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(push_front)
 
 BOOST_AUTO_TEST_CASE(pop_front)
 {
-  List<int> list;
+  List< int > list;
   list.push_back(1);
   list.push_back(2);
   list.push_back(3);
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(pop_front)
 
 BOOST_AUTO_TEST_CASE(pop_back)
 {
-  List<int> list;
+  List< int > list;
   list.push_back(1);
   list.push_back(2);
   list.push_back(3);
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(pop_back)
 
 BOOST_AUTO_TEST_CASE(clear)
 {
-  List<int> list;
+  List< int > list;
   list.push_back(1);
   list.push_back(2);
   list.push_back(3);

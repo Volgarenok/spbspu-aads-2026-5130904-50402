@@ -6,7 +6,7 @@ namespace karpovich
   template< class T >
   class LIter {
     friend class List< T >;
-    Node* ptr;
+    Node< T >* ptr;
   public:
     T& operator*() const;
     LIter& operator++();
@@ -17,7 +17,7 @@ namespace karpovich
   template< class T >
   class LCIter {
     friend class List< T >;
-    const Node* ptr;
+    const Node< T >* ptr;
   public:
     T& operator*() const;
     LCIter& operator++();
