@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(push_front)
   List<int> list;
   list.push_front(1);
   BOOST_CHECK_EQUAL(list.size(), 1);
-  
+
   list.push_front(2);
   BOOST_CHECK_EQUAL(list.size(), 2);
 }
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(pop_front)
   list.push_back(1);
   list.push_back(2);
   list.push_back(3);
-  
+
   list.pop_front();
   BOOST_CHECK_EQUAL(list.size(), 2);
 }
@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(pop_back)
   list.push_back(1);
   list.push_back(2);
   list.push_back(3);
-  
+
   list.pop_back();
   BOOST_CHECK_EQUAL(list.size(), 2);
 }
@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_CASE(clear)
   list.push_back(1);
   list.push_back(2);
   list.push_back(3);
-  
+
   list.clear();
   BOOST_CHECK_EQUAL(list.size(), 0);
   list.push_back(10);
