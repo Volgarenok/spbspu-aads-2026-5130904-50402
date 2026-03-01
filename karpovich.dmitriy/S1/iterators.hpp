@@ -4,10 +4,11 @@
 #include "node.hpp"
 namespace karpovich
 {
-  template< class T >
-  class LIter {
+  template < class T > class LIter
+  {
     friend class List< T >;
     Node< T >* ptr_;
+
   public:
     LIter(Node< T >* p);
     T& operator*() const;
@@ -18,10 +19,11 @@ namespace karpovich
     bool operator==(const LIter< T >& other) const;
     bool operator!=(const LIter< T >& other) const;
   };
-  template< class T >
-  class LCIter {
+  template < class T > class LCIter
+  {
     friend class List< T >;
     const Node< T >* ptr_;
+
   public:
     LCIter(const Node< T >* p);
     const T& operator*() const;
@@ -33,7 +35,8 @@ namespace karpovich
     bool operator!=(const LCIter< T >& other) const;
   };
 
-  template < class T > LIter< T >::LIter(Node< T >* p):
+  template < class T >
+  LIter< T >::LIter(Node< T >* p):
     ptr_(p)
   {}
 
@@ -76,7 +79,8 @@ namespace karpovich
     return *this;
   }
 
-  template < class T > LCIter< T >::LCIter(const Node< T >* p):
+  template < class T >
+  LCIter< T >::LCIter(const Node< T >* p):
     ptr_(p)
   {}
 
