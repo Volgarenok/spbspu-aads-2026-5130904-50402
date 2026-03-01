@@ -1,4 +1,5 @@
 #include "process.hpp"
+#include "list.hpp"
 #include <cstddef>
 #include <limits>
 #include <stdexcept>
@@ -73,20 +74,27 @@ void karpovich::output(std::ostream &out, const list_pair_t &names, const List< 
   }
 
   first = true;
-  for (auto row_it = transposed.begin(); row_it != transposed.end(); ++row_it) {
-    size_t sum = 0;
-    for (auto num_it = (*row_it).begin(); num_it != (*row_it).end(); ++num_it) {
-      if (*num_it > std::numeric_limits< size_t >::max() - sum) {
-        throw std::overflow_error("overflow");
-        return;
+  if (transposed.size() == 0) {
+    out << "0\n";
+  } else {
+    List< size_t > sums;
+    for (auto row_it = transposed.begin(); row_it != transposed.end(); ++row_it) {
+      size_t sum = 0;
+      for (auto num_it = (*row_it).begin(); num_it != (*row_it).end(); ++num_it) {
+        if (*num_it > std::numeric_limits< size_t >::max() - sum) {
+          throw std::overflow_error("overflow");
+          return;
+        }
+        sum += *num_it;
       }
-      sum += *num_it;
+      sums.push_back(sum);
     }
-    if (!first) {
-      out << ' ';
+    for (auto it = sums.begin(); it != sums.end(); it++) {
+      if (!first)
+        out << ' ';
+      out << *it;
+      first = false;
     }
-    out << sum;
-    first = false;
+    out << '\n';
   }
-  out << '\n';
 }
