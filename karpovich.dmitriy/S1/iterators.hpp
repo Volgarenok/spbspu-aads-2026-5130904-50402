@@ -1,9 +1,9 @@
 #ifndef ITERATORS_HPP
 #define ITERATORS_HPP
-#include "list.hpp"
 #include "node.hpp"
 namespace karpovich
 {
+  template <typename T> class List;
   template < class T > class LIter
   {
     friend class List< T >;
@@ -57,25 +57,25 @@ namespace karpovich
 
   template < class T > LIter< T >& LIter< T >::operator++()
   {
-    ptr = ptr->next;
+    ptr_ = ptr_->next;
     return *this;
   }
 
   template < class T > LIter< T >& LIter< T >::operator--()
   {
-    ptr = ptr->prev;
+    ptr_ = ptr_->prev;
     return *this;
   }
 
   template < class T > LIter< T >& LIter< T >::operator++(int)
   {
-    ptr = ptr->next;
+    ptr_ = ptr_->next;
     return *this;
   }
 
   template < class T > LIter< T >& LIter< T >::operator--(int)
   {
-    ptr = ptr->prev;
+    ptr_ = ptr_->prev;
     return *this;
   }
 
@@ -100,25 +100,25 @@ namespace karpovich
   }
   template < class T > LCIter< T >& LCIter< T >::operator++()
   {
-    ptr = ptr->next;
+    ptr_ = ptr_->next;
     return *this;
   }
 
   template < class T > LCIter< T >& LCIter< T >::operator--()
   {
-    ptr = ptr->prev;
+    ptr_ = ptr_->prev;
     return *this;
   }
 
   template < class T > LCIter< T >& LCIter< T >::operator++(int)
   {
-    ptr = ptr->next;
+    ptr_ = ptr_->next;
     return *this;
   }
 
   template < class T > LCIter< T >& LCIter< T >::operator--(int)
   {
-    ptr = ptr->prev;
+    ptr_ = ptr_->prev;
     return *this;
   }
 

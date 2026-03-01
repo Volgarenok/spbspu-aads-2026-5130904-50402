@@ -1,6 +1,6 @@
 #include "process.hpp"
 
-void karpovich::input(std::istream& in, list_pair_t& list) 
+void karpovich::input(std::istream& in, list_pair_t& list)
 {
   std::string name;
   while (in >> name) {
@@ -12,10 +12,10 @@ void karpovich::input(std::istream& in, list_pair_t& list)
       } else {
         break;
       }
-    }    
+    }
     if (in.peek() == '\n') {
       in.get();
-    }    
+    }
     list.push_back(std::make_pair(name, numbers));
   }
 }
