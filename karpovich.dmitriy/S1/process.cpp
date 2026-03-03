@@ -9,18 +9,12 @@ void karpovich::input(std::istream &in, list_pair_t &list)
   std::string name;
   while (in >> name) {
     List< size_t > numbers;
-    size_t num = 0;
-    while (in.peek() != '\n' && !in.eof()) {
-      if (in >> num) {
-        numbers.push_back(num);
-      } else {
-        break;
-      }
+    size_t num;
+    while (in >> num) {
+      numbers.push_back(num);
     }
-    if (in.peek() == '\n') {
-      in.get();
-    }
-    list.push_back(std::make_pair(name, numbers));
+    in.clear();
+    list.push_back({name, numbers});
   }
 }
 
