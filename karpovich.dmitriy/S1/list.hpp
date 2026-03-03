@@ -1,6 +1,7 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 #include <cstddef>
+#include <memory>
 #include "node.hpp"
 #include "iterators.hpp"
 namespace karpovich
@@ -28,6 +29,7 @@ namespace karpovich
     void pop_front();
     void pop_back();
     void clear();
+    void swap(List< T > &other) noexcept;
     size_t size() const;
   };
 
@@ -67,20 +69,16 @@ namespace karpovich
 
   template < class T > List< T > &List< T >::operator=(const List< T > &other)
   {
-    if (this != &other) {
-      clear();
-      Node< T > *cur = other.fake_->next;
-      while (cur != other.fake_) {
-        push_back(cur->val);
-        cur = cur->next;
-      }
+    if (this != std::addressof(other)) {
+      List< T > stub(other);
+      swap(stub);
     }
     return *this;
   }
 
   template < class T > List< T > &List< T >::operator=(List< T > &&other) noexcept
   {
-    if (this != &other) {
+    if (this != std::addressof(other)) {
       clear();
       delete fake_;
       fake_ = other.fake_;
@@ -175,6 +173,13 @@ namespace karpovich
   template < class T > LCIter< T > List< T >::end() const
   {
     return LCIter< T >{fake_};
+  }
+
+  template< typename T >
+  void List< T >::swap(List< T >& other) noexcept
+  {
+    std::swap(fake_, other.fake_);
+    std::swap(size_, other.size_);
   }
 }
 #endif
