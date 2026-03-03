@@ -3,7 +3,7 @@
 #include "node.hpp"
 namespace karpovich
 {
-  template < typename T > class List;
+  template < class T > class List;
   template < class T > class LIter
   {
     friend class List< T >;
