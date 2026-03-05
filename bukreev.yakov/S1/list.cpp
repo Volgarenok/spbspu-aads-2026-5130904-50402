@@ -12,6 +12,12 @@ namespace bukreev
   template< class T >
   List< T >::~List() noexcept
   {
+    clear();
+  }
+
+  template< class T >
+  List< T >::clear() noexcept
+  {
     List< T >* cur = m_fake.next;
     while (cur)
     {

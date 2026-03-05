@@ -16,6 +16,7 @@ namespace bukreev
   public:
     List() noexcept;
     ~List() noexcept;
+    void clear() noexcept;
     void pushBack(const T& value);
 
   private:
