@@ -19,6 +19,9 @@ namespace bukreev
 
   public:
     LIter< T > next() const noexcept;
+    T operator*() const;
+    bool operator==(const LIter< T >& other);
+    bool operator!=(const LIter< T >& other);
 
   private:
     LIter(Node< T >* node) noexcept;
@@ -32,7 +35,9 @@ namespace bukreev
   {
   public:
     List() noexcept;
+    List(const List< T >& other);
     ~List() noexcept;
+    List< T >& operator=(const List< T >& other);
     void clear() noexcept;
     LIter< T > begin() const noexcept;
     LIter< T > end() const noexcept;
@@ -42,6 +47,119 @@ namespace bukreev
     Node< T > m_fake;
     Node< T >* m_tail;
   };
+
+  template< class T >
+  List< T >::List() noexcept
+  {
+    m_fake.next = nullptr;
+    m_tail = nullptr;
+  }
+
+  template< class T >
+  List< T >::List(const List< T >& other)
+  {
+    m_fake.next = nullptr;
+    m_tail = nullptr;
+
+    for (LIter< T > it = other.begin(); it != other.end(); it = it.next())
+    {
+      pushBack(*it);
+    }
+  }
+
+  template< class T >
+  List< T >::~List() noexcept
+  {
+    clear();
+  }
+
+  template< class T >
+  List< T >& List< T >::operator=(const List< T >& other)
+  {
+    clear();
+
+    for (LIter< T > it = other.begin(); it != other.end(); it = it.next())
+    {
+      pushBack(*it);
+    }
+
+    return *this;
+  }
+
+  template< class T >
+  void List< T >::clear() noexcept
+  {
+    Node< T >* cur = m_fake.next;
+    while (cur)
+    {
+      Node< T >* n = cur->next;
+      delete cur;
+      cur = n;
+    }
+
+    m_fake.next = nullptr;
+    m_tail = nullptr;
+  }
+
+  template< class T >
+  LIter< T > List< T >::begin() const noexcept
+  {
+    return LIter< T >(m_fake.next);
+  }
+
+  template< class T >
+  LIter< T > List< T >::end() const noexcept
+  {
+    return LIter< T >(nullptr);
+  }
+
+  template< class T >
+  void List< T >::pushBack(const T& value)
+  {
+    Node< T >* node = new Node< T >;
+    node->val = value;
+    node->next = nullptr;
+
+    if (m_tail)
+    {
+      m_tail->next = node;
+    }
+    else
+    {
+      m_fake.next = node;
+    }
+    m_tail = node;
+  }
+
+  template< class T >
+  LIter< T >::LIter(Node< T >* node) noexcept
+  {
+    m_cur = node;
+  }
+
+  template< class T >
+  T LIter< T >::operator*() const
+  {
+    return m_cur->val;
+  }
+
+  template< class T >
+  bool LIter< T >::operator==(const LIter< T >& other)
+  {
+    return m_cur == other.m_cur;
+  }
+
+  template< class T >
+  bool LIter< T >::operator!=(const LIter< T >& other)
+  {
+    return m_cur != other.m_cur;
+  }
+
+  template< class T >
+  LIter< T > LIter< T >::next() const noexcept
+  {
+    return LIter< T >(m_cur->next);
+  }
 }
 
 #endif
