@@ -14,10 +14,13 @@ namespace bukreev
   class List
   {
   public:
-    List();
+    List() noexcept;
+    ~List() noexcept;
+    void pushBack(const T& value);
 
   private:
     Node< T > m_fake;
+    Node< T >* m_tail;
   };
 }
 
