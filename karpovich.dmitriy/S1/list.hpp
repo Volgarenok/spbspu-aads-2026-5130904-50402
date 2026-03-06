@@ -175,8 +175,7 @@ namespace karpovich
     return LCIter< T >{fake_};
   }
 
-  template< typename T >
-  void List< T >::swap(List< T >& other) noexcept
+  template < typename T > void List< T >::swap(List< T > &other) noexcept
   {
     std::swap(fake_, other.fake_);
     std::swap(size_, other.size_);

@@ -1,4 +1,5 @@
 #include <boost/test/unit_test.hpp>
+#include "iterators.hpp"
 #include "list.hpp"
 
 using namespace karpovich;
@@ -81,7 +82,7 @@ BOOST_AUTO_TEST_CASE(test_end)
   List< int > list;
   list.push_back(1);
 
-  auto it = list.begin();
+  LIter< int > it = list.begin();
   ++it;
   BOOST_CHECK(it == list.end());
 }
@@ -114,7 +115,7 @@ BOOST_AUTO_TEST_CASE(test_push_back)
   list.push_back(1);
   list.push_back(2);
 
-  auto it = list.begin();
+  LIter< int > it = list.begin();
   BOOST_CHECK_EQUAL(*it, 1);
   it++;
   BOOST_CHECK_EQUAL(*it, 2);
