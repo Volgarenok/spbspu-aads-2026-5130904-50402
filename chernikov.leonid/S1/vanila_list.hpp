@@ -1,7 +1,7 @@
 #ifndef LIST_FWD_HPP
 #define LIST_FWD_HPP
 
-namespace petrov
+namespace chernikov
 {
 
   template < typename T > class List;
