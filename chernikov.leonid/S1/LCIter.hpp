@@ -4,7 +4,7 @@
 #include "vanila_list.hpp"
 #include "node.hpp"
 
-namespace petrov
+namespace chernikov
 {
 
   template < typename T > class LCIter
