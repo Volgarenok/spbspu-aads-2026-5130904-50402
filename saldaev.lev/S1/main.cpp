@@ -147,3 +147,48 @@ template < class T > List< T > &List< T >::operator=(List< T > &&other)
   }
   return *this;
 }
+
+template < class T > void List< T >::newHead(const T &d)
+{
+  Node *n = new Node(d, head->next, head);
+  head->next->prev = n;
+  head->next = n;
+  ++length;
+}
+
+template < class T > void List< T >::newTail(const T &d)
+{
+  Node *n = new Node(d, tail, tail->prev);
+  tail->prev->next = n;
+  tail->prev = n;
+  ++length;
+}
+
+template < class T > void List< T >::cutHead() noexcept
+{
+  if (length != 0) {
+    Node *tmp = head->next->next;
+    delete head->next;
+    head->next = tmp;
+    tmp->prev = head;
+    --length;
+  }
+}
+
+template < class T > void List< T >::cutTail() noexcept
+{
+  if (length != 0) {
+    Node *tmp = tail->prev->prev;
+    delete tail->prev;
+    tail->prev = tmp;
+    tmp->next = tail;
+    --length;
+  }
+}
+
+template < class T > void List< T >::clear() noexcept
+{
+  while (length > 0) {
+    cutHead();
+  }
+}
