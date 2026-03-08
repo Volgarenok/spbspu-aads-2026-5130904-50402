@@ -82,6 +82,9 @@ namespace sogdanov {
     for (auto row = transp.begin(); row != transp.end(); ++row) {
       size_t sum = 0;
       for (auto it = (*row).begin(); it != (*row).end(); ++it) {
+        if (sum > std::numeric)limits<size_t>::max() - *it) {
+          throw std::overflow_error("overflow error");
+        }
         sum += *it;
       }
       if (!is_sum) {
@@ -105,5 +108,9 @@ int main() {
   }
   List<List<size_t>> transp;
   transpose(list, transp);
-  output(std::cout, list, transp);
+  try {
+    output(std::cout, list, transp);
+  } catch (const std::overflow_error& e) {
+    std::cerr << e.what() << '\n';
+    return 1;
 }
