@@ -77,13 +77,15 @@ namespace shirokov
     void pop_front();
     void pop_back();
 
-    void clear();
-    bool empty() const;
+    void clear() noexcept;
+    bool empty() const noexcept;
 
   private:
     Node* head = nullptr;
     Node* tail = nullptr;
   };
 }
+
+extern template class shirokov::BiList< int >;
 
 #endif
