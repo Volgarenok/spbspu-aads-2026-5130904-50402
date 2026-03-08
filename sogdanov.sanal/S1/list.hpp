@@ -11,6 +11,7 @@ namespace sogdanov {
     friend class List<T>;
     Node<T>* ptr_;
   public:
+    LIter() noexcept;
     LIter(Node<T>* p) noexcept;
     T& operator*() const;
     LIter& operator++() noexcept;
@@ -59,5 +60,15 @@ namespace sogdanov {
     bool empty() const noexcept;
     size_t size() const noexcept;
   };
-}
-#endif
+  template<class T>
+  LIter<T>::LIter() noexcept : ptr_(nullptr) {}
+  template<class T>
+  LIter<T>::LIter(Node<T>* p) noexcept : ptr_(p) {}
+  template<class T>
+  T& LIter<T>::operator*() const { return ptr_->data; }
+  template<class T>
+  LIter<T>& LIter<T>::operator++() noexcept { ptr_ = ptr_->next; return *this; }
+  template<class T>
+  bool LIter<T>::operator==(const LIter& o) const noexcept { return ptr_ == o.ptr_; }
+  template<class T>
+  bool LIter<T>::operator!=(const LIter& o) const noexcept { return ptr_ != o.ptr_; }
