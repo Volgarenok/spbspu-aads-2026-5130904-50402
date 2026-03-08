@@ -49,7 +49,7 @@ namespace sogdanov {
       LIter<size_t> row_last;
       for (auto it = list.begin(); it != list.end(); ++it) {
         auto elem = (*it).second.begin();
-        for (size_t j = 0; j < i; ++j) {
+        for (size_t j = 0; j < i && elem != (*it).second.end(); ++j) {
           ++elem;
         }
         if (elem != (*it).second.end()) {
@@ -58,6 +58,21 @@ namespace sogdanov {
       }
       data_last = list_append(data, data_last, std::move(row));
     }
+  }
+  List<size_t> calc_sum(const List<List<size_t>>& transp) {
+    List<size_t> sums;
+    LIter<size_t> sums_last;
+    for (auto row = transp.begin(); row != transp.end(); ++row) {
+      size_t sum = 0;
+      for (auto it = (*row).begin(); it != (*row).end(); ++it) {
+        if (sum > std::numeric_limits<size_t>::max() - *it) {
+          throw std::overflow_error("overflow errror\n");
+        }
+        sum += *it;
+      }
+      sums_last = list_append(sums, sums_last, sum);
+    }
+    return sums;
   }
   void output(std::ostream& out, const List_pair& names, const List<List<size_t>>& transp) {
     bool is_name = true;
@@ -80,24 +95,20 @@ namespace sogdanov {
       }
       out << '\n';
     }
-    if (!transp.empty()) {
-      bool is_sum = true;
-      for (auto row = transp.begin(); row != transp.end(); ++row) {
-        size_t sum = 0;
-        for (auto it = (*row).begin(); it != (*row).end(); ++it) {
-          if (sum > std::numeric_limits<size_t>::max() - *it) {
-            throw std::overflow_error("overflow error");
-          }
-          sum += *it;
-        }
-        if (!is_sum) {
-          out << ' ';
-        }
-        out << sum;
-        is_sum = false;
-      }
-      out << '\n';
+    List<size_t> sums = calc_sum(transp);
+    if (sums.empty()) {
+      out << 0 << '\n';
+      return;
     }
+    bool is_sum = true;
+    for (auto it = sums.begin(); it != sums.end(); ++it) {
+      if(!is_sum) {
+        out << ' ';
+      }
+      out << *it;
+      is_sum = false;
+    }
+    out << '\n';
   }
 }
 int main() {
