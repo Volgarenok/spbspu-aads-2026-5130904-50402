@@ -45,7 +45,7 @@ void karpovich::transpose(const list_pair_t &list, List< List< size_t > > &data)
   }
 }
 
-void karpovich::output(std::ostream &out, const list_pair_t &names, const List< List< size_t > > &transposed)
+void karpovich::printNames(std::ostream &out, const list_pair_t &names)
 {
   bool first = true;
   for (LCIter< std::pair< std::string, List< size_t > > > it = names.begin(); it != names.end(); ++it) {
@@ -56,7 +56,11 @@ void karpovich::output(std::ostream &out, const list_pair_t &names, const List< 
     first = false;
   }
   out << '\n';
+}
 
+void karpovich::printTransposed(std::ostream &out, const List< List< size_t > > &transposed)
+{
+  bool first = true;
   for (LCIter< List< size_t > > row_it = transposed.begin(); row_it != transposed.end(); ++row_it) {
     first = true;
     for (LCIter< size_t > num_it = (*row_it).begin(); num_it != (*row_it).end(); ++num_it) {
@@ -68,8 +72,13 @@ void karpovich::output(std::ostream &out, const list_pair_t &names, const List< 
     }
     out << '\n';
   }
+}
 
-  first = true;
+void karpovich::output(std::ostream &out, const list_pair_t &names, const List< List< size_t > > &transposed)
+{
+  printNames(out, names);
+  printTransposed(out, transposed);
+  bool first = true;
   if (transposed.size() == 0) {
     out << "0\n";
   } else {

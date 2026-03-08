@@ -9,5 +9,7 @@ namespace karpovich
   void input(std::istream &in, list_pair_t &list);
   void output(std::ostream &out, const list_pair_t &names, const List< List< size_t > > &transposed);
   void transpose(const list_pair_t &list, List< List< size_t > > &data);
+  void printNames(std::ostream &out, const list_pair_t &names);
+  void printTransposed(std::ostream &out, const List< List< size_t > > &transposed);
 }
 #endif
