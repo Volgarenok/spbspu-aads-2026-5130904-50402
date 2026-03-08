@@ -17,7 +17,8 @@ namespace afanasev
 
 
 // Обычный итератор
-  template < class T > class LIter
+  template < class T >
+  class LIter
   {
     friend class List< T >;
     List< T > * curr_;
@@ -35,6 +36,63 @@ namespace afanasev
   LIter< T >::LIter(List< T > * p):
     curr_(p)
   {}
+
+  template < class T >
+  T & LIter< T >::operator*() const
+  {
+    return curr_->val_
+  }
+
+  template < class T >
+  LIter< T > & LIter< T >::operator++()
+  {
+    curr_ = curr_->next_;
+    return * this;
+  }
+
+  template < class T >
+  LIter< T > & LIter< T >::operator++(int)
+  {
+    curr_ = curr_->next_;
+    return * this;
+  }
+
+  template < class T >
+  bool LIter< T >::operator==(const LIter< T > & other) const
+  {
+    return curr_ == other.curr_;
+  }
+
+  template < class T >
+  bool LIter< T >::operator!=(const LIter< T > & other) const
+  {
+    return curr_ != other.curr_;
+  }
+
+
+
+
+  template < class T > bool LIter< T >::operator!=(const LIter< T > &other) const
+  {
+    return ptr_ != other.ptr_;
+  }
+
+  template < class T > bool LIter< T >::operator==(const LIter< T > &other) const
+  {
+    return ptr_ == other.ptr_;
+  }
+
+  template < class T > LIter< T > &LIter< T >::operator++()
+  {
+    ptr_ = ptr_->next;
+    return *this;
+  }
+
+  template < class T > LIter< T > &LIter< T >::operator++(int)
+  {
+    ptr_ = ptr_->next;
+    return *this;
+  }
 
 
 // Константный итератор
