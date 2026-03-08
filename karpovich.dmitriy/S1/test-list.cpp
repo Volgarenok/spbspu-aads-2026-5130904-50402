@@ -166,4 +166,22 @@ BOOST_AUTO_TEST_CASE(test_size)
   BOOST_CHECK_EQUAL(list.size(), 2);
 }
 
+BOOST_AUTO_TEST_CASE(test_empty)
+{
+  List< int > list;
+  BOOST_CHECK_EQUAL(list.empty(), true);
+}
+
+BOOST_AUTO_TEST_CASE(test_insert)
+{
+  List< int > list;
+  list.push_back(1);
+  list.push_back(2);
+  list.push_back(3);
+  LIter< int > it = list.begin();
+  it++;
+  it = list.insert(it, 4);
+  BOOST_CHECK_EQUAL(*it, 4);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
