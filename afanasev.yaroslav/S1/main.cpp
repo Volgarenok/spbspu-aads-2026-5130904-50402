@@ -20,9 +20,29 @@ namespace afanasev
   template< class T >
   class List
   {
-    Node< T > * fake;
+    Node< T > * fake_;
     size_t size_;
+
+  public:
+    List();
+    ~List();
+
+    void clear();
+    size_t size() const;
   };
+
+  template < class T >
+  List< T >::List():
+    fake_(new Node< T >{T(), nullptr}),
+    size_(0)
+  {}
+
+  template < class T >
+  List< T >::~List()
+  {
+    clear();
+    delete fake_;
+  }
 
 
 // Обычный итератор
