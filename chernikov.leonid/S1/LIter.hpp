@@ -4,8 +4,7 @@
 #include "vanila_list.hpp"
 #include "node.hpp"
 
-namespace chernikov
-{
+namespace chernikov {
 
   template < typename T > class LIter
   {
@@ -16,12 +15,14 @@ namespace chernikov
 
     explicit LIter(Node< T > *p):
       ptr(p)
-    {}
+    {
+    }
 
   public:
     LIter():
       ptr(nullptr)
-    {}
+    {
+    }
 
     bool operator==(const LIter &other) const
     {

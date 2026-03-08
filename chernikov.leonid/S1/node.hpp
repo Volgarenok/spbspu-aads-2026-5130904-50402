@@ -1,8 +1,7 @@
 #ifndef NODE_HPP
 #define NODE_HPP
 
-namespace chernikov
-{
+namespace chernikov {
   template < typename T > struct Node
   {
     T data;
@@ -11,7 +10,8 @@ namespace chernikov
     Node(const T &value, Node *nxt = nullptr):
       data(value),
       next(nxt)
-    {}
+    {
+    }
   };
 }
 

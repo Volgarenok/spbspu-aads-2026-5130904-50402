@@ -4,8 +4,7 @@
 #include "vanila_list.hpp"
 #include "node.hpp"
 
-namespace chernikov
-{
+namespace chernikov {
 
   template < typename T > class LCIter
   {
@@ -16,15 +15,18 @@ namespace chernikov
 
     explicit LCIter(const Node< T > *p):
       ptr(p)
-    {}
+    {
+    }
 
   public:
     LCIter():
       ptr(nullptr)
-    {}
+    {
+    }
     LCIter(const LIter< T > &it):
       ptr(it.ptr)
-    {}
+    {
+    }
 
     bool operator==(const LCIter &other) const
     {

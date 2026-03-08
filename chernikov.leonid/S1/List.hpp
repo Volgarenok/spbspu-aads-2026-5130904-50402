@@ -6,9 +6,9 @@
 #include "LCIter.hpp"
 #include "LIter.hpp"
 #include <cstddef>
+#include <stdexcept>
 
-namespace chernikov
-{
+namespace chernikov {
 
   template < typename T > class List
   {
@@ -20,7 +20,8 @@ namespace chernikov
     List():
       head(nullptr),
       count(0)
-    {}
+    {
+    }
     List(const List &other):
       head(nullptr),
       count(0)
@@ -87,11 +88,21 @@ namespace chernikov
         throw std::logic_error("List is empty");
       return head->data;
     }
+    void swap(List &other) noexcept
+    {
+      std::swap(head, other.head);
+      std::swap(count, other.count);
+    }
+    void List< T >::add(const T &val);
+    void clear();
+    List< T > &operator=(const List &other);
+    List< T > &List< T >::operator=(List &&other) noexcept;
 
   private:
     void copy_from(const List &other);
+    void clear();
+    void first_delete()
   };
-
 }
 
 #endif

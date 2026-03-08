@@ -1,8 +1,7 @@
 #include <boost/test/unit_test.hpp>
 #include "node.hpp"
 
-namespace chernikov
-{
+namespace chernikov {
 
   BOOST_AUTO_TEST_SUITE(NodeTests)
 
