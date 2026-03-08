@@ -30,6 +30,9 @@ namespace afanasev
     LIter< T > begin() noexcept;
     LCIter< T > begin() const noexcept;
 
+    T getValue(LIter< T > pos) noexcept;
+    T getValue(LCIter< T > pos) const noexcept;
+    LIter< T > getHead() noexcept;
     void insert(const T & val, LIter< T > pos);
     void deleteNext(LIter< T > pos) noexcept;
     void clear() noexcept;
@@ -59,6 +62,24 @@ namespace afanasev
   LCIter< T > List< T >::begin() const noexcept
   {
     return LCIter< T >{fake_->next_};
+  }
+
+  template < class T >
+  T List< T >::getValue(LIter< T > pos) noexcept
+  {
+    return pos.curr_->val_;
+  }
+
+  template < class T >
+  T List< T >::getValue(LCIter< T > pos) const noexcept
+  {
+    return pos.curr_->val_;
+  }
+
+  template < class T >
+  LIter< T > List< T >::getHead() noexcept
+  {
+    return {fake_->next_};
   }
 
   template < class T >
