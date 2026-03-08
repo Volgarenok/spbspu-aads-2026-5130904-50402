@@ -46,15 +46,15 @@ namespace shirokov
       Node* next = nullptr;
       Node* prev = nullptr;
     };
-    BiList();
+    BiList() = default;
 
     BiList(const BiList< T >&);
     BiList(BiList< T >&&);
 
     ~BiList() noexcept;
 
-    BiList< T > operator=(const BiList< T >&);
-    BiList< T > operator=(BiList< T >&&);
+    BiList< T >& operator=(const BiList< T >&);
+    BiList< T >& operator=(BiList< T >&&);
 
     BLIter< T > begin();
     BLCIter< T > begin() const;

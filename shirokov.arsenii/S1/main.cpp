@@ -12,12 +12,12 @@ namespace shirokov
 
 int main()
 {
-  auto sequences = shirokov::BiList< std::pair< std::string, shirokov::BiList< int > > >();
+  shirokov::BiList< std::pair< std::string, shirokov::BiList< int > > > sequences{};
 
   {
     std::pair< std::string, shirokov::BiList< int > > pair;
     std::string name;
-    auto seq = shirokov::BiList< int >();
+    shirokov::BiList< int > seq{};
 
     int curr = 0;
     std::cin >> name;
@@ -61,7 +61,7 @@ int main()
     }
   }
 
-  auto listOfSum = shirokov::BiList< int >();
+  shirokov::BiList< int > listOfSum{};
   shirokov::BiList< shirokov::BLEnds > iterators;
   for (auto& pair : sequences)
   {
