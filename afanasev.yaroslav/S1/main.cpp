@@ -31,6 +31,7 @@ namespace afanasev
     LCIter< T > begin() const noexcept;
 
     void insert(const T & val, LIter< T > pos);
+    void deleteNext(LIter< T > pos) noexcept;
     void clear() noexcept;
     size_t size() const noexcept;
   };
@@ -66,6 +67,22 @@ namespace afanasev
     Node< T > * new_node = new Node< T >{val, pos.curr_->next_};
     pos.curr_->next_ = new_node;
     ++size_;
+  }
+
+  template < class T >
+  void List< T >::deleteNext(LIter< T > pos) noexcept
+  {
+    Node< T > * tmp = pos.curr_->next_;
+    if (!(tmp->next_))
+    {
+      return;
+    }
+    
+    delete tmp->val_;
+    pos.curr_->next_ = tmp->next_;
+    delete tmp;
+
+    size_--;
   }
 
   template < class T >
