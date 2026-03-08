@@ -26,6 +26,8 @@ private:
     T data;
     Node *next;
     Node *prev;
+
+    Node(const T &d, Node *n, Node *p);
   };
 
   Node *head;
@@ -80,6 +82,13 @@ private:
 };
 
 int main()
+{}
+
+template < class T >
+List< T >::Node::Node(const T &d, Node *n, Node *p):
+  data(d),
+  next(n),
+  prev(p)
 {}
 
 template < class T >
