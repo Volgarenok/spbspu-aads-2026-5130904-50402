@@ -27,6 +27,10 @@ namespace afanasev
     List();
     ~List();
 
+    LIter< T > begin() noexcept;
+    LCIter< T > begin() const noexcept;
+
+    void insert(const T & val, LIter< T > pos);
     void clear() noexcept;
     size_t size() const noexcept;
   };
@@ -42,6 +46,26 @@ namespace afanasev
   {
     clear();
     delete fake_;
+  }
+
+  template < class T >
+  LIter< T > List< T >::begin() noexcept
+  {
+    return LIter< T >{fake_->next_};
+  }
+
+  template < class T >
+  LCIter< T > List< T >::begin() const noexcept
+  {
+    return LCIter< T >{fake_->next_};
+  }
+
+  template < class T >
+  void List< T >::insert(const T & val, LIter< T > pos)
+  {
+    Node< T > * new_node = new Node< T >{val, pos.curr_->next_};
+    pos.curr_->next_ = new_node;
+    ++size_;
   }
 
   template < class T >
@@ -63,6 +87,7 @@ namespace afanasev
   {
     return size_;
   }
+
 
 
 // Обычный итератор
