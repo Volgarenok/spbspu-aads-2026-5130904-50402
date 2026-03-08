@@ -1,4 +1,5 @@
 #include <iostream>
+#include <utility>
 
 
 namespace afanasev
@@ -12,6 +13,7 @@ namespace afanasev
   template< class T >
   class Node
   {
+  public:
     T val_;
     Node< T > * next_;
   };
@@ -32,11 +34,17 @@ namespace afanasev
 
     T getValue(LIter< T > pos) noexcept;
     T getValue(LCIter< T > pos) const noexcept;
-    LIter< T > getHead() noexcept;
+    void addFirst(const T & val);
     void insert(const T & val, LIter< T > pos);
     void deleteNext(LIter< T > pos) noexcept;
     void clear() noexcept;
     size_t size() const noexcept;
+
+    List(const List & other);
+    List(List && other) noexcept;
+    List & operator=(const List & other);
+    List & operator=(List && other) noexcept;
+    void swap(List & other) noexcept;
   };
 
   template < class T >
@@ -77,9 +85,11 @@ namespace afanasev
   }
 
   template < class T >
-  LIter< T > List< T >::getHead() noexcept
+  void List< T >::addFirst(const T & val)
   {
-    return {fake_->next_};
+    Node< T > * new_node = new Node< T >{val, fake_->next_};
+    fake_->next_ = new_node;
+    ++size_;
   }
 
   template < class T >
@@ -112,11 +122,11 @@ namespace afanasev
     Node< T > * h = fake_->next_;
     while (h)
     {
-      Node< T > * tmp = h->next;
+      Node< T > * tmp = h->next_;
       delete h;
       h = tmp;
     }
-    fake_->next = nullptr;
+    fake_->next_ = nullptr;
     size_ = 0;
   }
 
@@ -125,6 +135,69 @@ namespace afanasev
   {
     return size_;
   }
+
+
+  template < class T >
+  List< T >::List(const List< T > & other) :
+    fake_(new Node< T >{T(), nullptr}),
+    size_(0)
+  {
+    Node< T > * this_curr = fake_;
+    Node< T > * other_curr = other.fake_->next_;
+    while (other_curr)
+    {
+      Node< T > * new_node = new Node< T >{other_curr->val_, nullptr};
+      this_curr->next_ = new_node;
+      this_curr = new_node;
+      other_curr = other_curr->next_;
+      ++size_;
+    }
+  }
+
+  template < class T >
+  List< T >::List(List< T > && other) noexcept :
+    fake_(other.fake_),
+    size_(other.size_)
+  {
+    other.fake_ = new Node< T >{T(), nullptr};
+    other.size_ = 0;
+  }
+
+  template < class T >
+  List< T > & List< T >::operator=(const List< T > & other)
+  {
+    if (this != &other)
+    {
+      List tmp(other);
+      swap(tmp);
+    }
+    return * this;
+  }
+
+  template < class T >
+  List< T > & List< T >::operator=(List< T > && other) noexcept
+  {
+    if (this != &other)
+    {
+      clear();
+      delete fake_;
+
+      fake_ = other.fake_;
+      size_ = other.size_;
+
+      other.fake_ = new Node< T >{T(), nullptr};
+      other.size_ = 0;
+    }
+    return * this;
+  }
+
+  template < class T >
+  void List< T >::swap(List< T > & other) noexcept
+  {
+    std::swap(fake_, other.fake_);
+    std::swap(size_, other.size_);
+  }
+
 
 
 
@@ -235,10 +308,33 @@ namespace afanasev
   {
     return curr_ != other.curr_;
   }
+
+// Функции для программы
+  void input(std::istream & in, List< std::pair< std::string, List< size_t > > > & list)
+  {
+    std::string name;
+
+    while (in >> name)
+    {
+      List< size_t > numbers;
+      size_t num;
+
+      while (in >> num)
+      {
+        numbers.addFirst(num);
+      }
+      in.clear();
+      list.addFirst({name, numbers});
+    }
+  }
 }
 
 
 int main()
 {
+  namespace a = afanasev;
+  a::List< std::pair< std::string, a::List< size_t > > > list;
+  a::input(std::cin, list);
+
   return 0;
 }
