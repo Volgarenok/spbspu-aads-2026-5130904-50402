@@ -46,12 +46,12 @@ namespace shirokov
       Node* next = nullptr;
       Node* prev = nullptr;
     };
-    BiList< T >();
+    BiList();
 
-    BiList< T >(const BiList< T >&);
-    BiList< T >(BiList< T >&&);
+    BiList(const BiList< T >&);
+    BiList(BiList< T >&&);
 
-    ~BiList< T >() noexcept;
+    ~BiList() noexcept;
 
     BiList< T > operator=(const BiList< T >&);
     BiList< T > operator=(BiList< T >&&);
