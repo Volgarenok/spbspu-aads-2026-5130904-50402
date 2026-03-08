@@ -27,8 +27,8 @@ namespace afanasev
     List();
     ~List();
 
-    void clear();
-    size_t size() const;
+    void clear() noexcept;
+    size_t size() const noexcept;
   };
 
   template < class T >
@@ -42,6 +42,26 @@ namespace afanasev
   {
     clear();
     delete fake_;
+  }
+
+  template < class T >
+  void List< T >::clear() noexcept
+  {
+    Node< T > * h = fake_->next_;
+    while (h)
+    {
+      Node< T > * tmp = h->next;
+      delete h;
+      h = tmp;
+    }
+    fake_->next = nullptr;
+    size_ = 0;
+  }
+
+  template < class T >
+  size_t List< T >::size() const noexcept
+  {
+    return size_;
   }
 
 
