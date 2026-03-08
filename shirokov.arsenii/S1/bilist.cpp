@@ -23,4 +23,6 @@ void shirokov::BiList< T >::clear() noexcept
     delete head;
     head = next;
   }
+  head = nullptr;
+  tail = nullptr;
 }
