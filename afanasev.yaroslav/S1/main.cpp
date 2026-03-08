@@ -40,7 +40,7 @@ namespace afanasev
   template < class T >
   T & LIter< T >::operator*() const
   {
-    return curr_->val_
+    return curr_->val_;
   }
 
   template < class T >
@@ -71,30 +71,6 @@ namespace afanasev
 
 
 
-
-  template < class T > bool LIter< T >::operator!=(const LIter< T > &other) const
-  {
-    return ptr_ != other.ptr_;
-  }
-
-  template < class T > bool LIter< T >::operator==(const LIter< T > &other) const
-  {
-    return ptr_ == other.ptr_;
-  }
-
-  template < class T > LIter< T > &LIter< T >::operator++()
-  {
-    ptr_ = ptr_->next;
-    return *this;
-  }
-
-  template < class T > LIter< T > &LIter< T >::operator++(int)
-  {
-    ptr_ = ptr_->next;
-    return *this;
-  }
-
-
 // Константный итератор
   template < class T >
   class LCIter
@@ -116,7 +92,37 @@ namespace afanasev
     curr_(p)
   {}
 
+  template < class T >
+  const T & LCIter< T >::operator*() const
+  {
+    return curr_->val_;
+  }
 
+  template < class T >
+  LCIter< T > & LCIter< T >::operator++()
+  {
+    curr_ = curr_->next_;
+    return * this;
+  }
+
+  template < class T >
+  LCIter< T > & LCIter< T >::operator++(int)
+  {
+    curr_ = curr_->val_;
+    return * this;
+  }
+
+  template < class T >
+  bool LCIter< T >::operator==(const LCIter< T > & other) const
+  {
+    return curr_ == other.curr_;
+  }
+
+  template < class T >
+  bool LCIter< T >::operator!=(const LCIter< T > & other) const
+  {
+    return curr_ != other.curr_;
+  }
 }
 
 
