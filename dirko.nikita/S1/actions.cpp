@@ -3,6 +3,7 @@
 #include "list.hpp"
 #include <iostream>
 #include <string>
+#include <type_traits>
 
 void dirko::input(std::istream &is, l_pair_t &seq)
 {

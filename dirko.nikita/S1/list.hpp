@@ -50,7 +50,7 @@ namespace dirko
     tail_(other.tail_),
     size_(other.size_)
   {
-    other.fake_ = nullptr;
+    other.fake_ = static_cast< Node< T > * >(::operator new(sizeof(Node< T >)));
   }
   template < class T >
   List< T >::List(const List< T > &other):
@@ -74,7 +74,7 @@ namespace dirko
     fake_ = other.fake_;
     size_ = other.size_;
     tail_ = other.tail_;
-    other.fake_ = nullptr;
+    other.fake_ = static_cast< Node< T > * >(::operator new(sizeof(Node< T >)));
     return *this;
   }
   template < class T >
@@ -101,6 +101,7 @@ namespace dirko
     }
     fake_->next = nullptr;
     size_ = 0;
+    tail_ = fake_;
   }
   template < class T >
   void List< T >::swap(List< T > &rhs) noexcept

@@ -68,7 +68,7 @@ namespace dirko
   template < class T >
   Iter< T > &Iter< T >::operator++(int)
   {
-    Node< T > *prev = curr_;
+    Iter< T > &prev = curr_;
     curr_ = curr_->next;
     return prev;
   }
@@ -81,7 +81,7 @@ namespace dirko
   template < class T >
   Iter< T > &Iter< T >::operator--(int)
   {
-    Node< T > *next = curr_;
+    Iter< T > &next = curr_;
     curr_ = curr_->prev;
     return next;
   }
@@ -113,7 +113,7 @@ namespace dirko
   template < class T >
   CIter< T > &CIter< T >::operator++(int)
   {
-    Node< T > *prev = curr_;
+    CIter< T > &prev = curr_;
     curr_ = curr_->next;
     return prev;
   }
@@ -126,7 +126,7 @@ namespace dirko
   template < class T >
   CIter< T > &CIter< T >::operator--(int)
   {
-    Node< T > *next = curr_;
+    CIter< T > &next = curr_;
     curr_ = curr_->prev;
     return next;
   }
