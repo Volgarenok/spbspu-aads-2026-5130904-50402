@@ -1,5 +1,12 @@
+#include <cstddef>
+
+template < class T > struct LCIter;
+template < class T > struct LIter;
 template < class T > struct List
 {
+  friend LCIter;
+  friend LIter;
+
   List();
   ~List();
   List(const List &other);
@@ -13,10 +20,10 @@ template < class T > struct List
   void cutTail() noexcept;
   void clear() noexcept;
 
-  LCIter begin() const;
-  LCIter end() const;
-  LIter begin();
-  LIter end();
+  LIter< T > begin();
+  LIter< T > end();
+  LCIter< T > begin() const;
+  LCIter< T > end() const;
 
   size_t getLength() const noexcept;
 
@@ -200,4 +207,29 @@ template < class T > void List< T >::clear() noexcept
   while (length > 0) {
     cutHead();
   }
+}
+
+template < class T > LIter< T > List< T >::begin()
+{
+  return LIter< T >(head);
+}
+
+template < class T > LIter< T > List< T >::end()
+{
+  return LIter< T >(tail);
+}
+
+template < class T > LCIter< T > List< T >::begin() const
+{
+  return LCIter< T >(head);
+}
+
+template < class T > LCIter< T > List< T >::end() const
+{
+  return LCIter< T >(tail);
+}
+
+template < class T > size_t List< T >::getLength() const noexcept
+{
+  return length;
 }
