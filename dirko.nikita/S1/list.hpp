@@ -9,17 +9,19 @@ namespace dirko
   {
   public:
     List();
-    List(const List< T > &other);
-    List(List< T > &&other) noexcept;
-    List &operator=(const List< T > &other);
-    List &operator=(List< T > &&other) noexcept;
+    List(const List< T > &);
+    List(List< T > &&) noexcept;
+    List &operator=(const List< T > &);
+    List &operator=(List< T > &&) noexcept;
     ~List();
-    void push_front(const T &val);
-    void push_back(const T &val);
+    void push_front(const T &);
+    void push_back(const T &);
     void pop_front();
     void pop_back();
     void clear();
     size_t size() const noexcept;
+    void swap(List< T > &) noexcept;
+
   private:
     Node< T > *fake_;
     size_t size_;
