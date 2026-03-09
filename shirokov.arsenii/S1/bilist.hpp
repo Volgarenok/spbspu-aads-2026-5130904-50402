@@ -10,23 +10,25 @@ namespace shirokov
   class BLIter
   {
   public:
-    bool operator==(const BLIter< T >& other);
-    bool operator!=(BLIter< T > other);
+    BLIter(typename BiList< T >::Node*);
+    bool operator==(const BLIter< T >& other) const noexcept;
+    bool operator!=(const BLIter< T >& other) const noexcept;
     BLIter< T > operator++();
     BLIter< T > operator--();
     T& operator*();
 
   private:
     friend class BiList< T >;
-    const typename BiList< T >::Node* curr = nullptr;
+    typename BiList< T >::Node* curr = nullptr;
   };
 
   template < class T >
   class BLCIter
   {
   public:
-    bool operator==(BLCIter< T > other);
-    bool operator!=(BLCIter< T > other);
+    BLCIter(const typename BiList< T >::Node*);
+    bool operator==(const BLCIter< T >& other);
+    bool operator!=(const BLCIter< T >& other);
     BLCIter< T > operator++();
     BLCIter< T > operator--();
     const T& operator*();
