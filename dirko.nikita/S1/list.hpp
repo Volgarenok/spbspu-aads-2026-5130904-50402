@@ -38,7 +38,7 @@ namespace dirko
   template < class T >
   List< T >::List():
     fake_(static_cast< Node< T > * >(::operator new(sizeof(Node< T >)))),
-    tail_(nullptr),
+    tail_(fake_),
     size_(0)
   {
     fake_->next = nullptr;
@@ -55,7 +55,7 @@ namespace dirko
   template < class T >
   List< T >::List(const List< T > &other):
     fake_(static_cast< Node< T > * >(::operator new(sizeof(Node< T >)))),
-    tail_(nullptr),
+    tail_(fake_),
     size_(0)
   {
     fake_->next = nullptr;
@@ -166,7 +166,7 @@ namespace dirko
   template < class T >
   Iter< T > List< T >::end()
   {
-    return Iter< T >{tail_};
+    return Iter< T >{tail_->next};
   }
 
   template < class T >
@@ -178,7 +178,7 @@ namespace dirko
   template < class T >
   CIter< T > List< T >::cend() const
   {
-    return CIter< T >{tail_};
+    return CIter< T >{tail_->next};
   }
 }
 
