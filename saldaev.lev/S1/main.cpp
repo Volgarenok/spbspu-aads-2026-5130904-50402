@@ -1,8 +1,11 @@
 #include <cstddef>
 
-template < class T > struct LCIter;
-template < class T > struct LIter;
-template < class T > struct List
+template < class T >
+struct LCIter;
+template < class T >
+struct LIter;
+template < class T >
+struct List
 {
   friend LCIter;
   friend LIter;
@@ -42,7 +45,8 @@ private:
   size_t length;
 };
 
-template < class T > struct LCIter
+template < class T >
+struct LCIter
 {
   friend class List< T >;
 
@@ -63,7 +67,8 @@ private:
   typename List< T >::Node *curr;
 };
 
-template < class T > struct LIter
+template < class T >
+struct LIter
 {
   friend class List< T >;
 
@@ -85,7 +90,7 @@ template < class T > struct LIter
   void cutCurrent() noexcept;
 
 private:
-  explicit LIter(typename List< T >::Node *node);
+  explicit LIter(typename List< T >::Node *node, List< T > *list);
   typename List< T >::Node *curr;
   List< T > *list;
 };
@@ -119,7 +124,8 @@ List< T >::List():
   tail->next = nullptr;
 }
 
-template < class T > List< T >::~List()
+template < class T >
+List< T >::~List()
 {
   clear();
   ::operator delete(head);
@@ -135,7 +141,8 @@ List< T >::List(const List &other):
   }
 }
 
-template < class T > List< T > &List< T >::operator=(const List< T > &other)
+template < class T >
+List< T > &List< T >::operator=(const List< T > &other)
 {
   if (this != &other) {
     List< T > tmp(other);
@@ -155,7 +162,8 @@ List< T >::List(List &&other):
   std::swap(length, other.length);
 }
 
-template < class T > List< T > &List< T >::operator=(List< T > &&other)
+template < class T >
+List< T > &List< T >::operator=(List< T > &&other)
 {
   if (this != &other) {
     std::swap(head, other.head);
@@ -166,7 +174,8 @@ template < class T > List< T > &List< T >::operator=(List< T > &&other)
   return *this;
 }
 
-template < class T > void List< T >::newHead(const T &d)
+template < class T >
+void List< T >::newHead(const T &d)
 {
   Node *n = new Node(d, head->next, head);
   head->next->prev = n;
@@ -174,7 +183,8 @@ template < class T > void List< T >::newHead(const T &d)
   ++length;
 }
 
-template < class T > void List< T >::newTail(const T &d)
+template < class T >
+void List< T >::newTail(const T &d)
 {
   Node *n = new Node(d, tail, tail->prev);
   tail->prev->next = n;
@@ -182,7 +192,8 @@ template < class T > void List< T >::newTail(const T &d)
   ++length;
 }
 
-template < class T > void List< T >::cutHead() noexcept
+template < class T >
+void List< T >::cutHead() noexcept
 {
   if (length != 0) {
     Node *tmp = head->next->next;
@@ -193,7 +204,8 @@ template < class T > void List< T >::cutHead() noexcept
   }
 }
 
-template < class T > void List< T >::cutTail() noexcept
+template < class T >
+void List< T >::cutTail() noexcept
 {
   if (length != 0) {
     Node *tmp = tail->prev->prev;
@@ -204,34 +216,40 @@ template < class T > void List< T >::cutTail() noexcept
   }
 }
 
-template < class T > void List< T >::clear() noexcept
+template < class T >
+void List< T >::clear() noexcept
 {
   while (length > 0) {
     cutHead();
   }
 }
 
-template < class T > LIter< T > List< T >::begin()
+template < class T >
+LIter< T > List< T >::begin()
 {
   return LIter< T >(head);
 }
 
-template < class T > LIter< T > List< T >::end()
+template < class T >
+LIter< T > List< T >::end()
 {
   return LIter< T >(tail);
 }
 
-template < class T > LCIter< T > List< T >::begin() const
+template < class T >
+LCIter< T > List< T >::begin() const
 {
   return LCIter< T >(head);
 }
 
-template < class T > LCIter< T > List< T >::end() const
+template < class T >
+LCIter< T > List< T >::end() const
 {
   return LCIter< T >(tail);
 }
 
-template < class T > size_t List< T >::getLength() const noexcept
+template < class T >
+size_t List< T >::getLength() const noexcept
 {
   return length;
 }
@@ -243,63 +261,74 @@ LCIter< T >::LCIter(typename List< T >::Node *node):
   curr(node)
 {}
 
-template < class T > bool LCIter< T >::hasNext() const noexcept
+template < class T >
+bool LCIter< T >::hasNext() const noexcept
 {
   return curr->next;
 }
 
-template < class T > bool LCIter< T >::hasPrev() const noexcept
+template < class T >
+bool LCIter< T >::hasPrev() const noexcept
 {
   return curr->prev;
 }
 
-template < class T > LCIter< T > &LCIter< T >::operator++()
+template < class T >
+LCIter< T > &LCIter< T >::operator++()
 {
   curr = curr->next;
   return *this;
 }
 
-template < class T > LCIter< T > LCIter< T >::operator++(int)
+template < class T >
+LCIter< T > LCIter< T >::operator++(int)
 {
   LCIter< T > old = *this;
   curr = curr->next;
   return old;
 }
 
-template < class T > LCIter< T > &LCIter< T >::operator--()
+template < class T >
+LCIter< T > &LCIter< T >::operator--()
 {
   curr = curr->prev;
   return *this;
 }
 
-template < class T > LCIter< T > LCIter< T >::operator--(int)
+template < class T >
+LCIter< T > LCIter< T >::operator--(int)
 {
   LCIter< T > old = *this;
   curr = curr->prev;
   return old;
 }
 
-template < class T > bool LCIter< T >::operator==(const LCIter &other) const
+template < class T >
+bool LCIter< T >::operator==(const LCIter &other) const
 {
   return this->curr == other.curr;
 }
 
-template < class T > bool LCIter< T >::operator!=(const LCIter &other) const
+template < class T >
+bool LCIter< T >::operator!=(const LCIter &other) const
 {
   return !(*this == other);
 }
 
-template < class T > bool LCIter< T >::isBegin() const noexcept
+template < class T >
+bool LCIter< T >::isBegin() const noexcept
 {
   return curr->prev;
 }
 
-template < class T > bool LCIter< T >::isEnd() const noexcept
+template < class T >
+bool LCIter< T >::isEnd() const noexcept
 {
   return !(curr->next);
 }
 
-template < class T > const T &LCIter< T >::getData() const noexcept
+template < class T >
+const T &LCIter< T >::getData() const noexcept
 {
   return !(curr->data);
 }
