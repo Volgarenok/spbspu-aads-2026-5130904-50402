@@ -1,5 +1,6 @@
 #include <iostream>
 #include <utility>
+#include <string>
 
 
 namespace afanasev
@@ -310,23 +311,71 @@ namespace afanasev
   }
 
 // Функции для программы
-  void input(std::istream & in, List< std::pair< std::string, List< size_t > > > & list)
+// Ввод создание списков
+  bool input(std::istream & in, List< std::pair< std::string, List< size_t > > > & list)
   {
     std::string name;
+
+    if (!(in >> name))
+    {
+      return false;
+    }
+
+    List< size_t > numbers;
+    size_t num;
+
+    if (in >> num)
+    {
+      numbers.addFirst(num);
+      LIter< size_t > lastNum = numbers.begin();
+  
+      while (in >> num)
+      {
+        numbers.insert(num, lastNum);
+        ++lastNum;
+      }
+    }
+
+    in.clear();
+    list.addFirst({name, numbers});
+
+    LIter< std::pair< std::string, List< size_t > > > lastPair = list.begin();
 
     while (in >> name)
     {
       List< size_t > numbers;
       size_t num;
 
-      while (in >> num)
+      if (in >> num)
       {
         numbers.addFirst(num);
+        LIter< size_t > lastNum = numbers.begin();
+  
+        while (in >> num)
+        {
+          numbers.insert(num, lastNum);
+          ++lastNum;
+        }
       }
+
       in.clear();
-      list.addFirst({name, numbers});
+      list.insert({name, numbers}, lastPair);
+      ++lastPair;
     }
+    return true;
   }
+/*
+// Функция должна вернуть std::string элемент по его координатам x и y в списке с std::pair 
+// std::pair< std::string, List< size_t > > - std::string название списка List< size_t > сам список
+  std::string getElem(size_t x, size_t y, List< std::pair< std::string, List< size_t > > > & list)
+  {
+    return;
+  }
+
+  void output(List< std::pair< std::string, List< size_t > > > & list)
+  {
+    return;
+  }*/
 }
 
 
@@ -334,7 +383,8 @@ int main()
 {
   namespace a = afanasev;
   a::List< std::pair< std::string, a::List< size_t > > > list;
-  a::input(std::cin, list);
+  bool flag = a::input(std::cin, list);
+  //a::output(list);
 
   return 0;
 }
