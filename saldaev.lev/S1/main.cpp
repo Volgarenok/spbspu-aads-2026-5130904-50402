@@ -48,17 +48,18 @@ template < class T > struct LCIter
 
   bool hasNext() const noexcept;
   bool hasPrev() const noexcept;
-  LIter &operator++();
-  LIter operator++(int);
-  LIter &operator--();
-  LIter operator--(int);
+  LCIter< T > &operator++();
+  LCIter< T > operator++(int);
+  LCIter< T > &operator--();
+  LCIter< T > operator--(int);
   bool operator==(const LCIter &other) const;
+  bool operator!=(const LCIter &other) const;
   bool isBegin() const noexcept;
   bool isEnd() const noexcept;
   const T &getData() const noexcept;
 
 private:
-  explicit LCIter(typename List< T >::Node *curr);
+  explicit LCIter(typename List< T >::Node *node);
   typename List< T >::Node *curr;
 };
 
@@ -68,11 +69,12 @@ template < class T > struct LIter
 
   bool hasNext() const noexcept;
   bool hasPrev() const noexcept;
-  LIter &operator++();
-  LIter operator++(int);
-  LIter &operator--();
-  LIter operator--(int);
-  bool operator==(const LCIter &other) const;
+  LIter< T > &operator++();
+  LIter< T > operator++(int);
+  LIter< T > &operator--();
+  LIter< T > operator--(int);
+  bool operator==(const LIter &other) const;
+  bool operator!=(const LIter &other) const;
   bool isBegin() const noexcept;
   bool isEnd() const noexcept;
   const T &getData() const noexcept;
