@@ -306,7 +306,7 @@ LCIter< T > LCIter< T >::operator--(int)
 template < class T >
 bool LCIter< T >::operator==(const LCIter &other) const
 {
-  return this->curr == other.curr;
+  return curr == other.curr;
 }
 
 template < class T >
@@ -318,19 +318,19 @@ bool LCIter< T >::operator!=(const LCIter &other) const
 template < class T >
 bool LCIter< T >::isBegin() const noexcept
 {
-  return curr->prev;
+  return !hasPrev();
 }
 
 template < class T >
 bool LCIter< T >::isEnd() const noexcept
 {
-  return !(curr->next);
+  return !hasNext();
 }
 
 template < class T >
 const T &LCIter< T >::getData() const noexcept
 {
-  return !(curr->data);
+  return curr->data;
 }
 
 //
@@ -386,25 +386,25 @@ LIter< T > LIter< T >::operator--(int)
 template < class T >
 bool LIter< T >::operator==(const LIter &other) const
 {
-  return this->curr == other.curr;
+  return curr == other.curr;
 }
 
 template < class T >
 bool LIter< T >::operator!=(const LIter &other) const
 {
-  return !(*this == other)
+  return !(*this == other);
 }
 
 template < class T >
 bool LIter< T >::isBegin() const noexcept
 {
-  return !(curr->prev)
+  return !hasPrev();
 }
 
 template < class T >
 bool LIter< T >::isEnd() const noexcept
 {
-  return !(curr->next)
+  return !hasNext();
 }
 
 template < class T >
