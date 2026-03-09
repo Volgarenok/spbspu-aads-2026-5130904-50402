@@ -1,7 +1,7 @@
 #include "list.hpp"
-#include "node.hpp"
 #include <cstddef>
 #include <utility>
+#include "node.hpp"
 namespace dirko
 {
   template < class T >
