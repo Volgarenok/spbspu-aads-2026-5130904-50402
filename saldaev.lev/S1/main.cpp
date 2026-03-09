@@ -235,3 +235,71 @@ template < class T > size_t List< T >::getLength() const noexcept
 {
   return length;
 }
+
+//
+
+template < class T >
+LCIter< T >::LCIter(typename List< T >::Node *node):
+  curr(node)
+{}
+
+template < class T > bool LCIter< T >::hasNext() const noexcept
+{
+  return curr->next;
+}
+
+template < class T > bool LCIter< T >::hasPrev() const noexcept
+{
+  return curr->prev;
+}
+
+template < class T > LCIter< T > &LCIter< T >::operator++()
+{
+  curr = curr->next;
+  return *this;
+}
+
+template < class T > LCIter< T > LCIter< T >::operator++(int)
+{
+  LCIter< T > old = *this;
+  curr = curr->next;
+  return old;
+}
+
+template < class T > LCIter< T > &LCIter< T >::operator--()
+{
+  curr = curr->prev;
+  return *this;
+}
+
+template < class T > LCIter< T > LCIter< T >::operator--(int)
+{
+  LCIter< T > old = *this;
+  curr = curr->prev;
+  return old;
+}
+
+template < class T > bool LCIter< T >::operator==(const LCIter &other) const
+{
+  return this->curr == other.curr;
+}
+
+template < class T > bool LCIter< T >::operator!=(const LCIter &other) const
+{
+  return !(*this == other);
+}
+
+template < class T > bool LCIter< T >::isBegin() const noexcept
+{
+  return curr->prev;
+}
+
+template < class T > bool LCIter< T >::isEnd() const noexcept
+{
+  return !(curr->next);
+}
+
+template < class T > const T &LCIter< T >::getData() const noexcept
+{
+  return !(curr->data);
+}
