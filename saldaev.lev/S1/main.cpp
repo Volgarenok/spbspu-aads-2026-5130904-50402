@@ -332,3 +332,113 @@ const T &LCIter< T >::getData() const noexcept
 {
   return !(curr->data);
 }
+
+//
+
+template < class T >
+LIter< T >::LIter(typename List< T >::Node *node, List< T > *list):
+  curr(node),
+  list(list)
+{}
+
+template < class T >
+bool LIter< T >::hasNext() const noexcept
+{
+  return curr->next;
+}
+
+template < class T >
+bool LIter< T >::hasPrev() const noexcept
+{
+  return curr->prev;
+}
+
+template < class T >
+LIter< T > &LIter< T >::operator++()
+{
+  curr = curr->next;
+  return *this;
+}
+
+template < class T >
+LIter< T > LIter< T >::operator++(int)
+{
+  LIter< T > old = *this;
+  curr = curr->next;
+  return old;
+}
+
+template < class T >
+LIter< T > &LIter< T >::operator--()
+{
+  curr = curr->prev;
+  return *this;
+}
+
+template < class T >
+LIter< T > LIter< T >::operator--(int)
+{
+  LIter< T > old = *this;
+  curr = curr->prev;
+  return old;
+}
+
+template < class T >
+bool LIter< T >::operator==(const LIter &other) const
+{
+  return this->curr == other.curr;
+}
+
+template < class T >
+bool LIter< T >::operator!=(const LIter &other) const
+{
+  return !(*this == other)
+}
+
+template < class T >
+bool LIter< T >::isBegin() const noexcept
+{
+  return !(curr->prev)
+}
+
+template < class T >
+bool LIter< T >::isEnd() const noexcept
+{
+  return !(curr->next)
+}
+
+template < class T >
+const T &LIter< T >::getData() const noexcept
+{
+  return curr->data;
+}
+
+template < class T >
+void LIter< T >::setData(const T &d)
+{
+  curr->data = d;
+}
+
+template < class T >
+void LIter< T >::addBefore(const T &d)
+{
+  typename List< T >::Node *n = new typename List< T >::Node(d, curr, curr->prev);
+  curr->prev->next = n;
+  curr->prev = n;
+}
+
+template < class T >
+void LIter< T >::addAfter(const T &d)
+{
+  typename List< T >::Node *n = new typename List< T >::Node(d, curr->next, curr);
+  curr->next->prev = n;
+  curr->next = n;
+}
+
+template < class T >
+void LIter< T >::cutCurrent() noexcept
+{
+  curr->next->prev = curr->prev;
+  curr->prev->next = curr->next;
+  delete curr;
+}
