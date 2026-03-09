@@ -1,6 +1,6 @@
 #include <iostream>
-
+#include "credentials.hpp"
 int main ()
 {
-  std::cout << "terentev.roman" << '\n';
+  terentev::out_credentials(std::cout) << '\n';
 }
