@@ -1,5 +1,5 @@
-#ifndef LIST_HPP
-#define LIST_HPP
+#ifndef LIST_CPP
+#define LIST_CPP
 #include "node.hpp"
 
 namespace khalikov
@@ -11,8 +11,11 @@ namespace khalikov
     Node< T > * h;
   public:
     List();
-    ~List();
-    List operator=(const List< T > & h);
+    ~List()
+    {
+      clear(h);
+    }
+    List operator=(const List< T > & other);
   };
 }
 
