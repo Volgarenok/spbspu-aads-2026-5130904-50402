@@ -1,10 +1,11 @@
 #ifndef ITERS_HPP
 #define ITERS_HPP
-#include "list.hpp"
 #include "node.hpp"
 
 namespace dirko
 {
+  template < class T >
+  class List;
   template < class T >
   class Iter
   {

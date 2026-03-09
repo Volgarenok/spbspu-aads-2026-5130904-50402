@@ -126,4 +126,27 @@ namespace dirko
     tail_->next = nullptr;
     --size_;
   }
+  template < class T >
+  Iter< T > List< T >::begin()
+  {
+    return Iter< T >{fake_->next};
+  }
+
+  template < class T >
+  Iter< T > List< T >::end()
+  {
+    return Iter< T >{tail_};
+  }
+
+  template < class T >
+  CIter< T > List< T >::cbegin() const
+  {
+    return CIter< T >{fake_->next};
+  }
+
+  template < class T >
+  CIter< T > List< T >::cend() const
+  {
+    return CIter< T >{tail_};
+  }
 }

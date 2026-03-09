@@ -19,7 +19,7 @@ namespace dirko
   template < class T >
   bool Iter< T >::operator!=(const Iter< T > &rhs) const
   {
-    return !*this == rhs;
+    return !(*this == rhs);
   }
   template < class T >
   Iter< T > &Iter< T >::operator++()
@@ -64,7 +64,7 @@ namespace dirko
   template < class T >
   bool CIter< T >::operator!=(const Iter< T > &rhs) const
   {
-    return !*this == rhs;
+    return !(*this == rhs);
   }
   template < class T >
   CIter< T > &CIter< T >::operator++()

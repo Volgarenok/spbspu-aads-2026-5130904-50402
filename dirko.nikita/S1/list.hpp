@@ -1,7 +1,8 @@
 #ifndef LIST_HPP
 #define LIST_HPP
-#include "node.hpp"
 #include <cstddef>
+#include "node.hpp"
+#include "iters.hpp"
 
 namespace dirko
 {
@@ -15,6 +16,10 @@ namespace dirko
     List &operator=(const List< T > &);
     List &operator=(List< T > &&) noexcept;
     ~List();
+    Iter< T > begin();
+    Iter< T > end();
+    CIter< T > cbegin() const;
+    CIter< T > cend() const;
     void push_front(const T &);
     void push_back(const T &);
     void pop_front();
