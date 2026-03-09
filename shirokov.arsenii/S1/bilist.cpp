@@ -1,6 +1,5 @@
 #include "bilist.hpp"
 #include <algorithm>
-#include <stdexcept>
 
 template class shirokov::BiList< int >;
 template class shirokov::BLIter< int >;
@@ -108,4 +107,56 @@ template < class T >
 const T& shirokov::BiList< T >::back() const
 {
   return tail->value;
+}
+
+template < class T >
+T& shirokov::BLIter< T >::operator*()
+{
+  return curr->value;
+}
+
+template < class T >
+shirokov::BLIter< T > shirokov::BLIter< T >::operator++()
+{
+  curr = curr->next;
+  return curr;
+}
+
+template < class T >
+shirokov::BLIter< T > shirokov::BLIter< T >::operator--()
+{
+  curr = curr->prev;
+  return curr;
+}
+
+template < class T >
+void shirokov::BiList< T >::push_front(const T& value)
+{
+  if (!head)
+  {
+    head = new Node{value, nullptr, nullptr};
+    tail = head;
+  }
+  else
+  {
+    Node* prev = new Node{value, head, nullptr};
+    head->prev = prev;
+    head = prev;
+  }
+}
+
+template < class T >
+void shirokov::BiList< T >::push_front(T&& value)
+{
+  if (!head)
+  {
+    head = new Node{std::move(value), nullptr, nullptr};
+    tail = head;
+  }
+  else
+  {
+    Node* prev = new Node{std::move(value), head, nullptr};
+    head->prev = prev;
+    head = prev;
+  }
 }
