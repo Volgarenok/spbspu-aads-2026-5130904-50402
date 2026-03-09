@@ -5,7 +5,8 @@
 
 namespace dirko
 {
-  template < class T > class List
+  template < class T >
+  class List
   {
   public:
     List();
@@ -24,6 +25,7 @@ namespace dirko
 
   private:
     Node< T > *fake_;
+    Node< T > *tail_;
     size_t size_;
   };
 
