@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(test_move_assignment)
   list2 = std::move(list1);
 
   BOOST_CHECK_EQUAL(list2.size(), 1);
-} 
+}
 
 BOOST_AUTO_TEST_CASE(test_destructor)
 {
@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE(test_pop_back)
   BOOST_CHECK_EQUAL(*list.begin(), 1);
 }
 
- BOOST_AUTO_TEST_CASE(test_clear)
+BOOST_AUTO_TEST_CASE(test_clear)
 {
   List< int > list;
   list.push_back(1);
@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE(test_pop_back)
   list.clear();
   BOOST_CHECK_EQUAL(list.size(), 0);
   BOOST_CHECK(list.begin() == list.end());
-} 
+}
 
 BOOST_AUTO_TEST_CASE(test_size)
 {
