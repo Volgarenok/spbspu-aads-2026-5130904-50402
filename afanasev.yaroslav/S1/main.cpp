@@ -2,7 +2,6 @@
 #include <utility>
 #include <string>
 
-
 namespace afanasev
 {
   template< class T > class Node;
@@ -10,7 +9,6 @@ namespace afanasev
   template< class T > class LIter;
   template< class T > class LCIter;
 
-// узел
   template< class T >
   class Node
   {
@@ -19,7 +17,7 @@ namespace afanasev
     Node< T > * next_;
   };
 
-// Список я так понял именно с ним будет работать пользователь
+
   template< class T >
   class List
   {
@@ -58,7 +56,7 @@ namespace afanasev
   List< T >::~List()
   {
     clear();
-    delete fake_;
+    ::operator delete fake_;
   }
 
   template < class T >
@@ -109,7 +107,7 @@ namespace afanasev
     {
       return;
     }
-    
+
     delete tmp->val_;
     pos.curr_->next_ = tmp->next_;
     delete tmp;
@@ -200,8 +198,6 @@ namespace afanasev
   }
 
 
-
-// Обычный итератор
   template < class T >
   class LIter
   {
@@ -261,8 +257,6 @@ namespace afanasev
   }
 
 
-
-// Константный итератор
   template < class T >
   class LCIter
   {
@@ -315,10 +309,6 @@ namespace afanasev
     return curr_ != other.curr_;
   }
 
-
-
-// Функции для программы
-// Ввод создание списка
   bool input(std::istream & in, List< std::pair< std::string, List< size_t > > > & list)
   {
     std::string name;
@@ -335,7 +325,7 @@ namespace afanasev
     {
       numbers.addFirst(num);
       LIter< size_t > lastNum = numbers.begin();
-  
+
       while (in >> num)
       {
         numbers.insert(num, lastNum);
@@ -357,7 +347,7 @@ namespace afanasev
       {
         numbers.addFirst(num);
         LIter< size_t > lastNum = numbers.begin();
-  
+
         while (in >> num)
         {
           numbers.insert(num, lastNum);
@@ -468,7 +458,6 @@ namespace afanasev
     outputNumbers(out, maxLen, numbers);
   }
 }
-
 
 int main()
 {
