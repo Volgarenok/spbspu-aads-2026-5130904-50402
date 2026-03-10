@@ -32,6 +32,7 @@ BOOST_AUTO_TEST_CASE(test_move_constructor)
 
   List< int > list2(std::move(list1));
   BOOST_CHECK_EQUAL(list2.size(), 2);
+  BOOST_CHECK_EQUAL(list1.size(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(test_copy_assignment)
@@ -55,6 +56,7 @@ BOOST_AUTO_TEST_CASE(test_move_assignment)
   list2 = std::move(list1);
 
   BOOST_CHECK_EQUAL(list2.size(), 1);
+  BOOST_CHECK_EQUAL(list1.size(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(test_destructor)

@@ -51,6 +51,7 @@ namespace dirko
     size_(other.size_)
   {
     other.fake_ = static_cast< Node< T > * >(::operator new(sizeof(Node< T >)));
+    other.size_ = 0;
   }
   template < class T >
   List< T >::List(const List< T > &other):
@@ -75,6 +76,7 @@ namespace dirko
     size_ = other.size_;
     tail_ = other.tail_;
     other.fake_ = static_cast< Node< T > * >(::operator new(sizeof(Node< T >)));
+    other.size_ = 0;
     return *this;
   }
   template < class T >

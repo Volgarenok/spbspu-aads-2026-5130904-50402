@@ -2,15 +2,17 @@
 #include "iters.hpp"
 #include "list.hpp"
 #include <iostream>
+#include <limits>
+#include <ostream>
+#include <stdexcept>
 #include <string>
-#include <type_traits>
 
 void dirko::input(std::istream &is, l_pair_t &seq)
 {
   std::string title;
   while (is >> title) {
-    List< long long > nums;
-    long long num;
+    List< size_t > nums;
+    size_t num;
     while (is >> num) {
       nums.push_back(num);
     }
@@ -19,7 +21,7 @@ void dirko::input(std::istream &is, l_pair_t &seq)
   }
 }
 
-dirko::List< dirko::List< long long > > dirko::process(l_pair_t seq)
+dirko::List< dirko::List< size_t > > dirko::process(const l_pair_t &seq)
 {
   size_t maxLen = 0;
   ci_pair_t seq_iter = seq.cbegin();
@@ -27,13 +29,13 @@ dirko::List< dirko::List< long long > > dirko::process(l_pair_t seq)
     maxLen = std::max(maxLen, (*seq_iter).second.size());
     ++seq_iter;
   }
-  List< List< long long > > list;
+  List< List< size_t > > list;
   for (size_t i = 0; i < maxLen; ++i) {
-    List< long long > row;
+    List< size_t > row;
     seq_iter = seq.cbegin();
     while (seq_iter != seq.cend()) {
       if (i < (*seq_iter).second.size()) {
-        CIter< long long > row_iter = (*seq_iter).second.cbegin();
+        CIter< size_t > row_iter = (*seq_iter).second.cbegin();
         for (size_t j = 0; j < i; ++j) {
           ++row_iter;
         }
@@ -46,31 +48,40 @@ dirko::List< dirko::List< long long > > dirko::process(l_pair_t seq)
   return list;
 }
 
-void dirko::output(std::ostream &os, l_pair_t titles, List< List< long long > > list)
+std::ostream &dirko::printSum(std::ostream &os, const l_pair_t &names, const List< List< size_t > > &list)
 {
-  printNames(os, titles);
-  os << '\n';
-  printList(os, list);
-  os << '\n';
-  CIter< List< long long > > iter = list.cbegin();
-  bool space = false;
+  printNames(os, names) << '\n';
+  if (list.size() == 0) {
+    os << "0";
+    return os;
+  }
+  printList(os, list) << '\n';
+  CIter< List< size_t > > iter = list.cbegin();
+  List< size_t > sums;
   while (iter != list.cend()) {
-    long long sum = 0;
-    CIter< long long > it = (*iter).cbegin();
+    size_t sum = 0;
+    CIter< size_t > it = (*iter).cbegin();
     while (it != (*iter).cend()) {
+      if (std::numeric_limits< size_t >::max() - sum < *it) {
+        throw std::overflow_error("overflow_error");
+      }
       sum += *it;
       ++it;
     }
-    if (space) {
-      os << ' ';
-    }
-    os << sum;
+    sums.push_back(sum);
     ++iter;
-    space = true;
   }
+  CIter< size_t > it = sums.cbegin();
+  os << *it;
+  ++it;
+  while (it != sums.cend()) {
+    os << ' ' << *it;
+    ++it;
+  }
+  return os;
 }
 
-void dirko::printNames(std::ostream &os, l_pair_t names)
+std::ostream &dirko::printNames(std::ostream &os, const l_pair_t &names)
 {
   ci_pair_t iter = names.cbegin();
   os << (*iter).first;
@@ -79,17 +90,18 @@ void dirko::printNames(std::ostream &os, l_pair_t names)
     os << ' ' << (*iter).first;
     ++iter;
   }
+  return os;
 }
 
-void dirko::printList(std::ostream &os, List< List< long long > > list)
+std::ostream &dirko::printList(std::ostream &os, const List< List< size_t > > &list)
 {
   bool lf = false;
-  CIter< List< long long > > iter = list.cbegin();
+  CIter< List< size_t > > iter = list.cbegin();
   while (iter != list.cend()) {
     if (lf) {
       os << '\n';
     }
-    CIter< long long > it = (*iter).cbegin();
+    CIter< size_t > it = (*iter).cbegin();
     os << *it;
     ++it;
     while (it != (*iter).cend()) {
@@ -99,4 +111,5 @@ void dirko::printList(std::ostream &os, List< List< long long > > list)
     ++iter;
     lf = true;
   }
+  return os;
 }
