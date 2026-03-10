@@ -108,9 +108,8 @@ namespace dirko
   template < class T >
   void List< T >::swap(List< T > &rhs) noexcept
   {
-    Node< T > *tmp = rhs.fake_;
-    rhs.fake_ = fake_;
-    fake_ = tmp;
+    std::swap(fake_, rhs.fake_);
+    std::swap(tail_, rhs.tail_);
     std::swap(size_, rhs.size_);
   }
   template < class T >
@@ -121,7 +120,7 @@ namespace dirko
   template < class T >
   void List< T >::push_front(const T &val)
   {
-    Node< T > *n = new Node< T >{val, fake_->next, fake_};
+    Node< T > *n = new Node< T >{val, fake_->next, nullptr};
     if (!size_) {
       fake_->next = n;
       tail_ = n;

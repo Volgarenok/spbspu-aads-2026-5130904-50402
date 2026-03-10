@@ -14,8 +14,8 @@ namespace dirko
     T &operator*() const;
     Iter &operator++();
     Iter &operator--();
-    Iter &operator++(int);
-    Iter &operator--(int);
+    Iter operator++(int);
+    Iter operator--(int);
     bool operator==(const Iter< T > &) const;
     bool operator!=(const Iter< T > &) const;
 
@@ -31,8 +31,8 @@ namespace dirko
     const T &operator*() const;
     CIter &operator++();
     CIter &operator--();
-    CIter &operator++(int);
-    CIter &operator--(int);
+    CIter operator++(int);
+    CIter operator--(int);
     bool operator==(const CIter< T > &) const;
     bool operator!=(const CIter< T > &) const;
 
@@ -66,9 +66,9 @@ namespace dirko
     return *this;
   }
   template < class T >
-  Iter< T > &Iter< T >::operator++(int)
+  Iter< T > Iter< T >::operator++(int)
   {
-    Iter< T > &prev = curr_;
+    Iter< T > prev = curr_;
     curr_ = curr_->next;
     return prev;
   }
@@ -79,9 +79,9 @@ namespace dirko
     return *this;
   }
   template < class T >
-  Iter< T > &Iter< T >::operator--(int)
+  Iter< T > Iter< T >::operator--(int)
   {
-    Iter< T > &next = curr_;
+    Iter< T > next = curr_;
     curr_ = curr_->prev;
     return next;
   }
@@ -111,9 +111,9 @@ namespace dirko
     return *this;
   }
   template < class T >
-  CIter< T > &CIter< T >::operator++(int)
+  CIter< T > CIter< T >::operator++(int)
   {
-    CIter< T > &prev = curr_;
+    CIter< T > prev = curr_;
     curr_ = curr_->next;
     return prev;
   }
@@ -124,9 +124,9 @@ namespace dirko
     return *this;
   }
   template < class T >
-  CIter< T > &CIter< T >::operator--(int)
+  CIter< T > CIter< T >::operator--(int)
   {
-    CIter< T > &next = curr_;
+    CIter< T > next = curr_;
     curr_ = curr_->prev;
     return next;
   }

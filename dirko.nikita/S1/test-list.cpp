@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(test_end)
   list.push_back(1);
 
   Iter< int > it = list.begin();
-  ++it;
+  it++;
   BOOST_CHECK(it == list.end());
 }
 
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE(test_push_back)
 
   Iter< int > it = list.begin();
   BOOST_CHECK_EQUAL(*it, 1);
-  ++it;
+  it++;
   BOOST_CHECK_EQUAL(*it, 2);
 }
 
