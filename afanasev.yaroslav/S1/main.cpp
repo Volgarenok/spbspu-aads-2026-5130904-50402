@@ -375,20 +375,22 @@ namespace afanasev
 
       for (LIter< LIter< size_t > > numIt = numbers.begin(); numIt != numsEnd; ++numIt)
       {
-        if (!firstCol) out << ' ';
-        firstCol = false;
-
         LIter< size_t > & current = * numIt;
 
         if (current != numEnd)
         {
+          if (!firstCol)
+          {
+            out << ' ';
+          }
+          else
+          {
+            firstCol = false;
+          }
+
           out << * current;
           rowSum += * current;
           ++current;
-        }
-        else
-        {
-          out << '_';
         }
       }
       out << '\n';
@@ -408,12 +410,13 @@ namespace afanasev
 
     LIter< size_t > sumsEnd(nullptr);
 
-    out << '\n';
-
     for (LIter< size_t > sIt = sums.begin(); sIt != sumsEnd; ++sIt)
     {
-        if (sIt != sums.begin()) out << ' ';
-        out << * sIt;
+      if (sIt != sums.begin())
+      {
+        out << ' ';
+      }
+      out << * sIt;
     }
     out << '\n';
   }
@@ -430,8 +433,17 @@ namespace afanasev
 
     for (LIter< std::pair< std::string, List< size_t > > > it = list.begin(); it != end; ++it)
     {
-      out << (* it).first << ' ';
-      ++lenght;
+      if (lenght)
+      {
+        out << ' ' << (* it).first;
+        ++lenght;
+      }
+      else
+      {
+        out << (* it).first;
+        ++lenght;
+      }
+      
 
       List< size_t > & numList = (* it).second;
       size_t sz = numList.size();
