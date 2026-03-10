@@ -56,7 +56,7 @@ namespace afanasev
   List< T >::~List()
   {
     clear();
-    ::operator delete fake_;
+    delete fake_;
   }
 
   template < class T >
@@ -103,15 +103,13 @@ namespace afanasev
   void List< T >::deleteNext(LIter< T > pos) noexcept
   {
     Node< T > * tmp = pos.curr_->next_;
-    if (!(tmp->next_))
+    if (!tmp)
     {
       return;
     }
 
-    delete tmp->val_;
     pos.curr_->next_ = tmp->next_;
     delete tmp;
-
     size_--;
   }
 
