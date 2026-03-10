@@ -16,15 +16,15 @@ namespace muhamadiarov
     List& operator=(List< T >&& other) noexcept;
     ~List() noexcept;
 
-    void push_front(const T& value);
-    void push_back(const T& value);
-    void pop_front() noexcept;
-    void pop_back() noexcept;
+    void pushFront(const T& value);
+    void pushBack(const T& value);
+    void popFront() noexcept;
+    void popBack() noexcept;
     void clear() noexcept;
     size_t size() const noexcept;
   private:
     Node< T >* head_;
-    size_t count_;
+    size_t size_;
   };
 };
 #endif
