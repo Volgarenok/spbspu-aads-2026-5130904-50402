@@ -1,6 +1,7 @@
 #include <iostream>
 #include <utility>
 #include <string>
+#include <limits>
 
 namespace afanasev
 {
@@ -291,7 +292,7 @@ namespace afanasev
   template < class T >
   LCIter< T > & LCIter< T >::operator++(int)
   {
-    curr_ = curr_->val_;
+    curr_ = curr_->next_;
     return * this;
   }
 
@@ -362,6 +363,12 @@ namespace afanasev
 
   void outputNumbers(std::ostream & out, size_t maxLen, List< LIter< size_t > > numbers)
   {
+    if (!maxLen)
+    {
+      out << "0\n";
+      return;
+    }
+
     LIter< size_t > numEnd(nullptr);
     List< size_t > sums;
     LIter< size_t > lastSum(nullptr);
@@ -389,6 +396,12 @@ namespace afanasev
           }
 
           out << * current;
+
+          if (rowSum > std::numeric_limits< size_t >::max() - * current)
+          {
+            throw std::overflow_error("Overflow");
+          }
+
           rowSum += * current;
           ++current;
         }
@@ -471,16 +484,25 @@ namespace afanasev
 int main()
 {
   namespace a = afanasev;
-  a::List< std::pair< std::string, a::List< size_t > > > list;
-  bool flag = a::input(std::cin, list);
 
-  if (flag)
+  try
   {
-    a::output(std::cout, list);
+    a::List< std::pair< std::string, a::List< size_t > > > list;
+    bool flag = a::input(std::cin, list);
+
+    if (flag)
+    {
+      a::output(std::cout, list);
+    }
+    else
+    {
+      std::cout << "0\n";
+    }
   }
-  else
+  catch (const std::overflow_error & e)
   {
-    std::cout << '0';
+    std::cerr << e.what() << std::endl;
+    return 1;
   }
   return 0;
 }
