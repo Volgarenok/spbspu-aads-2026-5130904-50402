@@ -443,7 +443,6 @@ namespace afanasev
         out << (* it).first;
         ++lenght;
       }
-      
 
       List< size_t > & numList = (* it).second;
       size_t sz = numList.size();
