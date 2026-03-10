@@ -501,7 +501,7 @@ int main()
   }
   catch (const std::overflow_error & e)
   {
-    std::cerr << e.what() << std::endl;
+    std::cerr << '\n' << e.what() << '\n';
     return 1;
   }
   return 0;
