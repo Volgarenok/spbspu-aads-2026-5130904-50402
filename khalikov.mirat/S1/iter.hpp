@@ -1,9 +1,16 @@
 #ifndef ITER_HPP
 #define ITER_HPP
-#include "list.hpp"
+
+#include <cstddef>
 
 namespace khalikov
 {
+  template< class T >
+  class List;
+
+  template< class T >
+  class Node;
+
   template< class T >
   class LIter
   {

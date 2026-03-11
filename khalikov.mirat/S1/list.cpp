@@ -1,6 +1,5 @@
 #ifndef LIST_CPP
 #define LIST_CPP
-#include "node.hpp"
 #include "list.hpp"
 
 namespace khalikov
