@@ -94,6 +94,49 @@ namespace khalikov
     Node< T > * new_element = new Node< T > {value, pos.curr->next};
     pos.curr->next = new_element;
   }
+
+  template< class T >
+  void List< T >::merge(List< T > & other)
+  {
+    Node< T > * res_h = nullptr;
+    if (h->val > other.h->val)
+    {
+      res_h = other.h;
+      other.h = other.h->next;
+    }
+    else
+    {
+      res_h = h;
+      h = h->next;
+    }
+    Node< T > * res_tail = res_h;
+    res_tail->next = nullptr;
+    while (h && other.h)
+    {
+      if (h->val > other.h->val)
+      {
+        res_tail->next = other.h;
+        other.h = other.h->next;
+      }
+      else
+      {
+        res_tail->next = h;
+        h = h->next;
+      }
+      res_tail = res_tail->next;
+      res_tail->next = nullptr;
+    }
+    if (h)
+    {
+      res_tail->next = h;
+    }
+    if (other.h)
+    {
+      res_tail->next = other.h;
+    }
+    other.h = nullptr;
+    h = res_h;
+  }
 }
 
 #endif
