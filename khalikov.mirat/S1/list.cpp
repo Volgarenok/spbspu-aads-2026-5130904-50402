@@ -1,22 +1,53 @@
 #ifndef LIST_CPP
 #define LIST_CPP
 #include "node.hpp"
+#include "list.hpp"
 
 namespace khalikov
 {
   template< class T >
-  class List
+  void List< T >::clear()
   {
-  private:
-    Node< T > * h;
-  public:
-    List();
-    ~List()
+    while(h)
     {
-      clear(h);
+      Node< T > * temp = h->next;
+      delete h;
+      h = temp;
     }
-    List operator=(const List< T > & other);
-  };
+  }
+  template< class T >
+  List< T >::List()
+  {
+    h = nullptr;
+  }
+  template< class T >
+  List< T >::~List()
+  {
+    clear();
+  }
+  template< class T >
+  List< T > & List< T >::operator=(const List< T > & other)
+  {}
+  template< class T >
+  List< T >::List(const List< T > & other)
+  {
+    if(!other.h)
+    {
+      h = nullptr;
+      return;
+    }
+
+    h = new Node< T > {other.h->val, nullptr};
+    Node< T > * curr = h;
+    Node< T > * curr_other = other.h->next;
+
+    while(curr_other)
+    {
+      curr->next = new Node< T > {curr_other->val, nullptr};
+      curr = curr->next;
+      curr_other = curr_other->next;
+    }
+  }
 }
 
 #endif

@@ -9,10 +9,12 @@ namespace khalikov
   {
   private:
     Node< T > * h;
+    void clear();
   public:
     List();
     ~List();
-    List operator=(const List< T > & h);
+    List< T > & operator=(const List< T > & h);
+    List(const List< T > & other);
   };
 }
 
