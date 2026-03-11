@@ -1,26 +1,31 @@
-#ifndef ITER_CPP
-#define ITER_CPP
+#ifndef CITER_CPP
+#define CITER_CPP
 
-#include "iter.hpp"
+#include "citer.hpp"
 #include "node.hpp"
 #include <stdexcept>
 
 namespace khalikov
 {
   template< class T >
-  LIter< T >::LIter()
+  LCIter< T >::LCIter()
   {
     curr = nullptr;
   }
   template< class T >
-  LIter< T >::LIter(Node< T > * h)
+  LCIter< T >::LCIter(const Node< T > * h)
   {
     curr = h;
   }
   template< class T >
-  T & LIter< T >::operator[](size_t index)
+  LCIter< T >::LCIter(const LIter< T > & other)
   {
-    Node < T > * temp = curr;
+    curr = other.curr;
+  }
+  template< class T >
+  const T & LCIter< T >::operator[](size_t index) const
+  {
+    const Node < T > * temp = curr;
     for (size_t k = 0; k < index; k++)
     {
       if (!temp)
@@ -32,7 +37,7 @@ namespace khalikov
     return temp->val;
   }
   template< class T >
-  T & LIter< T >::operator*()
+  const T & LCIter< T >::operator*() const
   {
     if (!curr)
     {
@@ -41,7 +46,7 @@ namespace khalikov
     return curr->val;
   }
   template< class T >
-  T * LIter< T >::operator->()
+  const T * LCIter< T >::operator->() const
   {
     if (!curr)
     {
@@ -50,7 +55,7 @@ namespace khalikov
     return &(curr->val);
   }
   template< class T >
-  LIter< T > & LIter< T >::operator++()
+  LCIter< T > & LCIter< T >::operator++()
   {
     if (!curr)
     {
@@ -60,19 +65,19 @@ namespace khalikov
     return *this;
   }
   template< class T >
-  LIter< T > LIter< T >::operator++(int)
+  LCIter< T > LCIter< T >::operator++(int)
   {
-    LIter< T > temp = *this;
+    LCIter< T > temp = *this;
     ++(*this);
     return temp;
   }
   template< class T >
-  bool LIter< T >::operator==(const LIter< T > & other) const
+  bool LCIter< T >::operator==(const LCIter< T > & other) const
   {
     return curr == other.curr;
   }
   template< class T >
-  bool LIter< T >::operator!=(const LIter< T > & other) const
+  bool LCIter< T >::operator!=(const LCIter< T > & other) const
   {
     return !(*this == other);
   }
