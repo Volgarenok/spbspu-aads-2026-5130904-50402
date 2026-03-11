@@ -109,6 +109,13 @@ int main()
 {}
 
 template < class T >
+saldaev::List< T >::Node::Node(const T &d, Node *n, Node *p):
+  data(d),
+  next(n),
+  prev(v)
+{}
+
+template < class T >
 saldaev::List< T >::List():
   head(nullptr),
   tail(nullptr),
