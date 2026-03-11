@@ -2,9 +2,13 @@
 #define LIST_HPP
 #include "node.hpp"
 #include "iter.hpp"
+#include "citer.hpp"
 
 namespace khalikov
 {
+  template< class T >
+  class LCIter;
+
   template< class T >
   class LIter;
 

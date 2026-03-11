@@ -4,6 +4,7 @@
 
 namespace khalikov
 {
+
   template< class T >
   void List< T >::clear()
   {
@@ -14,16 +15,19 @@ namespace khalikov
       h = temp;
     }
   }
+
   template< class T >
   List< T >::List()
   {
     h = nullptr;
   }
+
   template< class T >
   List< T >::~List()
   {
     clear();
   }
+
   template< class T >
   List< T > & List< T >::operator=(const List< T > & other)
   {
@@ -36,6 +40,7 @@ namespace khalikov
     }
     return *this;
   }
+
   template< class T >
   List< T >::List(const List< T > & other)
   {
@@ -55,6 +60,39 @@ namespace khalikov
       curr = curr->next;
       curr_other = curr_other->next;
     }
+  }
+
+  template< class T >
+  LIter< T > List< T >::begin()
+  {
+    return LIter< T >(h);
+  }
+
+  template< class T >
+  LCIter< T > List< T >::cbegin() const
+  {
+    return LCIter< T >(h);
+  }
+
+  template< class T >
+  bool List< T >::empty() const
+  {
+    return h == nullptr;
+  }
+
+  template< class T >
+  void List< T >::erase_after(LIter< T > pos)
+  {
+    Node< T > * erase = pos.curr->next;
+    pos.curr->next = erase->next;
+    delete erase;
+  }
+
+  template< class T >
+  void List< T >::insert_after(LIter< T > pos, const T & value)
+  {
+    Node< T > * new_element = new Node< T > {value, pos.curr->next};
+    pos.curr->next = new_element;
   }
 }
 
