@@ -302,3 +302,103 @@ size_t saldaev::List< T >::getLength() const noexcept
 {
   return length;
 }
+
+template < class T >
+saldaev::LCIter< T >::LCIter(typename List< T >::Node *node):
+  curr(node),
+  valid(true)
+{
+  if (!node) {
+    valid = false;
+  } else if (!(node->next) || !(node->prev)) {
+    valid = false;
+  }
+}
+
+template < class T >
+bool saldaev::LCIter< T >::isValid() const noexcept
+{
+  return valid;
+}
+
+template < class T >
+bool saldaev::LCIter< T >::hasNext() const noexcept
+{
+  return isValid() && (curr->next->next != nullptr);
+}
+
+template < class T >
+bool saldaev::LCIter< T >::hasPrev() const noexcept
+{
+  return isValid() && (curr->prev->prev != nullptr);
+}
+
+template < class T >
+saldaev::LCIter< T > &saldaev::LCIter< T >::operator++() noexcept
+{
+  if (isValid()) {
+    curr = curr->next;
+    valid = curr->next;
+  }
+  return *this;
+}
+
+template < class T >
+saldaev::LCIter< T > saldaev::LCIter< T >::operator++(int) noexcept
+{
+  LCIter< T > ret = *this;
+  if (isValid()) {
+    curr = curr->next valid = curr->next;
+  }
+  return ret;
+}
+
+template < class T >
+saldaev::LCIter< T > &saldaev::LCIter< T >::operator--() noexcept
+{
+  if (isValid()) {
+    curr = curr->prev;
+    valid = curr->prev;
+  }
+  return *this;
+}
+
+template < class T >
+saldaev::LCIter< T > saldaev::LCIter< T >::operator--(int) noexcept
+{
+  LCIter< T > ret = *this;
+  if (isValid()) {
+    curr = curr->prev valid = curr->prev;
+  }
+  return ret;
+}
+
+template < class T >
+bool saldaev::LCIter< T >::operator==(const LCIter &other) const noexcept
+{
+  return curr == other.curr;
+}
+
+template < class T >
+bool saldaev::LCIter< T >::operator==(const LIter< T > &other) const noexcept
+{
+  return curr == other.curr;
+}
+
+template < class T >
+bool saldaev::LCIter< T >::operator!=(const LCIter &other) const noexcept
+{
+  return !(*this == other);
+}
+
+template < class T >
+bool saldaev::LCIter< T >::operator!=(const LIter< T > &other) const noexcept
+{
+  return !(*this == other);
+}
+
+template < class T >
+const T &saldaev::LCIter< T >::getData() const noexcept
+{
+  return curr->data;
+}
