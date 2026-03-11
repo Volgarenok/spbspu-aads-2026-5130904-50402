@@ -91,9 +91,9 @@ namespace saldaev
     LIter< T > &operator--() noexcept;
     LIter< T > operator--(int) noexcept;
     bool operator==(const LIter &other) const noexcept;
-    bool operator==(const LCIter &other) const noexcept;
+    bool operator==(const LCIter< T > &other) const noexcept;
     bool operator!=(const LIter &other) const noexcept;
-    bool operator!=(const LCIter &other) const noexcept;
+    bool operator!=(const LCIter< T > &other) const noexcept;
     const T &getData() const noexcept;
     T &getData() noexcept;
 
@@ -303,6 +303,8 @@ size_t saldaev::List< T >::getLength() const noexcept
   return length;
 }
 
+//
+
 template < class T >
 saldaev::LCIter< T >::LCIter(typename List< T >::Node *node):
   curr(node),
@@ -399,6 +401,114 @@ bool saldaev::LCIter< T >::operator!=(const LIter< T > &other) const noexcept
 
 template < class T >
 const T &saldaev::LCIter< T >::getData() const noexcept
+{
+  return curr->data;
+}
+
+//
+
+template < class T >
+saldaev::LIter< T >::LIter(typename List< T >::Node *node):
+  curr(node),
+  valid(true)
+{
+  if (!node) {
+    valid = false;
+  } else if (!(node->next) || !(node->prev)) {
+    valid = false;
+  }
+}
+
+template < class T >
+bool saldaev::LIter< T >::isValid() const noexcept
+{
+  return valid;
+}
+
+template < class T >
+bool saldaev::LIter< T >::hasNext() const noexcept
+{
+  return isValid() && (curr->next->next != nullptr);
+}
+
+template < class T >
+bool saldaev::LIter< T >::hasPrev() const noexcept
+{
+  return isValid() && (curr->prev->prev != nullptr);
+}
+
+template < class T >
+saldaev::LIter< T > &saldaev::LIter< T >::operator++() noexcept
+{
+  if (isValid()) {
+    curr = curr->next;
+    valid = curr->next;
+  }
+  return *this;
+}
+
+template < class T >
+saldaev::LIter< T > saldaev::LIter< T >::operator++(int) noexcept
+{
+  LIter< T > ret = *this;
+  if (isValid()) {
+    curr = curr->next valid = curr->next;
+  }
+  return ret;
+}
+
+template < class T >
+saldaev::LIter< T > &saldaev::LIter< T >::operator--() noexcept
+{
+  if (isValid()) {
+    curr = curr->prev;
+    valid = curr->prev;
+  }
+  return *this;
+}
+
+template < class T >
+saldaev::LIter< T > saldaev::LIter< T >::operator--(int) noexcept
+{
+  LIter< T > ret = *this;
+  if (isValid()) {
+    curr = curr->prev valid = curr->prev;
+  }
+  return ret;
+}
+
+template < class T >
+bool saldaev::LIter< T >::operator==(const LIter &other) const noexcept
+{
+  return curr == other.curr;
+}
+
+template < class T >
+bool saldaev::LIter< T >::operator==(const LCIter< T > &other) const noexcept
+{
+  return curr == other.curr;
+}
+
+template < class T >
+bool saldaev::LIter< T >::operator!=(const LIter &other) const noexcept
+{
+  return !(*this == other);
+}
+
+template < class T >
+bool saldaev::LIter< T >::operator!=(const LCIter< T > &other) const noexcept
+{
+  return !(*this == other);
+}
+
+template < class T >
+const T &saldaev::LIter< T >::getData() const noexcept
+{
+  return curr->data;
+}
+
+template < class T >
+T &saldaev::LIter< T >::getData() noexcept
 {
   return curr->data;
 }
