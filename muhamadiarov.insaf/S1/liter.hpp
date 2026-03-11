@@ -22,5 +22,5 @@ namespace muhamadiarov
     Node< T >* current_;
     friend class List< T >;
   };
-};
+}
 #endif

@@ -26,5 +26,5 @@ namespace muhamadiarov
     Node< T >* head_;
     size_t size_;
   };
-};
+}
 #endif
