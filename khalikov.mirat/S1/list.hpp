@@ -1,7 +1,7 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 #include "node.hpp"
-
+#include "iter.hpp"
 namespace khalikov
 {
   template< class T >

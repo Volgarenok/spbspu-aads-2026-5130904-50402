@@ -8,6 +8,21 @@ namespace khalikov
   class LIter
   {
     friend class List< T >;
+  public:
+    LIter();
+    LIter(Node< T > * h);
+    LIter(const LIter< T > & other) = default;
+    ~LIter() = default;
+    T & operator[](size_t index);
+    T & operator*();
+    T * operator->();
+    LIter< T > & operator++();
+    LIter< T > operator++(int);
+    bool operator==(const LIter< T > & other) const;
+    bool operator!=(const LIter< T > & other) const;
+    LIter< T > & operator=(const LIter< T > & other) = default;
+  private:
+    Node< T > * curr;
   };
 }
 
