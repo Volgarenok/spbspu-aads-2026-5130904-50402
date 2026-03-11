@@ -27,7 +27,16 @@ namespace khalikov
   }
   template< class T >
   List< T > & List< T >::operator=(const List< T > & other)
-  {}
+  {
+    if (this != &other)
+    {
+      List< T > temp(other);
+      Node< T > * swapper = h;
+      h = temp.h;
+      temp.h = swapper;
+    }
+    return *this;
+  }
   template< class T >
   List< T >::List(const List< T > & other)
   {
