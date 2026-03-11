@@ -209,3 +209,27 @@ size_t muh::List< T >::size() const noexcept
 {
   return size_;
 }
+
+template <class T>
+muh::LIter< T > muh::List< T >::begin()
+{
+  return LIter{current_};
+}
+
+template <class T>
+muh::LIter< T > muh::List< T >::end()
+{
+  return LIter{current_->prev_};
+}
+
+template <class T>
+muh::LCIter< T > muh::List< T >::cbegin() const
+{
+  return LCIter{current_}
+}
+
+template <class T>
+muh::LCIter< T > muh::List< T >::cend() const
+{
+  return LCIter{current_->prev_};
+}

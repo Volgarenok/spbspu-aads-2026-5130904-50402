@@ -15,7 +15,10 @@ namespace muhamadiarov
     List& operator=(const List< T >& other);
     List& operator=(List< T >&& other) noexcept;
     ~List() noexcept;
-
+    LIter< T > begin();
+    LIter< T > end();
+    LCIter< T > cbegin() const;
+    LCIter< T > cend() const;
     void pushFront(const T& value);
     void pushBack(const T& value);
     void popFront() noexcept;
