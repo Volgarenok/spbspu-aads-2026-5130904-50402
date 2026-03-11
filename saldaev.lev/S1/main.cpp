@@ -104,3 +104,72 @@ private:
 
 int main()
 {}
+
+template < class T >
+List< T >::List():
+  head(nullptr),
+  tail(nullptr),
+  length(0)
+{
+  head = static_cast< Node * >(::operator new(sizeof(Node)));
+  try {
+    tail = static_cast< Node * >(::operator new(sizeof(Node)));
+  } catch (...) {
+    ::operator delete(head);
+    throw;
+  }
+  head->next = tail;
+  head->prev = nullptr;
+  tail->prev = head;
+  tail->next = nullptr;
+}
+
+template < class T >
+List< T >::~List()
+{
+  clear();
+  ::operator delete(head);
+  ::operator delete(tail);
+}
+
+template < class T >
+List< T >::List(const List &other):
+  List()
+{
+  for (auto it = other.begin(); !it.isEnd(); ++it) {
+    newTail(it.getData());
+  }
+}
+
+template < class T >
+List< T > &List< T >::operator=(const List< T > &other)
+{
+  if (this != &other) {
+    List< T > tmp(other);
+    std::swap(head, tmp.head);
+    std::swap(tail, tmp.tail);
+    std::swap(length, tmp.length);
+  }
+  return *this;
+}
+
+template < class T >
+List< T >::List(List &&other):
+  List()
+{
+  std::swap(head, other.head);
+  std::swap(tail, other.tail);
+  std::swap(length, other.length);
+}
+
+template < class T >
+List< T > &List< T >::operator=(List< T > &&other)
+{
+  if (this != &other) {
+    std::swap(head, other.head);
+    std::swap(tail, other.tail);
+    std::swap(length, other.length);
+    other.clear();
+  }
+  return *this;
+}
