@@ -61,8 +61,12 @@ namespace lavrentev
 
     void clear();
     LIter<T> insert(LIter<T> h, const T &v);
+    LIter<T> popFront();
     LIter<T> begin();
     LCIter<T> cbegin() const;
+    T& front();
+    const T& front() const;
+    bool empty() const;
 
   private:
     //T val;
@@ -181,17 +185,6 @@ template <class T> const T &lavrentev::LCIter<T>::operator*() const
   return curr->val;
 }
 
-/*template <class T>
-void lavrentev::LCIter<T>::printList(std::ostream &os)
-{
-  LCIter<T> it = *this;
-  while(it.curr){
-    it.printPair(os);
-    ++it;
-  }
-  os << "\n";
-}*/
-
 template <class T> void lavrentev::LCIter<T>::printList(std::ostream &os)
 {
   LCIter<T> it = *this;
@@ -201,7 +194,7 @@ template <class T> void lavrentev::LCIter<T>::printList(std::ostream &os)
     os << (*it).first << " ";
 
     const lavrentev::List<int> &valList = (*it).second;
-    lavrentev::LCIter<int> valIt = valList.cbegin(); // problem?
+    lavrentev::LCIter<int> valIt = valList.cbegin();
 
     while (valIt != lavrentev::LCIter<int>())
     {
@@ -327,6 +320,19 @@ lavrentev::LIter<T> lavrentev::List<T>::insert(lavrentev::LIter<T> h, const T &v
   return LIter<T>(newNode);
 }
 
+template <class T> lavrentev::LIter<T> lavrentev::List<T>::popFront()
+{
+  if (head == nullptr)
+  {
+    return LIter<T>{};
+  }
+  LIter<T> it = head;
+  ++it;
+  delete head;
+  head = it.curr;
+  return it;
+}
+
 template <class T> lavrentev::LIter<T> lavrentev::List<T>::begin()
 {
   return LIter<T>(head);
@@ -335,6 +341,35 @@ template <class T> lavrentev::LIter<T> lavrentev::List<T>::begin()
 template <class T> lavrentev::LCIter<T> lavrentev::List<T>::cbegin() const
 {
   return LCIter<T>(head);
+}
+
+template <class T> T& lavrentev::List<T>::front()
+{
+  if (head == nullptr)
+  {
+    throw std::out_of_range("Empty list");
+  }
+  lavrentev::LIter<T> h = this->begin();
+  return h.curr->val;
+}
+
+template <class T> const T& lavrentev::List<T>::front() const
+{
+  if (head == nullptr)
+  {
+    throw std::out_of_range("Empty list");
+  }
+  lavrentev::LCIter<T> h = this->cbegin();
+  return h.curr->val;
+}
+
+template <class T> bool lavrentev::List<T>::empty() const
+{
+  if(head == nullptr){
+    return true;
+  } else {
+    return false;
+  }
 }
 
 #endif
