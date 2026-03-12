@@ -8,55 +8,333 @@ namespace lavrentev
 
   template <class T> class LIter
   {
+    
   public:
-    LIter() : curr(nullptr) {}
-    explicit LIter(List<T> *n) : curr(n) {};
-    void clear();
+    bool operator==(const LIter<T> &other) const;
+    bool operator!=(const LIter<T> &other) const;
+    LIter<T> &operator++();
+    T &operator*();
+
+    LIter() : curr(nullptr) {};
+    LIter(typename lavrentev::List<T>::Node *node) : curr(node) {};
+    //LIter(typename std::pair<std::string, lavrentev::List<int>> *node) : curr(node) {};
 
   private:
     friend class List<T>;
-    List<T> *curr;
+    typename List<T>::Node *curr = nullptr;
   };
 
   template <class T> class LCIter
   {
-    public:
-      LCIter() : curr(nullptr) {}
-      explicit LCIter(const List<T> *n) : curr(n) {}
-      void printList();
-    private:
-      friend class List<T>;
-      const List<T> *curr;
+  public:
+    bool operator==(const LCIter<T> &other) const;
+    bool operator!=(const LCIter<T> &other) const;
+    LCIter<T> &operator++();
+    const T &operator*() const;
+
+    LCIter() : curr(nullptr) {};
+    explicit LCIter(typename List<T>::Node *node) : curr(node) {};
+    //LCIter(typename std::pair<std::string, lavrentev::List<int>> *node) : curr(node) {};
+
+    void printList(std::ostream &os);
+
+  private:
+    friend class List<T>;
+    typename List<T>::Node *curr = nullptr;
   };
 
   template <class T> class List
   {
   public:
-    List() : val{}, next(nullptr) {}
-    List(const T &v, List<T> *n = nullptr) : val(v), next(n) {}
+    struct Node
+    {
+      T val;
+      Node *next;
+    };
 
-    ~List() = default;
+    List<T>() = default;
+    List<T>(const List<T> &);
+    List<T>(List<T> &&);
+    ~List<T>() noexcept;
+    List<T> &operator=(const List<T> &);
+    List<T> &operator=(List<T> &&);
 
-    T retVal() const;
-    List<T> *retNext() const;
-    void addVal(int k);
-    void addNext(List<T> *aft);
-    
+    void clear();
+    LIter<T> insert(LIter<T> h, const T &v);
+    LIter<T> begin();
+    LCIter<T> cbegin() const;
+
   private:
-    T val;
-    List<T> *next;
+    //T val;
+    Node *head;
   };
 
-  std::pair<std::string, List<int>*>* getline(std::istream &in, size_t &size);
-  //void input(std::istream &in, LIter<int> *iter, char *s);
+  lavrentev::List<std::pair<std::string, lavrentev::List<int>>> getline(std::istream &in);
 
-  template <class T> List<T> *add(List<T> *h, const T &v);
-  template <class T> List<T> *insert(List<T> *h, const T &v);
-
-  void expand(std::pair<std::string, List<int>*> **arr, size_t &cap,
-              size_t size);
-
-  template <class T> void clear(LIter<T> *k);
 } // namespace lavrentev
+
+inline lavrentev::List<std::pair<std::string, lavrentev::List<int>>> lavrentev::getline(std::istream &in)
+{
+  lavrentev::List<std::pair<std::string, lavrentev::List<int>>> sequences{};
+  std::pair<std::string, lavrentev::List<int>> pair;
+  std::string name;
+  lavrentev::List<int> seq{};
+  auto it = seq.begin();
+  auto iterator = sequences.begin();
+
+  if (!(in >> name))
+  {
+    return sequences;
+  }
+
+  int value;
+  try
+  {
+    while (true)
+    {
+      if (in >> value)
+      {
+        it = seq.insert(it, value);
+        //++it;
+      }
+      else
+      {
+        if (in.eof())
+        {
+          pair.first = name;
+          pair.second = seq;
+          iterator = sequences.insert(iterator, pair);
+          break;
+        }
+
+        in.clear();
+        std::string bad;
+        if (in >> bad)
+        {
+          pair.first = name;
+          pair.second = seq;
+          iterator = sequences.insert(iterator, pair);
+          name = bad;
+          seq.clear();
+          it = seq.begin();
+        }
+      }
+    }
+  } catch (...)
+  {
+    seq.clear();
+    sequences.clear();
+    throw;
+  }
+  return sequences;
+}
+
+template <class T>
+bool lavrentev::LIter<T>::operator==(const LIter<T> &other) const
+{
+  return curr == other.curr;
+}
+
+template <class T>
+bool lavrentev::LIter<T>::operator!=(const LIter<T> &other) const
+{
+  return curr != other.curr;
+}
+
+template <class T> lavrentev::LIter<T> &lavrentev::LIter<T>::operator++()
+{
+  if (curr != nullptr)
+  {
+    curr = curr->next;
+  }
+  return *this;
+}
+
+template <class T> T &lavrentev::LIter<T>::operator*()
+{
+  return curr->val;
+}
+
+template <class T>
+bool lavrentev::LCIter<T>::operator==(const LCIter<T> &other) const
+{
+  return curr == other.curr;
+}
+
+template <class T>
+bool lavrentev::LCIter<T>::operator!=(const LCIter<T> &other) const
+{
+  return curr != other.curr;
+}
+
+template <class T> lavrentev::LCIter<T> &lavrentev::LCIter<T>::operator++()
+{
+  if (curr != nullptr)
+  {
+    curr = curr->next;
+  }
+  return *this;
+}
+
+template <class T> const T &lavrentev::LCIter<T>::operator*() const
+{
+  return curr->val;
+}
+
+/*template <class T>
+void lavrentev::LCIter<T>::printList(std::ostream &os)
+{
+  LCIter<T> it = *this;
+  while(it.curr){
+    it.printPair(os);
+    ++it;
+  }
+  os << "\n";
+}*/
+
+template <class T> void lavrentev::LCIter<T>::printList(std::ostream &os)
+{
+  LCIter<T> it = *this;
+
+  while (it.curr)
+  {
+    os << (*it).first << " ";
+
+    const lavrentev::List<int> &valList = (*it).second;
+    lavrentev::LCIter<int> valIt = valList.cbegin(); // problem?
+
+    while (valIt != lavrentev::LCIter<int>())
+    {
+      os << *valIt << " ";
+      ++valIt;
+    }
+
+    os << "\n";
+    ++it;
+  }
+}
+
+template <class T>
+lavrentev::List<T>::List(const List<T> &other) : head(nullptr)
+{
+  if (other.head == nullptr)
+  {
+    return;
+  }
+
+  head = new Node;
+  head->val = other.head->val;
+  head->next = nullptr;
+
+  Node *curr = head;
+  Node *bufCurr = other.head->next;
+
+  while (bufCurr != nullptr)
+  {
+    curr->next = new Node;
+    curr->next->val = bufCurr->val;
+    curr->next->next = nullptr;
+
+    curr = curr->next;
+    bufCurr = bufCurr->next;
+  }
+}
+
+template <class T> lavrentev::List<T>::List(List<T> &&other) : head(other.head)
+{
+  other.head = nullptr;
+}
+
+template <class T> lavrentev::List<T>::~List() noexcept
+{
+  clear();
+}
+
+template <class T>
+lavrentev::List<T> &lavrentev::List<T>::operator=(const List<T> &other)
+{
+  if (this != &other)
+  {
+    clear();
+
+    if (other.head == nullptr)
+    {
+      return *this;
+    }
+
+    head = new Node;
+    head->val = other.head->val;
+    head->next = nullptr;
+
+    Node *curr = head;
+    Node *bufCurr = other.head->next;
+
+    while (bufCurr != nullptr)
+    {
+      curr->next = new Node;
+      curr->next->val = bufCurr->val;
+      curr->next->next = nullptr;
+
+      curr = curr->next;
+      bufCurr = bufCurr->next;
+    }
+  }
+
+  return *this;
+}
+
+template <class T>
+lavrentev::List<T> &lavrentev::List<T>::operator=(lavrentev::List<T> &&other)
+{
+  if(this != &other)
+  {
+    clear();
+    head = other.head;
+    other.head = nullptr;
+  }
+
+  return *this;
+}
+
+template <class T> void lavrentev::List<T>::clear()
+{
+  while (head)
+  {
+    Node *n = head->next;
+    delete head;
+    head = n;
+  }
+}
+
+template <class T>
+lavrentev::LIter<T> lavrentev::List<T>::insert(lavrentev::LIter<T> h, const T &v)
+{
+  Node *newNode = new Node;
+  newNode->val = v;
+  newNode->next = nullptr;
+
+  if (h.curr == nullptr)
+  {
+    newNode->next = head;
+    head = newNode;
+  }
+  else
+  {
+    newNode->next = h.curr->next;
+    h.curr->next = newNode;
+  }
+
+  return LIter<T>(newNode);
+}
+
+template <class T> lavrentev::LIter<T> lavrentev::List<T>::begin()
+{
+  return LIter<T>(head);
+}
+
+template <class T> lavrentev::LCIter<T> lavrentev::List<T>::cbegin() const
+{
+  return LCIter<T>(head);
+}
 
 #endif
