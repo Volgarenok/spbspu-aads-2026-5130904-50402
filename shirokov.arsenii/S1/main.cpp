@@ -1,4 +1,6 @@
+#include <cctype>
 #include <iostream>
+#include <string>
 #include "bilist.hpp"
 
 namespace shirokov
@@ -36,6 +38,20 @@ int main()
         std::string bad;
         if (std::cin >> bad)
         {
+          bool flag = true;
+          for (char s : bad)
+          {
+            if (!std::isdigit(s))
+            {
+              flag = false;
+              break;
+            }
+          }
+          if (!flag)
+          {
+            std::cerr << "Incorrect input\n";
+            return 1;
+          }
           pair = {name, seq};
           sequences.push_back(pair);
           seq.clear();
