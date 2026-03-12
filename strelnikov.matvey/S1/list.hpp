@@ -14,13 +14,13 @@ namespace strelnikov
   public:
     LIter() noexcept;
 
-    LIter(const LIter &other) noexcept;
+    LIter(const LIter &) noexcept;
 
-    LIter(LIter &&other) noexcept;
+    LIter(LIter &&) noexcept;
 
-    LIter &operator=(const LIter &rhs);
+    LIter &operator=(const LIter &);
 
-    LIter &operator=(LIter &&rhs) noexcept;
+    LIter &operator=(LIter &&) noexcept;
 
     ~LIter() noexcept = default;
 
@@ -30,8 +30,8 @@ namespace strelnikov
     LIter &operator++();
     LIter operator++(int);
 
-    bool operator==(const LIter &other) const noexcept;
-    bool operator!=(const LIter &other) const noexcept;
+    bool operator==(const LIter &) const noexcept;
+    bool operator!=(const LIter &) const noexcept;
 
   private:
     Node< T > *curr_;
@@ -44,13 +44,13 @@ namespace strelnikov
   public:
     LCIter() noexcept;
 
-    LCIter(const LCIter &other) noexcept;
+    LCIter(const LCIter &) noexcept;
 
-    LCIter(LCIter &&other) noexcept;
+    LCIter(LCIter &&) noexcept;
 
-    LCIter &operator=(const LCIter &rhs);
+    LCIter &operator=(const LCIter &);
 
-    LCIter &operator=(LCIter &&rhs) noexcept;
+    LCIter &operator=(LCIter &&) noexcept;
 
     ~LCIter() noexcept = default;
 
@@ -60,8 +60,8 @@ namespace strelnikov
     LCIter &operator++();
     LCIter operator++(int);
 
-    bool operator==(const LCIter &other) const noexcept;
-    bool operator!=(const LCIter &other) const noexcept;
+    bool operator==(const LCIter &) const noexcept;
+    bool operator!=(const LCIter &) const noexcept;
 
   private:
     const Node< T > *curr_;
@@ -86,11 +86,11 @@ namespace strelnikov
     void clear();
     bool empty();
 
-    iterator insert_after(const_iterator pos, const T &value);
-    iterator insert_after(const_iterator pos, T &&value);
-    iterator insert_after(const_iterator pos, size_type n, const T &value);
+    iterator insert_after(const_iterator, const T &);
+    iterator insert_after(const_iterator, T &&);
+    iterator insert_after(const_iterator, size_t, const T &);
 
-    iterator erase_after(const_iterator pos);
+    iterator erase_after(const_iterator);
 
     iterator begin() noexcept;
     const_iterator begin() const noexcept;
