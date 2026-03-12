@@ -30,6 +30,45 @@ int main()
     sequences.push_back({name, nums});
   }
 
+  shirokov::BiList< shirokov::BiList< size_t > > rows;
+  shirokov::BiList< size_t > listOfSum{};
+  shirokov::BiList< shirokov::BLEnds > iterators;
+
+  for (auto& pair : sequences)
+  {
+    iterators.push_back({pair.second.begin(), pair.second.end()});
+  }
+
+  while (true)
+  {
+    bool flag = true;
+    size_t sum = 0;
+    shirokov::BiList< size_t > row;
+    for (shirokov::BLEnds& ends : iterators)
+    {
+      if (ends.curr == ends.end)
+      {
+        continue;
+      }
+      size_t value = *ends.curr;
+      if (sum > std::numeric_limits< size_t >::max() - value)
+      {
+        std::cerr << "Overflow error\n";
+        return 1;
+      }
+      sum += value;
+      row.push_back(value);
+      ++ends.curr;
+      flag = false;
+    }
+    if (flag)
+    {
+      break;
+    }
+    rows.push_back(row);
+    listOfSum.push_back(sum);
+  }
+
   for (const auto& pair : sequences)
   {
     if (&pair == &sequences.back())
@@ -42,46 +81,8 @@ int main()
     }
   }
 
-  shirokov::BiList< size_t > listOfSum{};
-  shirokov::BiList< shirokov::BLEnds > iterators;
-  for (auto& pair : sequences)
+  for (auto& row : rows)
   {
-    iterators.push_back({pair.second.begin(), pair.second.end()});
-  }
-
-  while (true)
-  {
-    bool flag = true;
-    size_t sum = 0;
-    shirokov::BiList< size_t > row;
-
-    for (shirokov::BLEnds& ends : iterators)
-    {
-      if (ends.curr == ends.end)
-      {
-        continue;
-      }
-
-      size_t value = *ends.curr;
-
-      if (sum > std::numeric_limits< size_t >::max() - value)
-      {
-        std::cerr << "Overflow error\n";
-        return 1;
-      }
-
-      sum += value;
-      row.push_back(value);
-
-      ++ends.curr;
-      flag = false;
-    }
-
-    if (flag)
-    {
-      break;
-    }
-
     bool first = true;
     for (size_t v : row)
     {
@@ -92,10 +93,7 @@ int main()
       std::cout << v;
       first = false;
     }
-
     std::cout << '\n';
-
-    listOfSum.push_back(sum);
   }
 
   if (listOfSum.empty())
@@ -103,6 +101,7 @@ int main()
     std::cout << 0 << '\n';
     return 0;
   }
+
   bool first = true;
   for (size_t s : listOfSum)
   {
