@@ -1,6 +1,7 @@
 #ifndef BILIST_HPP
 #define BILIST_HPP
 #include <algorithm>
+#include <stdexcept>
 
 namespace shirokov
 {
@@ -14,8 +15,8 @@ namespace shirokov
     explicit BLIter(typename BiList< T >::Node*);
     bool operator==(const BLIter< T >& other) const noexcept;
     bool operator!=(const BLIter< T >& other) const noexcept;
-    BLIter< T > operator++();
-    BLIter< T > operator--();
+    BLIter< T >& operator++();
+    BLIter< T >& operator--();
     T& operator*();
 
   private:
@@ -30,8 +31,8 @@ namespace shirokov
     explicit BLCIter(const typename BiList< T >::Node*);
     bool operator==(const BLCIter< T >& other);
     bool operator!=(const BLCIter< T >& other);
-    BLCIter< T > operator++();
-    BLCIter< T > operator--();
+    BLCIter< T >& operator++();
+    BLCIter< T >& operator--();
     const T& operator*();
 
   private:
@@ -142,14 +143,32 @@ void shirokov::BiList< T >::push_back(T&& value)
 {
   if (!head)
   {
-    head = new Node{std::move(value), nullptr, nullptr};
-    tail = head;
+    head = nullptr;
+    try
+    {
+      head = new Node{std::move(value)}; // T::T(T&&)
+      tail = head;
+    }
+    catch (...)
+    {
+      delete head;
+      throw;
+    }
   }
   else
   {
-    Node* next = new Node{std::move(value), nullptr, tail};
-    tail->next = next;
-    tail = next;
+    Node* next = nullptr;
+    try
+    {
+      next = new Node{std::move(value), nullptr, tail}; // T::T(T&&)
+      tail->next = next;
+      tail = next;
+    }
+    catch (...)
+    {
+      delete next;
+      throw;
+    }
   }
 }
 
@@ -158,57 +177,103 @@ void shirokov::BiList< T >::push_back(const T& value)
 {
   if (!head)
   {
-    head = new Node{value, nullptr, nullptr};
-    tail = head;
+    head = nullptr;
+    try
+    {
+      head = new Node{value}; // T::T(const T&)
+      tail = head;
+    }
+    catch (...)
+    {
+      delete head;
+      throw;
+    }
   }
   else
   {
-    Node* next = new Node{value, nullptr, tail};
-    tail->next = next;
-    tail = next;
+    Node* next = nullptr;
+    try
+    {
+      next = new Node{value, nullptr, tail}; // T::T(const T&)
+      tail->next = next;
+      tail = next;
+    }
+    catch (...)
+    {
+      delete next;
+      throw;
+    }
   }
 }
 
 template < class T >
 T& shirokov::BiList< T >::front()
 {
+  if (!head)
+  {
+    throw std::out_of_range("Empty list");
+  }
   return head->value;
 }
 
 template < class T >
 const T& shirokov::BiList< T >::front() const
 {
+  if (!head)
+  {
+    throw std::out_of_range("Empty list");
+  }
   return head->value;
 }
 
 template < class T >
 T& shirokov::BiList< T >::back()
 {
+  if (!head)
+  {
+    throw std::out_of_range("Empty list");
+  }
   return tail->value;
 }
 
 template < class T >
 const T& shirokov::BiList< T >::back() const
 {
+  if (!head)
+  {
+    throw std::out_of_range("Empty list");
+  }
   return tail->value;
 }
 
 template < class T >
 T& shirokov::BLIter< T >::operator*()
 {
+  if (!curr)
+  {
+    throw std::logic_error("Dereferencing null iterator");
+  }
   return curr->value;
 }
 
 template < class T >
-shirokov::BLIter< T > shirokov::BLIter< T >::operator++()
+shirokov::BLIter< T >& shirokov::BLIter< T >::operator++()
 {
+  if (!curr)
+  {
+    throw std::logic_error("Incrementing invalid iterator");
+  }
   curr = curr->next;
   return *this;
 }
 
 template < class T >
-shirokov::BLIter< T > shirokov::BLIter< T >::operator--()
+shirokov::BLIter< T >& shirokov::BLIter< T >::operator--()
 {
+  if (!curr)
+  {
+    throw std::logic_error("Decrementing invalid iterator");
+  }
   curr = curr->prev;
   return *this;
 }
@@ -218,14 +283,32 @@ void shirokov::BiList< T >::push_front(const T& value)
 {
   if (!head)
   {
-    head = new Node{value, nullptr, nullptr};
-    tail = head;
+    head = nullptr;
+    try
+    {
+      head = new Node{value}; // T::T(const T&)
+      tail = head;
+    }
+    catch (...)
+    {
+      delete head;
+      throw;
+    }
   }
   else
   {
-    Node* prev = new Node{value, head, nullptr};
-    head->prev = prev;
-    head = prev;
+    Node* prev = nullptr;
+    try
+    {
+      prev = new Node{value, head, nullptr}; // T::T(const T&)
+      head->prev = prev;
+      head = prev;
+    }
+    catch (...)
+    {
+      delete prev;
+      throw;
+    }
   }
 }
 
@@ -234,15 +317,181 @@ void shirokov::BiList< T >::push_front(T&& value)
 {
   if (!head)
   {
-    head = new Node{std::move(value), nullptr, nullptr};
-    tail = head;
+    head = nullptr;
+    try
+    {
+      head = new Node{std::move(value)}; // T::T(T&&)
+      tail = head;
+    }
+    catch (...)
+    {
+      delete head;
+      throw;
+    }
   }
   else
   {
-    Node* prev = new Node{std::move(value), head, nullptr};
-    head->prev = prev;
-    head = prev;
+    Node* prev = nullptr;
+    try
+    {
+      prev = new Node{std::move(value), head, nullptr}; // T::T(T&&)
+      head->prev = prev;
+      head = prev;
+    }
+    catch (...)
+    {
+      delete prev;
+      throw;
+    }
   }
+}
+
+template < class T >
+void shirokov::BiList< T >::pop_front()
+{
+  if (!head)
+  {
+    throw std::out_of_range("List is empty");
+  }
+  Node* newHead = head->next;
+  delete head;
+  head = newHead;
+  if (head)
+  {
+    head->prev = nullptr;
+  }
+  else
+  {
+    tail = nullptr;
+  }
+}
+
+template < class T >
+void shirokov::BiList< T >::pop_back()
+{
+  if (!tail)
+  {
+    throw std::out_of_range("List is empty");
+  }
+  Node* newTail = tail->prev;
+  delete tail;
+  tail = newTail;
+  if (tail)
+  {
+    tail->next = nullptr;
+  }
+  else
+  {
+    head = nullptr;
+  }
+}
+
+template < class T >
+shirokov::BLCIter< T > shirokov::BiList< T >::cbegin() const noexcept
+{
+  return shirokov::BLCIter< T >(head);
+}
+
+template < class T >
+const T& shirokov::BLCIter< T >::operator*()
+{
+  if (!curr)
+  {
+    throw std::logic_error("Dereferencing null iterator");
+  }
+  return curr->value;
+}
+
+template < class T >
+shirokov::BLCIter< T >& shirokov::BLCIter< T >::operator++()
+{
+  if (!curr)
+  {
+    throw std::logic_error("Incrementing invalid iterator");
+  }
+  curr = curr->next;
+  return *this;
+}
+
+template < class T >
+shirokov::BLCIter< T >& shirokov::BLCIter< T >::operator--()
+{
+  if (!curr)
+  {
+    throw std::logic_error("Decrementing invalid iterator");
+  }
+  curr = curr->prev;
+  return *this;
+}
+
+template < class T >
+shirokov::BLCIter< T >::BLCIter(const typename BiList< T >::Node* node): curr(node)
+{
+}
+
+template < class T >
+shirokov::BiList< T >::BiList(const BiList< T >& other)
+{
+  try
+  {
+    Node* curr = nullptr;
+    Node* otherCurr = other.head;
+    while (otherCurr)
+    {
+      if (!curr)
+      {
+        head = new Node{otherCurr->value}; // T::T(const T&)
+        curr = head;
+        otherCurr = otherCurr->next;
+        continue;
+      }
+      Node* next = new Node{otherCurr->value, nullptr, curr}; // T::T(const T&)
+      curr->next = next;
+      curr = next;
+      otherCurr = otherCurr->next;
+    }
+    tail = curr;
+  }
+  catch (...)
+  {
+    clear();
+    throw;
+  }
+}
+
+template < class T >
+shirokov::BiList< T >& shirokov::BiList< T >::operator=(const BiList< T >& other)
+{
+  if (this == &other)
+  {
+    return *this;
+  }
+  try
+  {
+    Node* curr = nullptr;
+    Node* otherCurr = other.head;
+    while (otherCurr)
+    {
+      if (!curr)
+      {
+        head = new Node{otherCurr->value}; // T::T(const T&)
+        curr = head;
+        otherCurr = otherCurr->next;
+        continue;
+      }
+      Node* next = new Node{otherCurr->value, nullptr, curr}; // T::T(const T&)
+      curr->next = next;
+      curr = next;
+      otherCurr = otherCurr->next;
+    }
+    tail = curr;
+  }
+  catch (...)
+  {
+    clear();
+    throw;
+  }
+  return *this;
 }
 
 #endif

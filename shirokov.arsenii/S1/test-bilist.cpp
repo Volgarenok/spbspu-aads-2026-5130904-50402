@@ -1,3 +1,4 @@
+#include <stdexcept>
 #define BOOST_TEST_MODULE S1
 #include <boost/test/included/unit_test.hpp>
 #include "bilist.hpp"
@@ -56,7 +57,7 @@ BOOST_AUTO_TEST_CASE(push_front_two)
   A.push_front(1);
   A.push_front(2);
 
-  auto it = A.begin();
+  auto it = A.cbegin();
   BOOST_TEST(*it == 2);
   ++it;
   BOOST_TEST(*it == 1);
@@ -64,4 +65,38 @@ BOOST_AUTO_TEST_CASE(push_front_two)
   BOOST_TEST(*it == 2);
   BOOST_TEST(A.front() == 2);
   BOOST_TEST(A.back() == 1);
+}
+
+BOOST_AUTO_TEST_CASE(pop_two)
+{
+  shirokov::BiList< int > A{};
+  A.push_back(1);
+  A.push_back(2);
+  A.push_front(3);
+  A.pop_back();
+  A.pop_front();
+  BOOST_TEST(A.front() == A.back());
+  BOOST_TEST(A.front() == 1);
+}
+
+BOOST_AUTO_TEST_CASE(pop_empty)
+{
+  shirokov::BiList< int > A{};
+  BOOST_REQUIRE(A.empty());
+  BOOST_CHECK_THROW(A.pop_back(), std::out_of_range);
+  BOOST_CHECK_THROW(A.pop_front(), std::out_of_range);
+}
+
+BOOST_AUTO_TEST_CASE(copy)
+{
+  shirokov::BiList< int > A{};
+  A.push_back(1);
+  A.push_back(2);
+  shirokov::BiList< int > B(A);
+  BOOST_TEST(B.back() == 2);
+  BOOST_TEST(B.front() == 1);
+  shirokov::BiList< int > C{};
+  C = B;
+  BOOST_TEST(C.back() == 2);
+  BOOST_TEST(C.front() == 1);
 }
