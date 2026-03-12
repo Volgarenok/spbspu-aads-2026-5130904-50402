@@ -76,7 +76,7 @@ namespace strelnikov
     List();
     List(const list &);
     List(list &&) noexcept;
-    list operator=(const list &);
+    list &operator=(const list &);
     list operator=(list &&) noexcept;
     ~List();
 
@@ -103,6 +103,56 @@ namespace strelnikov
   private:
     Node< T > *head_;
   };
+
+  template < class T >
+  List< T >::List():
+    head_(nullptr)
+  {}
+
+  template < class T >
+  List< T >::List(const list &other):
+    head_(nullptr)
+  {
+    Node< T > *curr_other = other.head_;
+
+    while (curr_other) {
+      Node< T > *new_node = new Node< T >();
+
+      new_node->val = curr_other->val;
+      new_node->next = curr_other->next;
+
+      if (head_) {
+        Node< T > *curr_this = head_;
+        while (curr_this) {
+          curr_this = curr_this->next;
+        }
+        curr_this->next = new_node;
+      } else {
+        head_ = new_node;
+      }
+
+      curr_other = curr_other->next;
+    }
+  }
+
+  template < class T >
+  List< T >::List(list &&other) noexcept:
+    head_(other.head_)
+  {
+    other.head_ = nullptr;
+  }
+
+  template < class T > List< T > &List< T >::operator=(const list &other)
+  {
+    Node < T > *tmp_head = new Node < T >();
+    tmp_head->val = other.head_->val;
+    tmp_head->next = other.head_->next;
+    
+    Node < T > *tmp_head = other.head_;
+    
+    return 
+  }
+
 }
 
 #endif
