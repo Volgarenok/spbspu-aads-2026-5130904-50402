@@ -48,14 +48,12 @@ dirko::List< dirko::List< size_t > > dirko::process(const l_pair_t &seq)
   return list;
 }
 
-std::ostream &dirko::printSum(std::ostream &os, const l_pair_t &names, const List< List< size_t > > &list)
+std::ostream &dirko::printSum(std::ostream &os, const List< List< size_t > > &list)
 {
-  printNames(os, names) << '\n';
   if (list.size() == 0) {
-    os << "0";
-    return os;
+    return os << "0";
   }
-  printList(os, list) << '\n';
+  os << '\n';
   CIter< List< size_t > > iter = list.cbegin();
   List< size_t > sums;
   while (iter != list.cend()) {

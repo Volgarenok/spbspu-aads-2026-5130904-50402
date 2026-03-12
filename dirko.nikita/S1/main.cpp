@@ -13,8 +13,10 @@ int main()
     return 0;
   }
   dirko::List< dirko::List< size_t > > list = dirko::process(seq);
+  printNames(std::cout, seq) << '\n';
+  printList(std::cout, list);
   try {
-    dirko::printSum(std::cout, seq, list) << '\n';
+    dirko::printSum(std::cout, list) << '\n';
   } catch (const std::overflow_error &e) {
     std::cerr << "overflow\n";
     return 1;
