@@ -13,8 +13,8 @@ namespace shirokov
   {
   public:
     explicit BLIter(typename BiList< T >::Node*);
-    bool operator==(const BLIter< T >& other) const noexcept;
-    bool operator!=(const BLIter< T >& other) const noexcept;
+    bool operator==(const BLIter< T >&) const noexcept;
+    bool operator!=(const BLIter< T >&) const noexcept;
     BLIter< T >& operator++();
     BLIter< T >& operator--();
     T& operator*();
@@ -29,8 +29,8 @@ namespace shirokov
   {
   public:
     explicit BLCIter(const typename BiList< T >::Node*);
-    bool operator==(const BLCIter< T >& other);
-    bool operator!=(const BLCIter< T >& other);
+    bool operator==(const BLCIter< T >&);
+    bool operator!=(const BLCIter< T >&);
     BLCIter< T >& operator++();
     BLCIter< T >& operator--();
     const T& operator*();
@@ -55,17 +55,15 @@ namespace shirokov
     BiList(const BiList< T >&);
     BiList(BiList< T >&&);
 
-    ~BiList() noexcept;
+    ~BiList();
 
     BiList< T >& operator=(const BiList< T >&);
     BiList< T >& operator=(BiList< T >&&);
 
     BLIter< T > begin();
-    BLCIter< T > begin() const;
     BLCIter< T > cbegin() const noexcept;
 
     BLIter< T > end();
-    BLCIter< T > end() const;
     BLCIter< T > cend() const noexcept;
 
     T& front();
@@ -97,7 +95,7 @@ bool shirokov::BiList< T >::empty() const noexcept
 }
 
 template < class T >
-shirokov::BiList< T >::~BiList() noexcept
+shirokov::BiList< T >::~BiList()
 {
   clear();
 }
@@ -125,6 +123,12 @@ template < class T >
 shirokov::BLIter< T > shirokov::BiList< T >::end()
 {
   return shirokov::BLIter< T >(nullptr);
+}
+
+template < class T >
+shirokov::BLCIter< T > shirokov::BiList< T >::cend() const noexcept
+{
+  return shirokov::BLCIter< T >(nullptr);
 }
 
 template < class T >
@@ -492,6 +496,46 @@ shirokov::BiList< T >& shirokov::BiList< T >::operator=(const BiList< T >& other
     throw;
   }
   return *this;
+}
+
+template < class T >
+shirokov::BiList< T >::BiList(BiList< T >&& other): head(other.head), tail(other.tail)
+{
+  other.head = nullptr;
+  other.tail = nullptr;
+}
+
+template < class T >
+shirokov::BiList< T >& shirokov::BiList< T >::operator=(BiList< T >&& other)
+{
+  if (this == &other)
+  {
+    return *this;
+  }
+  clear();
+  head = other.head;
+  tail = other.tail;
+  other.head = nullptr;
+  other.tail = nullptr;
+  return *this;
+}
+
+template < class T >
+bool shirokov::BLIter< T >::operator!=(const BLIter< T >& other) const noexcept
+{
+  return !(*this == other);
+}
+
+template < class T >
+bool shirokov::BLCIter< T >::operator==(const BLCIter< T >& other)
+{
+  return curr == other.curr;
+}
+
+template < class T >
+bool shirokov::BLCIter< T >::operator!=(const BLCIter< T >& other)
+{
+  return !(*this == other);
 }
 
 #endif

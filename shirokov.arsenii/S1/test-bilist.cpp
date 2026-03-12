@@ -100,3 +100,44 @@ BOOST_AUTO_TEST_CASE(copy)
   BOOST_TEST(C.back() == 2);
   BOOST_TEST(C.front() == 1);
 }
+
+BOOST_AUTO_TEST_CASE(move)
+{
+  shirokov::BiList< int > A{};
+  A.push_back(1);
+  A.push_back(2);
+  shirokov::BiList< int > B(std::move(A));
+  BOOST_TEST(B.back() == 2);
+  BOOST_TEST(B.front() == 1);
+  shirokov::BiList< int > C{};
+  C = std::move(B);
+  BOOST_TEST(C.back() == 2);
+  BOOST_TEST(C.front() == 1);
+}
+
+BOOST_AUTO_TEST_CASE(copying_itself)
+{
+  shirokov::BiList< int > A{};
+  A.push_back(5);
+  A = A;
+  BOOST_TEST(A.back() == 5);
+}
+
+BOOST_AUTO_TEST_CASE(comparing_iterators)
+{
+  shirokov::BiList< int > A{};
+  A.push_back(1);
+  auto it1 = A.begin();
+  ++it1;
+  auto it2 = A.begin();
+  BOOST_CHECK(it1 != it2);
+  ++it2;
+  BOOST_CHECK(it1 == it2);
+
+  auto it3 = A.cbegin();
+  ++it3;
+  auto it4 = A.cbegin();
+  BOOST_CHECK(it3 != it4);
+  ++it4;
+  BOOST_CHECK(it3 == it4);
+}
