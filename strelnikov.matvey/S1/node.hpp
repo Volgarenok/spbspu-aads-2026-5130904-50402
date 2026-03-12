@@ -3,7 +3,7 @@
 
 namespace strelnikov
 {
-  template < class T > struct node
+  template < class T > struct Node
   {
     T val;
     Node< T > *next;
