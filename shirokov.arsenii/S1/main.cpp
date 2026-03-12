@@ -103,13 +103,15 @@ int main()
     std::cout << 0 << '\n';
     return 0;
   }
+  bool first = true;
   for (size_t s : listOfSum)
   {
-    if (s != listOfSum.front())
+    if (!first)
     {
       std::cout << ' ';
     }
     std::cout << s;
+    first = false;
   }
   std::cout << '\n';
 }
