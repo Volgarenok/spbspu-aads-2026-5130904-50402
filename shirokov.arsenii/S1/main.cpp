@@ -1,4 +1,3 @@
-#include <cctype>
 #include <iostream>
 #include <string>
 #include "bilist.hpp"
@@ -7,62 +6,27 @@ namespace shirokov
 {
   struct BLEnds
   {
-    shirokov::BLIter< int > curr;
-    shirokov::BLIter< int > end;
+    shirokov::BLIter< size_t > curr;
+    shirokov::BLIter< size_t > end;
   };
 }
 
 int main()
 {
-  shirokov::BiList< std::pair< std::string, shirokov::BiList< int > > > sequences{};
+  shirokov::BiList< std::pair< std::string, shirokov::BiList< size_t > > > sequences{};
 
+  std::string name;
+
+  while (std::cin >> name)
   {
-    std::pair< std::string, shirokov::BiList< int > > pair;
-    std::string name;
-    shirokov::BiList< int > seq{};
-
-    int curr = 0;
-    std::cin >> name;
-
-    while (true)
+    shirokov::BiList< size_t > nums;
+    size_t num;
+    while (std::cin >> num)
     {
-      if (!(std::cin >> curr))
-      {
-        if (std::cin.eof())
-        {
-          pair = {name, seq};
-          sequences.push_back(pair);
-          break;
-        }
-        std::cin.clear();
-        std::string bad;
-        if (std::cin >> bad)
-        {
-          bool flag = true;
-          for (char s : bad)
-          {
-            if (!std::isdigit(s))
-            {
-              flag = false;
-              break;
-            }
-          }
-          if (!flag)
-          {
-            std::cerr << "Incorrect input\n";
-            return 1;
-          }
-          pair = {name, seq};
-          sequences.push_back(pair);
-          seq.clear();
-          name = bad;
-        }
-      }
-      else
-      {
-        seq.push_back(curr);
-      }
+      nums.push_back(num);
     }
+    std::cin.clear();
+    sequences.push_back({name, nums});
   }
 
   for (const auto& pair : sequences)

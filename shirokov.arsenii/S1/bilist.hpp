@@ -61,10 +61,10 @@ namespace shirokov
     BiList< T >& operator=(BiList< T >&&);
 
     BLIter< T > begin();
-    BLCIter< T > cbegin() const noexcept;
+    BLCIter< T > cbegin() const;
 
     BLIter< T > end();
-    BLCIter< T > cend() const noexcept;
+    BLCIter< T > cend() const;
 
     T& front();
     const T& front() const;
@@ -126,7 +126,7 @@ shirokov::BLIter< T > shirokov::BiList< T >::end()
 }
 
 template < class T >
-shirokov::BLCIter< T > shirokov::BiList< T >::cend() const noexcept
+shirokov::BLCIter< T > shirokov::BiList< T >::cend() const
 {
   return shirokov::BLCIter< T >(nullptr);
 }
@@ -391,7 +391,7 @@ void shirokov::BiList< T >::pop_back()
 }
 
 template < class T >
-shirokov::BLCIter< T > shirokov::BiList< T >::cbegin() const noexcept
+shirokov::BLCIter< T > shirokov::BiList< T >::cbegin() const
 {
   return shirokov::BLCIter< T >(head);
 }
