@@ -11,8 +11,6 @@ namespace permyakov
     List < T > * curr;
     public:
       LIter &operator++();
-      LIter &operator--();
-      LIter &operator[]();
       LIter &operator==(LIter < T > &ScndIter);
       LIter &operator!=(LIter < T > &ScndIter);
   };
@@ -23,8 +21,6 @@ namespace permyakov
     const List < T > * curr;
     public:
       LCIter &operator++();
-      LCIter &operator--();
-      LCIter &operator[]();
       LCIter &operator==(LCIter < T > &ScndIter);
       LCIter &operator!=(LCIter < T > &ScndIter);
   };
