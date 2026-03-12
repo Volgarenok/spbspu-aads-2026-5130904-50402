@@ -18,7 +18,7 @@ namespace lachugin
   template< class T >
   class List
   {
-    Node<T>* fake;
+    Node< T >* fake;
   public:
     List();
     Node< T >* addNext(const T& val, Node< T >* h);
@@ -105,7 +105,6 @@ namespace lachugin
     return *this;
   }
 
-
   template < class T >
   class LCIter
   {
@@ -113,16 +112,63 @@ namespace lachugin
     const Node< const T > *curr;
   };
 
-
-  std::pair< std::string, List< int >* >* getline(std::istream &in, size_t& size)
+  template<class T>
+  void expand(std::pair<std::string, List<T>*>*& arr, size_t& cap, size_t size)
   {
-    size = 0;
-    std::string name;
-    List < int >* h = nullptr;
+    size_t newCap = cap * 2;
 
-    while (in >> name) {
+    auto* newArr = new std::pair<std::string, List<T>*>[newCap];
 
+    for(size_t i = 0; i < size; ++i)
+    {
+      newArr[i] = arr[i];
     }
+
+    delete[] arr;
+    arr = newArr;
+    cap = newCap;
+  }
+
+  std::pair<std::string, List<int>*>* getline(std::istream &in, size_t& size)
+  {
+    std::string name;
+    size_t cap = 5;
+    size = 0;
+    auto* arr = new std::pair<std::string, List<int>*>[cap];
+    while (in >> name)
+    {
+      List<int>* list = new List<int>();
+      Node<int>* curr = nullptr;
+
+      int value;
+
+      while (in >> value)
+      {
+        if(curr == nullptr)
+        {
+          curr = list->add(value);
+        }
+        else
+        {
+          curr = list->addNext(value, curr);
+        }
+      }
+
+      if(size == cap)
+      {
+        expand(arr, cap, size);
+      }
+
+      arr[size++] = {name, list};
+      if(in.eof())
+      {
+        break;
+      }
+
+      in.clear();
+    }
+
+    return arr;
   }
 
 }
