@@ -1,4 +1,5 @@
-#include <boost/test/unit_test.hpp>
+#define BOOST_TEST_MODULE S1
+#include <boost/test/included/unit_test.hpp>
 #include "bilist.hpp"
 
 BOOST_AUTO_TEST_CASE(just_created_it_means_empty)
