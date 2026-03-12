@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include <string>
 #include "bilist.hpp"
 
@@ -41,7 +42,7 @@ int main()
     }
   }
 
-  shirokov::BiList< int > listOfSum{};
+  shirokov::BiList< size_t > listOfSum{};
   shirokov::BiList< shirokov::BLEnds > iterators;
   for (auto& pair : sequences)
   {
@@ -51,7 +52,7 @@ int main()
   while (true)
   {
     bool flag = true;
-    int sum = 0;
+    size_t sum = 0;
     for (shirokov::BLEnds& ends : iterators)
     {
       if (ends.curr == ends.end)
@@ -63,6 +64,11 @@ int main()
         std::cout << ' ';
       }
       std::cout << *ends.curr;
+      if (sum > std::numeric_limits< size_t >::max() - *ends.curr)
+      {
+        std::cerr << "Overflow error\n";
+        return 1;
+      }
       sum += *ends.curr;
       ++ends.curr;
       flag = false;
@@ -79,7 +85,7 @@ int main()
   {
     std::cout << 0 << '\n';
   }
-  for (int s : listOfSum)
+  for (size_t s : listOfSum)
   {
     if (s != listOfSum.front())
     {
