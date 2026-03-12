@@ -6,9 +6,67 @@
 
 namespace strelnikov
 {
+  template < class T > class List;
+  template < class T > class LIter
+  {
+    friend class List< T >;
 
-  template < class T > class LIter;
-  template < class T > class LCIter;
+  public:
+    LIter() noexcept;
+
+    LIter(const LIter &other) noexcept;
+
+    LIter(LIter &&other) noexcept;
+
+    LIter &operator=(const LIter &rhs);
+
+    LIter &operator=(LIter &&rhs) noexcept;
+
+    ~LIter() noexcept = default;
+
+    T &operator*() const noexcept;
+    T *operator->() const noexcept;
+
+    LIter &operator++();
+    LIter operator++(int);
+
+    bool operator==(const LIter &other) const noexcept;
+    bool operator!=(const LIter &other) const noexcept;
+
+  private:
+    Node< T > *curr_;
+  };
+
+  template < class T > class LCIter
+  {
+    friend class List< T >;
+
+  public:
+    LCIter() noexcept;
+
+    LCIter(const LCIter &other) noexcept;
+
+    LCIter(LCIter &&other) noexcept;
+
+    LCIter &operator=(const LCIter &rhs);
+
+    LCIter &operator=(LCIter &&rhs) noexcept;
+
+    ~LCIter() noexcept = default;
+
+    T &operator*() const noexcept;
+    T *operator->() const noexcept;
+
+    LCIter &operator++();
+    LCIter operator++(int);
+
+    bool operator==(const LCIter &other) const noexcept;
+    bool operator!=(const LCIter &other) const noexcept;
+
+  private:
+    const Node< T > *curr_;
+  };
+
   template < class T > class List
   {
   public:
@@ -28,12 +86,12 @@ namespace strelnikov
     void clear();
     bool empty();
 
-    iterator insert_after(const_iterator pos, const T& value);
-    iterator insert_after(const_iterator pos, T&& value);
-    iterator insert_after(const_iterator pos, size_type n, const T& value);
+    iterator insert_after(const_iterator pos, const T &value);
+    iterator insert_after(const_iterator pos, T &&value);
+    iterator insert_after(const_iterator pos, size_type n, const T &value);
 
     iterator erase_after(const_iterator pos);
-    
+
     iterator begin() noexcept;
     const_iterator begin() const noexcept;
     const_iterator cbegin() const noexcept;
