@@ -53,37 +53,55 @@ int main()
   {
     bool flag = true;
     size_t sum = 0;
+    shirokov::BiList< size_t > row;
+
     for (shirokov::BLEnds& ends : iterators)
     {
       if (ends.curr == ends.end)
       {
         continue;
       }
-      if (&ends != &iterators.front())
-      {
-        std::cout << ' ';
-      }
-      std::cout << *ends.curr;
-      if (sum > std::numeric_limits< size_t >::max() - *ends.curr)
+
+      size_t value = *ends.curr;
+
+      if (sum > std::numeric_limits< size_t >::max() - value)
       {
         std::cerr << "Overflow error\n";
         return 1;
       }
-      sum += *ends.curr;
+
+      sum += value;
+      row.push_back(value);
+
       ++ends.curr;
       flag = false;
     }
+
     if (flag)
     {
       break;
     }
+
+    bool first = true;
+    for (size_t v : row)
+    {
+      if (!first)
+      {
+        std::cout << ' ';
+      }
+      std::cout << v;
+      first = false;
+    }
+
     std::cout << '\n';
+
     listOfSum.push_back(sum);
   }
 
   if (listOfSum.empty())
   {
     std::cout << 0 << '\n';
+    return 0;
   }
   for (size_t s : listOfSum)
   {
