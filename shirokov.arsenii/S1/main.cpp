@@ -103,6 +103,12 @@ int main()
     sums.push_back(sum);
   }
 
+  if (sums.empty())
+  {
+    std::cout << 0 << '\n';
+    return 0;
+  }
+
   // std::cout << "SEVENTH\n";
   bool isFirst = true;
   for (size_t s : sums)
