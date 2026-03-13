@@ -22,13 +22,60 @@ int main()
   }
 
   // std::cout << "SECOND\n";
+  for (auto it = seq.begin(); it != seq.end(); ++it)
+  {
+    if (it != seq.begin())
+    {
+      std::cout << ' ';
+    }
+    std::cout << (*it).first;
+  }
+  if (!seq.empty())
+  {
+    std::cout << '\n';
+  }
+
+  // std::cout << "THIRD\n";
   shirokov::BiList< std::pair< shirokov::BLIter< size_t >, shirokov::BLIter< size_t > > > iterators{};
   for (auto it = seq.begin(); it != seq.end(); ++it)
   {
     iterators.push_back({(*it).second.begin(), (*it).second.end()});
   }
 
-  // std::cout << "THIRD\n";
+  // std::cout << "FOURTH\n";
+  while (true)
+  {
+    bool areValid = false;
+    bool isFirst = true;
+    for (auto& ends : iterators)
+    {
+      if (ends.first != ends.second)
+      {
+        if (!isFirst)
+        {
+          std::cout << ' ';
+        }
+        std::cout << *ends.first;
+        isFirst = false;
+        ++ends.first;
+        areValid = true;
+      }
+    }
+    if (!areValid)
+    {
+      break;
+    }
+    std::cout << '\n';
+  }
+
+  // std::cout << "FIFTH\n";
+  iterators.clear();
+  for (auto it = seq.begin(); it != seq.end(); ++it)
+  {
+    iterators.push_back({(*it).second.begin(), (*it).second.end()});
+  }
+
+  // std::cout << "SIXTH\n";
   shirokov::BiList< size_t > sums{};
   while (true)
   {
@@ -54,59 +101,6 @@ int main()
       break;
     }
     sums.push_back(sum);
-  }
-
-  // std::cout << "FOURTH\n";
-  for (auto it = seq.begin(); it != seq.end(); ++it)
-  {
-    if (it != seq.begin())
-    {
-      std::cout << ' ';
-    }
-    std::cout << (*it).first;
-  }
-  if (!seq.empty())
-  {
-    std::cout << '\n';
-  }
-
-  if (sums.empty())
-  {
-    std::cout << 0 << '\n';
-    return 0;
-  }
-
-  // std::cout << "FIFTH\n";
-  iterators.clear();
-  for (auto it = seq.begin(); it != seq.end(); ++it)
-  {
-    iterators.push_back({(*it).second.begin(), (*it).second.end()});
-  }
-
-  // std::cout << "SIXTH\n";
-  while (true)
-  {
-    bool areValid = false;
-    bool isFirst = true;
-    for (auto& ends : iterators)
-    {
-      if (ends.first != ends.second)
-      {
-        if (!isFirst)
-        {
-          std::cout << ' ';
-        }
-        std::cout << *ends.first;
-        isFirst = false;
-        ++ends.first;
-        areValid = true;
-      }
-    }
-    if (!areValid)
-    {
-      break;
-    }
-    std::cout << '\n';
   }
 
   // std::cout << "SEVENTH\n";
