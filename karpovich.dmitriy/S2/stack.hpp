@@ -28,7 +28,7 @@ namespace karpovich
   template< class T >
   T& Stack< T >::top() noexcept
   {
-
+    return data_.back();
   }
   template< class T >
   void Stack< T >::push(const T& rhs)
@@ -38,7 +38,7 @@ namespace karpovich
   template< class T >
   void Stack< T >::pop() noexcept
   {
-    data_.pop_front();
+    data_.pop_back();
   }
 }
 #endif

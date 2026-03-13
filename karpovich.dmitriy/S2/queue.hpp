@@ -29,7 +29,7 @@ namespace karpovich
   template< class T >
   T& Queue< T >::front() noexcept
   {
-
+    return data_.front();
   }
   template< class T >
   void Queue< T >::push(const T& rhs)
