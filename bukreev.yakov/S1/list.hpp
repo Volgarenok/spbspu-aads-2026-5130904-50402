@@ -19,12 +19,30 @@ namespace bukreev
 
   public:
     LIter< T > next() const noexcept;
-    T operator*() const;
+    T& operator*() const;
     bool operator==(const LIter< T >& other);
     bool operator!=(const LIter< T >& other);
 
   private:
     LIter(Node< T >* node) noexcept;
+
+  private:
+    Node< T >* m_cur;
+  };
+
+  template< class T >
+  class LCIter
+  {
+    friend class List< T >;
+
+  public:
+    LCIter< T > next() const noexcept;
+    T operator*() const;
+    bool operator==(const LCIter< T >& other);
+    bool operator!=(const LCIter< T >& other);
+
+  private:
+    LCIter(Node< T >* node) noexcept;
 
   private:
     Node< T >* m_cur;
@@ -41,6 +59,8 @@ namespace bukreev
     void clear() noexcept;
     LIter< T > begin() const noexcept;
     LIter< T > end() const noexcept;
+    LCIter< T > cbegin() const noexcept;
+    LCIter< T > cend() const noexcept;
     void pushBack(const T& value);
 
   private:
@@ -114,6 +134,18 @@ namespace bukreev
   }
 
   template< class T >
+  LCIter< T > List< T >::cbegin() const noexcept
+  {
+    return LCIter< T >(m_fake.next);
+  }
+
+  template< class T >
+  LCIter< T > List< T >::cend() const noexcept
+  {
+    return LCIter< T >(nullptr);
+  }
+
+  template< class T >
   void List< T >::pushBack(const T& value)
   {
     Node< T >* node = new Node< T >;
@@ -138,7 +170,7 @@ namespace bukreev
   }
 
   template< class T >
-  T LIter< T >::operator*() const
+  T& LIter< T >::operator*() const
   {
     return m_cur->val;
   }
@@ -159,6 +191,36 @@ namespace bukreev
   LIter< T > LIter< T >::next() const noexcept
   {
     return LIter< T >(m_cur->next);
+  }
+
+  template< class T >
+  LCIter< T >::LCIter(Node< T >* node) noexcept
+  {
+    m_cur = node;
+  }
+
+  template< class T >
+  T LCIter< T >::operator*() const
+  {
+    return m_cur->val;
+  }
+
+  template< class T >
+  bool LCIter< T >::operator==(const LCIter< T >& other)
+  {
+    return m_cur == other.m_cur;
+  }
+
+  template< class T >
+  bool LCIter< T >::operator!=(const LCIter< T >& other)
+  {
+    return m_cur != other.m_cur;
+  }
+
+  template< class T >
+  LCIter< T > LCIter< T >::next() const noexcept
+  {
+    return LCIter< T >(m_cur->next);
   }
 }
 
