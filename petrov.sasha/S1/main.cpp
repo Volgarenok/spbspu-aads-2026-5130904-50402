@@ -83,4 +83,19 @@ bool petrov::buildSums(const RowList& rows, NumberList& sums) {
     }
     sums.pushBack(sum);
   }
+  return true;
+}
+
+void petrov::printNames(std::ostream& output, const SequenceList& sequences) {
+  SequenceList::const_iterator it = sequences.cbegin();
+  if (it == sequences.cend()) {
+    return;
+  }
+  output << it->first;
+  ++it;
+  while (it != sequences.cend()) {
+    output << ' ' << it->first;
+    ++it;
+  }
+  output << '\n';
 }
