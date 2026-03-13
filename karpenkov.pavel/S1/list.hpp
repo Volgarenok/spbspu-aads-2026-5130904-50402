@@ -2,7 +2,11 @@
 #define LIST_HPP
 #include <iostream>
 namespace karpenkov{
+  template<class T> class LIter;
+  template<class T> class LCIter;
   template<class T> class List{
+    friend class LIter<T>;
+    friend class LCIter<T>;
     struct Node{
       T value;
       Node* next;
@@ -44,15 +48,15 @@ namespace karpenkov{
 		Node* temp_tail = tail->prev;
 	    delete tail;
 		tail = temp_tail;
-		if (temp){
-		  temp->next = nullptr;
+		if (tail){
+		  tail->next = nullptr;
 		}
 		else{
 		  head = nullptr;
 		}
 	  }
 	  void pop_front(){
-		if (head = nullptr){
+		if (head == nullptr){
 		  return;
 		}
 	    Node* temp_head = head->next;
@@ -72,10 +76,10 @@ namespace karpenkov{
 	    return LIter<T>();
 	  }
       LCIter<T> cbegin() const{
-	    return LIter<T>(head);
+	    return LCIter<T>(head);
       }
 	  LCIter<T> cend() const{
-	    return LIter<T>();
+	    return LCIter<T>();
 	  }
     private:
       Node* head = nullptr;
