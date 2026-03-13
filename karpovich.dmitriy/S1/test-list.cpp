@@ -184,4 +184,50 @@ BOOST_AUTO_TEST_CASE(test_insert)
   BOOST_CHECK_EQUAL(*it, 4);
 }
 
+BOOST_AUTO_TEST_CASE(test_front)
+{
+  List< int > list;
+  list.push_back(1);
+  list.push_back(2);
+  BOOST_CHECK_EQUAL(list.front(), 1);
+  list.front() = 10;
+  BOOST_CHECK_EQUAL(*list.begin(), 10);
+}
+
+BOOST_AUTO_TEST_CASE(test_back)
+{
+  List< int > list;
+  list.push_back(1);
+  list.push_back(2);
+  BOOST_CHECK_EQUAL(list.back(), 2);
+  list.back() = 20;
+  LIter< int > it = list.end();
+  it--;
+  BOOST_CHECK_EQUAL(*it, 20);
+}
+
+BOOST_AUTO_TEST_CASE(test_front_back_const)
+{
+  List< int > list;
+  list.push_back(5);
+  const List< int > &cref = list;
+  BOOST_CHECK_EQUAL(cref.front(), 5);
+  BOOST_CHECK_EQUAL(cref.back(), 5);
+}
+
+BOOST_AUTO_TEST_CASE(test_erase)
+{
+  List< int > list;
+  list.push_back(1);
+  list.push_back(2);
+  list.push_back(3);
+  LIter< int > it = list.begin();
+  ++it;
+  LIter< int > next = list.erase(it);
+  BOOST_CHECK_EQUAL(*next, 3);
+  BOOST_CHECK_EQUAL(list.size(), 2);
+  BOOST_CHECK_EQUAL(list.front(), 1);
+  BOOST_CHECK_EQUAL(list.back(), 3);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
