@@ -77,3 +77,16 @@ BOOST_AUTO_TEST_CASE(empty_test)
   it = k.insert(it, 3);
   BOOST_TEST(!k.empty());
 }
+
+BOOST_AUTO_TEST_CASE(hasNext_test)
+{
+  lavrentev::List<int> k{};
+  lavrentev::LCIter<int> it{};
+  BOOST_TEST(!it.hasNext());
+
+  it = k.insert(it, 3);
+  BOOST_TEST(!it.hasNext());
+
+  k.insert(it, 4);
+  BOOST_TEST(it.hasNext());
+}
