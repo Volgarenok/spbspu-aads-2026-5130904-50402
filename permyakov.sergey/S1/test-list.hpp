@@ -13,7 +13,7 @@ BOOST_AUTO_TEST_CASE(test_erase)
   list.push_front(0);
   LIter < int > bItList = list.begin();
   LIter < int > eItList = list.end();
-  bItList++;
+  ++bItList;
   list.erase(bItList);
   BOOST_CHECK_EQUAL(list.size(), 2);
   BOOST_CHECK_EQUAL(list.front(), 0);
@@ -28,7 +28,8 @@ BOOST_AUTO_TEST_CASE(test_clear)
   list.push_front(0);
   list.clear();
   BOOST_CHECK_EQUAL(list.size(), 0);
-  BOOST_CHECK(itList == list.front());
+  LIter < int > sItList = list.begin();
+  BOOST_CHECK(itList == sItList);
 }
 
 BOOST_AUTO_TEST_CASE(test_begin)

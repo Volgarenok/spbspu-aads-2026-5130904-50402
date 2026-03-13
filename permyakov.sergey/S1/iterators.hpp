@@ -13,8 +13,8 @@ namespace permyakov
     public:
       T &operator*();
       LIter &operator++();
-      LIter &operator==(LIter < T > &ScndIter);
-      LIter &operator!=(LIter < T > &ScndIter);
+      bool &operator==(LIter < T > &ScndIter);
+      bool &operator!=(LIter < T > &ScndIter);
   };
 
   template < class T > class LCIter
@@ -24,8 +24,8 @@ namespace permyakov
     public:
       const T &operator*();
       LCIter &operator++();
-      LCIter &operator==(LCIter < T > &ScndIter);
-      LCIter &operator!=(LCIter < T > &ScndIter);
+      bool &operator==(LCIter < T > &ScndIter);
+      bool &operator!=(LCIter < T > &ScndIter);
   };
 }
 

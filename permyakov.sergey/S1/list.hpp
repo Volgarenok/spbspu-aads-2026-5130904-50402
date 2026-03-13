@@ -8,18 +8,19 @@ namespace permyakov
   template < class T > class List
   {
     Node < T > * list;
-    size_t size;
+    size_t size_;
     public:
       List();
       List(const List< T > &scndList);
       List(List< T > &&scndList);
       ~List();
       T front();
-      LIter begin();
-      LCter beginC();
-      LIter end();
-      LCter endC();
-      LIter insert_after(LIter < T > pos, const T value);
+      size_t size();
+      LIter < T > begin();
+      LIter < T > end();
+      LCIter < T > beginC();
+      LCIter < T > endC();
+      LIter < T > insert_after(LIter < T > pos, const T value);
       void erase(LIter < T > pos);
       void clear();
       void push_front(const T value);
