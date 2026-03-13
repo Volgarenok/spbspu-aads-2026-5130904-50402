@@ -16,3 +16,9 @@ void karpenkov::readSequences(std::istream& input, pair_list& list){
     list.push_back({name, seq});
   }
 }
+void printNames(const pair_list& list, std::ostream& output){
+  for (auto it = list.cbegin(); it != list.cend(); ++it){
+    output << (*it).first << " ";
+  }
+  output << '\n';
+}

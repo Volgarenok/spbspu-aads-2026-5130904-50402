@@ -71,6 +71,12 @@ namespace karpenkov{
 	  LIter<T> end(){
 	    return LIter<T>();
 	  }
+      LCIter<T> cbegin() const{
+	    return LIter<T>(head);
+      }
+	  LCIter<T> cend() const{
+	    return LIter<T>();
+	  }
     private:
       Node* head = nullptr;
       Node* tail = nullptr;
