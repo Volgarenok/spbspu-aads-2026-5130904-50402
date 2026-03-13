@@ -1,10 +1,12 @@
 #include "List.hpp"
+#include <string>
+#include <utility>
 
 template < class T >
 saldaev::List< T >::Node::Node(const T &d, Node *n, Node *p):
   data(d),
   next(n),
-  prev(v)
+  prev(p)
 {}
 
 template < class T >
@@ -13,22 +15,25 @@ saldaev::List< T >::List():
   tail(nullptr),
   length(0)
 {
-  head = new Node(T(), nullptr, nullptr);
+  head = static_cast< Node * >(::operator new(sizeof(Node)));
   try {
-    tail = new Node(T(), head, nullptr);
+    tail = static_cast< Node * >(::operator new(sizeof(Node)));
   } catch (...) {
-    delete head;
+    ::operator delete(head);
     throw;
   }
   head->next = tail;
+  head->prev = nullptr;
+  tail->prev = head;
+  tail->next = nullptr;
 }
 
 template < class T >
 saldaev::List< T >::~List()
 {
   clear();
-  delete head;
-  delete tail;
+  ::operator delete(head);
+  ::operator delete(tail);
 }
 
 template < class T >
@@ -41,7 +46,7 @@ saldaev::List< T >::List(const List &other):
     }
   } catch (...) {
     clear();
-    throw
+    throw;
   }
 }
 
@@ -247,7 +252,8 @@ saldaev::LCIter< T > saldaev::LCIter< T >::operator++(int) noexcept
 {
   LCIter< T > ret = *this;
   if (isValid()) {
-    curr = curr->next valid = curr->next;
+    curr = curr->next;
+    valid = curr->next;
   }
   return ret;
 }
@@ -267,7 +273,8 @@ saldaev::LCIter< T > saldaev::LCIter< T >::operator--(int) noexcept
 {
   LCIter< T > ret = *this;
   if (isValid()) {
-    curr = curr->prev valid = curr->prev;
+    curr = curr->prev;
+    valid = curr->prev;
   }
   return ret;
 }
@@ -347,7 +354,8 @@ saldaev::LIter< T > saldaev::LIter< T >::operator++(int) noexcept
 {
   LIter< T > ret = *this;
   if (isValid()) {
-    curr = curr->next valid = curr->next;
+    curr = curr->next;
+    valid = curr->next;
   }
   return ret;
 }
@@ -367,7 +375,8 @@ saldaev::LIter< T > saldaev::LIter< T >::operator--(int) noexcept
 {
   LIter< T > ret = *this;
   if (isValid()) {
-    curr = curr->prev valid = curr->prev;
+    curr = curr->prev;
+    valid = curr->prev;
   }
   return ret;
 }
@@ -407,3 +416,15 @@ T &saldaev::LIter< T >::getData() noexcept
 {
   return curr->data;
 }
+
+template class saldaev::List< int >;
+template struct saldaev::LIter< int >;
+template struct saldaev::LCIter< int >;
+
+template class saldaev::List< std::pair< std::string, saldaev::List< int > > >;
+template struct saldaev::LIter< std::pair< std::string, saldaev::List< int > > >;
+template struct saldaev::LCIter< std::pair< std::string, saldaev::List< int > > >;
+
+template class saldaev::List< saldaev::LIter< int > >;
+template struct saldaev::LIter< saldaev::LIter< int > >;
+template struct saldaev::LCIter< saldaev::LIter< int > >;
