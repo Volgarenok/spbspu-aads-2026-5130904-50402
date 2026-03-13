@@ -15,8 +15,54 @@ namespace petrov
   class List;
 
   template< class T >
-  class LIter {
+  struct Node {
+    T value_;
+    Node< T >* next_, * prev_;
 
+    Node(const T& value):
+      value_(value)
+      next_(nullptr)
+      prev_(nullptr)
+    {}
+  };
+
+  template< class T >
+  class LIter {
+    friend class List< T >;
+  public:
+    LIter(Node< T >* ptr = nullptr):
+      ptr_(ptr)
+    {}
+    T * operator->() const
+    {
+      return std::addressof(ptr_->value_);
+    }
+    LIter< T >& operator++() {
+      ptr_ = ptr_->next;
+      return *this;
+    }
+    LIter< T > operator++(int) {
+      LIter< T > temp(*this);
+      ++(*this);
+      return temp;
+    }
+    LIter< T >& operator--() {
+      ptr_ = ptr_->prev;
+      return *this;
+    }
+    LIter< T > operator--(int) {
+      LIter< T > temp(*this);
+      --(*this);
+      return temp;
+    }
+    bool operator==(const LIter< T >& other) const {
+      return ptr_ == other.ptr_;
+    }
+    bool operator!=(const LIter< T >& other) const {
+      return !(*this == other);
+    }
+  private:
+    Node< T >* ptr_;
   };
   template< class T >
   class LCIter {
