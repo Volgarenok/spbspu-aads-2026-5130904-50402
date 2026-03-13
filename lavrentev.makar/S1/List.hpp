@@ -73,20 +73,20 @@ namespace lavrentev
     Node *head;
   };
 
-  lavrentev::List<std::pair<std::string, lavrentev::List<int>>>
+  lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>>
   getline(std::istream &in);
   void
-  printTrans(lavrentev::List<std::pair<std::string, lavrentev::List<int>>> arr);
+  printTrans(lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>> arr);
 
 }
 
-inline lavrentev::List<std::pair<std::string, lavrentev::List<int>>>
+inline lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>>
 lavrentev::getline(std::istream &in)
 {
-  lavrentev::List<std::pair<std::string, lavrentev::List<int>>> sequences{};
-  std::pair<std::string, lavrentev::List<int>> pair;
+  lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>> sequences{};
+  std::pair<std::string, lavrentev::List<size_t>> pair;
   std::string name;
-  lavrentev::List<int> seq{};
+  lavrentev::List<size_t> seq{};
   auto it = seq.begin();
   auto iterator = sequences.begin();
 
@@ -95,7 +95,7 @@ lavrentev::getline(std::istream &in)
     return sequences;
   }
 
-  int value;
+  size_t value;
   try
   {
     while (true)
@@ -136,28 +136,27 @@ lavrentev::getline(std::istream &in)
   return sequences;
 }
 
-inline void lavrentev::printTrans(lavrentev::List<std::pair<std::string, lavrentev::List<int>>> arr)
+inline void lavrentev::printTrans(lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>> arr)
 {
-  lavrentev::LIter<std::pair<std::string, lavrentev::List<int>>> iterator =
-      arr.begin();
-  lavrentev::List<lavrentev::LIter<int>> iters = {};
+  lavrentev::LIter<std::pair<std::string, lavrentev::List<size_t>>> iterator = arr.begin();
+  lavrentev::List<lavrentev::LIter<size_t>> iters = {};
   while (iterator != arr.end())
   {
-    lavrentev::LIter<int> it = {(*iterator).second.begin()};
+    lavrentev::LIter<size_t> it = {(*iterator).second.begin()};
     iters.insert(iters.end(), it);
     ++iterator;
   }
-  lavrentev::LIter<lavrentev::LIter<int>> itersIt = iters.begin();
+  lavrentev::LIter<lavrentev::LIter<size_t>> itersIt = iters.begin();
   while (true)
   {
-    int sum = 0;
+    size_t sum = 0;
     iterator = arr.begin();
     bool first = true;
     while (itersIt != iters.end())
     {
       if (*itersIt != (*iterator).second.end())
       {
-        int k = **itersIt;
+        size_t k = **itersIt;
         sum = k;
         if (!first)
         {
