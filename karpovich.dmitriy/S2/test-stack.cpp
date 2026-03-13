@@ -31,7 +31,7 @@ BOOST_AUTO_TEST_CASE(test_top)
 
   stack.push(20);
   BOOST_CHECK_EQUAL(stack.top(), 20);
-  
+
   stack.top() = 30;
   BOOST_CHECK_EQUAL(stack.top(), 30);
 }
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(test_pop)
   Stack< int > stack;
   stack.push(1);
   stack.push(2);
-  
+
   stack.pop();
   BOOST_CHECK_EQUAL(stack.size(), 1);
 }
