@@ -5,11 +5,20 @@
 
 int main()
 {
-  lavrentev::List<std::pair<std::string, lavrentev::List<int>>> arr = {lavrentev::getline(std::cin)};
+  lavrentev::List<std::pair<std::string, lavrentev::List<int>>> arr;
+  try
+  {
+    arr = lavrentev::getline(std::cin);
+  }
+  catch (const std::overflow_error& e)
+  {
+    std::cerr << e.what() << "\n";
+    return 1;
+  }
   lavrentev::LIter<std::pair<std::string, lavrentev::List<int>>> iterator = arr.begin();
   if((*iterator).first == "")
   {
-    exit(0);
+    return 0;
   }
   if((*iterator).second.begin() == nullptr)
   {
@@ -43,7 +52,7 @@ int main()
         if(sum > std::numeric_limits<int>::max() - k)
         {
           std::cerr << "Integer overflow";
-          throw;
+          return 1;
         }
         sum += k;
         if(!first)
