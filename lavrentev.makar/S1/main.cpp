@@ -9,8 +9,7 @@ int main()
   try
   {
     arr = lavrentev::getline(std::cin);
-  }
-  catch (const std::overflow_error& e)
+  } catch (const std::overflow_error &e)
   {
     std::cerr << e.what() << "\n";
     return 1;
@@ -22,17 +21,19 @@ int main()
     return 0;
   }
 
-  lavrentev::LIter<std::pair<std::string, lavrentev::List<int>>> iterator = arr.begin();
-  if((*iterator).first == "")
+  lavrentev::LIter<std::pair<std::string, lavrentev::List<int>>> iterator =
+      arr.begin();
+  if ((*iterator).first == "")
   {
     return 0;
   }
-  if((*iterator).second.begin() == nullptr)
+  if ((*iterator).second.begin() == nullptr)
   {
     std::cout << (*iterator).first << "\n" << "0" << "\n";
     return 0;
   }
   iterator.printNames(std::cout);
+  lavrentev::printTrans(arr);
 
   lavrentev::List<lavrentev::LIter<int>> iters = {};
   lavrentev::List<int> sums = {};
@@ -40,7 +41,6 @@ int main()
   while (iterator != arr.end())
   {
     lavrentev::LIter<int> it = {(*iterator).second.begin()};
-    it.printList(std::cout);
     iters.insert(iters.end(), it);
     ++iterator;
   }
@@ -55,8 +55,8 @@ int main()
     {
       if (*itersIt != (*iterator).second.end())
       {
-        int k  = **itersIt;
-        if(sum > std::numeric_limits<int>::max() - k)
+        int k = **itersIt;
+        if (sum > std::numeric_limits<int>::max() - k)
         {
           std::cout << "overflow" << "\n";
           return 1;

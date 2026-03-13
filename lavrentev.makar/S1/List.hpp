@@ -51,8 +51,8 @@ namespace lavrentev
     };
 
     List() : head(nullptr) {};
-    List(const List&);
-    List(List&&);
+    List(const List &);
+    List(List &&);
     ~List() noexcept;
     List<T> &operator=(const List<T> &);
     List<T> &operator=(List<T> &&);
@@ -75,8 +75,10 @@ namespace lavrentev
 
   lavrentev::List<std::pair<std::string, lavrentev::List<int>>>
   getline(std::istream &in);
+  void
+  printTrans(lavrentev::List<std::pair<std::string, lavrentev::List<int>>> arr);
 
-} // namespace lavrentev
+}
 
 inline lavrentev::List<std::pair<std::string, lavrentev::List<int>>>
 lavrentev::getline(std::istream &in)
@@ -132,6 +134,49 @@ lavrentev::getline(std::istream &in)
     throw;
   }
   return sequences;
+}
+
+inline void lavrentev::printTrans(lavrentev::List<std::pair<std::string, lavrentev::List<int>>> arr)
+{
+  lavrentev::LIter<std::pair<std::string, lavrentev::List<int>>> iterator =
+      arr.begin();
+  lavrentev::List<lavrentev::LIter<int>> iters = {};
+  while (iterator != arr.end())
+  {
+    lavrentev::LIter<int> it = {(*iterator).second.begin()};
+    iters.insert(iters.end(), it);
+    ++iterator;
+  }
+  lavrentev::LIter<lavrentev::LIter<int>> itersIt = iters.begin();
+  while (true)
+  {
+    int sum = 0;
+    iterator = arr.begin();
+    bool first = true;
+    while (itersIt != iters.end())
+    {
+      if (*itersIt != (*iterator).second.end())
+      {
+        int k = **itersIt;
+        sum = k;
+        if (!first)
+        {
+          std::cout << " ";
+        }
+        std::cout << k;
+        first = false;
+        ++(*itersIt);
+      }
+      ++itersIt;
+      ++iterator;
+    }
+    if (sum == 0)
+    {
+      break;
+    }
+    std::cout << "\n";
+    itersIt = iters.begin();
+  }
 }
 
 template <class T>
@@ -192,7 +237,7 @@ template <class T> void lavrentev::LIter<T>::printList(std::ostream &os)
   bool first = true;
   while (it.curr)
   {
-    if(!first)
+    if (!first)
     {
       std::cout << " ";
     }
@@ -209,7 +254,7 @@ template <class T> void lavrentev::LIter<T>::printNames(std::ostream &os)
   bool first = true;
   while (it.curr)
   {
-    if(!first)
+    if (!first)
     {
       os << " ";
     }
