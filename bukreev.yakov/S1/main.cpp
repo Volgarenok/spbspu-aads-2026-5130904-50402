@@ -30,5 +30,7 @@ void bukreev::input(std::istream& in, List< Sequence >& seqs)
     }
 
     seqs.pushBack({name, list});
+
+    in.clear();
   }
 }
