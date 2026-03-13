@@ -10,6 +10,7 @@ namespace permyakov
     friend class List;
     List < T > * curr;
     public:
+      T &operator*();
       LIter &operator++();
       LIter &operator==(LIter < T > &ScndIter);
       LIter &operator!=(LIter < T > &ScndIter);
@@ -20,6 +21,7 @@ namespace permyakov
     friend class List;
     const List < T > * curr;
     public:
+      const T LCIter &operator*();
       LCIter &operator++();
       LCIter &operator==(LCIter < T > &ScndIter);
       LCIter &operator!=(LCIter < T > &ScndIter);
