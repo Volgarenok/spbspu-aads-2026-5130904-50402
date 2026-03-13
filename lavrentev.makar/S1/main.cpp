@@ -16,11 +16,11 @@ int main()
     return 1;
   }
 
-  if (arr.empty())
+  /*if (arr.empty())
   {
     std::cout << "0\n";
     return 0;
-  }
+  }*/
 
   lavrentev::LIter<std::pair<std::string, lavrentev::List<int>>> iterator = arr.begin();
   if((*iterator).first == "")
@@ -29,8 +29,8 @@ int main()
   }
   if((*iterator).second.begin() == nullptr)
   {
-    std::cerr << "Empty list";
-    throw;
+    std::cout << "\n" << "0" << "\n";
+    return 0;
   }
   iterator.printNames(std::cout);
 

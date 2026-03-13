@@ -236,7 +236,7 @@ template <class T> void lavrentev::LIter<T>::printNames(std::ostream &os)
   {
     if(!first)
     {
-      std::cout << " ";
+      os << " ";
     }
     os << (*it).first;
     ++it;
