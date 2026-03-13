@@ -15,6 +15,13 @@ int main()
     std::cerr << e.what() << "\n";
     return 1;
   }
+
+  if (arr.empty())
+  {
+    std::cout << "0\n";
+    return 0;
+  }
+
   lavrentev::LIter<std::pair<std::string, lavrentev::List<int>>> iterator = arr.begin();
   if((*iterator).first == "")
   {

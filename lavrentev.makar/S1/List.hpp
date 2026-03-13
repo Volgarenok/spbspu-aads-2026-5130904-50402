@@ -50,7 +50,7 @@ namespace lavrentev
       Node *next;
     };
 
-    List() = default;
+    List() : head(nullptr) {};
     List(const List&);
     List(List&&);
     ~List() noexcept;
