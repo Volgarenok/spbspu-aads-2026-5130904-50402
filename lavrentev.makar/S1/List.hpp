@@ -50,10 +50,10 @@ namespace lavrentev
       Node *next;
     };
 
-    List<T>() = default;
-    List<T>(const List<T> &);
-    List<T>(List<T> &&);
-    ~List<T>() noexcept;
+    List() = default;
+    List(const List&);
+    List(List&&);
+    ~List() noexcept;
     List<T> &operator=(const List<T> &);
     List<T> &operator=(List<T> &&);
 
