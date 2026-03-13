@@ -189,11 +189,16 @@ template <class T> const T &lavrentev::LCIter<T>::operator*() const
 template <class T> void lavrentev::LIter<T>::printList(std::ostream &os)
 {
   LIter<T> it = *this;
-
+  bool first = true;
   while (it.curr)
   {
-    os << *it << " ";
+    if(!first)
+    {
+      std::cout << " ";
+    }
+    os << *it;
     ++it;
+    first = false;
   }
   os << "\n";
 }
@@ -201,11 +206,16 @@ template <class T> void lavrentev::LIter<T>::printList(std::ostream &os)
 template <class T> void lavrentev::LIter<T>::printNames(std::ostream &os)
 {
   LIter<T> it = *this;
-
+  bool first = true;
   while (it.curr)
   {
-    os << (*it).first << " ";
+    if(!first)
+    {
+      std::cout << " ";
+    }
+    os << (*it).first;
     ++it;
+    first = false;
   }
   os << "\n";
 }
