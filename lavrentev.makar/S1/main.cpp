@@ -51,7 +51,6 @@ int main()
   {
     int sum = 0;
     iterator = arr.begin();
-    bool first = true;
     while (itersIt != iters.end())
     {
       if (*itersIt != (*iterator).second.end())
