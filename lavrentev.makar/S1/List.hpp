@@ -93,39 +93,14 @@ lavrentev::getline(std::istream &in)
     return sequences;
   }
 
-  std::string value;
+  int value;
   try
   {
     while (true)
     {
       if (in >> value)
       {
-        bool isNumber = !value.empty();
-        for (size_t i = 0; i < value.size() && isNumber; ++i)
-        {
-          if (!std::isdigit(value[i]))
-          {
-            isNumber = false;
-          }
-        }
-
-        if (isNumber)
-        {
-          if (value.size() > 10 || (value.size() == 10 && value > "2147483647"))
-          {
-            throw std::overflow_error("overflow");
-          }
-          it = seq.insert(it, std::stoi(value));
-        }
-        else
-        {
-          pair.first = name;
-          pair.second = seq;
-          iterator = sequences.insert(iterator, pair);
-          name = value;
-          seq.clear();
-          it = seq.begin();
-        }
+        it = seq.insert(it, value);
       }
       else
       {

@@ -40,6 +40,7 @@ int main()
   while (iterator != arr.end())
   {
     lavrentev::LIter<int> it = {(*iterator).second.begin()};
+    it.printList(std::cout);
     iters.insert(iters.end(), it);
     ++iterator;
   }
@@ -58,16 +59,10 @@ int main()
         int k  = **itersIt;
         if(sum > std::numeric_limits<int>::max() - k)
         {
-          std::cerr << "Integer overflow";
+          std::cout << "overflow" << "\n";
           return 1;
         }
         sum += k;
-        if(!first)
-        {
-          std::cout << " ";
-        }
-        std::cout << k;
-        first = false;
         ++(*itersIt);
       }
       ++itersIt;
@@ -77,7 +72,6 @@ int main()
     {
       break;
     }
-    std::cout << "\n";
     sums.insert(sums.end(), sum);
     itersIt = iters.begin();
   }
