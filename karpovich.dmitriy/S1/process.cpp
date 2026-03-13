@@ -1,10 +1,10 @@
-#include "process.hpp"
-#include "iterators.hpp"
-#include "list.hpp"
 #include <cstddef>
 #include <limits>
 #include <stdexcept>
 #include <utility>
+#include <iterators.hpp>
+#include <list.hpp>
+#include "process.hpp"
 
 void karpovich::input(std::istream &in, list_pair_t &list)
 {
