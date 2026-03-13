@@ -8,7 +8,6 @@ namespace lavrentev
 
   template <class T> class LIter
   {
-    
   public:
     bool operator==(const LIter<T> &other) const;
     bool operator!=(const LIter<T> &other) const;
@@ -17,7 +16,9 @@ namespace lavrentev
 
     LIter() : curr(nullptr) {};
     LIter(typename lavrentev::List<T>::Node *node) : curr(node) {};
-    //LIter(typename std::pair<std::string, lavrentev::List<int>> *node) : curr(node) {};
+
+    void printList(std::ostream &os);
+    void printNames(std::ostream &os);
 
   private:
     friend class List<T>;
@@ -34,11 +35,6 @@ namespace lavrentev
 
     LCIter() : curr(nullptr) {};
     explicit LCIter(typename List<T>::Node *node) : curr(node) {};
-    //LCIter(typename std::pair<std::string, lavrentev::List<int>> *node) : curr(node) {};
-
-    void printList(std::ostream &os);
-    void printNames(std::ostream &os);
-    bool hasNext() const;
 
   private:
     friend class List<T>;
@@ -67,20 +63,23 @@ namespace lavrentev
     LIter<T> popFront();
     LIter<T> begin();
     LCIter<T> cbegin() const;
-    T& front();
-    const T& front() const;
+    LIter<T> end();
+    LCIter<T> cend() const;
+    T &front();
+    const T &front() const;
     bool empty() const;
 
   private:
-    //T val;
     Node *head;
   };
 
-  lavrentev::List<std::pair<std::string, lavrentev::List<int>>> getline(std::istream &in);
+  lavrentev::List<std::pair<std::string, lavrentev::List<int>>>
+  getline(std::istream &in);
 
 } // namespace lavrentev
 
-inline lavrentev::List<std::pair<std::string, lavrentev::List<int>>> lavrentev::getline(std::istream &in)
+inline lavrentev::List<std::pair<std::string, lavrentev::List<int>>>
+lavrentev::getline(std::istream &in)
 {
   lavrentev::List<std::pair<std::string, lavrentev::List<int>>> sequences{};
   std::pair<std::string, lavrentev::List<int>> pair;
@@ -102,7 +101,6 @@ inline lavrentev::List<std::pair<std::string, lavrentev::List<int>>> lavrentev::
       if (in >> value)
       {
         it = seq.insert(it, value);
-        //++it;
       }
       else
       {
@@ -188,32 +186,21 @@ template <class T> const T &lavrentev::LCIter<T>::operator*() const
   return curr->val;
 }
 
-template <class T> void lavrentev::LCIter<T>::printList(std::ostream &os)
+template <class T> void lavrentev::LIter<T>::printList(std::ostream &os)
 {
-  LCIter<T> it = *this;
+  LIter<T> it = *this;
 
   while (it.curr)
   {
-    os << (*it).first << " ";
-
-    const lavrentev::List<int> &valList = (*it).second;
-    lavrentev::LCIter<int> valIt = valList.cbegin();
-
-    while (valIt != lavrentev::LCIter<int>())
-    {
-      os << *valIt << " ";
-      ++valIt;
-    }
-
-    os << "\n";
+    os << *it << " ";
     ++it;
   }
+  os << "\n";
 }
 
-template <class T>
-void lavrentev::LCIter<T>::printNames(std::ostream &os)
+template <class T> void lavrentev::LIter<T>::printNames(std::ostream &os)
 {
-  LCIter<T> it = *this;
+  LIter<T> it = *this;
 
   while (it.curr)
   {
@@ -295,7 +282,7 @@ lavrentev::List<T> &lavrentev::List<T>::operator=(const List<T> &other)
 template <class T>
 lavrentev::List<T> &lavrentev::List<T>::operator=(lavrentev::List<T> &&other)
 {
-  if(this != &other)
+  if (this != &other)
   {
     clear();
     head = other.head;
@@ -322,15 +309,18 @@ lavrentev::LIter<T> lavrentev::List<T>::insert(lavrentev::LIter<T> h, const T &v
   newNode->val = v;
   newNode->next = nullptr;
 
-  if (h.curr == nullptr)
+  if (head == nullptr)
   {
-    newNode->next = head;
     head = newNode;
   }
   else
   {
-    newNode->next = h.curr->next;
-    h.curr->next = newNode;
+    Node *current = head;
+    while (current->next != nullptr)
+    {
+      current = current->next;
+    }
+    current->next = newNode;
   }
 
   return LIter<T>(newNode);
@@ -343,18 +333,21 @@ lavrentev::LCIter<T> lavrentev::List<T>::insert(lavrentev::LCIter<T> h, const T 
   newNode->val = v;
   newNode->next = nullptr;
 
-  if (h.curr == nullptr)
+  if (head == nullptr)
   {
-    newNode->next = head;
     head = newNode;
   }
   else
   {
-    newNode->next = h.curr->next;
-    h.curr->next = newNode;
+    Node *current = head;
+    while (current->next != nullptr)
+    {
+      current = current->next;
+    }
+    current->next = newNode;
   }
 
-  return LIter<T>(newNode);
+  return LCIter<T>(newNode);
 }
 
 template <class T> lavrentev::LIter<T> lavrentev::List<T>::popFront()
@@ -380,7 +373,17 @@ template <class T> lavrentev::LCIter<T> lavrentev::List<T>::cbegin() const
   return LCIter<T>(head);
 }
 
-template <class T> T& lavrentev::List<T>::front()
+template <class T> lavrentev::LIter<T> lavrentev::List<T>::end()
+{
+  return LIter<T>(nullptr);
+}
+
+template <class T> lavrentev::LCIter<T> lavrentev::List<T>::cend() const
+{
+  return LCIter<T>(nullptr);
+}
+
+template <class T> T &lavrentev::List<T>::front()
 {
   if (head == nullptr)
   {
@@ -390,7 +393,7 @@ template <class T> T& lavrentev::List<T>::front()
   return h.curr->val;
 }
 
-template <class T> const T& lavrentev::List<T>::front() const
+template <class T> const T &lavrentev::List<T>::front() const
 {
   if (head == nullptr)
   {
@@ -402,17 +405,14 @@ template <class T> const T& lavrentev::List<T>::front() const
 
 template <class T> bool lavrentev::List<T>::empty() const
 {
-  if(head == nullptr){
+  if (head == nullptr)
+  {
     return true;
-  } else {
+  }
+  else
+  {
     return false;
   }
-}
-
-template <class T>
-bool lavrentev::LCIter<T>::hasNext() const
-{
-  return curr != nullptr && curr->next != nullptr;
 }
 
 #endif

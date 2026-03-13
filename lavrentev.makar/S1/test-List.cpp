@@ -1,6 +1,6 @@
 #define BOOST_TEST_MODULE ListTest
 #include <boost/test/included/unit_test.hpp>
-//#include <sstream>
+#include <sstream>
 #include "List.hpp"
 
 BOOST_AUTO_TEST_CASE(clear_test)
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(begin_test)
 {
   lavrentev::List<int> k{};
   BOOST_CHECK(k.begin() == lavrentev::LIter<int>());
-  
+
   lavrentev::LIter<int> it;
   it = k.insert(it, 3);
   BOOST_CHECK(k.begin() == it);
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(cbegin_test)
 {
   lavrentev::List<int> k{};
   BOOST_CHECK(k.cbegin() == lavrentev::LCIter<int>());
-  
+
   lavrentev::LIter<int> it;
   it = k.insert(it, 3);
   lavrentev::LCIter<int> cit = k.cbegin();
@@ -55,16 +55,28 @@ BOOST_AUTO_TEST_CASE(cbegin_test)
   BOOST_TEST(*cit == 3);
 }
 
+BOOST_AUTO_TEST_CASE(end_test)
+{
+  lavrentev::List<int> k{};
+  BOOST_CHECK(k.end() == lavrentev::LIter<int>());
+}
+
+BOOST_AUTO_TEST_CASE(cend_test)
+{
+  lavrentev::List<int> k{};
+  BOOST_CHECK(k.cend() == lavrentev::LCIter<int>());
+}
+
 BOOST_AUTO_TEST_CASE(front_test)
 {
   lavrentev::List<int> k{};
   BOOST_CHECK_THROW(k.front(), std::out_of_range);
-  
+
   lavrentev::LIter<int> it;
   it = k.insert(it, 3);
   BOOST_TEST(k.front() == 3);
 
-  const lavrentev::List<int>& ck = k;
+  const lavrentev::List<int> &ck = k;
   BOOST_TEST(ck.front() == 3);
 }
 
@@ -72,21 +84,8 @@ BOOST_AUTO_TEST_CASE(empty_test)
 {
   lavrentev::List<int> k{};
   BOOST_TEST(k.empty());
-  
+
   lavrentev::LIter<int> it;
   it = k.insert(it, 3);
   BOOST_TEST(!k.empty());
-}
-
-BOOST_AUTO_TEST_CASE(hasNext_test)
-{
-  lavrentev::List<int> k{};
-  lavrentev::LCIter<int> it{};
-  BOOST_TEST(!it.hasNext());
-
-  it = k.insert(it, 3);
-  BOOST_TEST(!it.hasNext());
-
-  k.insert(it, 4);
-  BOOST_TEST(it.hasNext());
 }
