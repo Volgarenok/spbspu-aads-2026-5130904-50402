@@ -40,3 +40,12 @@ bool petrov::readSequences(std::istream& input, SequenceList& sequences) {
   }
   return true;
 }
+
+std::size_t petrov::getMaxLength(const SequenceList& sequences) {
+  std::size_t max_lenght = 0;
+  for (SequenceList::const_iterator it = sequences.cbegin(); it != sequences.cend(); ++it) {
+    const std::size_t current_size = it->second.size();
+    max_lenght = (max_lenght < current_size) ? current_size : max_lenght;
+  }
+  return max_lenght;
+}
