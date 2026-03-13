@@ -9,7 +9,7 @@ int main()
 
 bool petrov::readSequences(std::istream& input, SequenceList& sequences) {
   while (true) {
-    std::string name = '';
+    std::string name = "";
     if (!(input >> name)) {
       if (input.eof()) {
         return true;
@@ -26,7 +26,7 @@ bool petrov::readSequences(std::istream& input, SequenceList& sequences) {
       if (next_symbol == std::char_traits< char >::eof()) {
         break;
       }
-      std::size_t number = 0;
+      size_t number = 0;
       if (!(input >> number)) {
         return false;
       }
@@ -41,11 +41,33 @@ bool petrov::readSequences(std::istream& input, SequenceList& sequences) {
   return true;
 }
 
-std::size_t petrov::getMaxLength(const SequenceList& sequences) {
-  std::size_t max_lenght = 0;
+size_t petrov::getMaxLength(const SequenceList& sequences) {
+  size_t max_lenght = 0;
   for (SequenceList::const_iterator it = sequences.cbegin(); it != sequences.cend(); ++it) {
-    const std::size_t current_size = it->second.size();
+    const size_t current_size = it->second.size();
     max_lenght = (max_lenght < current_size) ? current_size : max_lenght;
   }
   return max_lenght;
+}
+
+void petrov::buildRows(const SequenceList& sequences, RowList& rows) {
+  const size_t max_lenght = getMaxLength(sequences);
+  for (size_t position = 0; position < max_lenght; ++position) {
+    NumberList row;
+    for (SequenceList::const_iterator seq_it = sequences.cbegin(); seq_it != sequences.cend(); ++seq_it) {
+      NumberList::const_iterator num_it = seq_it->second.cbegin();
+      size_t current_index = 0;
+
+      while (current_index < position && num_it != seq_it->second.cend()) {
+        ++num_it;
+        ++current_index;
+      }
+      if (num_it != seq_it->second.cend()) {
+        row.pushBack(*num_it);
+      }
+    }
+    if (!(row.empty())) {
+      rows.pushBack(std::move(row));
+    }
+  }
 }
