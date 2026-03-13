@@ -313,7 +313,7 @@ lavrentev::LIter<T> lavrentev::List<T>::insert(lavrentev::LIter<T> h, const T &v
   {
     head = newNode;
   }
-  else
+  else if (h.curr == nullptr)
   {
     Node *current = head;
     while (current->next != nullptr)
@@ -321,6 +321,11 @@ lavrentev::LIter<T> lavrentev::List<T>::insert(lavrentev::LIter<T> h, const T &v
       current = current->next;
     }
     current->next = newNode;
+  }
+  else
+  {
+    newNode->next = h.curr->next;
+    h.curr->next = newNode;
   }
 
   return LIter<T>(newNode);
@@ -337,7 +342,7 @@ lavrentev::LCIter<T> lavrentev::List<T>::insert(lavrentev::LCIter<T> h, const T 
   {
     head = newNode;
   }
-  else
+  else if (h.curr == nullptr)
   {
     Node *current = head;
     while (current->next != nullptr)
@@ -345,6 +350,11 @@ lavrentev::LCIter<T> lavrentev::List<T>::insert(lavrentev::LCIter<T> h, const T 
       current = current->next;
     }
     current->next = newNode;
+  }
+  else
+  {
+    newNode->next = h.curr->next;
+    h.curr->next = newNode;
   }
 
   return LCIter<T>(newNode);
