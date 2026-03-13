@@ -71,3 +71,16 @@ void petrov::buildRows(const SequenceList& sequences, RowList& rows) {
     }
   }
 }
+
+bool petrov::buildSums(const RowList& rows, NumberList& sums) {
+  for (RowList::const_iterator row_it = rows.cbegin(); row_it != rows.cend(); ++row_it) {
+    size_t sum = 0;
+    for (NumberList::const_iterator num_it = row_it->cbegin(); num_it != row_it->cend(); ++num_it) {
+      if (sum > max_size_value - *num_it) {
+        return false;
+      }
+      sum += *num_it;
+    }
+    sums.pushBack(sum);
+  }
+}
