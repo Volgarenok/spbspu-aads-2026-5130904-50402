@@ -1,5 +1,6 @@
 #include <cctype>
 #include <iostream>
+#include <limits>
 #include "List.hpp"
 
 int main()
@@ -28,12 +29,12 @@ int main()
   }
 
   lavrentev::LIter<lavrentev::LIter<int>> itersIt = iters.begin();
-  bool first = true;
 
   while (true)
   {
     int sum = 0;
     iterator = arr.begin();
+    bool first = true;
     while (itersIt != iters.end())
     {
       if (*itersIt != (*iterator).second.end())
@@ -48,9 +49,9 @@ int main()
         if(!first)
         {
           std::cout << " ";
-          first = false;
         }
         std::cout << k;
+        first = false;
         ++(*itersIt);
       }
       ++itersIt;
