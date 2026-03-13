@@ -1,5 +1,4 @@
 #include <boost/test/unit_test.hpp>
-#include "iterators.hpp"
 #include "list.hpp"
 
 using namespace permyakov;
@@ -47,6 +46,24 @@ BOOST_AUTO_TEST_CASE(test_end)
   list.push_front(2);
   list.push_front(1);
   LIter < int > itList = list.end();
+  BOOST_CHECK_EQUAL(*itList, 2);
+}
+
+BOOST_AUTO_TEST_CASE(test_beginC)
+{
+  List < int > list;
+  list.push_front(2);
+  list.push_front(1);
+  LCIter < int > itList = list.beginC();
+  BOOST_CHECK_EQUAL(*itList, 1);
+}
+
+BOOST_AUTO_TEST_CASE(test_endC)
+{
+  List < int > list;
+  list.push_front(2);
+  list.push_front(1);
+  LCIter < int > itList = list.endC();
   BOOST_CHECK_EQUAL(*itList, 2);
 }
 

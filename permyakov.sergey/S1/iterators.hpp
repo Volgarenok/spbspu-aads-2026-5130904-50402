@@ -1,5 +1,6 @@
-#ifdef ITERATORS_HPP
+#ifndef ITERATORS_HPP
 #define ITERATORS_HPP
+#include "node.hpp"
 
 namespace permyakov
 {
@@ -7,8 +8,8 @@ namespace permyakov
 
   template < class T > class LIter
   {
-    friend class List;
-    List < T > * curr;
+    friend class List < T >;
+    Node < T > * curr;
     public:
       T &operator*();
       LIter &operator++();
@@ -18,10 +19,10 @@ namespace permyakov
 
   template < class T > class LCIter
   {
-    friend class List;
-    const List < T > * curr;
+    friend class List < T >;
+    const Node < T > * curr;
     public:
-      const T LCIter &operator*();
+      const T &operator*();
       LCIter &operator++();
       LCIter &operator==(LCIter < T > &ScndIter);
       LCIter &operator!=(LCIter < T > &ScndIter);

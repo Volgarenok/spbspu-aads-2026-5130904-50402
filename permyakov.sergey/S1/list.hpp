@@ -1,4 +1,4 @@
-#ifdef LIST_HPP
+#ifndef LIST_HPP
 #define LIST_HPP
 #include <cstddef>
 #include "iterators.hpp"
@@ -7,8 +7,7 @@ namespace permyakov
 {
   template < class T > class List
   {
-    T val;
-    List <T> * next;
+    Node < T > * list;
     size_t size;
     public:
       List();
