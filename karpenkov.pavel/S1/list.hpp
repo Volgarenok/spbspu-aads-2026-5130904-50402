@@ -11,7 +11,7 @@ namespace karpenkov{
         value(value), next(next), prev(prev) {}
     };
     public:
-      List<T>() = default;
+      List() = default;
 
       void push_back(const T & v){
         Node* newNode = new Node(v);
@@ -68,6 +68,26 @@ namespace karpenkov{
     private:
       Node* head = nullptr;
       Node* tail = nullptr;
+  };
+  template<class T> LIter{
+    friend class List<T>;
+    private:
+      typename List<T>::Node* node;
+    public:
+      LIter(typename List<T>::Node* n = nullptr): node(n) {}
+	  T& operator*(){
+	    return node->value;
+      }
+      LIter operator++(){
+        node = node -> next;
+		return *this;
+      }
+      bool operator==(const LIter& rhs){
+        return node == rhs.node;
+	  }
+	  bool operator!=(const LIter& rhs){
+	    return node != rhs.node;
+      }
   };
 }
 #endif
