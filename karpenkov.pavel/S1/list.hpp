@@ -65,11 +65,17 @@ namespace karpenkov{
 		  tail = nullptr;
 		}
       }
+      LIter<T> begin(){
+	    return LIter<T>(head);
+      }
+	  LIter<T> end(){
+	    return LIter<T>();
+	  }
     private:
       Node* head = nullptr;
       Node* tail = nullptr;
   };
-  template<class T> LIter{
+  template<class T> class LIter{
     friend class List<T>;
     private:
       typename List<T>::Node* node;
@@ -78,14 +84,14 @@ namespace karpenkov{
 	  T& operator*(){
 	    return node->value;
       }
-      LIter operator++(){
+      LIter& operator++(){
         node = node -> next;
 		return *this;
       }
-      bool operator==(const LIter& rhs){
+      bool operator==(const LIter& rhs) const{
         return node == rhs.node;
 	  }
-	  bool operator!=(const LIter& rhs){
+	  bool operator!=(const LIter& rhs) const{
 	    return node != rhs.node;
       }
   };
