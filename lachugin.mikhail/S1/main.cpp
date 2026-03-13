@@ -97,7 +97,21 @@ namespace lachugin
     explicit LIter(Node<T>* n) : curr(n) {}
 
     LIter &operator++();
+
+    bool operator==(const LIter& other);
+
+    bool operator!=(const LIter& other);
   };
+
+  template< class T >
+  bool LIter <T >::operator==(const LIter &other) {
+    return curr == other.curr;
+  }
+
+  template<class T>
+  bool LIter<T>::operator!=(const LIter &other) {
+    return curr != other.curr;
+  }
 
   template<class T>
   LIter<T> &LIter<T>::operator++() {
@@ -129,43 +143,59 @@ namespace lachugin
     cap = newCap;
   }
 
-  std::pair<std::string, List<int>*>* getline(std::istream &in, size_t& size)
+  std::pair<std::string, List<int>*>* getline(std::istream& in, size_t& size)
   {
-    std::string name;
     size_t cap = 5;
     size = 0;
+
     auto* arr = new std::pair<std::string, List<int>*>[cap];
-    while (in >> name)
+
+    std::string name;
+
+    try
     {
-      List<int>* list = new List<int>();
-      Node<int>* curr = nullptr;
-
-      int value;
-
-      while (in >> value)
+      while(in >> name)
       {
-        if(curr == nullptr)
+        List<int>* list = new List<int>();
+        Node<int>* curr = nullptr;
+
+        int value;
+
+        while(in >> value)
         {
-          curr = list->add(value);
+          if(curr == nullptr)
+          {
+            curr = list->add(value);
+          }
+          else
+          {
+            curr = list->addNext(value, curr);
+          }
         }
-        else
+
+        if(size == cap)
         {
-          curr = list->addNext(value, curr);
+          expand(arr, cap, size);
         }
-      }
 
-      if(size == cap)
+        arr[size++] = {name, list};
+
+        if(in.eof())
+          break;
+
+        in.clear();
+      }
+    }
+    catch(...)
+    {
+      for(size_t i = 0; i < size; ++i)
       {
-        expand(arr, cap, size);
+        arr[i].second->clear();
+        delete arr[i].second;
       }
 
-      arr[size++] = {name, list};
-      if(in.eof())
-      {
-        break;
-      }
-
-      in.clear();
+      delete[] arr;
+      throw;
     }
 
     return arr;
