@@ -66,7 +66,46 @@ namespace petrov
   };
   template< class T >
   class LCIter {
-
+    friend class List< T >;
+  public:
+    LCIter(const Node< T >* ptr = nullptr):
+      ptr_(ptr)
+    {}
+    LCIter(const LIter< T >& other):
+      ptr_(other.ptr_)
+    {}
+    const T& operator*() {
+      return ptr_->value;
+    }
+    const T* operator->() const {
+      return std::addressof(ptr_->value_);
+    }
+    LCIter< T >& operator++() {
+      ptr_ == ptr_->next;
+      return *this;
+    }
+    LCIter< T > operator++(int) {
+      LCIter< T >* temp(*this);
+      ++(*this);
+      return temp;
+    }
+    LCIter< T >& operator--() {
+      ptr_ = ptr_->prev_;
+      return *this;
+    }
+    LCIter< T > operator--(int) {
+      LCIter< T > temp(*this);
+      --(*this);
+      return temp;
+    }
+    bool operator==(const LCIter< T >& other) const {
+      return ptr_ == other.ptr_;
+    }
+    bool operator!=(const LCIter< T >& other) const {
+      return !(*this == other);
+    }
+  private:
+    const Node< T >* ptr_;
   };
 }
 
