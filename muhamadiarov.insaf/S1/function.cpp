@@ -88,3 +88,33 @@ void muh::printNames(std::ostream& out, const l_pair_str_l_t& list)
     }
   }
 }
+
+void muh::printSum(std::ostream& out, const List< List< size_t > >& list)
+{
+  if (list.size() == 0)
+  {
+    out << 0;
+    return;
+  }
+  LCIter< List< size_t > > iter = list.cbegin();
+  while (iter != list.cend())
+  {
+    const List< size_t >& inList = *iter;
+    size_t sum = 0;
+    if (inList.size() != 0)
+    {
+      LCIter< size_t > inIter = inList.cbegin();
+      for (size_t i = 0; i < inList.size(); ++i)
+      {
+	sum += *inIter;
+	++inIter;
+      }     
+    }
+    out << sum;
+    ++iter;
+    if (iter != list.cend())
+    {
+      out << ' ';
+    }
+  }
+}

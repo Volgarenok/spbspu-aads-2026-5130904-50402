@@ -14,5 +14,6 @@ namespace muhamadiarov
   List< List< size_t > > transposes(const l_pair_str_l_t& list);
   void printList(std::ostream& out, const List< List< size_t > >& list);
   void printNames(std::ostream& out, const l_pair_str_l_t& list);
+  void printSum(std::ostream& out, const List< List< size_t > >& list);
 }
 #endif
