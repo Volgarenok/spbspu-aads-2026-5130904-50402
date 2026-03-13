@@ -37,6 +37,34 @@ namespace karpenkov{
 		  head = newNode;
 		}
 	  }
+      void pop_back(){
+		if (tail == nullptr){
+		  return;
+		}
+		Node* temp_tail = tail->prev;
+	    delete tail;
+		tail = temp_tail;
+		if (temp){
+		  temp->next = nullptr;
+		}
+		else{
+		  head = nullptr;
+		}
+	  }
+	  void pop_front(){
+		if (head = nullptr){
+		  return;
+		}
+	    Node* temp_head = head->next;
+		delete head;
+		head = temp_head;
+		if (head){
+		  head->prev = nullptr;
+		}
+		else{
+		  tail = nullptr;
+		}
+      }
     private:
       Node* head = nullptr;
       Node* tail = nullptr;
