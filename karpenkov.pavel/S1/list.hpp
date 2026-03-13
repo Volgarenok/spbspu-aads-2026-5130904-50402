@@ -95,5 +95,26 @@ namespace karpenkov{
 	    return node != rhs.node;
       }
   };
+  template<class T> class LCIter {
+    friend class List<T>;
+    private:
+      typename List<T>::Node* node;
+    public:
+      LCIter(typename List<T>::Node* n = nullptr) : node(n) {}
+      const T& operator*() const {
+        return node->value;
+      }
+      LCIter& operator++() {
+        node = node->next;
+        return *this;
+      }
+
+      bool operator==(const LCIter& rhs) const {
+        return node == rhs.node;
+      }
+      bool operator!=(const LCIter& rhs) const {
+        return node != rhs.node;
+      }
+  };
 }
 #endif
