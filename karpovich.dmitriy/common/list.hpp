@@ -19,11 +19,16 @@ namespace karpovich
     List &operator=(List< T > &&other) noexcept;
     ~List() noexcept;
 
+    T &front() noexcept;
+    T &back() noexcept;
+    const T &front() const noexcept;
+    const T &back() const noexcept;
     LIter< T > begin();
     LIter< T > end();
     LCIter< T > begin() const;
     LCIter< T > end() const;
     LIter< T > insert(LIter< T > pos, const T &value);
+    LIter< T > erase(LIter< T > pos) noexcept;
     void push_front(const T &val);
     void push_back(const T &val);
     void pop_front();
@@ -197,6 +202,34 @@ namespace karpovich
     size_++;
 
     return LIter< T >{new_node};
+  }
+
+  template < class T > T &List< T >::front() noexcept
+  {
+    return fake_->next->val;
+  }
+  template < class T > const T &List< T >::front() const noexcept
+  {
+    return fake_->next->val;
+  }
+  template < class T > T &List< T >::back() noexcept
+  {
+    return fake_->prev->val;
+  }
+  template < class T > const T &List< T >::back() const noexcept
+  {
+    return fake_->prev->val;
+  }
+
+  template < class T > LIter< T > List< T >::erase(LIter< T > pos) noexcept
+  {
+    Node< T > *node = pos.ptr_;
+    Node< T > *next = node->next;
+    node->prev->next = next;
+    next->prev = node->prev;
+    delete node;
+    size_--;
+    return LIter< T >{next};
   }
 }
 #endif
