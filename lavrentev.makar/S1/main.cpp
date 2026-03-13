@@ -6,6 +6,15 @@ int main()
 {
   lavrentev::List<std::pair<std::string, lavrentev::List<int>>> arr = {lavrentev::getline(std::cin)};
   lavrentev::LIter<std::pair<std::string, lavrentev::List<int>>> iterator = arr.begin();
+  if((*iterator).first == "")
+  {
+    exit(0);
+  }
+  if((*iterator).second.begin() == nullptr)
+  {
+    std::cerr << "Empty list";
+    throw;
+  }
   iterator.printNames(std::cout);
 
   lavrentev::List<lavrentev::LIter<int>> iters = {};
@@ -19,6 +28,7 @@ int main()
   }
 
   lavrentev::LIter<lavrentev::LIter<int>> itersIt = iters.begin();
+  bool first = true;
 
   while (true)
   {
@@ -28,8 +38,19 @@ int main()
     {
       if (*itersIt != (*iterator).second.end())
       {
-        sum += **itersIt;
-        std::cout << **itersIt << " ";
+        int k  = **itersIt;
+        if(sum > std::numeric_limits<int>::max() - k)
+        {
+          std::cerr << "Integer overflow";
+          throw;
+        }
+        sum += k;
+        if(!first)
+        {
+          std::cout << " ";
+          first = false;
+        }
+        std::cout << k;
         ++(*itersIt);
       }
       ++itersIt;
