@@ -11,8 +11,8 @@ namespace permyakov
     size_t size_;
     public:
       List();
-      List(const List< T > &scndList);
-      List(List< T > &&scndList);
+      List(const List< T > & scndList);
+      List(List< T > && scndList);
       ~List();
       T front();
       size_t size();
