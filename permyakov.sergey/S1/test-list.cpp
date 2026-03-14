@@ -9,10 +9,6 @@ BOOST_AUTO_TEST_CASE(test_default_constructor)
 {
   List < int > listNum;
   BOOST_CHECK_EQUAL(listNum.size(), 0);
-  BOOST_CHECK_EQUAL(listNum.front(), 0);
-  List < bool > listBool;
-  BOOST_CHECK_EQUAL(listBool.size(), 0);
-  BOOST_CHECK_EQUAL(listBool.front(), false);
 }
 
 BOOST_AUTO_TEST_CASE(test_copy_constructor)

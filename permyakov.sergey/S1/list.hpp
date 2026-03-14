@@ -2,6 +2,7 @@
 #define LIST_HPP
 #include <cstddef>
 #include <utility>
+#include <stdexcept>
 #include "iterators.hpp"
 
 namespace permyakov
@@ -144,6 +145,7 @@ namespace permyakov
     Node < T > * ersNode = pos.curr;
     ++pos;
     delete[] ersNode; 
+    size_--;
   }
 
   template < class T > void List < T >::clear()
@@ -158,6 +160,7 @@ namespace permyakov
   template < class T > void List < T >::push_front(const T value)
   {
     nodes = new Node < T > {value, nodes};
+    size_++;
   }
 
   template < class T > void List < T >::pop_front()
@@ -165,6 +168,7 @@ namespace permyakov
     Node < T > * ersNode = nodes;
     nodes = nodes -> next;
     delete[] ersNode; 
+    size_--;
   }
 }
 
