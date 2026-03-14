@@ -72,7 +72,10 @@ void muh::printList(std::ostream& out, const List< List< size_t > >& list)
         out << ' ' << *podIter;
       }
     }
-    out << '\n';
+    if (i != list.size() - 1)
+    {
+      out << '\n';
+    }
     ++iter;
   }
 }
