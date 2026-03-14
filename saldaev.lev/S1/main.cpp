@@ -4,12 +4,12 @@
 
 int main()
 {
-  saldaev::List< std::pair< std::string, saldaev::List< int > > > outer;
+  saldaev::List< std::pair< std::string, saldaev::List< size_t > > > outer;
 
   std::string name = "";
   size_t num = 0;
   while (std::cin >> name) {
-    saldaev::List< int > numList;
+    saldaev::List< size_t > numList;
     while (std::cin >> num) {
       numList.newTail(num);
     }
@@ -20,8 +20,12 @@ int main()
     }
   }
 
-  saldaev::LIter< std::pair< std::string, saldaev::List< int > > > outerIt = outer.begin();
-  saldaev::List< saldaev::LIter< int > > iters;
+  if (outer.begin() == outer.end()) {
+    return 0;
+  }
+
+  saldaev::LIter< std::pair< std::string, saldaev::List< size_t > > > outerIt = outer.begin();
+  saldaev::List< saldaev::LIter< size_t > > iters;
   while (outerIt != outer.end()) {
     iters.newTail(outerIt.getData().second.begin());
     ++outerIt;
@@ -38,21 +42,21 @@ int main()
     ++outerIt;
   }
 
-  saldaev::List< int > sums;
+  saldaev::List< size_t > sums;
   for (size_t i = 0; i < iters.getLength(); ++i) {
     sums.newHead(0);
   }
-  saldaev::LIter< int > sumsIt = sums.begin();
+  saldaev::LIter< size_t > sumsIt = sums.begin();
 
   bool any_left = true;
   while (any_left) {
     std::cout << '\n';
     any_left = false;
-    saldaev::LIter< saldaev::LIter< int > > iterIt = iters.begin();
+    saldaev::LIter< saldaev::LIter< size_t > > iterIt = iters.begin();
 
     first = true;
     while (iterIt != iters.end()) {
-      saldaev::LIter< int > &innerIt = iterIt.getData();
+      saldaev::LIter< size_t > &innerIt = iterIt.getData();
       if (innerIt.isValid()) {
         if (!first) {
           std::cout << ' ';
