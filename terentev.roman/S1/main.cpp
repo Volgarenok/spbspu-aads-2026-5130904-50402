@@ -70,6 +70,53 @@ int main()
     return 0;
   }
 
+  terentev::List< std::pair< std::string, terentev::List< unsigned long long > > >
+      tempSequences(sequences);
+  terentev::List< unsigned long long > sums;
+  terentev::List< unsigned long long >::LIter sumsTail;
+  bool isFirstSum = true;
+
+  while (true) {
+    bool hasNumbers = false;
+    unsigned long long sum = 0;
+
+    terentev::List<
+        std::pair< std::string, terentev::List< unsigned long long > > >::LIter
+        iter = tempSequences.begin();
+
+    while (iter != tempSequences.end()) {
+      terentev::List< unsigned long long > &currentList = (*iter).second;
+
+      if (!currentList.isEmpty()) {
+        unsigned long long value = currentList.front();
+
+        if (sum > ULLONG_MAX - value) {
+          std::cerr << "Overflow\n";
+          return 1;
+        }
+
+        sum += value;
+        currentList.popFront();
+        hasNumbers = true;
+      }
+
+      ++iter;
+    }
+
+    if (!hasNumbers) {
+      break;
+    }
+
+    if (isFirstSum) {
+      sums.pushFront(sum);
+      sumsTail = sums.begin();
+      isFirstSum = false;
+    } else {
+      sums.insertAfter(sumsTail, sum);
+      ++sumsTail;
+    }
+  }
+
   bool isFirstName = true;
   terentev::List<
       std::pair< std::string, terentev::List< unsigned long long > > >::LCIter
@@ -84,14 +131,9 @@ int main()
   }
   std::cout << '\n';
 
-  terentev::List< unsigned long long > sums;
-  terentev::List< unsigned long long >::LIter sumsTail;
-  bool isFirstSum = true;
-
   while (true) {
     bool hasNumbers = false;
     bool isFirstOutputNumber = true;
-    unsigned long long sum = 0;
 
     terentev::List<
         std::pair< std::string, terentev::List< unsigned long long > > >::LIter
@@ -103,19 +145,12 @@ int main()
       if (!currentList.isEmpty()) {
         unsigned long long value = currentList.front();
 
-        if (sum > ULLONG_MAX - value) {
-          std::cerr << "Overflow\n";
-          return 1;
-        }
-
         if (!isFirstOutputNumber) {
           std::cout << ' ';
         }
         std::cout << value;
 
-        sum += value;
         currentList.popFront();
-
         hasNumbers = true;
         isFirstOutputNumber = false;
       }
@@ -128,15 +163,6 @@ int main()
     }
 
     std::cout << '\n';
-
-    if (isFirstSum) {
-      sums.pushFront(sum);
-      sumsTail = sums.begin();
-      isFirstSum = false;
-    } else {
-      sums.insertAfter(sumsTail, sum);
-      ++sumsTail;
-    }
   }
 
   if (sums.isEmpty()) {
