@@ -62,6 +62,7 @@ int main()
   }
 
   if (sequences.isEmpty()) {
+    std::cout << "0\n";
     return 0;
   }
 
