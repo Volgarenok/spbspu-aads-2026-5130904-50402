@@ -2,6 +2,7 @@
 #include <string>
 #include <ostream>
 #include <algorithm>
+#include <limits>
 #include "function.hpp"
 #include "list.hpp"
 #include "lciter.hpp"
@@ -111,6 +112,10 @@ void muh::printSum(std::ostream& out, const List< List< size_t > >& list)
       LCIter< size_t > inIter = inList.cbegin();
       for (size_t i = 0; i < inList.size(); ++i)
       {
+        if (std::numeric_limits< size_t >::max() - sum < *inIter)
+        {
+          throw std::overflow_error("overflow_error");
+        }
         sum += *inIter;
         ++inIter;
       }

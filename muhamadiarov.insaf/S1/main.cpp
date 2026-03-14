@@ -19,8 +19,11 @@ int main()
   muh::List< muh::List< size_t > > trList = muh::transposes(list);
   muh::printNames(std::cout, list);
   std::cout << '\n';
-  muh::printList(std::cout, trList);
-  std::cout << '\n';
+  if (trList.size() != 0)
+  {
+    muh::printList(std::cout, trList);
+    std::cout << '\n';
+  }
   try
   {
     muh::printSum(std::cout, trList);
