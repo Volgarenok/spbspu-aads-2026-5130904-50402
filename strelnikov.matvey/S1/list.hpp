@@ -3,6 +3,7 @@
 
 #include "node.hpp"
 #include <cstddef>
+#include <utility>
 
 namespace strelnikov
 {
@@ -73,17 +74,19 @@ namespace strelnikov
     using list = List< T >;
     using iterator = LIter< T >;
     using const_iterator = LCIter< T >;
+    using node = Node< T >;
     List();
     List(const list &);
     List(list &&) noexcept;
     list &operator=(const list &);
-    list operator=(list &&) noexcept;
+    list &operator=(list &&) noexcept;
     ~List();
 
     void push_front(const T &);
     void push_front(T &&);
     void pop_front();
     void clear();
+    void swap(list &);
     bool empty();
 
     iterator insert_after(const_iterator, const T &);
@@ -101,7 +104,7 @@ namespace strelnikov
     const_iterator cend() const noexcept;
 
   private:
-    Node< T > *head_;
+    node *head_;
   };
 
   template < class T >
@@ -113,24 +116,25 @@ namespace strelnikov
   List< T >::List(const list &other):
     head_(nullptr)
   {
-    Node< T > *curr_other = other.head_;
+    if (other.head_ = nullptr) {
+      return;
+    }
+
+    head_ = new node();
+    head_->val = other.head_->val;
+    head_->next = nullptr;
+
+    node *curr_this = head_;
+    node *curr_other = other.head_->next;
 
     while (curr_other) {
-      Node< T > *new_node = new Node< T >();
+      node *tmp = new node();
+      tmp->val = curr_other->val;
+      tmp->next = nullptr;
 
-      new_node->val = curr_other->val;
-      new_node->next = curr_other->next;
+      curr_this->next = tmp;
 
-      if (head_) {
-        Node< T > *curr_this = head_;
-        while (curr_this) {
-          curr_this = curr_this->next;
-        }
-        curr_this->next = new_node;
-      } else {
-        head_ = new_node;
-      }
-
+      curr_this = curr_this->next;
       curr_other = curr_other->next;
     }
   }
@@ -142,17 +146,152 @@ namespace strelnikov
     other.head_ = nullptr;
   }
 
-  template < class T > List< T > &List< T >::operator=(const list &other)
+  template < class T > typename List< T >::list &List< T >::operator=(const list &other)
   {
-    Node < T > *tmp_head = new Node < T >();
-    tmp_head->val = other.head_->val;
-    tmp_head->next = other.head_->next;
-    
-    Node < T > *tmp_head = other.head_;
-    
-    return 
+    if (this == &other) {
+      return *this;
+    }
+
+    list tmp(other);
+    swap(tmp);
+    return *this;
   }
 
+  template < class T > typename List< T >::list &List< T >::operator=(list &&other) noexcept
+  {
+    if (this == &other) {
+      return *this;
+    }
+
+    swap(other);
+    return *this;
+  }
+
+  template < class T > List< T >::~List()
+  {
+    clear();
+  }
+
+  template < class T > void List< T >::push_front(const T &value)
+  {
+    node new_head = new node();
+    new_head.next = head_;
+    new_head.val = value;
+
+    head_ = new_head;
+  }
+
+  template < class T > void List< T >::push_front(T &&value)
+  {
+    node new_head = new node();
+    new_head.next = head_;
+    new_head.val = std::move(value);
+
+    head_ = new_head;
+  }
+
+  template < class T > void List< T >::pop_front()
+  {
+    node *tmp_head = head_->next;
+    delete head_;
+    head_ = tmp_head;
+  }
+
+  template < class T > void List< T >::clear()
+  {
+    while (head_) {
+      pop_front();
+    }
+  }
+
+  template < class T > void List< T >::swap(list &other)
+  {
+    std::swap(head_, other.head_);
+  }
+
+  template < class T > bool List< T >::empty()
+  {
+    return head_;
+  }
+
+  template < class T > typename List< T >::iterator List< T >::insert_after(const_iterator pos, const T &value)
+  {
+    node *curr = static_cast< node * >(pos.curr_);
+    node *new_node = new node();
+    new_node->val = value;
+    new_node->next = curr->next;
+
+    curr->next = new_node;
+
+    return iterator(new_node);
+  }
+
+  template < class T > typename List< T >::iterator List< T >::insert_after(const_iterator pos, T &&value)
+  {
+    node *curr = static_cast< node * >(pos.curr_);
+    node *new_node = new node();
+    new_node->val = std::move(value);
+    new_node->next = curr->next;
+
+    curr->next = new_node;
+
+    return iterator(new_node);
+  }
+
+  template < class T > typename List< T >::iterator List< T >::insert_after(const_iterator pos, size_t s, const T &value)
+  {
+    iterator curr = pos;
+    for (size_t i = 0; i < s; ++i) {
+      curr = insert_after(curr, value);
+    }
+    return curr;
+  }
+
+  template < class T > typename List< T >::iterator List< T >::erase_after(const_iterator pos)
+  {
+    node *curr = static_cast< node * >(pos.curr_);
+    node *to_delete = curr->next;
+
+    if (!to_delete) {
+      return iterator(nullptr);
+    }
+
+    curr->next = to_delete->next;
+
+    delete to_delete;
+
+    return iterator(curr->next);
+  }
+
+  template < class T > typename List< T >::iterator List< T >::begin() noexcept
+  {
+    return iterator(head_);
+  }
+
+  template < class T > typename List< T >::const_iterator List< T >::begin() const noexcept
+  {
+    return const_iterator(head_);
+  }
+
+  template < class T > typename List< T >::const_iterator List< T >::cbegin() const noexcept
+  {
+    return const_iterator(head_);
+  }
+
+  template < class T > typename List< T >::iterator List< T >::end() noexcept
+  {
+    return iterator(nullptr);
+  }
+
+  template < class T > typename List< T >::const_iterator List< T >::end() const noexcept
+  {
+    return const_iterator(nullptr);
+  }
+
+  template < class T > typename List< T >::const_iterator List< T >::cend() const noexcept
+  {
+    return const_iterator(nullptr);
+  }
 }
 
 #endif
