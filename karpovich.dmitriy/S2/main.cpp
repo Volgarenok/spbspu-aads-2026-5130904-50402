@@ -11,8 +11,8 @@
 int main(int argc, char **argv)
 {
   namespace karp = karpovich;
-  if (argc > 1) {
-    std::cerr << "bad num of arguments";
+  if (argc > 2) {
+    std::cerr << "bad num of arguments" << '\n';
     return 1;
   }
   std::istream *input = &std::cin;
@@ -20,7 +20,7 @@ int main(int argc, char **argv)
     std::ifstream file;
     file.open(argv[1]);
     if (!file.is_open()) {
-      std::cerr << "bad file";
+      std::cerr << "bad file" << '\n';
       return 1;
     }
     input = &file;

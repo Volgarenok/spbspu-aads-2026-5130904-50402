@@ -31,7 +31,7 @@ long long karpovich::mod(long long a, long long b)
   if (b == 0) {
     throw std::runtime_error("Division by zero");
   }
-  return a % b;
+  return (a % b + b) % b;
 }
 long long karpovich::multiply(long long a, long long b)
 {
