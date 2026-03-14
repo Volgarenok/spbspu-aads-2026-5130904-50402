@@ -1,10 +1,12 @@
 #ifndef LITER_HPP
 #define LITER_HPP
 
-#include "vanila_list.hpp"
 #include "node.hpp"
+#include <ostream>
 
 namespace chernikov {
+
+  template < typename T > class List;
 
   template < typename T > class LIter
   {
@@ -23,6 +25,11 @@ namespace chernikov {
       ptr(nullptr)
     {
     }
+    LIter(const LIter &other) = default;
+    LIter(LIter< T > &it):
+      ptr(it.ptr)
+    {
+    }
 
     bool operator==(const LIter &other) const
     {
@@ -37,15 +44,31 @@ namespace chernikov {
     {
       return ptr->data;
     }
-    T *operator->()
+    const T &operator*() const
     {
-      return &ptr->data;
+      return ptr->data;
     }
-
-    LIter &operator++()
+    LIter &operator++() // префикс
     {
       ptr = ptr->next;
       return *this;
+    }
+    LIter operator++(int) // постфикс
+    {
+      LIter tmp(*this);
+      ptr = ptr->next;
+      return tmp;
+    }
+    friend std::ostream &operator<<(std::ostream &os, const LIter< T > &it)
+    {
+      if (it == LIter< T >())
+      {
+        os << "LIter(nullptr)";
+      } else
+      {
+        os << "LIter(" << *it << ")";
+      }
+      return os;
     }
   };
 }

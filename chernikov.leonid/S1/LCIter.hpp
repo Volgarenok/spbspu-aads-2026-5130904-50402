@@ -1,10 +1,13 @@
 #ifndef LCITER_HPP
 #define LCITER_HPP
 
-#include "vanila_list.hpp"
 #include "node.hpp"
+#include <ostream>
 
 namespace chernikov {
+
+  template < typename T > class List;
+  template < typename T > class LIter;
 
   template < typename T > class LCIter
   {
@@ -41,15 +44,27 @@ namespace chernikov {
     {
       return ptr->data;
     }
-    const T *operator->() const
-    {
-      return &ptr->data;
-    }
-
-    LCIter &operator++()
+    LCIter &operator++() // префикс
     {
       ptr = ptr->next;
       return *this;
+    }
+    LCIter operator++(int) // постфикс
+    {
+      LCIter tmp(*this);
+      ptr = ptr->next;
+      return tmp;
+    }
+    friend std::ostream &operator<<(std::ostream &os, const LCIter &it)
+    {
+      if (it.ptr == nullptr)
+      {
+        os << "LCIter(end)";
+      } else
+      {
+        os << "LCIter(" << it.ptr->data << ")";
+      }
+      return os;
     }
   };
 
