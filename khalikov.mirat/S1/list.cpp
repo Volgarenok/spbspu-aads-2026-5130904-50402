@@ -137,6 +137,52 @@ namespace khalikov
     other.h = nullptr;
     h = res_h;
   }
+
+  template< class T >
+  void List< T >::pop_front()
+  {
+    Node< T > * temp = h;
+    h = h->next;
+    delete temp;
+  }
+
+  template< class T >
+  void List< T >::push_front(const T & value)
+  {
+    Node< T > * temp = new Node< T > {value, h};
+    h = temp;
+  }
+
+  template< class T >
+  void List< T >::erase(LIter< T > pos)
+  {
+    Node< T > * prev = h;
+    while (prev->next != pos.curr)
+    {
+      prev = prev->next;
+    }
+    prev->next = pos.curr->next;
+    delete pos.curr;
+  }
+
+  template< class T >
+  void List< T >::remove(const T & value)
+  {
+    auto it = begin();
+    while (it.curr != nullptr)
+    {
+      auto next = it;
+      next++;
+      if (it.curr->val == value)
+      {
+        erase(it);
+      }
+      it = next;
+    }
+  }
+
+  
+
 }
 
 #endif

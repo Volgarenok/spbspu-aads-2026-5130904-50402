@@ -31,6 +31,7 @@ namespace khalikov
     void merge(List< T > & other);
     void pop_front();
     void push_front(const T & value);
+    void erase(LIter< T > pos);
     void remove(const T & value);
     void sort();
     void unique();
