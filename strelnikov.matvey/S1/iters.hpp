@@ -95,13 +95,13 @@ namespace strelnikov
 
   template < class T > LIter< T > &LIter< T >::operator=(LIter &&other) noexcept
   {
-    if(this == &other){
+    if (this == &other) {
       return *this;
     }
 
     curr_ = other.curr_;
     other.curr_ = nullptr;
-    
+
     return *this;
   }
 
@@ -174,13 +174,13 @@ namespace strelnikov
 
   template < class T > LCIter< T > &LCIter< T >::operator=(LCIter &&other) noexcept
   {
-    if(this == &other){
+    if (this == &other) {
       return *this;
     }
 
     curr_ = other.curr_;
     other.curr_ = nullptr;
-    
+
     return *this;
   }
 

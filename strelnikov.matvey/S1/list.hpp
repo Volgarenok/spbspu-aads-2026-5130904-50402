@@ -161,7 +161,7 @@ namespace strelnikov
     node *curr = const_cast< node * >(pos.curr_);
     node *new_node = new node();
     new_node->val = value;
-    
+
     new_node->next = curr->next;
     curr->next = new_node;
 
