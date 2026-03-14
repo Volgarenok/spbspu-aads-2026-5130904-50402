@@ -13,8 +13,8 @@ namespace permyakov
     public:
       T & operator*();
       LIter & operator++();
-      bool & operator==(LIter < T > & scndIter);
-      bool & operator!=(LIter < T > & scndIter);
+      bool operator==(LIter < T > & scndIter);
+      bool operator!=(LIter < T > & scndIter);
   };
 
   template < class T > class LCIter
@@ -24,8 +24,8 @@ namespace permyakov
     public:
       const T & operator*();
       LCIter & operator++();
-      bool & operator==(LCIter < T > & scndIter);
-      bool & operator!=(LCIter < T > & scndIter);
+      bool operator==(LCIter < T > & scndIter);
+      bool operator!=(LCIter < T > & scndIter);
   };
 
   template < class T > T & LIter < T >::operator*()
@@ -50,24 +50,24 @@ namespace permyakov
     return *this;
   }
 
-  template < class T > bool & LIter < T >::operator==(LIter < T > & scndIter)
+  template < class T > bool LIter < T >::operator==(LIter < T > & scndIter)
   {
-    return curr == scndIter.curr;
+    return curr -> val == scndIter.curr -> val;
   }
 
-  template < class T > bool & LIter < T >::operator!=(LIter < T > & scndIter)
+  template < class T > bool LIter < T >::operator!=(LIter < T > & scndIter)
   {
-    return curr != scndIter.curr;
+    return curr -> val != scndIter.curr -> val;
   }
 
-  template < class T > bool & LCIter < T >::operator==(LCIter < T > & scndIter)
+  template < class T > bool LCIter < T >::operator==(LCIter < T > & scndIter)
   {
-    return curr == scndIter.curr;
+    return curr -> val == scndIter.curr -> val;
   }
 
-  template < class T > bool & LCIter < T >::operator!=(LCIter < T > & scndIter)
+  template < class T > bool LCIter < T >::operator!=(LCIter < T > & scndIter)
   {
-    return curr != scndIter.curr;
+    return curr -> val != scndIter.curr -> val;
   }
 }
 

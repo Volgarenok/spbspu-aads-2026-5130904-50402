@@ -1,9 +1,10 @@
+#define BOOST_TEST_MODULE S0
 #include <boost/test/unit_test.hpp>
 #include "list.hpp"
 
 using namespace permyakov;
 
-BOOST_AUTO_TEST_SUITE(ListMethodsTests)
+BOOST_AUTO_TEST_SUITE(ListTests)
 
 BOOST_AUTO_TEST_CASE(test_default_constructor)
 {
