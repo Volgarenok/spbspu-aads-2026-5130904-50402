@@ -1,8 +1,8 @@
-#include <iostream>
-#include <string>
-#include <exception>
 #include "list.hpp"
 #include "process.hpp"
+#include <exception>
+#include <iostream>
+#include <string>
 
 int main()
 {
@@ -48,9 +48,10 @@ int main()
 
     bool firstName = true;
     for (auto it = sequences.begin(); it != sequences.end(); ++it) {
-      if (!firstName)
+      if (!firstName) {
         std::cout << " ";
-      std::cout << (*it).first;
+      }
+      std::cout << it->first;
       firstName = false;
     }
     std::cout << "\n";
@@ -59,9 +60,10 @@ int main()
 
     for (auto rowIt = result.rows.begin(); rowIt != result.rows.end(); ++rowIt) {
       bool firstEl = true;
-      for (auto elIt = (*rowIt).begin(); elIt != (*rowIt).end(); ++elIt) {
-        if (!firstEl)
+      for (auto elIt = rowIt->begin(); elIt != rowIt->end(); ++elIt) {
+        if (!firstEl) {
           std::cout << " ";
+        }
         std::cout << *elIt;
         firstEl = false;
       }
@@ -70,8 +72,9 @@ int main()
 
     bool firstSum = true;
     for (auto sumIt = result.sums.begin(); sumIt != result.sums.end(); ++sumIt) {
-      if (!firstSum)
+      if (!firstSum) {
         std::cout << " ";
+      }
       std::cout << *sumIt;
       firstSum = false;
     }

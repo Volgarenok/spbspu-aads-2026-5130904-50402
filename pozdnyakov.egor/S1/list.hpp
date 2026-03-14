@@ -64,8 +64,9 @@ namespace pozdnyakov
 
     LIter &operator++()
     {
-      if (ptr)
+      if (ptr) {
         ptr = ptr->next;
+      }
       return *this;
     }
 
@@ -121,8 +122,9 @@ namespace pozdnyakov
 
     LCIter &operator++()
     {
-      if (ptr)
+      if (ptr) {
         ptr = ptr->next;
+      }
       return *this;
     }
 
@@ -165,8 +167,9 @@ namespace pozdnyakov
     {
       fakeNode = new detail::BaseNode();
       fakeNode->next = fakeNode;
-      if (other.empty())
+      if (other.empty()) {
         return;
+      }
 
       try {
         auto it = other.cbegin();

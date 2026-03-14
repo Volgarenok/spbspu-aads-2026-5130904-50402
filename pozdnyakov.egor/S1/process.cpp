@@ -1,6 +1,6 @@
 #include "process.hpp"
-#include <stdexcept>
 #include <limits>
+#include <stdexcept>
 
 namespace pozdnyakov
 {
@@ -17,13 +17,13 @@ namespace pozdnyakov
 
     for (auto it = sequences.cbegin(); it != sequences.cend(); ++it) {
       if (iters.empty()) {
-        iters.pushFront((*it).second.cbegin());
-        ends.pushFront((*it).second.cend());
+        iters.pushFront(it->second.cbegin());
+        ends.pushFront(it->second.cend());
         itersTail = iters.begin();
         endsTail = ends.begin();
       } else {
-        iters.insertAfter(itersTail, (*it).second.cbegin());
-        ends.insertAfter(endsTail, (*it).second.cend());
+        iters.insertAfter(itersTail, it->second.cbegin());
+        ends.insertAfter(endsTail, it->second.cend());
         ++itersTail;
         ++endsTail;
       }
@@ -63,8 +63,9 @@ namespace pozdnyakov
         }
       }
 
-      if (!elementsLeft)
+      if (!elementsLeft) {
         break;
+      }
 
       if (result.rows.empty()) {
         result.rows.pushFront(currentRow);
