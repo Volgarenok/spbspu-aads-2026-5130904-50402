@@ -42,11 +42,17 @@ int main()
   while (true)
   {
     bool isValid = false;
+    bool isFirst = true;
     for (auto& ends : iterators)
     {
       if (ends.first != ends.second)
       {
-        std::cout << *ends.first << ' ';
+        if (!isFirst)
+        {
+          std::cout << ' ';
+        }
+        std::cout << *ends.first;
+        isFirst = false;
         ++ends.first;
         isValid = true;
       }
@@ -97,9 +103,15 @@ int main()
     return 0;
   }
 
+  bool isFirst = true;
   for (size_t s : sums)
   {
-    std::cout << s << ' ';
+    if (!isFirst)
+    {
+      std::cout << ' ';
+    }
+    std::cout << s;
+    isFirst = false;
   }
   std::cout << '\n';
 }
