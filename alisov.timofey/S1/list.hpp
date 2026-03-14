@@ -26,6 +26,7 @@ namespace alisov
 
   private:
     Node< T > *fake_;
+    Node< T > *tail_;
     size_t size_;
   };
 
