@@ -1,7 +1,8 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 
-#include <iostream>
+#include <cstddef>
+#include <utility>
 
 namespace terentev
 {
@@ -138,20 +139,18 @@ namespace terentev
       head_(nullptr),
       size_(0)
     {
-      if (other.head_ == nullptr) {
-        return;
-      }
-
-      head_ = new Node(other.head_->data);
-      size_ = 1;
-
-      Node *current = head_;
-      Node *source = other.head_->next;
+      Node *source = other.head_;
+      Node *tail = nullptr;
 
       try {
         while (source != nullptr) {
-          current->next = new Node(source->data);
-          current = current->next;
+          Node *newNode = new Node(source->data);
+          if (head_ == nullptr) {
+            head_ = newNode;
+          } else {
+            tail->next = newNode;
+          }
+          tail = newNode;
           source = source->next;
           ++size_;
         }
@@ -197,7 +196,8 @@ namespace terentev
 
     void pushFront(const T &value)
     {
-      head_ = new Node(value, head_);
+      Node *newNode = new Node(value, head_);
+      head_ = newNode;
       ++size_;
     }
 
@@ -239,7 +239,7 @@ namespace terentev
 
     bool isEmpty() const
     {
-      return size_ == 0;
+      return head_ == nullptr;
     }
 
     size_t getSize() const
