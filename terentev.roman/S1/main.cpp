@@ -1,7 +1,6 @@
 #include "list.hpp"
 #include <climits>
 #include <iostream>
-#include <string>
 #include <utility>
 
 int main()
@@ -10,30 +9,24 @@ int main()
       sequences;
   terentev::List<
       std::pair< std::string, terentev::List< unsigned long long > > >::LIter
-      sequencesTail;
+      sequencesTail = sequences.begin();
   bool isFirstSequence = true;
 
   std::string name;
   while (std::cin >> name) {
     terentev::List< unsigned long long > numbers;
-    terentev::List< unsigned long long >::LIter numbersTail;
+    terentev::List< unsigned long long >::LIter numbersTail = numbers.begin();
     bool isFirstNumber = true;
 
-    char symbol = '\0';
-    while (std::cin.get(symbol)) {
-      if (symbol == '\n') {
-        break;
-      }
-      if (symbol == ' ' || symbol == '\t' || symbol == '\r') {
-        continue;
-      }
+    while (std::cin.peek() == ' ' || std::cin.peek() == '\t') {
+      std::cin.ignore();
+    }
 
-      std::cin.unget();
-
+    while (std::cin.peek() != '\n' && std::cin.peek() != EOF) {
       unsigned long long value = 0;
       if (!(std::cin >> value)) {
         std::cerr << "Invalid input\n";
-        return 1;
+        return 2;
       }
 
       if (isFirstNumber) {
@@ -43,6 +36,10 @@ int main()
       } else {
         numbers.insertAfter(numbersTail, value);
         ++numbersTail;
+      }
+
+      while (std::cin.peek() == ' ' || std::cin.peek() == '\t') {
+        std::cin.ignore();
       }
     }
 
@@ -58,11 +55,10 @@ int main()
       sequences.insertAfter(sequencesTail, element);
       ++sequencesTail;
     }
-  }
 
-  if (!std::cin.eof() && std::cin.fail()) {
-    std::cerr << "Invalid input\n";
-    return 1;
+    if (std::cin.peek() == '\n') {
+      std::cin.ignore();
+    }
   }
 
   if (sequences.isEmpty()) {
@@ -73,7 +69,7 @@ int main()
   terentev::List< std::pair< std::string, terentev::List< unsigned long long > > >
       tempSequences(sequences);
   terentev::List< unsigned long long > sums;
-  terentev::List< unsigned long long >::LIter sumsTail;
+  terentev::List< unsigned long long >::LIter sumsTail = sums.begin();
   bool isFirstSum = true;
 
   while (true) {
@@ -83,23 +79,18 @@ int main()
     terentev::List<
         std::pair< std::string, terentev::List< unsigned long long > > >::LIter
         iter = tempSequences.begin();
-
     while (iter != tempSequences.end()) {
       terentev::List< unsigned long long > &currentList = (*iter).second;
-
       if (!currentList.isEmpty()) {
-        unsigned long long value = currentList.front();
-
+        const unsigned long long value = currentList.front();
         if (sum > ULLONG_MAX - value) {
           std::cerr << "Overflow\n";
-          return 1;
+          return 2;
         }
-
         sum += value;
         currentList.popFront();
         hasNumbers = true;
       }
-
       ++iter;
     }
 
@@ -118,67 +109,50 @@ int main()
   }
 
   bool isFirstName = true;
-  terentev::List<
-      std::pair< std::string, terentev::List< unsigned long long > > >::LCIter
-      sequenceIter = sequences.begin();
-  while (sequenceIter != sequences.end()) {
+  for (terentev::List<
+      std::pair< std::string, terentev::List< unsigned long long > > >::LIter
+      iter = sequences.begin(); iter != sequences.end(); ++iter) {
     if (!isFirstName) {
       std::cout << ' ';
     }
-    std::cout << (*sequenceIter).first;
+    std::cout << (*iter).first;
     isFirstName = false;
-    ++sequenceIter;
   }
   std::cout << '\n';
 
   while (true) {
     bool hasNumbers = false;
-    bool isFirstOutputNumber = true;
+    bool isFirstInRow = true;
 
-    terentev::List<
+    for (terentev::List<
         std::pair< std::string, terentev::List< unsigned long long > > >::LIter
-        iter = sequences.begin();
-
-    while (iter != sequences.end()) {
+        iter = sequences.begin(); iter != sequences.end(); ++iter) {
       terentev::List< unsigned long long > &currentList = (*iter).second;
-
       if (!currentList.isEmpty()) {
-        unsigned long long value = currentList.front();
-
-        if (!isFirstOutputNumber) {
+        if (!isFirstInRow) {
           std::cout << ' ';
         }
-        std::cout << value;
-
+        std::cout << currentList.front();
         currentList.popFront();
         hasNumbers = true;
-        isFirstOutputNumber = false;
+        isFirstInRow = false;
       }
-
-      ++iter;
     }
 
     if (!hasNumbers) {
       break;
     }
-
     std::cout << '\n';
   }
 
-  if (sums.isEmpty()) {
-    std::cout << 0 << '\n';
-    return 0;
-  }
-
   bool isFirstOutputSum = true;
-  terentev::List< unsigned long long >::LCIter sumsIter = sums.begin();
-  while (sumsIter != sums.end()) {
+  for (terentev::List< unsigned long long >::LIter iter = sums.begin();
+      iter != sums.end(); ++iter) {
     if (!isFirstOutputSum) {
       std::cout << ' ';
     }
-    std::cout << *sumsIter;
+    std::cout << *iter;
     isFirstOutputSum = false;
-    ++sumsIter;
   }
   std::cout << '\n';
 }
