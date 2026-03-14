@@ -95,7 +95,7 @@ void muh::printSum(std::ostream& out, const List< List< size_t > >& list)
 {
   if (list.size() == 0)
   {
-    out << 0;
+    out << '0';
     return;
   }
   LCIter< List< size_t > > iter = list.cbegin();

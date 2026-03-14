@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <stdexcept>
 #include "function.hpp"
 #include "liter.hpp"
 #include "lciter.hpp"
@@ -25,7 +26,7 @@ int main()
     muh::printSum(std::cout, trList);
     std::cout << '\n';
   }
-  catch (const std::overflow_error&)
+  catch (const std::overflow_error& e)
   {
     std::cerr << "overflow\n";
     return 1;
