@@ -14,5 +14,6 @@ namespace karpovich
   long long calculatePostfix(Queue< std::string > postfix);
   bool isOperation(const std::string &op);
   bool isPriorityOp(const std::string &op1, const std::string &op2);
+  long long calculateOperation(const std::string &op, long long a, long long b);
 }
 #endif

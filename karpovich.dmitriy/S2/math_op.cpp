@@ -3,6 +3,7 @@
 #include <climits>
 #include <cstddef>
 #include <stdexcept>
+#include <string>
 
 long long karpovich::sum(long long a, long long b)
 {
@@ -63,7 +64,7 @@ karpovich::Queue< std::string > karpovich::convertToPostfix(Queue< std::string >
       continue;
     }
     if (isOperation(current)) {
-      while (isPriorityOp(current, tempStack.top()) && !tempStack.empty() && tempStack.top() != "(") {
+      while (!tempStack.empty() && isPriorityOp(current, tempStack.top()) && tempStack.top() != "(") {
         postfix.push(tempStack.top());
         tempStack.pop();
       }
@@ -108,9 +109,48 @@ bool karpovich::isPriorityOp(const std::string &op1, const std::string &op2)
   }
   return prior1 >= prior2;
 }
+long long karpovich::calculateOperation(const std::string &op, long long a, long long b)
+{
+  if (op == "+") {
+    return sum(a, b);
+  } else if (op == "-") {
+    return subtract(a, b);
+  } else if (op == "/") {
+    return divide(a, b);
+  } else if (op == "%") {
+    return mod(a, b);
+  } else if (op == "*") {
+    return multiply(a, b);
+  } else if (op == "^") {
+    return a ^ b;
+  } else {
+    throw std::runtime_error("bad operation");
+  }
+}
 long long karpovich::calculatePostfix(Queue< std::string > postfix)
 {
-  long long a = 0;
-  postfix.pop();
-  return a;
+  Stack< long long > tempStack;
+  while (!postfix.empty()) {
+    std::string current = postfix.front();
+    postfix.pop();
+    if (isOperation(current)) {
+      if (tempStack.empty()) {
+        throw std::runtime_error("Invalid expression");
+      }
+      long long b = tempStack.top();
+      tempStack.pop();
+      if (tempStack.empty()) {
+        throw std::runtime_error("Invalid expression");
+      }
+      long long a = tempStack.top();
+      tempStack.pop();
+      tempStack.push(calculateOperation(current, a, b));
+    } else {
+      tempStack.push(std::stoll(current));
+    }
+  }
+  if (tempStack.empty()) {
+    throw std::runtime_error("Empty result");
+  }
+  return tempStack.top();
 }
