@@ -13,7 +13,7 @@ void muh::input(std::istream& in, l_pair_str_l_t& list)
   std::string name;
   while (in >> name)
   {
-    List< size_t > listNum;  
+    List< size_t > listNum;
     size_t num = 0;
     while (in >> num)
     {
@@ -42,11 +42,11 @@ muh::List< muh::List< size_t > > muh::transposes(const l_pair_str_l_t& list)
     {
       if ((*lciter).second.size() > i)
       {
-	LCIter< size_t > iter = ((*lciter).second).cbegin();
-	for (size_t c = 0; c < i; ++c)
-	{
-	  ++iter;
-	}
+        LCIter< size_t > iter = ((*lciter).second).cbegin();
+        for (size_t c = 0; c < i; ++c)
+        {
+          ++iter;
+        }
         listNum.pushBack(*iter);
       }
       ++lciter;
@@ -108,9 +108,9 @@ void muh::printSum(std::ostream& out, const List< List< size_t > >& list)
       LCIter< size_t > inIter = inList.cbegin();
       for (size_t i = 0; i < inList.size(); ++i)
       {
-	sum += *inIter;
-	++inIter;
-      }     
+        sum += *inIter;
+        ++inIter;
+      }
     }
     out << sum;
     if (iter != list.cend())

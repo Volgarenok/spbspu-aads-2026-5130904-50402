@@ -74,7 +74,7 @@ muh::List< T >::List(const List< T >& other):
 }
 
 template <class T>
-muh::List< T >::List(List< T >&& other) noexcept: 
+muh::List< T >::List(List< T >&& other) noexcept:
   head_(other.head_),
   size_(other.size_)
 {
@@ -197,7 +197,7 @@ void muh::List< T >::popFront() noexcept
   {
     return;
   }
-  
+
   if (size_ == 1)
   {
     delete head_;
