@@ -2,72 +2,12 @@
 #define LIST_HPP
 
 #include "node.hpp"
+#include "iters.hpp"
 #include <cstddef>
 #include <utility>
 
 namespace strelnikov
 {
-  template < class T > class List;
-  template < class T > class LIter
-  {
-    friend class List< T >;
-
-  public:
-    LIter() noexcept;
-
-    LIter(const LIter &) noexcept;
-
-    LIter(LIter &&) noexcept;
-
-    LIter &operator=(const LIter &);
-
-    LIter &operator=(LIter &&) noexcept;
-
-    ~LIter() noexcept = default;
-
-    T &operator*() const noexcept;
-    T *operator->() const noexcept;
-
-    LIter &operator++();
-    LIter operator++(int);
-
-    bool operator==(const LIter &) const noexcept;
-    bool operator!=(const LIter &) const noexcept;
-
-  private:
-    Node< T > *curr_;
-  };
-
-  template < class T > class LCIter
-  {
-    friend class List< T >;
-
-  public:
-    LCIter() noexcept;
-
-    LCIter(const LCIter &) noexcept;
-
-    LCIter(LCIter &&) noexcept;
-
-    LCIter &operator=(const LCIter &);
-
-    LCIter &operator=(LCIter &&) noexcept;
-
-    ~LCIter() noexcept = default;
-
-    T &operator*() const noexcept;
-    T *operator->() const noexcept;
-
-    LCIter &operator++();
-    LCIter operator++(int);
-
-    bool operator==(const LCIter &) const noexcept;
-    bool operator!=(const LCIter &) const noexcept;
-
-  private:
-    const Node< T > *curr_;
-  };
-
   template < class T > class List
   {
   public:
