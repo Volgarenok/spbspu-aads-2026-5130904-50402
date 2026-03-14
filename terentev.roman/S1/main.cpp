@@ -96,7 +96,7 @@ int main()
       if (!currentList.isEmpty()) {
         int value = currentList.front();
 
-        if (sum > std::numeric_limits< long long >::max() - value) {
+        if (sum > LLONG_MAX - value) {
           std::cerr << "Overflow\n";
           return 1;
         }
