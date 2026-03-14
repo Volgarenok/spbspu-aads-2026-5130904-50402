@@ -5,6 +5,81 @@ using namespace permyakov;
 
 BOOST_AUTO_TEST_SUITE(ListMethodsTests)
 
+BOOST_AUTO_TEST_CASE(test_default_constructor)
+{
+  List < int > listNum;
+  BOOST_CHECK_EQUAL(listNum.size(), 0);
+  BOOST_CHECK_EQUAL(listNum.front(), 0);
+  List < bool > listBool;
+  BOOST_CHECK_EQUAL(listBool.size(), 0);
+  BOOST_CHECK_EQUAL(listBool.front(), false);
+}
+
+BOOST_AUTO_TEST_CASE(test_copy_constructor)
+{
+  List < int > frstList;
+  frstList.push_front(2);
+  frstList.push_front(1);
+  List < int > scndList(frstList);
+  BOOST_CHECK_EQUAL(frstList.size(), scndList.size());
+  LIter < int > frstIter = frstList.begin();
+  LIter < int > frstEndIter = frstList.end();
+  LIter < int > scndIter = scndList.begin();
+  while(frstIter != frstEndIter) {
+    BOOST_CHECK(frstIter == scndIter);
+    ++frstIter;
+    ++scndIter;
+  }
+}
+
+BOOST_AUTO_TEST_CASE(test_move_constructor)
+{
+  List < int > frstList;
+  frstList.push_front(2);
+  frstList.push_front(1);
+  List < int > scndList(std::move(frstList));
+  BOOST_CHECK_EQUAL(frstList.size(), 0);
+  BOOST_CHECK_EQUAL(scndList.size(), 2);
+  BOOST_CHECK_EQUAL(scndList.front(),1);
+}
+
+BOOST_AUTO_TEST_CASE(test_copy_operator)
+{
+  List < int > frstList;
+  frstList.push_front(2);
+  frstList.push_front(1);
+  List < int > scndList = frstList;
+  BOOST_CHECK_EQUAL(frstList.size(), scndList.size());
+  LIter < int > frstIter = frstList.begin();
+  LIter < int > frstEndIter = frstList.end();
+  LIter < int > scndIter = scndList.begin();
+  while(frstIter != frstEndIter) {
+    BOOST_CHECK(frstIter == scndIter);
+    ++frstIter;
+    ++scndIter;
+  }
+}
+
+BOOST_AUTO_TEST_CASE(test_move_operator)
+{
+  List < int > frstList;
+  frstList.push_front(2);
+  frstList.push_front(1);
+  List < int > scndList =std::move(frstList);
+  BOOST_CHECK_EQUAL(frstList.size(), 0);
+  BOOST_CHECK_EQUAL(scndList.size(), 2);
+  BOOST_CHECK_EQUAL(scndList.front(),1);
+}
+
+BOOST_AUTO_TEST_CASE(test_destructor)
+{
+  {
+    List < int > list;
+    list.push_front(1);
+  }
+  BOOST_CHECK(true);
+}
+
 BOOST_AUTO_TEST_CASE(test_erase)
 {
   List < int > list;
