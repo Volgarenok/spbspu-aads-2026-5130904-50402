@@ -136,6 +136,10 @@ int main()
       ++sumsTail;
     }
   }
+  if (sums.isEmpty()) {
+    std::cout << 0 << '\n';
+    return 0;
+  }
 
   bool isFirstOutputSum = true;
   terentev::List< size_t >::LCIter sumsIter = sums.begin();
