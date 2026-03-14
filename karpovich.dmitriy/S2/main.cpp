@@ -15,9 +15,9 @@ int main(int argc, char **argv)
     std::cerr << "bad num of arguments" << '\n';
     return 1;
   }
+  std::ifstream file;
   std::istream *input = &std::cin;
   if (argc == 2) {
-    std::ifstream file;
     file.open(argv[1]);
     if (!file.is_open()) {
       std::cerr << "bad file" << '\n';
