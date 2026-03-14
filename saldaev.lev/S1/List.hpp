@@ -58,6 +58,7 @@ namespace saldaev
   struct LCIter
   {
     friend class List< T >;
+    friend struct LIter< T >;
 
     bool isValid() const noexcept;
     bool hasNext() const noexcept;
@@ -83,6 +84,7 @@ namespace saldaev
   struct LIter
   {
     friend class List< T >;
+    friend struct LCIter< T >;
 
     bool isValid() const noexcept;
     bool hasNext() const noexcept;
