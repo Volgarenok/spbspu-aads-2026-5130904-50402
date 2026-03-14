@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_CASE(empty_begin_equal_to_end)
 BOOST_AUTO_TEST_CASE(push_back_one)
 {
   shirokov::BiList< int > A{};
-  A.push_back(5);
+  A.pushBack(5);
   BOOST_TEST(!A.empty());
   BOOST_TEST(A.front() == 5);
   BOOST_TEST(A.back() == 5);
@@ -28,8 +28,8 @@ BOOST_AUTO_TEST_CASE(push_back_one)
 BOOST_AUTO_TEST_CASE(push_back_two)
 {
   shirokov::BiList< int > A{};
-  A.push_back(1);
-  A.push_back(2);
+  A.pushBack(1);
+  A.pushBack(2);
 
   auto it = A.begin();
   BOOST_TEST(*it == 1);
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(push_front_one)
 {
   shirokov::BiList< int > A{};
   int n = 10;
-  A.push_front(n);
+  A.pushFront(n);
   BOOST_TEST(!A.empty());
   BOOST_TEST(A.front() == n);
   BOOST_TEST(A.back() == n);
@@ -54,8 +54,8 @@ BOOST_AUTO_TEST_CASE(push_front_one)
 BOOST_AUTO_TEST_CASE(push_front_two)
 {
   shirokov::BiList< int > A{};
-  A.push_front(1);
-  A.push_front(2);
+  A.pushFront(1);
+  A.pushFront(2);
 
   auto it = A.cbegin();
   BOOST_TEST(*it == 2);
@@ -70,11 +70,11 @@ BOOST_AUTO_TEST_CASE(push_front_two)
 BOOST_AUTO_TEST_CASE(pop_two)
 {
   shirokov::BiList< int > A{};
-  A.push_back(1);
-  A.push_back(2);
-  A.push_front(3);
-  A.pop_back();
-  A.pop_front();
+  A.pushBack(1);
+  A.pushBack(2);
+  A.pushFront(3);
+  A.popBack();
+  A.popFront();
   BOOST_TEST(A.front() == A.back());
   BOOST_TEST(A.front() == 1);
 }
@@ -83,15 +83,15 @@ BOOST_AUTO_TEST_CASE(pop_empty)
 {
   shirokov::BiList< int > A{};
   BOOST_REQUIRE(A.empty());
-  BOOST_CHECK_THROW(A.pop_back(), std::out_of_range);
-  BOOST_CHECK_THROW(A.pop_front(), std::out_of_range);
+  BOOST_CHECK_THROW(A.popBack(), std::out_of_range);
+  BOOST_CHECK_THROW(A.popFront(), std::out_of_range);
 }
 
 BOOST_AUTO_TEST_CASE(copy)
 {
   shirokov::BiList< int > A{};
-  A.push_back(1);
-  A.push_back(2);
+  A.pushBack(1);
+  A.pushBack(2);
   shirokov::BiList< int > B(A);
   BOOST_TEST(B.back() == 2);
   BOOST_TEST(B.front() == 1);
@@ -104,8 +104,8 @@ BOOST_AUTO_TEST_CASE(copy)
 BOOST_AUTO_TEST_CASE(move)
 {
   shirokov::BiList< int > A{};
-  A.push_back(1);
-  A.push_back(2);
+  A.pushBack(1);
+  A.pushBack(2);
   shirokov::BiList< int > B(std::move(A));
   BOOST_TEST(B.back() == 2);
   BOOST_TEST(B.front() == 1);
@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(move)
 BOOST_AUTO_TEST_CASE(copying_itself)
 {
   shirokov::BiList< int > A{};
-  A.push_back(5);
+  A.pushBack(5);
   A = A;
   BOOST_TEST(A.back() == 5);
 }
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(copying_itself)
 BOOST_AUTO_TEST_CASE(comparing_iterators)
 {
   shirokov::BiList< int > A{};
-  A.push_back(1);
+  A.pushBack(1);
   auto it1 = A.begin();
   ++it1;
   auto it2 = A.begin();

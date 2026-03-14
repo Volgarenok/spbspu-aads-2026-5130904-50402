@@ -15,10 +15,10 @@ int main()
     size_t num;
     while (std::cin >> num)
     {
-      nums.push_back(num);
+      nums.pushBack(num);
     }
     std::cin.clear();
-    seq.push_back({name, nums});
+    seq.pushBack({name, nums});
   }
 
   // std::cout << "SECOND\n";
@@ -39,7 +39,7 @@ int main()
   shirokov::BiList< std::pair< shirokov::BLIter< size_t >, shirokov::BLIter< size_t > > > iterators{};
   for (auto it = seq.begin(); it != seq.end(); ++it)
   {
-    iterators.push_back({(*it).second.begin(), (*it).second.end()});
+    iterators.pushBack({(*it).second.begin(), (*it).second.end()});
   }
 
   // std::cout << "FOURTH\n";
@@ -72,7 +72,7 @@ int main()
   iterators.clear();
   for (auto it = seq.begin(); it != seq.end(); ++it)
   {
-    iterators.push_back({(*it).second.begin(), (*it).second.end()});
+    iterators.pushBack({(*it).second.begin(), (*it).second.end()});
   }
 
   // std::cout << "SIXTH\n";
@@ -100,7 +100,7 @@ int main()
     {
       break;
     }
-    sums.push_back(sum);
+    sums.pushBack(sum);
   }
 
   if (sums.empty())
