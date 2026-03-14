@@ -1,3 +1,4 @@
+#include <exception>
 #include <fstream>
 #include <iostream>
 #include <istream>
@@ -24,15 +25,20 @@ int main(int argc, char **argv)
     }
     input = &file;
   }
-  karp::Queue< karp::Queue< std::string > > queue;
-  karp::inputQueue(*input, queue);
-  karp::Stack< long long > result;
-  while (!queue.empty()) {
-    karp::Queue< std::string > infix = queue.front();
-    queue.pop();
-    karp::Queue< std::string > postfix = karp::convertToPostfix(infix);
-    long long res = karpovich::calculatePostfix(postfix);
-    result.push(res);
+  try {
+    karp::Queue< karp::Queue< std::string > > queue;
+    karp::inputQueue(*input, queue);
+    karp::Stack< long long > result;
+    while (!queue.empty()) {
+      karp::Queue< std::string > infix = queue.front();
+      queue.pop();
+      karp::Queue< std::string > postfix = karp::convertToPostfix(infix);
+      long long res = karpovich::calculatePostfix(postfix);
+      result.push(res);
+    }
+    karpovich::output(std::cout, result);
+  } catch (const std::exception &e) {
+    std::cout << e.what() << '\n';
+    return 1;
   }
-  karpovich::output(std::cout, result);
 }

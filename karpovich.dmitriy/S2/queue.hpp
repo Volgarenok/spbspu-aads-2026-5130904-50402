@@ -1,6 +1,6 @@
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
-#include "list.hpp"
+#include <list.hpp>
 #include <cstddef>
 
 namespace karpovich

@@ -6,18 +6,26 @@
 
 void karpovich::inputQueue(std::istream &in, Queue< Queue< std::string > > &queue)
 {
-  std::string s;
-  while (std::getline(in, s)) {
-    if (s.empty()) {
+  std::string str;
+  while (std::getline(in, str)) {
+    if (str.empty()) {
       continue;
     }
     Queue< std::string > inf;
-    for (size_t i = 0; i < s.length(); i++) {
-      std::string sChar = s.substr(i, 1);
+    std::string token;
+    for (size_t i = 0; i < str.length(); i++) {
+      std::string sChar = str.substr(i, 1);
       if (sChar == " ") {
-        continue;
+        if (!token.empty()) {
+          inf.push(token);
+          token.clear();
+        }
+      } else {
+        token += sChar;
       }
-      inf.push(sChar);
+    }
+    if (!token.empty()) {
+      inf.push(token);
     }
     queue.push(inf);
   }
