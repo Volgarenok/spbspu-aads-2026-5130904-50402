@@ -28,6 +28,7 @@ namespace strelnikov
     void clear();
     void swap(list &);
     bool empty();
+    node *get_head();
 
     iterator insert_after(const_iterator, const T &);
     iterator insert_after(const_iterator, T &&);
@@ -104,6 +105,7 @@ namespace strelnikov
     }
 
     swap(other);
+    other.clear();
     return *this;
   }
 
@@ -114,18 +116,18 @@ namespace strelnikov
 
   template < class T > void List< T >::push_front(const T &value)
   {
-    node new_head = new node();
-    new_head.next = head_;
-    new_head.val = value;
+    node *new_head = new node();
+    new_head->next = head_;
+    new_head->val = value;
 
     head_ = new_head;
   }
 
   template < class T > void List< T >::push_front(T &&value)
   {
-    node new_head = new node();
-    new_head.next = head_;
-    new_head.val = std::move(value);
+    node *new_head = new node();
+    new_head->next = head_;
+    new_head->val = std::move(value);
 
     head_ = new_head;
   }
@@ -151,7 +153,7 @@ namespace strelnikov
 
   template < class T > bool List< T >::empty()
   {
-    return head_;
+    return head_ == nullptr;
   }
 
   template < class T > typename List< T >::iterator List< T >::insert_after(const_iterator pos, const T &value)
@@ -159,8 +161,8 @@ namespace strelnikov
     node *curr = const_cast< node * >(pos.curr_);
     node *new_node = new node();
     new_node->val = value;
+    
     new_node->next = curr->next;
-
     curr->next = new_node;
 
     return iterator(new_node);
@@ -171,14 +173,15 @@ namespace strelnikov
     node *curr = const_cast< node * >(pos.curr_);
     node *new_node = new node();
     new_node->val = std::move(value);
-    new_node->next = curr->next;
 
+    new_node->next = curr->next;
     curr->next = new_node;
 
     return iterator(new_node);
   }
 
-  template < class T > typename List< T >::iterator List< T >::insert_after(const_iterator pos, size_t s, const T &value)
+  template < class T >
+  typename List< T >::iterator List< T >::insert_after(const_iterator pos, size_t s, const T &value)
   {
     iterator curr = pos;
     for (size_t i = 0; i < s; ++i) {
@@ -231,6 +234,10 @@ namespace strelnikov
   template < class T > typename List< T >::const_iterator List< T >::cend() const noexcept
   {
     return const_iterator(nullptr);
+  }
+  template < class T > typename List< T >::node *List< T >::get_head()
+  {
+    return head_;
   }
 }
 

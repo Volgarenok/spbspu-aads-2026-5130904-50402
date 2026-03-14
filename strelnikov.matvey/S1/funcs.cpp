@@ -4,9 +4,12 @@
 #include "funcs.hpp"
 #include <iostream>
 #include <limits>
+#include <cctype>
+#include <cstddef>
 
-void strelnikov::input(std::istream &in, List< std::pair< std::string, List< size_t > > > &list)
+strelnikov::List< std::pair< std::string, strelnikov::List< size_t > > > strelnikov::input(std::istream &in)
 {
+  List< std::pair< std::string, List< size_t > > > list;
   auto list_it = list.cbegin();
 
   std::string name;
@@ -16,26 +19,29 @@ void strelnikov::input(std::istream &in, List< std::pair< std::string, List< siz
 
     size_t num;
     while (in >> num) {
-      nums_it = nums.insert_after(nums_it, num);
+      if (!nums.empty()) {
+        nums_it = nums.insert_after(nums_it, num);
+
+      } else {
+        nums.push_front(num);
+
+        nums_it = nums.cbegin();
+      }
     }
 
     in.clear();
 
-    std::pair< std::string, List< size_t > > pair_to_insert(name, nums);
-    list_it = list.insert_after(list_it, pair_to_insert);
-  }
-}
+    if (!list.empty()) {
+      list_it = list.insert_after(list_it, {name, nums});
 
-template < class T > size_t strelnikov::size(const List< T > &list)
-{
-  size_t res = 0;
-  auto it = list.cbegin();
-  while (it != list.cend()) {
-    res++;
-    it++;
+    } else {
+      list.push_front({name, nums});
+
+      list_it = list.cbegin();
+    }
   }
 
-  return res;
+  return list;
 }
 
 strelnikov::List< strelnikov::List< size_t > >
@@ -68,14 +74,23 @@ strelnikov::leave_nums(List< std::pair< std::string, List< size_t > > > &list)
         for (size_t j = 0; j < i; ++j) {
           ++it_nums;
         }
-
-        it_tmp = tmp.insert_after(it_tmp, *it_nums);
+        if (!tmp.empty()) {
+          it_tmp = tmp.insert_after(it_tmp, *it_nums);
+        } else {
+          tmp.push_front(*it_nums);
+          it_tmp = tmp.cbegin();
+        }
       }
 
       ++it;
     }
 
-    res_it = res.insert_after(res_it, tmp);
+    if (!res.empty()) {
+      res_it = res.insert_after(res_it, tmp);
+    } else {
+      res.push_front(tmp);
+      res_it = res.cbegin();
+    }
   }
 
   return res;
@@ -100,7 +115,14 @@ strelnikov::List< size_t > strelnikov::get_sum(List< List< size_t > > &list)
       ++it_inner;
     }
 
-    sum_it = sum.insert_after(sum_it, res);
+    if (!sum.empty()) {
+      sum_it = sum.insert_after(sum_it, res);
+    } else {
+      sum.push_front(res);
+      sum_it = sum.cbegin();
+    }
+
+    ++it;
   }
 
   return sum;
@@ -149,6 +171,8 @@ std::ostream &strelnikov::printList(std::ostream &out, const List< List< size_t 
       ++it_inner;
     }
     ++it;
+
+    std::cout << '\n';
   }
   return out;
 }

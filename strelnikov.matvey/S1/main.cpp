@@ -6,10 +6,7 @@
 
 int main()
 {
-  strelnikov::List< std::pair< std::string, strelnikov::List< size_t > > > list;
-
-  strelnikov::input(std::cin, list);
-
+  auto list = strelnikov::input(std::cin);
   if (list.cbegin() == list.cend()) {
     std::cout << "0\n";
     return 0;
