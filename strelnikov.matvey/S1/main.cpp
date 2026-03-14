@@ -22,10 +22,7 @@ int main()
     return 1;
   }
 
-  strelnikov::printNames(std::cout, list);
-  std::cout << "\n";
-  strelnikov::printList(std::cout, onlynums);
-  std::cout << "\n";
-  strelnikov::printSum(std::cout, sums);
-  std::cout << "\n";
+  strelnikov::printNames(std::cout, list) << '\n';
+  strelnikov::printList(std::cout, onlynums) << '\n';
+  strelnikov::printSum(std::cout, sums) << '\n';
 }

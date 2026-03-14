@@ -143,12 +143,13 @@ std::ostream &strelnikov::printNames(std::ostream &out, const List< std::pair< s
     out << ' ' << (*it).first;
     ++it;
   }
-
   return out;
 }
 
 std::ostream &strelnikov::printList(std::ostream &out, const List< List< size_t > > &list)
 {
+  bool flag = false;
+
   auto it = list.cbegin();
 
   if (it == list.cend()) {
@@ -156,6 +157,9 @@ std::ostream &strelnikov::printList(std::ostream &out, const List< List< size_t 
   }
 
   while (it != list.cend()) {
+    if(flag) {
+      out << '\n';
+    }
     auto it_inner = (*it).cbegin();
 
     if (it_inner == (*it).cend()) {
@@ -172,7 +176,7 @@ std::ostream &strelnikov::printList(std::ostream &out, const List< List< size_t 
     }
     ++it;
 
-    std::cout << '\n';
+    flag = true;
   }
   return out;
 }
@@ -192,6 +196,5 @@ std::ostream &strelnikov::printSum(std::ostream &out, const List< size_t > &list
     out << ' ' << *it;
     ++it;
   }
-
   return out;
 }
