@@ -3,6 +3,8 @@
 #include <stdexcept>
 #include <utility>
 #include <limits>
+#include <vector>
+#include <sstream>
 
 namespace pozdnyakov
 {
@@ -326,7 +328,7 @@ namespace pozdnyakov
           }
 
           if (current_row_sum > std::numeric_limits< ValueType >::max() - val) {
-            throw std::overflow_error("Произошло переполнение при подсчете суммы.");
+            throw std::overflow_error("Overflow while sum counting");
           }
           current_row_sum += val;
           ++(*it);
@@ -356,4 +358,157 @@ namespace pozdnyakov
     return result;
   }
 
+  namespace tests
+  {
+    void assert_true(bool condition, const std::string &name)
+    {
+      if (!condition)
+        throw std::runtime_error("Test failed: " + name);
+      std::cout << "[OK] " << name << "\n";
+    }
+
+    List< ValueType > make_list(const std::vector< ValueType > &vals)
+    {
+      List< ValueType > lst;
+      LIter< ValueType > tail = lst.end();
+      for (auto v : vals) {
+        if (lst.empty()) {
+          lst.push_front(v);
+          tail = lst.begin();
+        } else {
+          lst.insert_after(tail, v);
+          ++tail;
+        }
+      }
+      return lst;
+    }
+
+    void test_exception_safety()
+    {
+      List< int > list1;
+      list1.push_front(10);
+      list1.push_front(20);
+      List< int > list2 = list1;
+      assert_true(list2.front() == 20, "Copy constructor safe and valid");
+    }
+
+    void test_process_logic()
+    {
+      List< NamedSequence > seqs;
+      seqs.push_front({"fourth", make_list({4, 4})});
+      seqs.push_front({"third", make_list({})});
+      seqs.push_front({"second", make_list({2, 2, 2, 2})});
+      seqs.push_front({"first", make_list({1, 1, 1})});
+
+      ProcessResult res = build_interleaved_rows(seqs);
+
+      std::vector< ValueType > expected_sums = {7, 7, 3, 2};
+      int i = 0;
+      for (auto it = res.sums.begin(); it != res.sums.end(); ++it) {
+        assert_true(*it == expected_sums[i++], "Sum matches expected");
+      }
+    }
+
+    void run_all()
+    {
+      std::cout << "Tests started\n";
+      test_exception_safety();
+      test_process_logic();
+      std::cout << "Tests completed\n";
+    }
+  }
+
+}
+
+int main(int argc, char *argv[])
+{
+  if (argc > 1 && std::string(argv[1]) == "--test") {
+    try {
+      pozdnyakov::tests::run_all();
+      return 0;
+    } catch (const std::exception &e) {
+      std::cerr << e.what() << '\n';
+      return 1;
+    }
+  }
+
+  try {
+    pozdnyakov::List< pozdnyakov::NamedSequence > sequences;
+    pozdnyakov::LIter< pozdnyakov::NamedSequence > seq_tail = sequences.end();
+
+    std::string name;
+
+    while (std::cin >> name) {
+      if (sequences.empty()) {
+        sequences.push_front({name, pozdnyakov::List< pozdnyakov::ValueType >()});
+        seq_tail = sequences.begin();
+      } else {
+        sequences.insert_after(seq_tail, {name, pozdnyakov::List< pozdnyakov::ValueType >()});
+        ++seq_tail;
+      }
+
+      pozdnyakov::LIter< pozdnyakov::ValueType > val_tail = seq_tail->second.end();
+      pozdnyakov::ValueType val;
+
+      while (std::cin >> val) {
+        if (seq_tail->second.empty()) {
+          seq_tail->second.push_front(val);
+          val_tail = seq_tail->second.begin();
+        } else {
+          seq_tail->second.insert_after(val_tail, val);
+          ++val_tail;
+        }
+      }
+
+      if (std::cin.eof() || std::cin.bad()) {
+        break;
+      }
+
+      std::cin.clear();
+    }
+
+    if (sequences.empty()) {
+      std::cout << 0 << "\n";
+      return 0;
+    }
+
+    bool first_name = true;
+    for (auto it = sequences.begin(); it != sequences.end(); ++it) {
+      if (!first_name)
+        std::cout << " ";
+      std::cout << (*it).first;
+      first_name = false;
+    }
+    std::cout << "\n";
+
+    pozdnyakov::ProcessResult result = pozdnyakov::build_interleaved_rows(sequences);
+
+    for (auto row_it = result.rows.begin(); row_it != result.rows.end(); ++row_it) {
+      bool first_el = true;
+      for (auto el_it = (*row_it).begin(); el_it != (*row_it).end(); ++el_it) {
+        if (!first_el)
+          std::cout << " ";
+        std::cout << *el_it;
+        first_el = false;
+      }
+      std::cout << "\n";
+    }
+
+    bool first_sum = true;
+    for (auto sum_it = result.sums.begin(); sum_it != result.sums.end(); ++sum_it) {
+      if (!first_sum)
+        std::cout << " ";
+      std::cout << *sum_it;
+      first_sum = false;
+    }
+    if (!result.sums.empty()) {
+      std::cout << "\n";
+    }
+
+  } catch (const std::exception &e) {
+    std::cerr << "Error: " << e.what() << '\n';
+    return 1;
+  }
+
+  return 0;
 }
