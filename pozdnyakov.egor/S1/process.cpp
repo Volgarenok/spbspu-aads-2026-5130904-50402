@@ -5,9 +5,9 @@
 namespace pozdnyakov
 {
 
-  ProcessResult buildInterleavedRows(const List< NamedSequence > &sequences)
+  List< List< ValueType > > buildInterleavedRows(const List< NamedSequence > &sequences)
   {
-    ProcessResult result;
+    List< List< ValueType > > result;
 
     List< LCIter< ValueType > > iters;
     List< LCIter< ValueType > > ends;
@@ -29,12 +29,10 @@ namespace pozdnyakov
       }
     }
 
-    LIter< List< ValueType > > rowsTail = result.rows.end();
-    LIter< ValueType > sumsTail = result.sums.end();
+    LIter< List< ValueType > > rowsTail = result.end();
 
     while (true) {
       bool elementsLeft = false;
-      ValueType currentRowSum = 0;
 
       List< ValueType > currentRow;
       LIter< ValueType > currentRowTail = currentRow.end();
@@ -55,10 +53,6 @@ namespace pozdnyakov
             ++currentRowTail;
           }
 
-          if (currentRowSum > std::numeric_limits< ValueType >::max() - val) {
-            throw std::overflow_error("Sum calculation overflow");
-          }
-          currentRowSum += val;
           ++(*it);
         }
       }
@@ -67,24 +61,43 @@ namespace pozdnyakov
         break;
       }
 
-      if (result.rows.empty()) {
-        result.rows.pushFront(currentRow);
-        rowsTail = result.rows.begin();
+      if (result.empty()) {
+        result.pushFront(currentRow);
+        rowsTail = result.begin();
       } else {
-        result.rows.insertAfter(rowsTail, currentRow);
+        result.insertAfter(rowsTail, currentRow);
         ++rowsTail;
-      }
-
-      if (result.sums.empty()) {
-        result.sums.pushFront(currentRowSum);
-        sumsTail = result.sums.begin();
-      } else {
-        result.sums.insertAfter(sumsTail, currentRowSum);
-        ++sumsTail;
       }
     }
 
     return result;
+  }
+
+  List< ValueType > calculateSums(const List< List< ValueType > > &rows)
+  {
+    List< ValueType > sums;
+    LIter< ValueType > sumsTail = sums.end();
+
+    for (auto rowIt = rows.cbegin(); rowIt != rows.cend(); ++rowIt) {
+      ValueType currentRowSum = 0;
+
+      for (auto elIt = rowIt->cbegin(); elIt != rowIt->cend(); ++elIt) {
+        if (currentRowSum > std::numeric_limits< ValueType >::max() - *elIt) {
+          throw std::overflow_error("Sum calculation overflow");
+        }
+        currentRowSum += *elIt;
+      }
+
+      if (sums.empty()) {
+        sums.pushFront(currentRowSum);
+        sumsTail = sums.begin();
+      } else {
+        sums.insertAfter(sumsTail, currentRowSum);
+        ++sumsTail;
+      }
+    }
+
+    return sums;
   }
 
 }

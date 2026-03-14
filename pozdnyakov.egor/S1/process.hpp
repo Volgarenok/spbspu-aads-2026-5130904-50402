@@ -2,22 +2,18 @@
 #define POZDNYAKOV_PROCESS_HPP
 
 #include "list.hpp"
+#include <cstddef>
 #include <string>
 #include <utility>
 
 namespace pozdnyakov
 {
 
-  using ValueType = unsigned long long;
+  using ValueType = std::size_t;
   using NamedSequence = std::pair< std::string, List< ValueType > >;
 
-  struct ProcessResult
-  {
-    List< List< ValueType > > rows;
-    List< ValueType > sums;
-  };
-
-  ProcessResult buildInterleavedRows(const List< NamedSequence > &sequences);
+  List< List< ValueType > > buildInterleavedRows(const List< NamedSequence > &sequences);
+  List< ValueType > calculateSums(const List< List< ValueType > > &rows);
 
 }
 

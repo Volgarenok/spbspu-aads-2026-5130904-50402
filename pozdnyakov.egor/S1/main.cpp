@@ -56,9 +56,9 @@ int main()
     }
     std::cout << "\n";
 
-    pozdnyakov::ProcessResult result = pozdnyakov::buildInterleavedRows(sequences);
+    pozdnyakov::List< pozdnyakov::List< pozdnyakov::ValueType > > rows = pozdnyakov::buildInterleavedRows(sequences);
 
-    for (auto rowIt = result.rows.begin(); rowIt != result.rows.end(); ++rowIt) {
+    for (auto rowIt = rows.begin(); rowIt != rows.end(); ++rowIt) {
       bool firstEl = true;
       for (auto elIt = rowIt->begin(); elIt != rowIt->end(); ++elIt) {
         if (!firstEl) {
@@ -70,15 +70,19 @@ int main()
       std::cout << "\n";
     }
 
-    bool firstSum = true;
-    for (auto sumIt = result.sums.begin(); sumIt != result.sums.end(); ++sumIt) {
-      if (!firstSum) {
-        std::cout << " ";
+    pozdnyakov::List< pozdnyakov::ValueType > sums = pozdnyakov::calculateSums(rows);
+
+    if (sums.empty()) {
+      std::cout << 0 << "\n";
+    } else {
+      bool firstSum = true;
+      for (auto sumIt = sums.begin(); sumIt != sums.end(); ++sumIt) {
+        if (!firstSum) {
+          std::cout << " ";
+        }
+        std::cout << *sumIt;
+        firstSum = false;
       }
-      std::cout << *sumIt;
-      firstSum = false;
-    }
-    if (!result.sums.empty()) {
       std::cout << "\n";
     }
 
