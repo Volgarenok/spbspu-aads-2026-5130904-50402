@@ -4,107 +4,161 @@
 #include <utility>
 #include <limits>
 
-namespace pozdnyakov {
+namespace pozdnyakov
+{
 
-  namespace detail {
-    template <class T>
-    struct Node {
+  namespace detail
+  {
+    template < class T > struct Node
+    {
       T data;
-      Node* next;
-      Node(const T& val, Node* n = nullptr) : data(val), next(n) {}
+      Node *next;
+      Node(const T &val, Node *n = nullptr):
+        data(val),
+        next(n)
+      {}
     };
   }
 
-  template <class T> class List;
-  template <class T> class LCIter;
+  template < class T > class List;
+  template < class T > class LCIter;
 
-  template <class T>
-  class LIter {
-    friend class List<T>;
-    friend class LCIter<T>;
+  template < class T > class LIter
+  {
+    friend class List< T >;
+    friend class LCIter< T >;
   private:
-    detail::Node<T>* ptr;
-    explicit LIter(detail::Node<T>* p) : ptr(p) {}
+    detail::Node< T > *ptr;
+    explicit LIter(detail::Node< T > *p):
+      ptr(p)
+    {}
 
   public:
     using iterator_category = std::forward_iterator_tag;
     using value_type = T;
     using difference_type = std::ptrdiff_t;
-    using pointer = T*;
-    using reference = T&;
+    using pointer = T *;
+    using reference = T &;
 
-    LIter() : ptr(nullptr) {}
+    LIter():
+      ptr(nullptr)
+    {}
 
-    reference operator*() const { return ptr->data; }
-    pointer operator->() const { return &(ptr->data); }
+    reference operator*() const
+    {
+      return ptr->data;
+    }
+    pointer operator->() const
+    {
+      return &(ptr->data);
+    }
 
-    LIter& operator++() {
-      if (ptr) ptr = ptr->next;
+    LIter &operator++()
+    {
+      if (ptr)
+        ptr = ptr->next;
       return *this;
     }
 
-    LIter operator++(int) {
+    LIter operator++(int)
+    {
       LIter tmp = *this;
       ++(*this);
       return tmp;
     }
 
-    bool operator==(const LIter& other) const { return ptr == other.ptr; }
-    bool operator!=(const LIter& other) const { return ptr != other.ptr; }
+    bool operator==(const LIter &other) const
+    {
+      return ptr == other.ptr;
+    }
+    bool operator!=(const LIter &other) const
+    {
+      return ptr != other.ptr;
+    }
   };
 
-  template <class T>
-  class LCIter {
-    friend class List<T>;
+  template < class T > class LCIter
+  {
+    friend class List< T >;
+
   private:
-    const detail::Node<T>* ptr;
-    explicit LCIter(const detail::Node<T>* p) : ptr(p) {}
+    const detail::Node< T > *ptr;
+    explicit LCIter(const detail::Node< T > *p):
+      ptr(p)
+    {}
 
   public:
     using iterator_category = std::forward_iterator_tag;
     using value_type = const T;
     using difference_type = std::ptrdiff_t;
-    using pointer = const T*;
-    using reference = const T&;
+    using pointer = const T *;
+    using reference = const T &;
 
-    LCIter() : ptr(nullptr) {}
-    LCIter(const LIter<T>& other) : ptr(other.ptr) {}
+    LCIter():
+      ptr(nullptr)
+    {}
+    LCIter(const LIter< T > &other):
+      ptr(other.ptr)
+    {}
 
-    reference operator*() const { return ptr->data; }
-    pointer operator->() const { return &(ptr->data); }
+    reference operator*() const
+    {
+      return ptr->data;
+    }
+    pointer operator->() const
+    {
+      return &(ptr->data);
+    }
 
-    LCIter& operator++() {
-      if (ptr) ptr = ptr->next;
+    LCIter &operator++()
+    {
+      if (ptr)
+        ptr = ptr->next;
       return *this;
     }
 
-    LCIter operator++(int) {
+    LCIter operator++(int)
+    {
       LCIter tmp = *this;
       ++(*this);
       return tmp;
     }
 
-    bool operator==(const LCIter& other) const { return ptr == other.ptr; }
-    bool operator!=(const LCIter& other) const { return ptr != other.ptr; }
+    bool operator==(const LCIter &other) const
+    {
+      return ptr == other.ptr;
+    }
+    bool operator!=(const LCIter &other) const
+    {
+      return ptr != other.ptr;
+    }
   };
 
-  template <class T>
-  class List {
+  template < class T > class List
+  {
   private:
-    detail::Node<T>* head;
+    detail::Node< T > *head;
 
   public:
-    List() noexcept : head(nullptr) {}
+    List() noexcept:
+      head(nullptr)
+    {}
 
-    ~List() noexcept { clear(); }
+    ~List() noexcept
+    {
+      clear();
+    }
 
-    List(const List& other) : head(nullptr) {
-      if (other.empty()) return;
+    List(const List &other):
+      head(nullptr)
+    {
+      if (other.empty())
+        return;
 
       try {
         auto it = other.cbegin();
         push_front(*it);
-        LIter<T> tail = begin();
+        LIter< T > tail = begin();
         ++it;
 
         while (it != other.cend()) {
@@ -112,18 +166,20 @@ namespace pozdnyakov {
           ++tail;
           ++it;
         }
-      }
-      catch (...) {
+      } catch (...) {
         clear();
         throw;
       }
     }
 
-    List(List&& other) noexcept : head(other.head) {
+    List(List &&other) noexcept:
+      head(other.head)
+    {
       other.head = nullptr;
     }
 
-    List& operator=(const List& other) {
+    List &operator=(const List &other)
+    {
       if (this != &other) {
         List tmp(other);
         std::swap(head, tmp.head);
@@ -131,7 +187,8 @@ namespace pozdnyakov {
       return *this;
     }
 
-    List& operator=(List&& other) noexcept {
+    List &operator=(List &&other) noexcept
+    {
       if (this != &other) {
         clear();
         head = other.head;
@@ -140,65 +197,93 @@ namespace pozdnyakov {
       return *this;
     }
 
-    void push_front(const T& val) {
-      head = new detail::Node<T>(val, head);
+    void push_front(const T &val)
+    {
+      head = new detail::Node< T >(val, head);
     }
 
-    void pop_front() noexcept {
+    void pop_front() noexcept
+    {
       if (head) {
-        detail::Node<T>* temp = head;
+        detail::Node< T > *temp = head;
         head = head->next;
         delete temp;
       }
     }
 
-    void insert_after(LIter<T> pos, const T& val) {
+    void insert_after(LIter< T > pos, const T &val)
+    {
       if (pos.ptr) {
-        pos.ptr->next = new detail::Node<T>(val, pos.ptr->next);
+        pos.ptr->next = new detail::Node< T >(val, pos.ptr->next);
       }
     }
 
-    void erase_after(LIter<T> pos) noexcept {
+    void erase_after(LIter< T > pos) noexcept
+    {
       if (pos.ptr && pos.ptr->next) {
-        detail::Node<T>* temp = pos.ptr->next;
+        detail::Node< T > *temp = pos.ptr->next;
         pos.ptr->next = temp->next;
         delete temp;
       }
     }
 
-    void clear() noexcept {
+    void clear() noexcept
+    {
       while (head) {
         pop_front();
       }
     }
 
-    bool empty() const noexcept { return head == nullptr; }
+    bool empty() const noexcept
+    {
+      return head == nullptr;
+    }
 
-    T& front() { return head->data; }
-    const T& front() const { return head->data; }
+    T &front()
+    {
+      return head->data;
+    }
+    const T &front() const
+    {
+      return head->data;
+    }
 
-    LIter<T> begin() { return LIter<T>(head); }
-    LIter<T> end() { return LIter<T>(nullptr); }
-    LCIter<T> cbegin() const { return LCIter<T>(head); }
-    LCIter<T> cend() const { return LCIter<T>(nullptr); }
+    LIter< T > begin()
+    {
+      return LIter< T >(head);
+    }
+    LIter< T > end()
+    {
+      return LIter< T >(nullptr);
+    }
+    LCIter< T > cbegin() const
+    {
+      return LCIter< T >(head);
+    }
+    LCIter< T > cend() const
+    {
+      return LCIter< T >(nullptr);
+    }
   };
 
   using ValueType = unsigned long long;
-  using NamedSequence = std::pair<std::string, List<ValueType>>;
+  using NamedSequence = std::pair< std::string, List< ValueType > >;
 
-  struct ProcessResult {
-    List<List<ValueType>> rows;
-    List<ValueType> sums;
+  struct ProcessResult
+  {
+    List< List< ValueType > > rows;
+    List< ValueType > sums;
   };
 
-  ProcessResult build_interleaved_rows(const List<NamedSequence>& sequences) {
+  ProcessResult build_interleaved_rows(const List< NamedSequence > &sequences)
+  {
     ProcessResult result;
 
-    List<LCIter<ValueType>> iters;
-    List<LCIter<ValueType>> ends;
+    List< LCIter< ValueType > > iters;
+    List< LCIter< ValueType > > ends;
 
-    LIter<LCIter<ValueType>> iters_tail = iters.end();
-    LIter<LCIter<ValueType>> ends_tail = ends.end();
+    LIter< LCIter< ValueType > > iters_tail = iters.end();
+    LIter< LCIter< ValueType > > ends_tail = ends.end();
 
     for (auto it = sequences.cbegin(); it != sequences.cend(); ++it) {
       if (iters.empty()) {
@@ -206,8 +291,7 @@ namespace pozdnyakov {
         ends.push_front((*it).second.cend());
         iters_tail = iters.begin();
         ends_tail = ends.begin();
-      }
-      else {
+      } else {
         iters.insert_after(iters_tail, (*it).second.cbegin());
         ends.insert_after(ends_tail, (*it).second.cend());
         ++iters_tail;
@@ -215,15 +299,15 @@ namespace pozdnyakov {
       }
     }
 
-    LIter<List<ValueType>> rows_tail = result.rows.end();
-    LIter<ValueType> sums_tail = result.sums.end();
+    LIter< List< ValueType > > rows_tail = result.rows.end();
+    LIter< ValueType > sums_tail = result.sums.end();
 
     while (true) {
       bool elements_left = false;
       ValueType current_row_sum = 0;
 
-      List<ValueType> current_row;
-      LIter<ValueType> current_row_tail = current_row.end();
+      List< ValueType > current_row;
+      LIter< ValueType > current_row_tail = current_row.end();
 
       auto it = iters.begin();
       auto end_it = ends.begin();
@@ -236,13 +320,12 @@ namespace pozdnyakov {
           if (current_row.empty()) {
             current_row.push_front(val);
             current_row_tail = current_row.begin();
-          }
-          else {
+          } else {
             current_row.insert_after(current_row_tail, val);
             ++current_row_tail;
           }
 
-          if (current_row_sum > std::numeric_limits<ValueType>::max() - val) {
+          if (current_row_sum > std::numeric_limits< ValueType >::max() - val) {
             throw std::overflow_error("Произошло переполнение при подсчете суммы.");
           }
           current_row_sum += val;
@@ -250,13 +333,13 @@ namespace pozdnyakov {
         }
       }
 
-      if (!elements_left) break;
+      if (!elements_left)
+        break;
 
       if (result.rows.empty()) {
         result.rows.push_front(current_row);
         rows_tail = result.rows.begin();
-      }
-      else {
+      } else {
         result.rows.insert_after(rows_tail, current_row);
         ++rows_tail;
       }
@@ -264,8 +347,7 @@ namespace pozdnyakov {
       if (result.sums.empty()) {
         result.sums.push_front(current_row_sum);
         sums_tail = result.sums.begin();
-      }
-      else {
+      } else {
         result.sums.insert_after(sums_tail, current_row_sum);
         ++sums_tail;
       }
