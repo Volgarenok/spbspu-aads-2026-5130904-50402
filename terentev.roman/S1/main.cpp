@@ -78,14 +78,14 @@ int main()
   }
   std::cout << '\n';
 
-  terentev::List< size_t > sums;
-  terentev::List< size_t >::LIter sumsTail;
+  terentev::List< long long > sums;
+  terentev::List< long long >::LIter sumsTail;
   bool isFirstSum = true;
 
   while (true) {
     bool hasNumbers = false;
     bool isFirstOutputNumber = true;
-    size_t sum = 0;
+    long long sum = 0;
 
     terentev::List< std::pair< std::string, terentev::List< int > > >::LIter
         iter = sequences.begin();
@@ -96,13 +96,8 @@ int main()
       if (!currentList.isEmpty()) {
         int value = currentList.front();
 
-        if (value < 0) {
-          std::cerr << "Invalid input\n";
-          return 1;
-        }
-
-        if (sum > static_cast< size_t >(-1) - static_cast< size_t >(value)) {
-          std::cerr << "Sum overflow\n";
+        if (sum > std::numeric_limits< long long >::max() - value) {
+          std::cerr << "Overflow\n";
           return 1;
         }
 
@@ -111,7 +106,7 @@ int main()
         }
         std::cout << value;
 
-        sum += static_cast< size_t >(value);
+        sum += value;
         currentList.popFront();
 
         hasNumbers = true;
@@ -136,13 +131,14 @@ int main()
       ++sumsTail;
     }
   }
+
   if (sums.isEmpty()) {
     std::cout << 0 << '\n';
     return 0;
   }
 
   bool isFirstOutputSum = true;
-  terentev::List< size_t >::LCIter sumsIter = sums.begin();
+  terentev::List< long long >::LCIter sumsIter = sums.begin();
   while (sumsIter != sums.end()) {
     if (!isFirstOutputSum) {
       std::cout << ' ';
