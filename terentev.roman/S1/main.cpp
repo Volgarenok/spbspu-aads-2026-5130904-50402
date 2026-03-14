@@ -25,7 +25,7 @@ int main()
     while (std::cin.peek() != '\n' && std::cin.peek() != EOF) {
       unsigned long long value = 0;
       if (!(std::cin >> value)) {
-        std::cerr << "Invalid input\n";
+        std::cerr << "invalid input\n";
         return 1;
       }
 
@@ -62,7 +62,7 @@ int main()
   }
 
   if (sequences.isEmpty()) {
-    std::cout << "0\n";
+    std::cout << 0 << '\n';
     return 0;
   }
 
@@ -83,7 +83,7 @@ int main()
       if (!list.isEmpty()) {
         const unsigned long long value = list.front();
         if (currentSum > ULLONG_MAX - value) {
-          std::cerr << "Overflow\n";
+          std::cerr << "overflow\n";
           return 1;
         }
         currentSum += value;
@@ -121,18 +121,19 @@ int main()
   while (true) {
     bool foundInThisLevel = false;
     isFirst = true;
-    for (terentev::List< std::pair< std::string, terentev::List< unsigned long long > > >::LIter
-       iter = sequences.begin(); iter != sequences.end(); ++iter) {
-       terentev::List< unsigned long long > &list = (*iter).second;
-       if (!list.isEmpty()) {
-         if (!isFirst) {
-           std::cout << ' ';
-         }
-         std::cout << list.front();
-         list.popFront();
-         foundInThisLevel = true;
-         isFirst = false;
-       }
+    for (terentev::List<
+        std::pair< std::string, terentev::List< unsigned long long > > >::LIter
+        iter = sequences.begin(); iter != sequences.end(); ++iter) {
+      terentev::List< unsigned long long > &list = (*iter).second;
+      if (!list.isEmpty()) {
+        if (!isFirst) {
+          std::cout << ' ';
+        }
+        std::cout << list.front();
+        list.popFront();
+        foundInThisLevel = true;
+        isFirst = false;
+      }
     }
 
     if (!foundInThisLevel) {
@@ -145,7 +146,8 @@ int main()
     std::cout << 0 << '\n';
   } else {
     isFirst = true;
-    for (terentev::List< unsigned long long >::LIter iter = sums.begin(); iter != sums.end(); ++iter) {
+    for (terentev::List< unsigned long long >::LIter iter = sums.begin();
+        iter != sums.end(); ++iter) {
       if (!isFirst) {
         std::cout << ' ';
       }
