@@ -1,18 +1,22 @@
 #include "list.hpp"
 #include <climits>
 #include <iostream>
+#include <string>
+#include <utility>
 
 int main()
 {
-  terentev::List< std::pair< std::string, terentev::List< int > > > sequences;
-  terentev::List< std::pair< std::string, terentev::List< int > > >::LIter
+  terentev::List< std::pair< std::string, terentev::List< unsigned long long > > >
+      sequences;
+  terentev::List<
+      std::pair< std::string, terentev::List< unsigned long long > > >::LIter
       sequencesTail;
   bool isFirstSequence = true;
 
   std::string name;
   while (std::cin >> name) {
-    terentev::List< int > numbers;
-    terentev::List< int >::LIter numbersTail;
+    terentev::List< unsigned long long > numbers;
+    terentev::List< unsigned long long >::LIter numbersTail;
     bool isFirstNumber = true;
 
     char symbol = '\0';
@@ -26,18 +30,11 @@ int main()
 
       std::cin.unget();
 
-      unsigned long long readValue = 0;
-      if (!(std::cin >> readValue)) {
+      unsigned long long value = 0;
+      if (!(std::cin >> value)) {
         std::cerr << "Invalid input\n";
         return 1;
       }
-
-      if (readValue > static_cast< unsigned long long >(INT_MAX)) {
-        std::cerr << "Overflow\n";
-        return 1;
-      }
-
-      int value = static_cast< int >(readValue);
 
       if (isFirstNumber) {
         numbers.pushFront(value);
@@ -49,7 +46,7 @@ int main()
       }
     }
 
-    std::pair< std::string, terentev::List< int > > element(
+    std::pair< std::string, terentev::List< unsigned long long > > element(
         name,
         std::move(numbers));
 
@@ -74,7 +71,8 @@ int main()
   }
 
   bool isFirstName = true;
-  terentev::List< std::pair< std::string, terentev::List< int > > >::LCIter
+  terentev::List<
+      std::pair< std::string, terentev::List< unsigned long long > > >::LCIter
       sequenceIter = sequences.begin();
   while (sequenceIter != sequences.end()) {
     if (!isFirstName) {
@@ -95,16 +93,17 @@ int main()
     bool isFirstOutputNumber = true;
     unsigned long long sum = 0;
 
-    terentev::List< std::pair< std::string, terentev::List< int > > >::LIter
+    terentev::List<
+        std::pair< std::string, terentev::List< unsigned long long > > >::LIter
         iter = sequences.begin();
 
     while (iter != sequences.end()) {
-      terentev::List< int > &currentList = (*iter).second;
+      terentev::List< unsigned long long > &currentList = (*iter).second;
 
       if (!currentList.isEmpty()) {
-        int value = currentList.front();
+        unsigned long long value = currentList.front();
 
-        if (sum > ULLONG_MAX - static_cast< unsigned long long >(value)) {
+        if (sum > ULLONG_MAX - value) {
           std::cerr << "Overflow\n";
           return 1;
         }
@@ -114,7 +113,7 @@ int main()
         }
         std::cout << value;
 
-        sum += static_cast< unsigned long long >(value);
+        sum += value;
         currentList.popFront();
 
         hasNumbers = true;
