@@ -1,15 +1,13 @@
 #include "list.hpp"
-#include <climits>
 #include <iostream>
+#include <limits>
+#include <string>
 #include <utility>
 
 int main()
 {
-  terentev::List< std::pair< std::string, terentev::List< unsigned long long > > >
-      sequences;
-  terentev::List<
-      std::pair< std::string, terentev::List< unsigned long long > > >::LIter
-      sequencesTail = sequences.begin();
+  terentev::List< std::pair< std::string, terentev::List< unsigned long long > > > sequences;
+  terentev::List< std::pair< std::string, terentev::List< unsigned long long > > >::LIter sequencesTail = sequences.begin();
   bool isFirstSequence = true;
 
   std::string name;
@@ -43,9 +41,7 @@ int main()
       }
     }
 
-    std::pair< std::string, terentev::List< unsigned long long > > element(
-        name,
-        std::move(numbers));
+    std::pair< std::string, terentev::List< unsigned long long > > element(name, std::move(numbers));
 
     if (isFirstSequence) {
       sequences.pushFront(element);
@@ -66,8 +62,7 @@ int main()
     return 0;
   }
 
-  terentev::List< std::pair< std::string, terentev::List< unsigned long long > > >
-      tempSequences(sequences);
+  terentev::List< std::pair< std::string, terentev::List< unsigned long long > > > tempSequences(sequences);
   terentev::List< unsigned long long > sums;
   terentev::List< unsigned long long >::LIter sumsTail = sums.begin();
   bool isFirstSum = true;
@@ -76,13 +71,11 @@ int main()
     bool hasNumbersInThisIteration = false;
     unsigned long long currentSum = 0;
 
-    for (terentev::List<
-        std::pair< std::string, terentev::List< unsigned long long > > >::LIter
-        iter = tempSequences.begin(); iter != tempSequences.end(); ++iter) {
+    for (terentev::List< std::pair< std::string, terentev::List< unsigned long long > > >::LIter iter = tempSequences.begin(); iter != tempSequences.end(); ++iter) {
       terentev::List< unsigned long long > &list = (*iter).second;
       if (!list.isEmpty()) {
         const unsigned long long value = list.front();
-        if (currentSum > ULLONG_MAX - value) {
+        if (currentSum > std::numeric_limits< unsigned long long >::max() - value) {
           std::cerr << "overflow\n";
           return 1;
         }
@@ -107,9 +100,7 @@ int main()
   }
 
   bool isFirst = true;
-  for (terentev::List<
-      std::pair< std::string, terentev::List< unsigned long long > > >::LIter
-      iter = sequences.begin(); iter != sequences.end(); ++iter) {
+  for (terentev::List< std::pair< std::string, terentev::List< unsigned long long > > >::LIter iter = sequences.begin(); iter != sequences.end(); ++iter) {
     if (!isFirst) {
       std::cout << ' ';
     }
@@ -118,12 +109,13 @@ int main()
   }
   std::cout << '\n';
 
+  terentev::List< std::pair< std::string, terentev::List< unsigned long long > > > printSequences(sequences);
+
   while (true) {
     bool foundInThisLevel = false;
     isFirst = true;
-    for (terentev::List<
-        std::pair< std::string, terentev::List< unsigned long long > > >::LIter
-        iter = sequences.begin(); iter != sequences.end(); ++iter) {
+
+    for (terentev::List< std::pair< std::string, terentev::List< unsigned long long > > >::LIter iter = printSequences.begin(); iter != printSequences.end(); ++iter) {
       terentev::List< unsigned long long > &list = (*iter).second;
       if (!list.isEmpty()) {
         if (!isFirst) {
@@ -146,8 +138,7 @@ int main()
     std::cout << 0 << '\n';
   } else {
     isFirst = true;
-    for (terentev::List< unsigned long long >::LIter iter = sums.begin();
-        iter != sums.end(); ++iter) {
+    for (terentev::List< unsigned long long >::LIter iter = sums.begin(); iter != sums.end(); ++iter) {
       if (!isFirst) {
         std::cout << ' ';
       }
