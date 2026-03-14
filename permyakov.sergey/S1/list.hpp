@@ -77,6 +77,95 @@ namespace permyakov
     clear();
     delete nodes;
   }
+
+  template < class T > T List < T >::front() const
+  {
+    if(size_ == 0) {
+      throw std::logic_error("empty list");
+    }
+    return nodes -> val;
+  }
+
+  template < class T > size_t List < T >::size() const
+  {
+    return size_;
+  }
+
+  template < class T > LIter < T > List < T >::begin()
+  {
+    if(size_ == 0) {
+      throw std::logic_error("empty list");
+    }
+    return LIter < T > (nodes);
+  }
+  
+  template < class T > LIter < T > List < T >::end()
+  {
+    if(size_ == 0) {
+      throw std::logic_error("empty list");
+    }
+    LIter < T > iter = begin();
+    while(iter.curr -> next) {
+      ++iter;
+    }
+    return iter;
+  }
+
+  template < class T > LCIter < T > List < T >::beginC() const
+  {
+    if(size_ == 0) {
+      throw std::logic_error("empty list");
+    }
+    return LCIter < T > (nodes);
+  }
+
+  template < class T > LCIter < T > List < T >::endC() const
+  {
+    if(size_ == 0) {
+      throw std::logic_error("empty list");
+    }
+    LCIter < T > iter = beginC();
+    while(iter.curr -> next) {
+      ++iter;
+    }
+    return iter;
+  }
+
+  template < class T > LIter < T > List < T >::insert_after(LIter < T > pos, const T value)
+  {
+    Node < T > * nextNode = pos.curr -> next;
+    Node < T > * newNode = new Node < T > {value, nextNode};
+    pos.curr -> next = newNode;
+    return LIter < T > (newNode);
+  }
+
+  template < class T > void List < T >::erase(LIter < T > pos)
+  {
+    Node < T > * ersNode = pos.curr;
+    ++pos;
+    delete[] ersNode; 
+  }
+
+  template < class T > void List < T >::clear()
+  {
+    LIter < T > iter = begin();
+    for(;size_ > 0; --size_) {
+      erase(iter);
+    }
+    nodes = new Node < T > {T(), nullptr};
+  }
+
+  template < class T > void List < T >::push_front(const T value)
+  {
+    nodes = new Node < T > {value, nodes};
+  }
+
+  template < class T > void List < T >::pop_front()
+  {
+    Node < T > * ersNode = nodes;
+    nodes = nodes -> next;
+    delete[] ersNode; 
+  }
 }
 
 #endif

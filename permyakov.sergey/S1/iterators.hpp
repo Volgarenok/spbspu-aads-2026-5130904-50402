@@ -11,6 +11,7 @@ namespace permyakov
     friend class List < T >;
     Node < T > * curr;
     public:
+      LIter(Node< T > * node);
       T & operator*();
       LIter & operator++();
       bool operator==(LIter < T > & scndIter);
@@ -22,11 +23,20 @@ namespace permyakov
     friend class List < T >;
     const Node < T > * curr;
     public:
+      LCIter(Node< T > * node);
       const T & operator*();
       LCIter & operator++();
       bool operator==(LCIter < T > & scndIter);
       bool operator!=(LCIter < T > & scndIter);
   };
+
+  template < class T > LIter < T >::LIter(Node< T > * node):
+    curr(node)
+  {}
+
+  template < class T > LCIter < T >::LCIter(Node< T > * node):
+    curr(node)
+  {}
 
   template < class T > T & LIter < T >::operator*()
   {
