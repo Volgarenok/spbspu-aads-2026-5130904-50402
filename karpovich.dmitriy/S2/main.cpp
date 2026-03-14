@@ -1,10 +1,16 @@
 #include <fstream>
 #include <iostream>
 #include <istream>
+#include <string>
+#include "math_op.hpp"
+#include "stack.hpp"
+#include "queue.hpp"
+#include "process.hpp"
 
 int main(int argc, char **argv)
 {
-  if (argc > 2) {
+  namespace karp = karpovich;
+  if (argc > 1) {
     std::cerr << "bad num of arguments";
     return 1;
   }
@@ -18,4 +24,15 @@ int main(int argc, char **argv)
     }
     input = &file;
   }
+  karp::Queue< karp::Queue< std::string > > queue;
+  karp::inputQueue(*input, queue);
+  karp::Stack< long long > result;
+  while (!queue.empty()) {
+    karp::Queue< std::string > infix = queue.front();
+    queue.pop();
+    karp::Queue< std::string > postfix = karp::convertToPostfix(infix);
+    long long res = karpovich::calculatePostfix(postfix);
+    result.push(res);
+  }
+  karpovich::output(std::cout, result);
 }

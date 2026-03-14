@@ -49,3 +49,13 @@ long long karpovich::multiply(long long a, long long b)
   }
   return a * b;
 }
+karpovich::Queue< std::string > karpovich::convertToPostfix(Queue< std::string > infix)
+{
+  Queue< std::string > res;
+  return res;
+}
+long long karpovich::calculatePostfix(Queue< std::string > postfix)
+{
+  long long a = 0;
+  return a;
+}
