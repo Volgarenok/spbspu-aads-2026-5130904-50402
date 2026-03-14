@@ -26,13 +26,13 @@ int main()
 
       std::cin.unget();
 
-      long long readValue = 0;
+      unsigned long long readValue = 0;
       if (!(std::cin >> readValue)) {
         std::cerr << "Invalid input\n";
         return 1;
       }
 
-      if (readValue > INT_MAX) {
+      if (readValue > static_cast< unsigned long long >(INT_MAX)) {
         std::cerr << "Overflow\n";
         return 1;
       }
@@ -86,14 +86,14 @@ int main()
   }
   std::cout << '\n';
 
-  terentev::List< long long > sums;
-  terentev::List< long long >::LIter sumsTail;
+  terentev::List< unsigned long long > sums;
+  terentev::List< unsigned long long >::LIter sumsTail;
   bool isFirstSum = true;
 
   while (true) {
     bool hasNumbers = false;
     bool isFirstOutputNumber = true;
-    long long sum = 0;
+    unsigned long long sum = 0;
 
     terentev::List< std::pair< std::string, terentev::List< int > > >::LIter
         iter = sequences.begin();
@@ -104,7 +104,7 @@ int main()
       if (!currentList.isEmpty()) {
         int value = currentList.front();
 
-        if (sum > LLONG_MAX - value) {
+        if (sum > ULLONG_MAX - static_cast< unsigned long long >(value)) {
           std::cerr << "Overflow\n";
           return 1;
         }
@@ -114,7 +114,7 @@ int main()
         }
         std::cout << value;
 
-        sum += value;
+        sum += static_cast< unsigned long long >(value);
         currentList.popFront();
 
         hasNumbers = true;
@@ -146,7 +146,7 @@ int main()
   }
 
   bool isFirstOutputSum = true;
-  terentev::List< long long >::LCIter sumsIter = sums.begin();
+  terentev::List< unsigned long long >::LCIter sumsIter = sums.begin();
   while (sumsIter != sums.end()) {
     if (!isFirstOutputSum) {
       std::cout << ' ';
