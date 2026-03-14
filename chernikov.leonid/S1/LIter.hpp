@@ -26,11 +26,7 @@ namespace chernikov {
     {
     }
     LIter(const LIter &other) = default;
-    LIter(LIter< T > &it):
-      ptr(it.ptr)
-    {
-    }
-
+    LIter &operator=(const LIter &other) = default;
     bool operator==(const LIter &other) const
     {
       return ptr == other.ptr;

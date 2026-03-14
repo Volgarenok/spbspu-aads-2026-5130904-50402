@@ -94,6 +94,7 @@ namespace chernikov {
     }
     void add(const T &val);
     LIter< T > insert_after(LIter< T > pos, const T &value);
+    void push_back(const T &value);
     void first_delete();
     void clear();
     List< T > &operator=(const List &other);
@@ -149,6 +150,23 @@ namespace chernikov {
     pos.ptr->next = new_node;
     ++count;
     return LIter< T >(new_node);
+  }
+  template < typename T > void List< T >::push_back(const T &value)
+  {
+    Node< T > *new_node = new Node< T >(value, nullptr);
+    if (!head)
+    {
+      head = new_node;
+    } else
+    {
+      Node< T > *current = head;
+      while (current->next)
+      {
+        current = current->next;
+      }
+      current->next = new_node;
+    }
+    ++count;
   }
   template < typename T > void List< T >::first_delete()
   {
