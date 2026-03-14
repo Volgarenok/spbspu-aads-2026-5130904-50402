@@ -8,7 +8,7 @@ BOOST_AUTO_TEST_CASE(default_constructor_test)
   terentev::List< int > list;
   BOOST_TEST(list.isEmpty());
   BOOST_TEST(list.getSize() == 0);
-  BOOST_TEST(list.begin() == list.end());
+  BOOST_CHECK(list.begin() == list.end());
 }
 
 BOOST_AUTO_TEST_CASE(push_front_test)
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(insert_after_test)
   ++check;
   BOOST_TEST(*check == 2);
   ++check;
-  BOOST_TEST(check == list.end());
+  BOOST_CHECK(check == list.end());
 }
 
 BOOST_AUTO_TEST_CASE(insert_after_middle_test)
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE(clear_test)
   list.clear();
   BOOST_TEST(list.isEmpty());
   BOOST_TEST(list.getSize() == 0);
-  BOOST_TEST(list.begin() == list.end());
+  BOOST_CHECK(list.begin() == list.end());
 }
 
 BOOST_AUTO_TEST_CASE(copy_constructor_test)
@@ -135,8 +135,8 @@ BOOST_AUTO_TEST_CASE(copy_constructor_test)
     ++copyIter;
   }
 
-  BOOST_TEST(originalIter == list.end());
-  BOOST_TEST(copyIter == copy.end());
+  BOOST_CHECK(originalIter == list.end());
+  BOOST_CHECK(copyIter == copy.end());
 }
 
 BOOST_AUTO_TEST_CASE(copy_assignment_test)
@@ -162,8 +162,8 @@ BOOST_AUTO_TEST_CASE(copy_assignment_test)
     ++copyIter;
   }
 
-  BOOST_TEST(originalIter == list.end());
-  BOOST_TEST(copyIter == copy.end());
+  BOOST_CHECK(originalIter == list.end());
+  BOOST_CHECK(copyIter == copy.end());
 }
 
 BOOST_AUTO_TEST_CASE(move_constructor_test)
