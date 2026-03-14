@@ -46,12 +46,12 @@ namespace novikov
       Node* next = nullptr;
       Node* prev = nullptr;
     };
-    List< T >();
+    List();
 
-    List< T >(const List< T >&);
-    List< T >(List< T >&&);
+    List(const List< T >&);
+    List(List< T >&&);
 
-    ~List< T >() noexcept;
+    ~List() noexcept;
 
     List< T > operator=(const List< T >&);
     List< T > operator=(List< T >&&);
