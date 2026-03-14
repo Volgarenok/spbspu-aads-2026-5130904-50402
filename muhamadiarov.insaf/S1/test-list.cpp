@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(test_end)
   List< int > list;
   list.pushFront(1);
 
-  Iter< int > it = list.begin();
+  LIter< int > it = list.begin();
   it++;
   BOOST_CHECK(it == list.end());
 }
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(test_push_back)
   list.pushBack(1);
   list.pushBack(2);
 
-  Iter< int > it = list.begin();
+  LIter< int > it = list.begin();
   BOOST_CHECK_EQUAL(*it, 1);
   it++;
   BOOST_CHECK_EQUAL(*it, 2);
@@ -129,7 +129,7 @@ BOOST_AUTO_TEST_CASE(test_pop_front)
 
   list.popFront();
   BOOST_CHECK_EQUAL(list.size(), 1);
-  BOOST_CHECK_EQUAL(*list.begin(), 2);
+  BOOST_CHECK_EQUAL(*list.begin(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(test_pop_back)
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE(test_pop_back)
 
   list.popBack();
   BOOST_CHECK_EQUAL(list.size(), 1);
-  BOOST_CHECK_EQUAL(*list.begin(), 1);
+  BOOST_CHECK_EQUAL(*list.begin(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(test_clear)

@@ -1,8 +1,10 @@
-#include "function.hpp"
 #include <iostream>
 #include <string>
 #include <ostream>
 #include <algorithm>
+#include "function.hpp"
+#include "list.hpp"
+#include "lciter.hpp"
 
 namespace muh = muhamadiarov;
 
@@ -15,9 +17,9 @@ void muh::input(std::istream& in, l_pair_str_l_t& list)
     size_t num = 0;
     while (in >> num)
     {
-      listNum.pushFront(num);
+      listNum.pushBack(num);
     }
-    list.pushFront({name, listNum});
+    list.pushBack({name, listNum});
     in.clear();
   }
 }
@@ -25,7 +27,7 @@ void muh::input(std::istream& in, l_pair_str_l_t& list)
 muh::List< muh::List< size_t > > muh::transposes(const l_pair_str_l_t& list)
 {
   size_t maxLen = 0;
-  c_iter_t lciter = list.cbegin(); 
+  c_iter_t lciter = list.cbegin();
   while (lciter != list.cend())
   {
     maxLen = std::max(maxLen, (*lciter).second.size());
@@ -45,11 +47,11 @@ muh::List< muh::List< size_t > > muh::transposes(const l_pair_str_l_t& list)
 	{
 	  ++iter;
 	}
-        listNum.pushFront(*iter);
+        listNum.pushBack(*iter);
       }
       ++lciter;
     }
-    result.pushFront(listNum);
+    result.pushBack(listNum);
   }
   return result;
 }
@@ -66,8 +68,8 @@ void muh::printList(std::ostream& out, const List< List< size_t > >& list)
       out << *podIter;
       for (size_t j = 1; j < inList.size(); ++j)
       {
-        ++poditer;
-        out << ' ' << *poditer;
+        ++podIter;
+        out << ' ' << *podIter;
       }
     }
     out << '\n';
@@ -78,14 +80,14 @@ void muh::printList(std::ostream& out, const List< List< size_t > >& list)
 void muh::printNames(std::ostream& out, const l_pair_str_l_t& list)
 {
   c_iter_t iter = list.cbegin();
-  while (iter != list.cend())
+  for (size_t i = 0; i < list.size(); ++i)
   {
     out << (*iter).first;
-    ++iter;
     if (iter != list.cend())
     {
       out << " ";
     }
+    ++iter;
   }
 }
 
@@ -97,7 +99,7 @@ void muh::printSum(std::ostream& out, const List< List< size_t > >& list)
     return;
   }
   LCIter< List< size_t > > iter = list.cbegin();
-  while (iter != list.cend())
+  for (size_t i = 0; i < list.size(); ++i)
   {
     const List< size_t >& inList = *iter;
     size_t sum = 0;
@@ -111,10 +113,10 @@ void muh::printSum(std::ostream& out, const List< List< size_t > >& list)
       }     
     }
     out << sum;
-    ++iter;
     if (iter != list.cend())
     {
       out << ' ';
     }
+    ++iter;
   }
 }
