@@ -103,6 +103,7 @@ void muh::printSum(std::ostream& out, const List< List< size_t > >& list)
     return;
   }
   LCIter< List< size_t > > iter = list.cbegin();
+  List< size_t > sums;
   for (size_t i = 0; i < list.size(); ++i)
   {
     const List< size_t >& inList = *iter;
@@ -120,11 +121,17 @@ void muh::printSum(std::ostream& out, const List< List< size_t > >& list)
         ++inIter;
       }
     }
-    out << sum;
-    if (iter != list.cend())
+    sums.pushBack(sum);
+    ++iter;
+  }
+  LCIter< size_t > itSum = sums.cbegin();
+  for (size_t i = 0; i < sums.size(); ++i)
+  {
+    out << *itSum;
+    if (itSum != sums.cend())
     {
       out << ' ';
     }
-    ++iter;
+    ++itSum;
   }
 }
