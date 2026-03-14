@@ -2,7 +2,6 @@
 #include "list.hpp"
 #include "node.hpp"
 #include "funcs.hpp"
-#include "funcs.cpp"
 #include <iostream>
 
 int main()

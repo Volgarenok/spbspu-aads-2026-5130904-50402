@@ -6,6 +6,7 @@
 namespace strelnikov
 {
   template < class T > class List;
+  template < class T > class LCIter;
   template < class T > class LIter
   {
   public:
@@ -34,6 +35,7 @@ namespace strelnikov
   private:
     Node< T > *curr_;
     friend class List< T >;
+    friend class LCIter< T >;
   };
 
   template < class T > class LCIter
@@ -65,6 +67,7 @@ namespace strelnikov
   private:
     const Node< T > *curr_;
     friend class List< T >;
+    friend class LIter< T >;
   };
 
   template < class T >

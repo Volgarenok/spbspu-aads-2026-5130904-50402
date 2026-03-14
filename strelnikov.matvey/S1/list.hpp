@@ -56,7 +56,7 @@ namespace strelnikov
   List< T >::List(const list &other):
     head_(nullptr)
   {
-    if (other.head_ = nullptr) {
+    if (other.head_ == nullptr) {
       return;
     }
 
@@ -156,7 +156,7 @@ namespace strelnikov
 
   template < class T > typename List< T >::iterator List< T >::insert_after(const_iterator pos, const T &value)
   {
-    node *curr = static_cast< node * >(pos.curr_);
+    node *curr = const_cast< node * >(pos.curr_);
     node *new_node = new node();
     new_node->val = value;
     new_node->next = curr->next;
@@ -168,7 +168,7 @@ namespace strelnikov
 
   template < class T > typename List< T >::iterator List< T >::insert_after(const_iterator pos, T &&value)
   {
-    node *curr = static_cast< node * >(pos.curr_);
+    node *curr = const_cast< node * >(pos.curr_);
     node *new_node = new node();
     new_node->val = std::move(value);
     new_node->next = curr->next;
@@ -189,7 +189,7 @@ namespace strelnikov
 
   template < class T > typename List< T >::iterator List< T >::erase_after(const_iterator pos)
   {
-    node *curr = static_cast< node * >(pos.curr_);
+    node *curr = const_cast< node * >(pos.curr_);
     node *to_delete = curr->next;
 
     if (!to_delete) {
