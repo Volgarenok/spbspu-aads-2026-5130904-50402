@@ -12,5 +12,7 @@ namespace karpovich
   long long multiply(long long a, long long b);
   Queue< std::string > convertToPostfix(Queue< std::string > infix);
   long long calculatePostfix(Queue< std::string > postfix);
+  bool isOperation(const std::string &op);
+  bool isPriorityOp(const std::string &op1, const std::string &op2);
 }
 #endif
