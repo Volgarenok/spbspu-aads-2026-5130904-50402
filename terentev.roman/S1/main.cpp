@@ -26,7 +26,7 @@ int main()
       unsigned long long value = 0;
       if (!(std::cin >> value)) {
         std::cerr << "Invalid input\n";
-        return 2;
+        return 1;
       }
 
       if (isFirstNumber) {
@@ -62,7 +62,6 @@ int main()
   }
 
   if (sequences.isEmpty()) {
-    std::cout << 0 << '\n';
     return 0;
   }
 
@@ -73,86 +72,90 @@ int main()
   bool isFirstSum = true;
 
   while (true) {
-    bool hasNumbers = false;
-    unsigned long long sum = 0;
+    bool hasNumbersInThisIteration = false;
+    unsigned long long currentSum = 0;
 
-    terentev::List<
+    for (terentev::List<
         std::pair< std::string, terentev::List< unsigned long long > > >::LIter
-        iter = tempSequences.begin();
-    while (iter != tempSequences.end()) {
-      terentev::List< unsigned long long > &currentList = (*iter).second;
-      if (!currentList.isEmpty()) {
-        const unsigned long long value = currentList.front();
-        if (sum > ULLONG_MAX - value) {
+        iter = tempSequences.begin(); iter != tempSequences.end(); ++iter) {
+      terentev::List< unsigned long long > &list = (*iter).second;
+      if (!list.isEmpty()) {
+        const unsigned long long value = list.front();
+        if (currentSum > ULLONG_MAX - value) {
           std::cerr << "Overflow\n";
-          return 2;
+          return 1;
         }
-        sum += value;
-        currentList.popFront();
-        hasNumbers = true;
+        currentSum += value;
+        list.popFront();
+        hasNumbersInThisIteration = true;
       }
-      ++iter;
     }
 
-    if (!hasNumbers) {
+    if (!hasNumbersInThisIteration) {
       break;
     }
 
     if (isFirstSum) {
-      sums.pushFront(sum);
+      sums.pushFront(currentSum);
       sumsTail = sums.begin();
       isFirstSum = false;
     } else {
-      sums.insertAfter(sumsTail, sum);
+      sums.insertAfter(sumsTail, currentSum);
       ++sumsTail;
     }
   }
 
-  bool isFirstName = true;
+  bool isFirst = true;
   for (terentev::List<
       std::pair< std::string, terentev::List< unsigned long long > > >::LIter
       iter = sequences.begin(); iter != sequences.end(); ++iter) {
-    if (!isFirstName) {
+    if (!isFirst) {
       std::cout << ' ';
     }
     std::cout << (*iter).first;
-    isFirstName = false;
+    isFirst = false;
   }
   std::cout << '\n';
 
-  while (true) {
-    bool hasNumbers = false;
-    bool isFirstInRow = true;
+  if (!sums.isEmpty()) {
+    while (true) {
+      bool foundInThisLevel = false;
+      isFirst = true;
 
-    for (terentev::List<
-        std::pair< std::string, terentev::List< unsigned long long > > >::LIter
-        iter = sequences.begin(); iter != sequences.end(); ++iter) {
-      terentev::List< unsigned long long > &currentList = (*iter).second;
-      if (!currentList.isEmpty()) {
-        if (!isFirstInRow) {
-          std::cout << ' ';
+      for (terentev::List<
+          std::pair< std::string, terentev::List< unsigned long long > > >::LIter
+          iter = sequences.begin(); iter != sequences.end(); ++iter) {
+        terentev::List< unsigned long long > &list = (*iter).second;
+        if (!list.isEmpty()) {
+          if (!isFirst) {
+            std::cout << ' ';
+          }
+          std::cout << list.front();
+          list.popFront();
+          foundInThisLevel = true;
+          isFirst = false;
         }
-        std::cout << currentList.front();
-        currentList.popFront();
-        hasNumbers = true;
-        isFirstInRow = false;
       }
-    }
 
-    if (!hasNumbers) {
-      break;
+      if (!foundInThisLevel) {
+        break;
+      }
+      std::cout << '\n';
+    }
+  }
+
+  if (sums.isEmpty()) {
+    std::cout << 0 << '\n';
+  } else {
+    isFirst = true;
+    for (terentev::List< unsigned long long >::LIter iter = sums.begin();
+        iter != sums.end(); ++iter) {
+      if (!isFirst) {
+        std::cout << ' ';
+      }
+      std::cout << *iter;
+      isFirst = false;
     }
     std::cout << '\n';
   }
-
-  bool isFirstOutputSum = true;
-  for (terentev::List< unsigned long long >::LIter iter = sums.begin();
-      iter != sums.end(); ++iter) {
-    if (!isFirstOutputSum) {
-      std::cout << ' ';
-    }
-    std::cout << *iter;
-    isFirstOutputSum = false;
-  }
-  std::cout << '\n';
 }
