@@ -8,6 +8,7 @@ int main()
 {
   auto list = strelnikov::input(std::cin);
   if (list.cbegin() == list.cend()) {
+    strelnikov::printNames(std::cout, list) << '\n';
     std::cout << "0\n";
     return 0;
   }
@@ -18,6 +19,8 @@ int main()
   try {
     sums = get_sum(onlynums);
   } catch (const std::overflow_error &e) {
+    strelnikov::printNames(std::cout, list) << '\n';
+    strelnikov::printList(std::cout, onlynums) << '\n';
     std::cerr << e.what();
     return 1;
   }

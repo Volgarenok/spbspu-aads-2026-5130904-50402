@@ -109,7 +109,7 @@ strelnikov::List< size_t > strelnikov::get_sum(List< List< size_t > > &list)
 
     while (it_inner != (*it).cend()) {
       if (std::numeric_limits< size_t >::max() - res < *it_inner) {
-        throw std::overflow_error("why we need these?");
+        throw std::overflow_error("overflow\n");
       }
       res += *it_inner;
       ++it_inner;
