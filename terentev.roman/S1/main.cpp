@@ -80,18 +80,22 @@ int main()
         std::pair< std::string, terentev::List< unsigned long long > > >::LIter
         iter = tempSequences.begin(); iter != tempSequences.end(); ++iter) {
       terentev::List< unsigned long long > &list = (*iter).second;
-      const unsigned long long value = list.front();
-      if (currentSum > ULLONG_MAX - value) {
-        std::cerr << "overflow\n";
-        return 1;
+      if (!list.isEmpty()) {
+        const unsigned long long value = list.front();
+        if (currentSum > ULLONG_MAX - value) {
+          std::cerr << "overflow\n";
+          return 1;
+        }
+        currentSum += value;
+        list.popFront();
+        hasNumbersInThisIteration = true;
       }
-      currentSum += value;
-      list.popFront();
-      hasNumbersInThisIteration = true;
     }
+
     if (!hasNumbersInThisIteration) {
       break;
     }
+
     if (isFirstSum) {
       sums.pushFront(currentSum);
       sumsTail = sums.begin();
