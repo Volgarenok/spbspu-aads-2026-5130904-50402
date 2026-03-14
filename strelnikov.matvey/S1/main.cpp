@@ -1,2 +1,35 @@
+#include "iters.hpp"
+#include "list.hpp"
+#include "node.hpp"
+#include "funcs.hpp"
+#include "funcs.cpp"
+#include <iostream>
+
 int main()
-{}
+{
+  strelnikov::List< std::pair< std::string, strelnikov::List< size_t > > > list;
+
+  strelnikov::input(std::cin, list);
+
+  if (list.cbegin() == list.cend()) {
+    std::cout << "0\n";
+    return 0;
+  }
+
+  auto onlynums = leave_nums(list);
+
+  strelnikov::List< size_t > sums;
+  try {
+    sums = get_sum(onlynums);
+  } catch (const std::overflow_error &e) {
+    std::cerr << e.what();
+    return 1;
+  }
+
+  strelnikov::printNames(std::cout, list);
+  std::cout << "\n";
+  strelnikov::printList(std::cout, onlynums);
+  std::cout << "\n";
+  strelnikov::printSum(std::cout, sums);
+  std::cout << "\n";
+}
