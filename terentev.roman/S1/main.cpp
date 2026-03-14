@@ -118,39 +118,34 @@ int main()
   }
   std::cout << '\n';
 
-  if (!sums.isEmpty()) {
-    while (true) {
-      bool foundInThisLevel = false;
-      isFirst = true;
-
-      for (terentev::List<
-          std::pair< std::string, terentev::List< unsigned long long > > >::LIter
-          iter = sequences.begin(); iter != sequences.end(); ++iter) {
-        terentev::List< unsigned long long > &list = (*iter).second;
-        if (!list.isEmpty()) {
-          if (!isFirst) {
-            std::cout << ' ';
-          }
-          std::cout << list.front();
-          list.popFront();
-          foundInThisLevel = true;
-          isFirst = false;
-        }
-      }
-
-      if (!foundInThisLevel) {
-        break;
-      }
-      std::cout << '\n';
+  while (true) {
+    bool foundInThisLevel = false;
+    isFirst = true;
+    for (terentev::List< std::pair< std::string, terentev::List< unsigned long long > > >::LIter
+       iter = sequences.begin(); iter != sequences.end(); ++iter) {
+       terentev::List< unsigned long long > &list = (*iter).second;
+       if (!list.isEmpty()) {
+         if (!isFirst) {
+           std::cout << ' ';
+         }
+         std::cout << list.front();
+         list.popFront();
+         foundInThisLevel = true;
+         isFirst = false;
+       }
     }
+
+    if (!foundInThisLevel) {
+      break;
+    }
+    std::cout << '\n';
   }
 
   if (sums.isEmpty()) {
     std::cout << 0 << '\n';
   } else {
     isFirst = true;
-    for (terentev::List< unsigned long long >::LIter iter = sums.begin();
-        iter != sums.end(); ++iter) {
+    for (terentev::List< unsigned long long >::LIter iter = sums.begin(); iter != sums.end(); ++iter) {
       if (!isFirst) {
         std::cout << ' ';
       }
