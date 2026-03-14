@@ -26,11 +26,18 @@ int main()
 
       std::cin.unget();
 
-      int value = 0;
-      if (!(std::cin >> value)) {
+      long long readValue = 0;
+      if (!(std::cin >> readValue)) {
         std::cerr << "Invalid input\n";
         return 1;
       }
+
+      if (readValue > INT_MAX) {
+        std::cerr << "Overflow\n";
+        return 1;
+      }
+
+      int value = static_cast< int >(readValue);
 
       if (isFirstNumber) {
         numbers.pushFront(value);
