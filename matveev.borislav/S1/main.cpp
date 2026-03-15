@@ -48,6 +48,7 @@ int main()
 
     if (sequences.begin() == sequences.end())
     {
+      std::cout << "0\n";
       return 0;
     }
 
@@ -148,7 +149,7 @@ int main()
   }
   catch (const std::overflow_error&)
   {
-    std::cerr << "overflow\n";
+    std::cerr << "Error\n";
     return 1;
   }
 }
