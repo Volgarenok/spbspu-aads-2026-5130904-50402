@@ -8,15 +8,15 @@
 
 int main()
 {
-  matveev::List<std::pair<std::string, matveev::List<long long>>> sequences;
+  matveev::List< std::pair< std::string, matveev::List< size_t > > > sequences;
   auto tail = sequences.beforeBegin();
   std::string name;
 
   while (std::cin >> name)
   {
-    matveev::List<long long> numbers;
+    matveev::List< size_t > numbers;
     auto numTail = numbers.beforeBegin();
-    long long value;
+    size_t value;
 
     while (true)
     {
@@ -37,7 +37,7 @@ int main()
       numTail = numbers.insertAfter(numTail, value);
     }
 
-    std::pair<std::string, matveev::List<long long>> seq(name, numbers);
+    std::pair<std::string, matveev::List< size_t >> seq(name, numbers);
     tail = sequences.insertAfter(tail, seq);
   }
 
@@ -58,7 +58,7 @@ int main()
 
   std::cout << "\n";
 
-  matveev::List<long long> sums;
+  matveev::List< size_t > sums;
   auto sumTail = sums.beforeBegin();
 
   bool more = true;
@@ -66,7 +66,7 @@ int main()
   while (more)
   {
     more = false;
-    long long rowSum = 0;
+    size_t rowSum = 0;
     bool first = true;
 
     for (auto it = sequences.begin(); it != sequences.end(); ++it)
@@ -75,9 +75,9 @@ int main()
 
       if (list.begin() != list.end())
       {
-        long long v = *list.begin();
+        size_t v = *list.begin();
 
-        if (rowSum > LLONG_MAX - v)
+        if (v > std::numeric_limits<size_t>::max() - rowSum)
         {
           std::cerr << "Error\n";
           return 1;
