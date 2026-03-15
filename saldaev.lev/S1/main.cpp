@@ -42,12 +42,6 @@ int main()
     ++outerIt;
   }
 
-  saldaev::List< size_t > sums;
-  for (size_t i = 0; i < iters.getLength(); ++i) {
-    sums.newHead(0);
-  }
-  saldaev::LIter< size_t > sumsIt = sums.begin();
-
   bool any_left = true;
   while (any_left) {
     std::cout << '\n';
@@ -62,6 +56,36 @@ int main()
           std::cout << ' ';
         }
         std::cout << innerIt.getData();
+        ++innerIt;
+        any_left = true;
+        first = false;
+      }
+      ++iterIt;
+    }
+  }
+
+  outerIt = outer.begin();
+  saldaev::LIter< saldaev::LIter< size_t > > iterIt = iters.begin();
+  while (outerIt != outer.end()) {
+    iters.setData(iterIt, outerIt.getData().second.begin());
+    ++outerIt;
+    ++iterIt;
+  }
+
+  saldaev::List< size_t > sums;
+  for (size_t i = 0; i < iters.getLength(); ++i) {
+    sums.newHead(0);
+  }
+  saldaev::LIter< size_t > sumsIt = sums.begin();
+  any_left = true;
+  while (any_left) {
+    any_left = false;
+    saldaev::LIter< saldaev::LIter< size_t > > iterIt = iters.begin();
+
+    while (iterIt != iters.end()) {
+      saldaev::LIter< size_t > &innerIt = iterIt.getData();
+      if (innerIt.isValid()) {
+        size_t num = innerIt.getData();
         sumsIt.getData() += innerIt.getData();
         ++innerIt;
         any_left = true;
