@@ -7,15 +7,15 @@
 
 int main()
 {
-  matveev::List<std::pair<std::string, matveev::List<int>>> sequences;
+  matveev::List< std::pair< std::string, matveev::List< long long > > > sequences;
   auto tail = sequences.beforeBegin();
   std::string name;
 
   while (std::cin >> name)
   {
-    matveev::List<int> numbers;
+    matveev::List< long long > numbers;
     auto numTail = numbers.beforeBegin();
-    int value;
+    long long value;
 
     while (true)
     {
@@ -35,7 +35,7 @@ int main()
       numTail = numbers.insertAfter(numTail, value);
     }
 
-    std::pair<std::string, matveev::List<int>> seq(name, numbers);
+    std::pair< std::string, matveev::List< long long > > seq(name, numbers);
     tail = sequences.insertAfter(tail, seq);
   }
 
@@ -56,7 +56,7 @@ int main()
 
   std::cout << "\n";
 
-  matveev::List<long long> sums;
+  matveev::List< long long > sums;
   auto sumTail = sums.beforeBegin();
 
   bool more = true;
@@ -73,7 +73,7 @@ int main()
 
       if (list.begin() != list.end())
       {
-        int v = *list.begin();
+        long long v = *list.begin();
 
         if (rowSum > LLONG_MAX - v)
         {
