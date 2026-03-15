@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include <utility>
-#include <climits>
 #include <limits>
 
 #include "list.hpp"
@@ -21,7 +20,6 @@ int main()
     while (true)
     {
       int c = std::cin.peek();
-
       if (c == '\n' || c == EOF)
       {
         break;
@@ -37,7 +35,7 @@ int main()
       numTail = numbers.insertAfter(numTail, value);
     }
 
-    std::pair<std::string, matveev::List< size_t >> seq(name, numbers);
+    std::pair< std::string, matveev::List< size_t > > seq(name, numbers);
     tail = sequences.insertAfter(tail, seq);
   }
 
@@ -47,16 +45,8 @@ int main()
     return 0;
   }
 
-  auto it = sequences.begin();
-  std::cout << it->first;
-  ++it;
-
-  for (; it != sequences.end(); ++it)
-  {
-    std::cout << " " << it->first;
-  }
-
-  std::cout << "\n";
+  matveev::List< matveev::List< size_t > > rows;
+  auto rowsTail = rows.beforeBegin();
 
   matveev::List< size_t > sums;
   auto sumTail = sums.beforeBegin();
@@ -67,7 +57,8 @@ int main()
   {
     more = false;
     size_t rowSum = 0;
-    bool first = true;
+    matveev::List< size_t > row;
+    auto rowTail = row.beforeBegin();
 
     for (auto it = sequences.begin(); it != sequences.end(); ++it)
     {
@@ -83,15 +74,9 @@ int main()
           return 1;
         }
 
-        if (!first)
-        {
-          std::cout << " ";
-        }
-
-        std::cout << v;
-        first = false;
-
+        rowTail = row.insertAfter(rowTail, v);
         rowSum += v;
+
         list.removeFront();
         more = true;
       }
@@ -99,9 +84,35 @@ int main()
 
     if (more)
     {
+      rowsTail = rows.insertAfter(rowsTail, row);
       sumTail = sums.insertAfter(sumTail, rowSum);
-      std::cout << "\n";
     }
+  }
+
+  auto it = sequences.begin();
+  std::cout << it->first;
+  ++it;
+
+  for (; it != sequences.end(); ++it)
+  {
+    std::cout << " " << it->first;
+  }
+
+  std::cout << "\n";
+
+  for (auto r = rows.begin(); r != rows.end(); ++r)
+  {
+    bool first = true;
+    for (auto v = r->begin(); v != r->end(); ++v)
+    {
+      if (!first)
+      {
+        std::cout << " ";
+      }
+      std::cout << *v;
+      first = false;
+    }
+    std::cout << "\n";
   }
 
   if (sums.begin() == sums.end())
