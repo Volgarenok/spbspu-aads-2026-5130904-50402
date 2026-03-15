@@ -4,6 +4,7 @@
 #include <istream>
 #include <string>
 #include <cctype>
+#include <limits>
 
 namespace chernikov {
 
@@ -18,9 +19,7 @@ namespace chernikov {
       size_t pos = 0;
       size_t len = line.length();
       while (pos < len && std::isspace(line[pos]))
-      {
         ++pos;
-      }
       if (pos >= len)
         continue;
       std::string name;
@@ -30,22 +29,16 @@ namespace chernikov {
         ++pos;
       }
       if (name.empty())
-      {
         continue;
-      }
       List< int > numbers;
       while (pos < len)
       {
         while (pos < len && std::isspace(line[pos]))
-        {
           ++pos;
-        }
         if (pos >= len)
           break;
         if (!std::isdigit(line[pos]))
-        {
           break;
-        }
         int value = 0;
         while (pos < len && std::isdigit(line[pos]))
         {
@@ -54,14 +47,125 @@ namespace chernikov {
         }
         numbers.push_back(value);
       }
-      result.add({name, numbers});
+      if (result.empty())
+      {
+        result.add({name, numbers});
+      } else
+      {
+        auto last = result.begin();
+        auto prev = last;
+        while (last != result.end())
+        {
+          prev = last;
+          ++last;
+        }
+        result.insert_after(prev, {name, numbers});
+      }
     }
-    List< Sequence > final_result;
-    auto insert_pos = final_result.end();
-    for (auto it = result.begin(); it != result.end(); ++it)
+    return result;
+  }
+  void print_names(std::ostream &out, const List< Sequence > &sequences)
+  {
+    if (sequences.empty())
     {
-      insert_pos = final_result.insert_after(insert_pos, *it);
+      return;
     }
-    return final_result;
+    bool first_element = true;
+    for (auto it = sequences.begin(); it != sequences.end(); ++it)
+    {
+      if (!first_element)
+      {
+        out << " ";
+      }
+      out << it->first;
+      first_element = false;
+    }
+    out << "\n";
+  }
+  size_t max_sequence_length(const List< Sequence > &sequences)
+  {
+    size_t max_len = 0;
+    for (auto it = sequences.begin(); it != sequences.end(); ++it)
+    {
+      size_t current_len = it->second.size();
+      if (current_len > max_len)
+      {
+        max_len = current_len;
+      }
+    }
+    return max_len;
+  }
+  void print_transposed(std::ostream &out, const List< Sequence > &sequences)
+  {
+    if (sequences.empty())
+    {
+      return;
+    }
+    size_t max_len = max_sequence_length(sequences);
+    for (size_t i = 0; i < max_len; ++i)
+    {
+      bool first = true;
+      for (auto seq_it = sequences.begin(); seq_it != sequences.end(); ++seq_it)
+      {
+        const List< int > &numbers = seq_it->second;
+        if (i < numbers.size())
+        {
+          auto num_it = numbers.begin();
+          for (size_t j = 0; j < i; ++j)
+          {
+            ++num_it;
+          }
+
+          if (!first)
+          {
+            out << " ";
+          }
+          out << *num_it;
+          first = false;
+        }
+      }
+      out << "\n";
+    }
+  }
+  void print_sums(std::ostream &out, const List< Sequence > &sequences)
+  {
+    if (sequences.empty())
+    {
+      return;
+    }
+    size_t max_len = max_sequence_length(sequences);
+    bool possible = true;
+    for (size_t i = 0; i < max_len; ++i)
+    {
+      long long sum = 0;
+      bool has_numbers = false;
+      for (auto seq_it = sequences.begin(); seq_it != sequences.end(); ++seq_it)
+      {
+        const List< int > &numbers = seq_it->second;
+        if (i < numbers.size())
+        {
+          auto num_it = numbers.begin();
+          for (size_t j = 0; j < i; ++j)
+          {
+            ++num_it;
+          }
+          if (sum > std::numeric_limits< long long >::max() - *num_it)
+          {
+            possible = false;
+            break;
+          }
+          sum += *num_it;
+          has_numbers = true;
+        }
+      }
+      if (!possible)
+      {
+        throw std::overflow_error("Sum overflow");
+      }
+      if (has_numbers)
+      {
+        out << sum << " ";
+      }
+    }
   }
 }

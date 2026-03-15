@@ -44,6 +44,10 @@ namespace chernikov {
     {
       return ptr->data;
     }
+    const T *operator->() const
+    {
+      return &ptr->data;
+    }
     LCIter &operator++() // префикс
     {
       ptr = ptr->next;
