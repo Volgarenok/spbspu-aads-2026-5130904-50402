@@ -7,13 +7,27 @@ namespace matveev
 {
 
 template< class T >
-class List;
+struct Node
+{
+  T data;
+  Node* next;
+
+  Node()
+    : data(),
+      next(nullptr)
+  {
+  }
+
+  Node(const T& value)
+    : data(value),
+      next(nullptr)
+  {
+  }
+};
 
 template< class T >
 class LIter
 {
-  friend class List< T >;
-
 public:
   LIter()
     : node_(nullptr)
@@ -22,20 +36,17 @@ public:
 
   T& operator*() const
   {
-    Node* node = reinterpret_cast< Node* >(node_);
-    return node->data;
+    return node_->data;
   }
 
   T* operator->() const
   {
-    Node* node = reinterpret_cast< Node* >(node_);
-    return &(node->data);
+    return &(node_->data);
   }
 
   LIter& operator++()
   {
-    Node* node = reinterpret_cast< Node* >(node_);
-    node_ = node->next;
+    node_ = node_->next;
     return *this;
   }
 
@@ -50,20 +61,15 @@ public:
   }
 
 private:
-  struct Node
-  {
-    T data;
-    Node* next;
-  };
+  Node< T >* node_;
 
-  void* node_;
+  template< class >
+  friend class List;
 };
 
 template< class T >
 class LCIter
 {
-  friend class List< T >;
-
 public:
   LCIter()
     : node_(nullptr)
@@ -72,26 +78,23 @@ public:
 
   const T& operator*() const
   {
-    const Node* node = reinterpret_cast< const Node* >(node_);
-    return node->data;
+    return node_->data;
   }
 
   const T* operator->() const
   {
-    const Node* node = reinterpret_cast< const Node* >(node_);
-    return &(node->data);
+    return &(node_->data);
   }
 
   LCIter& operator++()
   {
-    const Node* node = reinterpret_cast< const Node* >(node_);
-    node_ = node->next;
+    node_ = node_->next;
     return *this;
   }
 
   bool operator==(const LCIter& other) const
   {
-    return node_ == other.node_;
+   return node_ == other.node_;
   }
 
   bool operator!=(const LCIter& other) const
@@ -100,13 +103,10 @@ public:
   }
 
 private:
-  struct Node
-  {
-    T data;
-    Node* next;
-  };
+  const Node< T >* node_;
 
-  const void* node_;
+  template< class >
+  friend class List;
 };
 
 template< class T >
@@ -115,29 +115,24 @@ class List
 public:
   List()
   {
-    sentinel_ = new Node();
+    sentinel_ = new Node< T >();
+    sentinel_->next = nullptr;
   }
-
   List(const List& other)
   {
-    sentinel_ = new Node();
-    Node* tail = sentinel_;
+    sentinel_ = new Node<T>();
+    sentinel_->next = nullptr;
 
-    Node* cur = other.sentinel_->next;
+    Node<T>* tail = sentinel_;
+    Node<T>* cur = other.sentinel_->next;
 
     while (cur != nullptr)
     {
-      Node* node = new Node(cur->data);
+      Node<T>* node = new Node<T>(cur->data);
       tail->next = node;
       tail = node;
       cur = cur->next;
     }
-  }
-
-  List(List&& other)
-  {
-    sentinel_ = other.sentinel_;
-    other.sentinel_ = new Node();
   }
 
   List& operator=(const List& other)
@@ -149,32 +144,16 @@ public:
 
     clear();
 
-    Node* tail = sentinel_;
-    Node* cur = other.sentinel_->next;
+    Node<T>* tail = sentinel_;
+    Node<T>* cur = other.sentinel_->next;
 
     while (cur != nullptr)
     {
-      Node* node = new Node(cur->data);
+      Node<T>* node = new Node<T>(cur->data);
       tail->next = node;
       tail = node;
       cur = cur->next;
     }
-
-    return *this;
-  }
-
-  List& operator=(List&& other)
-  {
-    if (this == &other)
-    {
-      return *this;
-    }
-
-    clear();
-    delete sentinel_;
-
-    sentinel_ = other.sentinel_;
-    other.sentinel_ = new Node();
 
     return *this;
   }
@@ -185,9 +164,23 @@ public:
     delete sentinel_;
   }
 
+  void clear()
+  {
+    Node< T >* cur = sentinel_->next;
+
+    while (cur != nullptr)
+    {
+      Node< T >* tmp = cur;
+      cur = cur->next;
+      delete tmp;
+    }
+
+    sentinel_->next = nullptr;
+  }
+
   void removeFront()
   {
-    Node* first = sentinel_->next;
+    Node< T >* first = sentinel_->next;
 
     if (first == nullptr)
     {
@@ -198,12 +191,18 @@ public:
     delete first;
   }
 
-  void clear()
+  LIter< T > beforeBegin()
   {
-    while (sentinel_->next != nullptr)
-    {
-      removeFront();
-    }
+    LIter< T > it;
+    it.node_ = sentinel_;
+    return it;
+  }
+
+  LCIter< T > beforeBegin() const
+  {
+    LCIter< T > it;
+    it.node_ = sentinel_;
+    return it;
   }
 
   LIter< T > begin()
@@ -213,17 +212,17 @@ public:
     return it;
   }
 
-  LIter< T > end()
-  {
-    LIter< T > it;
-    it.node_ = nullptr;
-    return it;
-  }
-
   LCIter< T > begin() const
   {
     LCIter< T > it;
     it.node_ = sentinel_->next;
+    return it;
+  }
+
+  LIter< T > end()
+  {
+    LIter< T > it;
+    it.node_ = nullptr;
     return it;
   }
 
@@ -236,9 +235,9 @@ public:
 
   LIter< T > insertAfter(LIter< T > pos, const T& value)
   {
-    Node* node = reinterpret_cast< Node* >(pos.node_);
+    Node< T >* node = pos.node_;
 
-    Node* newNode = new Node(value);
+    Node< T >* newNode = new Node< T >(value);
     newNode->next = node->next;
     node->next = newNode;
 
@@ -250,9 +249,8 @@ public:
 
   void eraseAfter(LIter< T > pos)
   {
-    Node* node = reinterpret_cast< Node* >(pos.node_);
-
-    Node* target = node->next;
+    Node< T >* node = pos.node_;
+    Node< T >* target = node->next;
 
     if (target == nullptr)
     {
@@ -264,25 +262,7 @@ public:
   }
 
 private:
-  struct Node
-  {
-    Node()
-      : data(),
-        next(nullptr)
-    {
-    }
-
-    Node(const T& value)
-      : data(value),
-        next(nullptr)
-    {
-    }
-
-    T data;
-    Node* next;
-  };
-
-  Node* sentinel_;
+  Node< T >* sentinel_;
 };
 
 }
