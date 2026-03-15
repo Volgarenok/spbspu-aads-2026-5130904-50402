@@ -76,9 +76,29 @@ public:
     return it;
   }
 
+  LIter< T > insertAfter(LIter< T > pos, const T& value)
+  {
+    Node* node = reinterpret_cast< Node* >(pos.node_);
+
+    Node* newNode = new Node(value);
+    newNode->next = node->next;
+    node->next = newNode;
+
+    LIter< T > it;
+    it.node_ = newNode;
+
+    return it;
+  }
+
 private:
   struct Node
   {
+    Node(const T& value)
+      : data(value),
+        next(nullptr)
+    {
+    }
+
     T data;
     Node* next;
   };
