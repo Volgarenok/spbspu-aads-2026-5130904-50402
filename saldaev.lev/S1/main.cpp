@@ -1,6 +1,7 @@
 #include "List.hpp"
 #include <iostream>
 #include <string>
+#include <limits>
 
 int main()
 {
@@ -86,6 +87,9 @@ int main()
       saldaev::LIter< size_t > &innerIt = iterIt.getData();
       if (innerIt.isValid()) {
         size_t num = innerIt.getData();
+        if (std::numeric_limits< size_t >::max() - num < sumsIt.getData()) {
+          throw std::overflow_error("overflow_error");
+        }
         sumsIt.getData() += innerIt.getData();
         ++innerIt;
         any_left = true;
