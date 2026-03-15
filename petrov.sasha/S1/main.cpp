@@ -121,3 +121,4 @@ int main() {
   petrov::printSums(std::cout, sums);
   return 0;
 }
+
