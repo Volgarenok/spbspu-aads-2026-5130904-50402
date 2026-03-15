@@ -3,6 +3,7 @@
 #include <utility>
 #include <limits>
 #include <stdexcept>
+#include <cctype>
 
 #include "list.hpp"
 
@@ -22,6 +23,11 @@ int main()
 
       while (true)
       {
+        while (std::isspace(std::cin.peek()) && std::cin.peek() != '\n')
+        {
+          std::cin.ignore();
+        }
+
         int c = std::cin.peek();
         if (c == '\n' || c == EOF)
         {
@@ -30,11 +36,8 @@ int main()
 
         if (!(std::cin >> value))
         {
-          std::cin.clear();
-          std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-          break;
+          throw std::overflow_error("overflow");
         }
-
         numTail = numbers.insertAfter(numTail, value);
       }
 
@@ -44,99 +47,85 @@ int main()
 
     if (sequences.begin() == sequences.end())
     {
-      std::cout << 0 << "\n";
       return 0;
     }
 
-    matveev::List< matveev::List< size_t > > rows;
-    auto rowsTail = rows.beforeBegin();
+    auto it = sequences.begin();
+    std::cout << it->first;
+    for (++it; it != sequences.end(); ++it)
+    {
+      std::cout << " " << it->first;
+    }
+    std::cout << "\n";
 
     matveev::List< size_t > sums;
     auto sumTail = sums.beforeBegin();
-
+    size_t rowIndex = 0;
     bool more = true;
 
     while (more)
     {
       more = false;
       size_t rowSum = 0;
-      matveev::List< size_t > row;
-      auto rowTail = row.beforeBegin();
+      bool firstInRow = true;
 
-      for (auto it = sequences.begin(); it != sequences.end(); ++it)
+      for (auto seqIt = sequences.begin(); seqIt != sequences.end(); ++seqIt)
       {
-        auto &list = it->second;
+        auto &list = seqIt->second;
+        auto valIt = list.begin();
 
-        if (list.begin() != list.end())
+        for (size_t i = 0; i < rowIndex && valIt != list.end(); ++i)
         {
-          size_t v = *list.begin();
+          ++valIt;
+        }
 
-          if (v > std::numeric_limits<size_t>::max() - rowSum)
+        if (valIt != list.end())
+        {
+          size_t v = *valIt;
+          if (!firstInRow)
           {
-            throw std::overflow_error("overflow");
+            if (v > (std::numeric_limits<size_t>::max() - rowSum))
+            {
+              throw std::overflow_error("overflow");
+            }
+            std::cout << " ";
           }
 
-          rowTail = row.insertAfter(rowTail, v);
+          std::cout << v;
           rowSum += v;
-
-          list.removeFront();
+          firstInRow = false;
           more = true;
         }
       }
 
       if (more)
       {
-        rowsTail = rows.insertAfter(rowsTail, row);
         sumTail = sums.insertAfter(sumTail, rowSum);
+        std::cout << "\n";
+        rowIndex++;
       }
-    }
-
-    auto it = sequences.begin();
-    std::cout << it->first;
-    ++it;
-
-    for (; it != sequences.end(); ++it)
-    {
-      std::cout << " " << it->first;
-    }
-    std::cout << "\n";
-
-    for (auto r = rows.begin(); r != rows.end(); ++r)
-    {
-      bool first = true;
-      for (auto v = r->begin(); v != r->end(); ++v)
-      {
-        if (!first)
-        {
-          std::cout << " ";
-        }
-        std::cout << *v;
-        first = false;
-      }
-      std::cout << "\n";
-    }
-
-    if (sums.begin() == sums.end())
-    {
-      std::cout << 0 << "\n";
-      return 0;
     }
 
     auto sit = sums.begin();
-    std::cout << *sit;
-    ++sit;
-
-    for (; sit != sums.end(); ++sit)
+    if (sit != sums.end())
     {
-      std::cout << " " << *sit;
+      std::cout << *sit;
+      for (++sit; sit != sums.end(); ++sit)
+      {
+        std::cout << " " << *sit;
+      }
+      std::cout << "\n";
     }
-    std::cout << "\n";
+    else
+    {
+      std::cout << "0\n";
+    }
 
     return 0;
   }
   catch (const std::overflow_error &)
   {
-    std::cerr << "Error\n";
+    std::cerr << "overflow\n";
     return 1;
   }
 }
