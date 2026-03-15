@@ -179,6 +179,19 @@ namespace petrov
       return *this;
     }
 
+    List< T >& operator=(List< T >&& other) noexcept {
+      if (this != std::addressof(other)) {
+        clear();
+        head_ = other.head_;
+        tail_ = other.tail_;
+        size_ = other.size_;
+        other.head_ = nullptr;
+        other.tail_ = nullptr;
+        other.size_ = 0;
+      }
+      return *this;
+    }
+
     iterator begin() {
       return iterator(head_);
     }

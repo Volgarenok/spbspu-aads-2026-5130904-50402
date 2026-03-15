@@ -141,6 +141,12 @@ int main() {
   petrov::printNames(std::cout, sequences);
   petrov::RowList rows;
   petrov::buildRows(sequences, rows);
+
+  if (rows.empty()) {
+    std::cout << "0\n";
+    return 0;
+  }
+
   petrov::printRows(std::cout, rows);
   petrov::NumberList sums;
   if (!petrov::buildSums(rows, sums)) {
