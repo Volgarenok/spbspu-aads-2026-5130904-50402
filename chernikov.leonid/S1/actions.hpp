@@ -7,7 +7,7 @@
 
 namespace chernikov {
 
-  using Sequence = std::pair< std::string, List< int > >;
+  using Sequence = std::pair< std::string, List< size_t > >;
 
   List< Sequence > parser(std::istream &in);
   void print_names(std::ostream &out, const List< Sequence > &sequences);

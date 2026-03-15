@@ -30,7 +30,7 @@ namespace chernikov {
       }
       if (name.empty())
         continue;
-      List< int > numbers;
+      List< size_t > numbers;
       while (pos < len)
       {
         while (pos < len && std::isspace(line[pos]))
@@ -39,7 +39,7 @@ namespace chernikov {
           break;
         if (!std::isdigit(line[pos]))
           break;
-        int value = 0;
+        size_t value = 0;
         while (pos < len && std::isdigit(line[pos]))
         {
           value = value * 10 + (line[pos] - '0');
@@ -107,7 +107,7 @@ namespace chernikov {
       bool first = true;
       for (auto seq_it = sequences.begin(); seq_it != sequences.end(); ++seq_it)
       {
-        const List< int > &numbers = seq_it->second;
+        const List< size_t > &numbers = seq_it->second;
         if (i < numbers.size())
         {
           auto num_it = numbers.begin();
@@ -142,11 +142,11 @@ namespace chernikov {
     }
     for (size_t i = 0; i < max_len; ++i)
     {
-      long long sum = 0;
+      size_t sum = 0;
       bool has_numbers = false;
       for (auto seq_it = sequences.begin(); seq_it != sequences.end(); ++seq_it)
       {
-        const List< int > &numbers = seq_it->second;
+        const List< size_t > &numbers = seq_it->second;
         if (i < numbers.size())
         {
           auto num_it = numbers.begin();
@@ -154,11 +154,7 @@ namespace chernikov {
           {
             ++num_it;
           }
-          if (sum > std::numeric_limits< long long >::max() - *num_it)
-          {
-            throw std::overflow_error("Sum overflow");
-          }
-          if (*num_it < 0 && sum < std::numeric_limits< long long >::min() - *num_it)
+          if (sum > std::numeric_limits< size_t >::max() - *num_it)
           {
             throw std::overflow_error("Sum overflow");
           }
