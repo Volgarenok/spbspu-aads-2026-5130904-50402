@@ -131,13 +131,13 @@ namespace chernikov {
   {
     if (sequences.empty())
     {
-      out << "0";
+      out << "0\n";
       return;
     }
     size_t max_len = max_sequence_length(sequences);
     if (max_len == 0)
     {
-      out << "0";
+      out << "0\n";
       return;
     }
     for (size_t i = 0; i < max_len; ++i)
