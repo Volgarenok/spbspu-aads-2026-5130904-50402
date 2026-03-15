@@ -79,30 +79,32 @@ class List
 {
 public:
   List()
-    : head_(nullptr)
   {
+    sentinel_ = new Node();
   }
 
   ~List()
   {
     clear();
+    delete sentinel_;
   }
 
   void removeFront()
   {
-    if (head_ == nullptr)
+    Node* first = sentinel_->next;
+
+    if (first == nullptr)
     {
       return;
     }
 
-    Node* tmp = head_;
-    head_ = head_->next;
-    delete tmp;
+    sentinel_->next = first->next;
+    delete first;
   }
 
   void clear()
   {
-    while (head_ != nullptr)
+    while (sentinel_->next != nullptr)
     {
       removeFront();
     }
@@ -111,7 +113,7 @@ public:
   LIter< T > begin()
   {
     LIter< T > it;
-    it.node_ = head_;
+    it.node_ = sentinel_->next;
     return it;
   }
 
@@ -125,7 +127,7 @@ public:
   LCIter< T > begin() const
   {
     LCIter< T > it;
-    it.node_ = head_;
+    it.node_ = sentinel_->next;
     return it;
   }
 
@@ -153,6 +155,12 @@ public:
 private:
   struct Node
   {
+    Node()
+      : data(),
+        next(nullptr)
+    {
+    }
+
     Node(const T& value)
       : data(value),
         next(nullptr)
@@ -163,7 +171,7 @@ private:
     Node* next;
   };
 
-  Node* head_;
+  Node* sentinel_;
 };
 
 }
