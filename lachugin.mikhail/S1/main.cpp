@@ -2,7 +2,7 @@
 
 namespace lachugin
 {
-  template <class T >
+  template < class T >
   struct Node
   {
     T value;
@@ -21,6 +21,7 @@ namespace lachugin
     Node< T >* fake;
   public:
     List();
+    List(const List<T>& other);
     Node< T >* addNext(const T& val, Node< T >* h);
     Node< T >* add(const T& val);
 
@@ -39,6 +40,20 @@ namespace lachugin
     fake->next = fake;
   }
 
+  template<class T>
+  List<T>::List(const List<T>& other): List()
+  {
+    Node<T>* curr = nullptr;
+
+    for (auto it = other.begin(); it != other.end(); ++it)
+    {
+      if (curr == nullptr)
+        curr = add(*it);
+      else
+        curr = addNext(*it, curr);
+    }
+  }
+
   template< class T >
   Node<T>* List<T>::add(const T& val)
   {
@@ -48,37 +63,44 @@ namespace lachugin
   }
 
   template< class T >
-  Node< T >* List< T >::addNext(const T &val, Node<T> *h) {
+  Node< T >* List< T >::addNext(const T &val, Node<T> *h)
+  {
     Node< T >* n = new Node< T >{val, h->next};
     h->next = n;
     return n;
   }
 
   template< class T >
-  LIter<T> List<T>::begin() {
+  LIter<T> List<T>::begin()
+  {
     return LIter< T > {fake->next};
   }
 
   template< class T >
-  LCIter<T> List<T>::begin() const {
+  LCIter<T> List<T>::begin() const
+  {
     return LCIter< T > {fake->next};
   }
 
   template< class T >
-  LIter<T> List<T>::end() {
+  LIter<T> List<T>::end()
+  {
     return LIter< T > {fake};
   }
 
   template< class T >
-  LCIter<T> List<T>::end() const {
+  LCIter<T> List<T>::end() const
+  {
     return LCIter< T > {fake};
   }
 
   template< class T >
-  void List<T>::clear() {
+  void List<T>::clear()
+  {
     auto it = begin();
 
-    while (it != end()) {
+    while (it != end())
+    {
       auto c = it;
       ++it;
       delete c.curr;
@@ -104,12 +126,14 @@ namespace lachugin
   };
 
   template< class T >
-  bool LIter <T >::operator==(const LIter &other) {
+  bool LIter <T >::operator==(const LIter &other)
+  {
     return curr == other.curr;
   }
 
   template<class T>
-  bool LIter<T>::operator!=(const LIter &other) {
+  bool LIter<T>::operator!=(const LIter &other)
+  {
     return curr != other.curr;
   }
 
@@ -123,8 +147,40 @@ namespace lachugin
   class LCIter
   {
     friend class List< T >;
-    const Node< const T > *curr;
+     const Node< T > *curr;
+  public:
+    explicit LCIter(Node<T>* n) : curr(n) {}
+    const T &operator*() const;
+
+    LCIter &operator++();
+
+    bool operator==(const LCIter& other) const;
+
+    bool operator!=(const LCIter& other) const;
   };
+
+  template < class T > const T &LCIter< T >::operator*() const
+  {
+    return curr->value;
+  }
+
+  template< class T >
+  bool LCIter <T >::operator==(const LCIter &other) const
+  {
+    return curr == other.curr;
+  }
+
+  template< class T >
+  bool LCIter<T>::operator!=(const LCIter &other) const
+  {
+    return curr != other.curr;
+  }
+
+  template< class T >
+  LCIter<T> &LCIter<T>::operator++() {
+    curr = curr->next;
+    return *this;
+  }
 
   template<class T>
   void expand(std::pair<std::string, List<T>*>*& arr, size_t& cap, size_t size)
@@ -143,22 +199,19 @@ namespace lachugin
     cap = newCap;
   }
 
-  std::pair<std::string, List<int>*>* getline(std::istream& in, size_t& size)
+  List <std::pair< std::string, List< int >* > > getline(std::istream& in)
   {
-    size_t cap = 5;
-    size = 0;
+    using pair = std::pair< std::string, List< int >* >;
 
-    auto* arr = new std::pair<std::string, List<int>*>[cap];
+    List < pair > listOfLists{};
+    Node < pair >* currOfLists = nullptr;
 
     std::string name;
-
-    try
-    {
-      while(in >> name)
+    try {
+      while (in >> name)
       {
-        List<int>* list = new List<int>();
-        Node<int>* curr = nullptr;
-
+        auto* list = new List< int >{};
+        Node< int >* curr = nullptr;
         int value;
 
         while(in >> value)
@@ -173,32 +226,24 @@ namespace lachugin
           }
         }
 
-        if(size == cap)
-        {
-          expand(arr, cap, size);
-        }
-
-        arr[size++] = {name, list};
-
-        if(in.eof())
-          break;
-
         in.clear();
-      }
-    }
-    catch(...)
-    {
-      for(size_t i = 0; i < size; ++i)
-      {
-        arr[i].second->clear();
-        delete arr[i].second;
-      }
+        pair p{name, list};
 
-      delete[] arr;
+        if (currOfLists == nullptr)
+        {
+          currOfLists = listOfLists.add(p);
+        }
+        else
+        {
+          currOfLists = listOfLists.addNext(p, currOfLists);
+        }
+      }
+    } catch (const std::bad_alloc& e) {
+      std::cout << e.what();
+      listOfLists.clear();
       throw;
     }
 
-    return arr;
+    return listOfLists;
   }
-
 }
