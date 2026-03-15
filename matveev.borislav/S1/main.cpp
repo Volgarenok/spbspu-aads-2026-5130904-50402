@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <utility>
+#include <limits>
 #include <climits>
 
 #include "list.hpp"
@@ -26,11 +27,13 @@ int main()
         break;
       }
 
-      if (!(std::cin >> value))
-      {
-        std::cerr << "Error\n";
-        return 1;
-      }
+    if (!(std::cin >> value))
+    {
+      std::cin.clear();
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      break;
+    }
+
 
       numTail = numbers.insertAfter(numTail, value);
     }
