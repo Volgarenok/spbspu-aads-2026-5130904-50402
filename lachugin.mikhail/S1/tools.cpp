@@ -50,8 +50,7 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
   return listOfLists;
 }
 
-lachugin::List< lachugin::List< int > > lachugin::process(List< pair > l)
-{
+lachugin::List< lachugin::List< int > > lachugin::process(List< pair > l) {
   List< List< int > > listOfLists{};
   Node< List< int > >* currOfLists = nullptr;
 
@@ -106,6 +105,41 @@ lachugin::List< lachugin::List< int > > lachugin::process(List< pair > l)
       currOfLists = listOfLists.addNext(listOfVal, currOfLists);
     }
     ++k;
+  }
+
+  List<int> sumList{};
+  Node<int>* currSum = nullptr;
+
+  auto itLists = listOfLists.begin();
+
+  while (itLists != listOfLists.end())
+  {
+    int sum = 0;
+    auto itVals = (*itLists).begin();
+    while (itVals != (*itLists).end())
+    {
+      sum += *itVals;
+      ++itVals;
+    }
+
+    if (currSum == nullptr)
+    {
+      currSum = sumList.add(sum);
+    }
+    else
+    {
+      currSum = sumList.addNext(sum, currSum);
+    }
+    ++itLists;
+  }
+
+  if (currOfLists == nullptr)
+  {
+    listOfLists.add(sumList);
+  }
+  else
+  {
+    listOfLists.addNext(sumList, currOfLists);
   }
   return listOfLists;
 }
