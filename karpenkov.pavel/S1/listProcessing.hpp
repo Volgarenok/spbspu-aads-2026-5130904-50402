@@ -50,6 +50,9 @@ namespace karpenkov
         if (*it_it != *end_it) {
           hasElement = true;
           output << **it_it << " ";
+          if (**it_it > std::numeric_limits< size_t >::max() - sum){
+            throw std::overflow_error("Number is too big");
+          }
           sum += **it_it;
           ++(*it_it);
         }

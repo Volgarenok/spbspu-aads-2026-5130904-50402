@@ -24,6 +24,10 @@ namespace karpenkov
   public:
     List() = default;
 
+    ~List(){
+      clear();
+    }
+
     void push_back(const T &v)
     {
       Node *newNode = new Node(v);
@@ -76,6 +80,11 @@ namespace karpenkov
         tail = nullptr;
       }
     }
+    void clear(){
+      while (head != nullptr) {
+        pop_front();
+      }
+    }
     LIter< T > begin()
     {
       return LIter< T >(head);
@@ -91,6 +100,10 @@ namespace karpenkov
     LCIter< T > cend() const
     {
       return LCIter< T >();
+    }
+    LCIter< T > cback() const
+    {
+      return LCIter< T >(tail);
     }
 
   private:
