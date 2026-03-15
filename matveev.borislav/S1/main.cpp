@@ -38,6 +38,7 @@ int main()
         {
           throw std::overflow_error("overflow");
         }
+
         numTail = numbers.insertAfter(numTail, value);
       }
 
@@ -50,16 +51,12 @@ int main()
       return 0;
     }
 
-    auto it = sequences.begin();
-    std::cout << it->first;
-    for (++it; it != sequences.end(); ++it)
-    {
-      std::cout << " " << it->first;
-    }
-    std::cout << "\n";
+    matveev::List< matveev::List< size_t > > rows;
+    auto rowsTail = rows.beforeBegin();
 
     matveev::List< size_t > sums;
     auto sumTail = sums.beforeBegin();
+
     size_t rowIndex = 0;
     bool more = true;
 
@@ -67,11 +64,14 @@ int main()
     {
       more = false;
       size_t rowSum = 0;
-      bool hasValueInRow = false;
+      bool hasValue = false;
+
+      matveev::List< size_t > row;
+      auto rowTail = row.beforeBegin();
 
       for (auto seqIt = sequences.begin(); seqIt != sequences.end(); ++seqIt)
       {
-        auto &list = seqIt->second;
+        auto& list = seqIt->second;
         auto valIt = list.begin();
 
         for (size_t i = 0; i < rowIndex && valIt != list.end(); ++i)
@@ -82,27 +82,51 @@ int main()
         if (valIt != list.end())
         {
           size_t v = *valIt;
-          if (hasValueInRow)
+
+          if (hasValue)
           {
             if (v > (std::numeric_limits<size_t>::max() - rowSum))
             {
               throw std::overflow_error("overflow");
             }
-            std::cout << " ";
           }
-          std::cout << v;
+
+          rowTail = row.insertAfter(rowTail, v);
           rowSum += v;
-          hasValueInRow = true;
+
+          hasValue = true;
           more = true;
         }
       }
 
       if (more)
       {
+        rowsTail = rows.insertAfter(rowsTail, row);
         sumTail = sums.insertAfter(sumTail, rowSum);
-        std::cout << "\n";
         rowIndex++;
       }
+    }
+
+    auto it = sequences.begin();
+    std::cout << it->first;
+    for (++it; it != sequences.end(); ++it)
+    {
+      std::cout << " " << it->first;
+    }
+    std::cout << "\n";
+
+    for (auto r = rows.begin(); r != rows.end(); ++r)
+    {
+      auto v = r->begin();
+      if (v != r->end())
+      {
+        std::cout << *v;
+        for (++v; v != r->end(); ++v)
+        {
+          std::cout << " " << *v;
+        }
+      }
+      std::cout << "\n";
     }
 
     auto sit = sums.begin();
@@ -122,7 +146,7 @@ int main()
 
     return 0;
   }
-  catch (const std::overflow_error &)
+  catch (const std::overflow_error&)
   {
     std::cerr << "overflow\n";
     return 1;
