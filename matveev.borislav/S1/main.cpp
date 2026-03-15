@@ -12,8 +12,8 @@ int main()
   while(std::cin>>name)
   {
     matveev::List<int> numbers;
-    int value;
     auto numTail = numbers.beforeBegin();
+    int value;
 
     while(true)
     {
@@ -37,13 +37,37 @@ int main()
     tail = sequences.insertAfter(tail,seq);
   }
 
-  for(matveev::LIter<std::pair<std::string,matveev::List<int>>> it = sequences.begin();
-      it != sequences.end();
-      ++it)
+  for(auto it=sequences.begin(); it!=sequences.end(); ++it)
   {
     std::cout<<it->first<<" ";
   }
-
   std::cout<<"\n";
+
+  bool more=true;
+
+  while(more)
+  {
+    more=false;
+
+    for(auto it=sequences.begin(); it!=sequences.end(); ++it)
+    {
+      auto &list=it->second;
+      auto iter=list.begin();
+
+      if(iter!=list.end())
+      {
+        std::cout<<*iter<<" ";
+        ++iter;
+        it->second.removeFront();
+        more=true;
+      }
+    }
+
+    if(more)
+    {
+      std::cout<<"\n";
+    }
+  }
+
   return 0;
 }
