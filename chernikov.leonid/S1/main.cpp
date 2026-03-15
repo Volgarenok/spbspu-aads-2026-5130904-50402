@@ -10,10 +10,12 @@ int main()
     if (sequences.empty())
     {
       std::cout << "0\n";
+      return 0;
     }
     chernikov::print_names(std::cout, sequences);
     chernikov::print_transposed(std::cout, sequences);
     chernikov::print_sums(std::cout, sequences);
+    return 0;
   } catch (const std::exception &e)
   {
     std::cerr << "Error: " << e.what() << "\n";

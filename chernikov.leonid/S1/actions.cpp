@@ -175,5 +175,6 @@ namespace chernikov {
         out << sum;
       }
     }
+    out << "\n";
   }
 }
