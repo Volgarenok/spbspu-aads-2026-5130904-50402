@@ -3,6 +3,7 @@
 #include <utility>
 #include <limits>
 #include <climits>
+#include <cctype>
 
 #include "list.hpp"
 
@@ -18,23 +19,19 @@ int main()
     auto numTail = numbers.beforeBegin();
     unsigned long long value;
 
-    while (true)
+    while (std::cin.peek() != '\n' && std::cin.peek() != EOF)
     {
-      int c = std::cin.peek();
-
-      if (c == '\n' || c == EOF)
+      if (std::isspace(std::cin.peek()))
       {
-        break;
+        std::cin.ignore();
+        continue;
       }
 
-    if (!(std::cin >> value))
-    {
-      std::cin.clear();
-      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-      break;
-    }
-
-
+      if (!(std::cin >> value))
+      {
+        std::cerr << "Error\n";
+        return 1;
+      }
       numTail = numbers.insertAfter(numTail, value);
     }
 
@@ -44,56 +41,47 @@ int main()
 
   if (sequences.begin() == sequences.end())
   {
-    std::cout << 0 << "\n";
     return 0;
   }
 
-  auto it = sequences.begin();
-  std::cout << it->first;
-  ++it;
-
-  for (; it != sequences.end(); ++it)
-  {
-    std::cout << " " << it->first;
-  }
-
-  std::cout << "\n";
-
   matveev::List< unsigned long long > sums;
   auto sumTail = sums.beforeBegin();
-
   bool more = true;
+  size_t rowIndex = 0;
 
   while (more)
   {
     more = false;
     unsigned long long rowSum = 0;
-    bool first = true;
+    bool hasValueInRow = false;
 
     for (auto it = sequences.begin(); it != sequences.end(); ++it)
     {
       auto &list = it->second;
+      auto valIt = list.begin();
 
-      if (list.begin() != list.end())
+      for (size_t i = 0; i < rowIndex && valIt != list.end(); ++i)
       {
-        unsigned long long v = *list.begin();
+        ++valIt;
+      }
 
-        if (rowSum > ULLONG_MAX - v)
+      if (valIt != list.end())
+      {
+        unsigned long long v = *valIt;
+        if (hasValueInRow)
         {
-          std::cerr << "Error\n";
-          return 1;
+          if (v > (ULLONG_MAX - rowSum))
+          {
+            std::cerr << "Error\n";
+            return 1;
+          }
+          rowSum += v;
         }
-
-        if (!first)
+        else
         {
-          std::cout << " ";
+          rowSum = v;
+          hasValueInRow = true;
         }
-
-        std::cout << v;
-        first = false;
-
-        rowSum += v;
-        list.removeFront();
         more = true;
       }
     }
@@ -101,26 +89,56 @@ int main()
     if (more)
     {
       sumTail = sums.insertAfter(sumTail, rowSum);
-      std::cout << "\n";
+      rowIndex++;
     }
+  }
+
+  auto it = sequences.begin();
+  std::cout << it->first;
+  for (++it; it != sequences.end(); ++it)
+  {
+    std::cout << " " << it->first;
+  }
+  std::cout << "\n";
+
+  for (size_t i = 0; i < rowIndex; ++i)
+  {
+    bool firstInRow = true;
+    for (auto sit = sequences.begin(); sit != sequences.end(); ++sit)
+    {
+      auto valIt = sit->second.begin();
+      for (size_t j = 0; j < i && valIt != sit->second.end(); ++j)
+      {
+        ++valIt;
+      }
+
+      if (valIt != sit->second.end())
+      {
+        if (!firstInRow)
+        {
+          std::cout << " ";
+        }
+        std::cout << *valIt;
+        firstInRow = false;
+      }
+    }
+    std::cout << "\n";
   }
 
   if (sums.begin() == sums.end())
   {
     std::cout << 0 << "\n";
-    return 0;
   }
-
-  auto sit = sums.begin();
-  std::cout << *sit;
-  ++sit;
-
-  for (; sit != sums.end(); ++sit)
+  else
   {
-    std::cout << " " << *sit;
+    auto sit = sums.begin();
+    std::cout << *sit;
+    for (++sit; sit != sums.end(); ++sit)
+    {
+      std::cout << " " << *sit;
+    }
+    std::cout << "\n";
   }
-
-  std::cout << "\n";
 
   return 0;
 }
