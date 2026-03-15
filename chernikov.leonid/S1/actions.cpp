@@ -140,7 +140,25 @@ namespace chernikov {
       out << "0\n";
       return;
     }
-    bool overflow = false;
+    for (size_t i = 0; i < max_len; ++i)
+    {
+      size_t sum = 0;
+      for (auto seq_it = sequences.begin(); seq_it != sequences.end(); ++seq_it)
+      {
+        const List< size_t > &numbers = seq_it->second;
+        if (i < numbers.size())
+        {
+          auto num_it = numbers.begin();
+          for (size_t j = 0; j < i; ++j)
+            ++num_it;
+          if (sum > std::numeric_limits< size_t >::max() - *num_it)
+          {
+            throw std::overflow_error("Sum overflow");
+          }
+          sum += *num_it;
+        }
+      }
+    }
     for (size_t i = 0; i < max_len; ++i)
     {
       size_t sum = 0;
@@ -152,31 +170,18 @@ namespace chernikov {
         {
           auto num_it = numbers.begin();
           for (size_t j = 0; j < i; ++j)
-          {
             ++num_it;
-          }
-          if (sum > std::numeric_limits< size_t >::max() - *num_it)
-          {
-            overflow = true;
-            break;
-          }
           sum += *num_it;
           has_numbers = true;
         }
       }
-      if (has_numbers && !overflow)
+      if (has_numbers)
       {
         if (i > 0)
-        {
           out << " ";
-        }
         out << sum;
       }
     }
     out << "\n";
-    if (overflow)
-    {
-      throw std::overflow_error("Sum overflow");
-    }
   }
 }
