@@ -8,7 +8,7 @@ int main()
 {
   auto list = strelnikov::input(std::cin);
   if (list.cbegin() == list.cend()) {
-    std::cerr << "\n0\n";
+    std::cout << "0\n";
     return 0;
   }
 
