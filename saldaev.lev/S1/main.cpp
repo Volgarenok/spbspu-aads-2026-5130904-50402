@@ -1,7 +1,7 @@
 #include "List.hpp"
 #include <iostream>
-#include <string>
 #include <limits>
+#include <string>
 
 int main()
 {
@@ -22,6 +22,7 @@ int main()
   }
 
   if (outer.begin() == outer.end()) {
+    std::cout << "0";
     return 0;
   }
 
