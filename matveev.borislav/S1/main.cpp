@@ -43,11 +43,15 @@ int main()
   }
   std::cout<<"\n";
 
+  matveev::List<long long> sums;
+  auto sumTail = sums.beforeBegin();
+
   bool more=true;
 
   while(more)
   {
     more=false;
+    long long rowSum=0;
 
     for(auto it=sequences.begin(); it!=sequences.end(); ++it)
     {
@@ -56,18 +60,26 @@ int main()
 
       if(iter!=list.end())
       {
-        std::cout<<*iter<<" ";
-        ++iter;
-        it->second.removeFront();
+        int v=*iter;
+        std::cout<<v<<" ";
+        rowSum+=v;
+        list.removeFront();
         more=true;
       }
     }
 
     if(more)
     {
+      sumTail=sums.insertAfter(sumTail,rowSum);
       std::cout<<"\n";
     }
   }
 
+  for(auto it=sums.begin(); it!=sums.end(); ++it)
+  {
+    std::cout<<*it<<" ";
+  }
+
+  std::cout<<"\n";
   return 0;
 }
