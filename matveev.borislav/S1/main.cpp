@@ -38,18 +38,20 @@ int main()
         {
           throw std::overflow_error("overflow");
         }
+
         numTail = numbers.insertAfter(numTail, value);
       }
 
-      std::pair< std::string, matveev::List< size_t > > seq(name, numbers);
-      tail = sequences.insertAfter(tail, seq);
+      tail = sequences.insertAfter(tail, {name, numbers});
     }
 
     if (sequences.begin() == sequences.end())
     {
+      std::cout << "0\n";
       return 0;
     }
 
+    // печать имён
     auto it = sequences.begin();
     std::cout << it->first;
     for (++it; it != sequences.end(); ++it)
@@ -60,6 +62,7 @@ int main()
 
     matveev::List< size_t > sums;
     auto sumTail = sums.beforeBegin();
+
     size_t rowIndex = 0;
     bool more = true;
 
@@ -82,16 +85,19 @@ int main()
         if (valIt != list.end())
         {
           size_t v = *valIt;
+
           if (!firstInRow)
           {
-            if (v > (std::numeric_limits<size_t>::max() - rowSum))
-            {
-              throw std::overflow_error("overflow");
-            }
             std::cout << " ";
           }
 
           std::cout << v;
+
+          if (rowSum > std::numeric_limits<size_t>::max() - v)
+          {
+            throw std::overflow_error("overflow");
+          }
+
           rowSum += v;
           firstInRow = false;
           more = true;
@@ -102,7 +108,7 @@ int main()
       {
         sumTail = sums.insertAfter(sumTail, rowSum);
         std::cout << "\n";
-        rowIndex++;
+        ++rowIndex;
       }
     }
 
@@ -125,7 +131,7 @@ int main()
   }
   catch (const std::overflow_error &)
   {
-    std::cerr << "overflow\n";
+    std::cerr << "Error\n";
     return 1;
   }
 }
