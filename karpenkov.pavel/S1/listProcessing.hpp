@@ -81,7 +81,10 @@ namespace karpenkov
       return;
     }
     for (auto it = sums.begin(); it != sums.end(); ++it) {
-      output << *it << " ";
+      if (it != sums.begin()) {
+        output << " ";
+      }
+      output << *it;
     }
     output << '\n';
   }

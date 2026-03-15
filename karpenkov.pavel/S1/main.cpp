@@ -13,6 +13,9 @@ int main()
     }
     karpenkov::printNames(sequences, std::cout);
     karpenkov::printSequences(sequences, std::cout);
+  } catch (std::overflow_error &e) {
+    std::cerr << e.what() << '\n';
+    return 1;
   } catch (...) {
     std::cerr << "Memory allocation error" << '\n';
     return 1;
