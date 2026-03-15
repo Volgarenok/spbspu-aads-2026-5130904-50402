@@ -4,7 +4,8 @@
 #include "list.hpp"
 namespace lachugin
 {
-  using pair = std::pair< std::string, List< int >* >;
+  using pair = std::pair< std::string, List< int > >;
   List < pair > getline(std::istream& in);
+  List < List < int > > process(List< pair > l);
 }
 #endif
