@@ -135,6 +135,30 @@ public:
     }
   }
 
+  List(List&& other)
+  {
+    sentinel_ = other.sentinel_;
+    other.sentinel_ = new Node<T>();
+    other.sentinel_->next = nullptr;
+  }
+
+  List& operator=(List&& other)
+  {
+    if(this == &other)
+    {
+      return *this;
+    }
+
+    clear();
+    delete sentinel_;
+
+    sentinel_ = other.sentinel_;
+    other.sentinel_ = new Node<T>();
+    other.sentinel_->next = nullptr;
+
+    return *this;
+  }
+
   List& operator=(const List& other)
   {
     if (this == &other)
