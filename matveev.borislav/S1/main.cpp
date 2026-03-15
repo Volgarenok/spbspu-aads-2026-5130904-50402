@@ -8,15 +8,15 @@
 
 int main()
 {
-  matveev::List< std::pair< std::string, matveev::List< long long > > > sequences;
+  matveev::List< std::pair< std::string, matveev::List< unsigned long long > > > sequences;
   auto tail = sequences.beforeBegin();
   std::string name;
 
   while (std::cin >> name)
   {
-    matveev::List< long long > numbers;
+    matveev::List< unsigned long long > numbers;
     auto numTail = numbers.beforeBegin();
-    long long value;
+    unsigned long long value;
 
     while (true)
     {
@@ -38,7 +38,7 @@ int main()
       numTail = numbers.insertAfter(numTail, value);
     }
 
-    std::pair< std::string, matveev::List< long long > > seq(name, numbers);
+    std::pair< std::string, matveev::List< unsigned long long > > seq(name, numbers);
     tail = sequences.insertAfter(tail, seq);
   }
 
@@ -59,7 +59,7 @@ int main()
 
   std::cout << "\n";
 
-  matveev::List< long long > sums;
+  matveev::List< unsigned long long > sums;
   auto sumTail = sums.beforeBegin();
 
   bool more = true;
@@ -67,7 +67,7 @@ int main()
   while (more)
   {
     more = false;
-    long long rowSum = 0;
+    unsigned long long rowSum = 0;
     bool first = true;
 
     for (auto it = sequences.begin(); it != sequences.end(); ++it)
@@ -76,9 +76,9 @@ int main()
 
       if (list.begin() != list.end())
       {
-        long long v = *list.begin();
+        unsigned long long v = *list.begin();
 
-        if (rowSum > LLONG_MAX - v)
+        if (rowSum > ULLONG_MAX - v)
         {
           std::cerr << "Error\n";
           return 1;
