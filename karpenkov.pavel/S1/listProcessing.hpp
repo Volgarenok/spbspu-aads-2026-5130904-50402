@@ -25,8 +25,14 @@ namespace karpenkov
 
   inline void printNames(const pair_list &list, std::ostream &output)
   {
-    for (auto it = list.cbegin(); it != list.cend(); ++it)
-      output << (*it).first << " ";
+    bool first = true;
+    for (auto it = list.cbegin(); it != list.cend(); ++it) {
+      if (!first) {
+        output << " ";
+      }
+      output << (*it).first;
+      first = false;
+    }
     output << '\n';
   }
 
@@ -47,10 +53,15 @@ namespace karpenkov
       size_t sum = 0;
       auto it_it = its.begin();
       auto end_it = endsList.begin();
+      bool first = true;
       while (it_it != its.end()) {
         if (*it_it != *end_it) {
           hasElement = true;
-          output << **it_it << " ";
+          if (!first) {
+            output << " ";
+          }
+          output << **it_it;
+          first = false;
           if (**it_it > std::numeric_limits< size_t >::max() - sum) {
             throw std::overflow_error("Number is too big");
           }
@@ -69,10 +80,10 @@ namespace karpenkov
       output << 0 << '\n';
       return;
     }
-    for (auto it = sums.begin(); it != sums.end(); ++it)
+    for (auto it = sums.begin(); it != sums.end(); ++it) {
       output << *it << " ";
+    }
     output << '\n';
   }
-
 }
 #endif
