@@ -174,5 +174,9 @@ namespace chernikov {
       }
     }
     out << "\n";
+    if (overflow)
+    {
+      throw std::overflow_error("Sum overflow");
+    }
   }
 }
