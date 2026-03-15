@@ -83,6 +83,31 @@ public:
   {
   }
 
+  ~List()
+  {
+    clear();
+  }
+
+  void removeFront()
+  {
+    if (head_ == nullptr)
+    {
+      return;
+    }
+
+    Node* tmp = head_;
+    head_ = head_->next;
+    delete tmp;
+  }
+
+  void clear()
+  {
+    while (head_ != nullptr)
+    {
+      removeFront();
+    }
+  }
+
   LIter< T > begin()
   {
     LIter< T > it;
