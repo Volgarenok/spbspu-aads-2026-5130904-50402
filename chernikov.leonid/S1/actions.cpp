@@ -157,7 +157,7 @@ namespace chernikov {
           }
           if (sum > std::numeric_limits< size_t >::max() - *num_it)
           {
-            bool overflow = true;
+            overflow = true;
             break;
           }
           sum += *num_it;
