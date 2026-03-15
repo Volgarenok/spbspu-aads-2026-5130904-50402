@@ -22,7 +22,7 @@ int main()
   }
 
   if (outer.begin() == outer.end()) {
-    std::cout << "0";
+    std::cout << "0\n";
     return 0;
   }
 
