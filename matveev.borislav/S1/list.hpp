@@ -259,6 +259,11 @@ public:
 
   LIter< T > insertAfter(LIter< T > pos, const T& value)
   {
+    if (pos.node_ == nullptr)
+    {
+      return end();
+    }
+
     Node< T >* node = pos.node_;
 
     Node< T >* newNode = new Node< T >(value);
@@ -274,6 +279,12 @@ public:
   void eraseAfter(LIter< T > pos)
   {
     Node< T >* node = pos.node_;
+
+    if (node == nullptr)
+    {
+      return;
+    }
+
     Node< T >* target = node->next;
 
     if (target == nullptr)
