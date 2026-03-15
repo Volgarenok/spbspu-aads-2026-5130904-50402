@@ -4,6 +4,7 @@
 #include <limits>
 #include <stdexcept>
 #include <cctype>
+#include <cstdlib>
 
 #include "list.hpp"
 
@@ -150,6 +151,6 @@ int main()
   catch (const std::overflow_error&)
   {
     std::cerr << "Error\n";
-    return 1;
+    std::exit(1);
   }
 }
