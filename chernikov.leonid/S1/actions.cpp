@@ -140,6 +140,7 @@ namespace chernikov {
       out << "0\n";
       return;
     }
+    bool overflow = false;
     for (size_t i = 0; i < max_len; ++i)
     {
       size_t sum = 0;
@@ -156,13 +157,14 @@ namespace chernikov {
           }
           if (sum > std::numeric_limits< size_t >::max() - *num_it)
           {
-            throw std::overflow_error("Sum overflow");
+            bool overflow = true;
+            break;
           }
           sum += *num_it;
           has_numbers = true;
         }
       }
-      if (has_numbers)
+      if (has_numbers && !overflow)
       {
         if (i > 0)
         {
