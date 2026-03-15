@@ -15,7 +15,7 @@ namespace karpenkov
       Node *next;
       Node *prev;
       Node(const T &value, Node *next = nullptr, Node *prev = nullptr):
-        value(value),
+        value(std::move(value)),
         next(next),
         prev(prev)
       {}
@@ -24,10 +24,49 @@ namespace karpenkov
   public:
     List() = default;
 
-    ~List(){
+    ~List()
+    {
       clear();
     }
 
+    List(const List &other)
+    {
+      Node *current = other.head;
+      while (current) {
+        push_back(current->value);
+        current = current->next;
+      }
+    }
+    List &operator=(const List &other)
+    {
+      if (this != &other) {
+        clear();
+        Node *current = other.head;
+        while (current) {
+          push_back(current->value);
+          current = current->next;
+        }
+      }
+      return *this;
+    }
+    List(List &&other):
+      head(other.head),
+      tail(other.tail)
+    {
+      other.head = nullptr;
+      other.tail = nullptr;
+    }
+    List &operator=(List &&other)
+    {
+      if (this != &other) {
+        clear();
+        head = other.head;
+        tail = other.tail;
+        other.head = nullptr;
+        other.tail = nullptr;
+      }
+      return *this;
+    }
     void push_back(const T &v)
     {
       Node *newNode = new Node(v);
@@ -40,6 +79,7 @@ namespace karpenkov
         tail = newNode;
       }
     }
+
     void push_front(const T &v)
     {
       Node *newNode = new Node(v);
@@ -80,7 +120,8 @@ namespace karpenkov
         tail = nullptr;
       }
     }
-    void clear(){
+    void clear()
+    {
       while (head != nullptr) {
         pop_front();
       }

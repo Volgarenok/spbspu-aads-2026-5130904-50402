@@ -5,20 +5,15 @@
 int main()
 {
   karpenkov::pair_list sequences;
-  try{
+  try {
     karpenkov::readSequences(std::cin, sequences);
-    if (sequences.cbegin() == sequences.cback()) {
-      std::cout << 0 << '\n';
-      return 0;
-    }
     if (sequences.cbegin() == sequences.cend()) {
       std::cout << 0 << '\n';
       return 0;
     }
     karpenkov::printNames(sequences, std::cout);
     karpenkov::printSequences(sequences, std::cout);
-  }
-  catch(...){
+  } catch (...) {
     std::cerr << "Memory allocation error" << '\n';
     return 1;
   }
