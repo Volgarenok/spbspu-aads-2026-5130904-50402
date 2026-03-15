@@ -131,10 +131,15 @@ namespace chernikov {
   {
     if (sequences.empty())
     {
+      out << "0";
       return;
     }
     size_t max_len = max_sequence_length(sequences);
-    bool possible = true;
+    if (max_len == 0)
+    {
+      out << "0";
+      return;
+    }
     for (size_t i = 0; i < max_len; ++i)
     {
       long long sum = 0;
@@ -151,20 +156,23 @@ namespace chernikov {
           }
           if (sum > std::numeric_limits< long long >::max() - *num_it)
           {
-            possible = false;
-            break;
+            throw std::overflow_error("Sum overflow");
+          }
+          if (*num_it < 0 && sum < std::numeric_limits< long long >::min() - *num_it)
+          {
+            throw std::overflow_error("Sum overflow");
           }
           sum += *num_it;
           has_numbers = true;
         }
       }
-      if (!possible)
-      {
-        throw std::overflow_error("Sum overflow");
-      }
       if (has_numbers)
       {
-        out << sum << " ";
+        if (i > 0)
+        {
+          out << " ";
+        }
+        out << sum;
       }
     }
   }
