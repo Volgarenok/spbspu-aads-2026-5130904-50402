@@ -20,7 +20,42 @@ public:
   {
   }
 
+  T& operator*() const
+  {
+    Node* node = reinterpret_cast< Node* >(node_);
+    return node->data;
+  }
+
+  T* operator->() const
+  {
+    Node* node = reinterpret_cast< Node* >(node_);
+    return &(node->data);
+  }
+
+  LIter& operator++()
+  {
+    Node* node = reinterpret_cast< Node* >(node_);
+    node_ = node->next;
+    return *this;
+  }
+
+  bool operator==(const LIter& other) const
+  {
+    return node_ == other.node_;
+  }
+
+  bool operator!=(const LIter& other) const
+  {
+    return node_ != other.node_;
+  }
+
 private:
+  struct Node
+  {
+    T data;
+    Node* next;
+  };
+
   void* node_;
 };
 
