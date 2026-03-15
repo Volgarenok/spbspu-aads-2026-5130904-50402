@@ -70,7 +70,42 @@ public:
   {
   }
 
+  const T& operator*() const
+  {
+    const Node* node = reinterpret_cast< const Node* >(node_);
+    return node->data;
+  }
+
+  const T* operator->() const
+  {
+    const Node* node = reinterpret_cast< const Node* >(node_);
+    return &(node->data);
+  }
+
+  LCIter& operator++()
+  {
+    const Node* node = reinterpret_cast< const Node* >(node_);
+    node_ = node->next;
+    return *this;
+  }
+
+  bool operator==(const LCIter& other) const
+  {
+    return node_ == other.node_;
+  }
+
+  bool operator!=(const LCIter& other) const
+  {
+    return node_ != other.node_;
+  }
+
 private:
+  struct Node
+  {
+    T data;
+    Node* next;
+  };
+
   const void* node_;
 };
 
@@ -81,6 +116,67 @@ public:
   List()
   {
     sentinel_ = new Node();
+  }
+
+  List(const List& other)
+  {
+    sentinel_ = new Node();
+    Node* tail = sentinel_;
+
+    Node* cur = other.sentinel_->next;
+
+    while (cur != nullptr)
+    {
+      Node* node = new Node(cur->data);
+      tail->next = node;
+      tail = node;
+      cur = cur->next;
+    }
+  }
+
+  List(List&& other)
+  {
+    sentinel_ = other.sentinel_;
+    other.sentinel_ = new Node();
+  }
+
+  List& operator=(const List& other)
+  {
+    if (this == &other)
+    {
+      return *this;
+    }
+
+    clear();
+
+    Node* tail = sentinel_;
+    Node* cur = other.sentinel_->next;
+
+    while (cur != nullptr)
+    {
+      Node* node = new Node(cur->data);
+      tail->next = node;
+      tail = node;
+      cur = cur->next;
+    }
+
+    return *this;
+  }
+
+  List& operator=(List&& other)
+  {
+    if (this == &other)
+    {
+      return *this;
+    }
+
+    clear();
+    delete sentinel_;
+
+    sentinel_ = other.sentinel_;
+    other.sentinel_ = new Node();
+
+    return *this;
   }
 
   ~List()
@@ -150,6 +246,21 @@ public:
     it.node_ = newNode;
 
     return it;
+  }
+
+  void eraseAfter(LIter< T > pos)
+  {
+    Node* node = reinterpret_cast< Node* >(pos.node_);
+
+    Node* target = node->next;
+
+    if (target == nullptr)
+    {
+      return;
+    }
+
+    node->next = target->next;
+    delete target;
   }
 
 private:
