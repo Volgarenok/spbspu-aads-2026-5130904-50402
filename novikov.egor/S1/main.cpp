@@ -95,6 +95,6 @@ int main()
       ++sum_res;
     } while (start_sum != sum_res);
   } else {
-    std::cout << 0;
+    std::cout << 0 << "\n";
   }
 }
