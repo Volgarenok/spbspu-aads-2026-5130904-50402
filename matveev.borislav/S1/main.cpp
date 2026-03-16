@@ -32,17 +32,11 @@ int main()
         break;
       }
 
-      if (!(std::cin >> value))
-      {
-        std::cerr << "Error\n";
-        return 1;
-      }
-
+      std::cin >> value;
       numTail = numbers.insertAfter(numTail, value);
     }
 
-    std::pair< std::string, matveev::List< size_t > > seq(name, numbers);
-    tail = sequences.insertAfter(tail, seq);
+    tail = sequences.insertAfter(tail, { name, numbers });
   }
 
   if (sequences.begin() == sequences.end())
@@ -64,6 +58,7 @@ int main()
 
   size_t rowIndex = 0;
   bool more = true;
+  bool anyRow = false;
 
   while (more)
   {
@@ -99,9 +94,9 @@ int main()
         }
 
         rowSum += v;
-
         hasValue = true;
         more = true;
+        anyRow = true;
       }
     }
 
@@ -113,16 +108,20 @@ int main()
     }
   }
 
-  auto sit = sums.begin();
-  if (sit != sums.end())
+  if (!anyRow)
   {
-    std::cout << *sit;
-    for (++sit; sit != sums.end(); ++sit)
-    {
-      std::cout << " " << *sit;
-    }
-    std::cout << "\n";
+    std::cout << "0\n";
+    return 0;
   }
+
+  auto sit = sums.begin();
+  std::cout << *sit;
+  for (++sit; sit != sums.end(); ++sit)
+  {
+    std::cout << " " << *sit;
+  }
+  std::cout << "\n";
 
   return 0;
 }
+
