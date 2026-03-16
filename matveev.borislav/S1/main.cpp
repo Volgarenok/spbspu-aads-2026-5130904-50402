@@ -53,6 +53,9 @@ int main()
   }
   std::cout << "\n";
 
+  matveev::List< size_t > sums;
+  auto sumTail = sums.beforeBegin();
+
   size_t rowIndex = 0;
   bool more = true;
   bool anyRow = false;
@@ -114,6 +117,7 @@ int main()
         ++rv;
       }
 
+      sumTail = sums.insertAfter(sumTail, rowSum);
       rowIndex++;
     }
   }
@@ -121,7 +125,16 @@ int main()
   if (!anyRow)
   {
     std::cout << "0\n";
+    return 0;
   }
+
+  auto sit = sums.begin();
+  std::cout << *sit;
+  for (++sit; sit != sums.end(); ++sit)
+  {
+    std::cout << " " << *sit;
+  }
+  std::cout << "\n";
 
   return 0;
 }
