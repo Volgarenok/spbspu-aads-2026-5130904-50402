@@ -53,9 +53,6 @@ int main()
   }
   std::cout << "\n";
 
-  matveev::List< size_t > sums;
-  auto sumTail = sums.beforeBegin();
-
   size_t rowIndex = 0;
   bool more = true;
   bool anyRow = false;
@@ -65,6 +62,9 @@ int main()
     more = false;
     size_t rowSum = 0;
     bool hasValue = false;
+
+    matveev::List<size_t> rowValues;
+    auto rowTail = rowValues.beforeBegin();
 
     for (auto seqIt = sequences.begin(); seqIt != sequences.end(); ++seqIt)
     {
@@ -87,13 +87,8 @@ int main()
 
         std::cout << v;
 
-        if (v > std::numeric_limits<size_t>::max() - rowSum)
-        {
-          std::cerr << "Error\n";
-          std::exit(1);
-        }
+        rowTail = rowValues.insertAfter(rowTail, v);
 
-        rowSum += v;
         hasValue = true;
         more = true;
         anyRow = true;
@@ -102,8 +97,23 @@ int main()
 
     if (more)
     {
-      sumTail = sums.insertAfter(sumTail, rowSum);
       std::cout << "\n";
+
+      auto rv = rowValues.begin();
+      while (rv != rowValues.end())
+      {
+        size_t v = *rv;
+
+        if (v > std::numeric_limits<size_t>::max() - rowSum)
+        {
+          std::cerr << "Error\n";
+          std::exit(1);
+        }
+
+        rowSum += v;
+        ++rv;
+      }
+
       rowIndex++;
     }
   }
@@ -111,17 +121,7 @@ int main()
   if (!anyRow)
   {
     std::cout << "0\n";
-    return 0;
   }
-
-  auto sit = sums.begin();
-  std::cout << *sit;
-  for (++sit; sit != sums.end(); ++sit)
-  {
-    std::cout << " " << *sit;
-  }
-  std::cout << "\n";
 
   return 0;
 }
-
