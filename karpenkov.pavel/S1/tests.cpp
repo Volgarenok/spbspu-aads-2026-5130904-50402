@@ -5,12 +5,14 @@ using namespace karpenkov;
 
 BOOST_AUTO_TEST_SUITE(ListTests);
 
-BOOST_AUTO_TEST_CASE(defaultConstructor){
+BOOST_AUTO_TEST_CASE(defaultConstructor)
+{
   List< int > list;
   BOOST_CHECK(list.begin() == list.end());
 }
 
-BOOST_AUTO_TEST_CASE(push_back){
+BOOST_AUTO_TEST_CASE(push_back)
+{
   List< int > list;
   list.push_back(1);
   list.push_back(2);
@@ -20,7 +22,8 @@ BOOST_AUTO_TEST_CASE(push_back){
   BOOST_CHECK_EQUAL(*it, 2);
 }
 
-BOOST_AUTO_TEST_CASE(push_front){
+BOOST_AUTO_TEST_CASE(push_front)
+{
   List< int > list;
   list.push_front(1);
   list.push_front(2);
@@ -32,7 +35,7 @@ BOOST_AUTO_TEST_CASE(push_front){
 
 BOOST_AUTO_TEST_CASE(pop_back)
 {
-  List<int> list;
+  List< int > list;
   list.push_back(1);
   list.push_back(2);
   list.push_back(3);
@@ -47,7 +50,7 @@ BOOST_AUTO_TEST_CASE(pop_back)
 
 BOOST_AUTO_TEST_CASE(pop_front)
 {
-  List<int> list;
+  List< int > list;
   list.push_back(1);
   list.push_back(2);
   list.push_back(3);
@@ -67,10 +70,10 @@ BOOST_AUTO_TEST_CASE(clear)
 
 BOOST_AUTO_TEST_CASE(copy_constructor)
 {
-  List<int> list;
+  List< int > list;
   list.push_back(5);
   list.push_back(6);
-  List<int> copy(list);
+  List< int > copy(list);
   auto it = copy.begin();
   BOOST_CHECK_EQUAL(*it, 5);
   ++it;
@@ -79,10 +82,10 @@ BOOST_AUTO_TEST_CASE(copy_constructor)
 
 BOOST_AUTO_TEST_CASE(move_constructor)
 {
-  List<int> list;
+  List< int > list;
   list.push_back(7);
   list.push_back(8);
-  List<int> moved(std::move(list));
+  List< int > moved(std::move(list));
   auto it = moved.begin();
   BOOST_CHECK_EQUAL(*it, 7);
   ++it;
@@ -91,15 +94,14 @@ BOOST_AUTO_TEST_CASE(move_constructor)
 
 BOOST_AUTO_TEST_CASE(const_iterator)
 {
-  List<int> list;
+  List< int > list;
   list.push_back(9);
   list.push_back(10);
-  const List<int>& clist = list;
+  const List< int > &clist = list;
   auto it = clist.cbegin();
   BOOST_CHECK_EQUAL(*it, 9);
   ++it;
   BOOST_CHECK_EQUAL(*it, 10);
 }
-
 
 BOOST_AUTO_TEST_SUITE_END();
