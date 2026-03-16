@@ -4,8 +4,6 @@
 
 using namespace karpenkov;
 
-BOOST_AUTO_TEST_SUITE(ListTests);
-
 BOOST_AUTO_TEST_CASE(defaultConstructor)
 {
   List< int > list;
@@ -104,5 +102,3 @@ BOOST_AUTO_TEST_CASE(const_iterator)
   ++it;
   BOOST_CHECK_EQUAL(*it, 10);
 }
-
-BOOST_AUTO_TEST_SUITE_END();
