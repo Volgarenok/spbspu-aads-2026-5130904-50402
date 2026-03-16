@@ -53,7 +53,7 @@ namespace dirko
     tail_(other.tail_),
     size_(other.size_)
   {
-    other.fake_ = static_cast< Node< T > * >(::operator new(sizeof(Node< T >)));
+    other.fake_ = nullptr;
     other.size_ = 0;
   }
   template < class T >
@@ -78,7 +78,7 @@ namespace dirko
     fake_ = other.fake_;
     size_ = other.size_;
     tail_ = other.tail_;
-    other.fake_ = static_cast< Node< T > * >(::operator new(sizeof(Node< T >)));
+    other.fake_ = nullptr;
     other.size_ = 0;
     return *this;
   }
@@ -98,13 +98,16 @@ namespace dirko
   template < class T >
   void List< T >::clear()
   {
-    Node< T > *head = fake_->next;
-    while (head != nullptr) {
-      Node< T > *tmp = head->next;
-      delete head;
-      head = tmp;
+    if (fake_) {
+
+      Node< T > *head = fake_->next;
+      while (head != nullptr) {
+        Node< T > *tmp = head->next;
+        delete head;
+        head = tmp;
+      }
+      fake_->next = nullptr;
     }
-    fake_->next = nullptr;
     size_ = 0;
     tail_ = fake_;
   }
