@@ -17,6 +17,7 @@ namespace afanasev
       List< size_t > sums;
       LIter< size_t > lastSum(nullptr);
       bool firstSum = true;
+      bool overflow = false;
 
       for (size_t row = 0; row < maxLen; ++row)
       {
@@ -41,18 +42,18 @@ namespace afanasev
 
             out << * current;
 
-            out << '\n';
-
             if (rowSum > std::numeric_limits< size_t >::max() - * current)
             {
-              throw std::overflow_error("Overflow");
+              overflow = true;
             }
-
-            rowSum += * current;
+            else
+            {
+              rowSum += * current;
+            }
             ++current;
           }
         }
-
+        out << '\n';
 
         if (firstSum)
         {
@@ -65,6 +66,11 @@ namespace afanasev
           sums.insert(rowSum, lastSum);
           ++lastSum;
         }
+      }
+
+      if (overflow)
+      {
+        throw std::overflow_error("Overflow");
       }
 
       LIter< size_t > sumsEnd(nullptr);
