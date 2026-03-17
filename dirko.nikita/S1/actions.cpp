@@ -4,7 +4,6 @@
 #include <ostream>
 #include <stdexcept>
 #include <string>
-#include "list.hpp"
 
 void dirko::input(std::istream &is, l_pair_t &seq)
 {
