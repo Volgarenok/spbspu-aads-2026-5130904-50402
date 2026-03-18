@@ -14,11 +14,23 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
     {
       List< int > list;
       Node< int >* curr = nullptr;
-      int value;
 
-      while(in >> value)
+      while (true)
       {
-        if(curr == nullptr)
+        if (!(in >> std::ws))
+        {
+          break;
+        }
+
+        if (!std::isdigit(in.peek()) && in.peek() != '-')
+        {
+          break;
+        }
+
+        int value;
+        in >> value;
+
+        if (curr == nullptr)
         {
           curr = list.add(value);
         }
@@ -28,7 +40,6 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
         }
       }
 
-      in.clear();
       pair p{name, list};
 
       if (currOfLists == nullptr)
@@ -55,8 +66,16 @@ lachugin::List< lachugin::List< int > > lachugin::process(List< pair > l)
   List< List< int > > listOfLists{};
   Node< List< int > >* currOfLists = nullptr;
   size_t k = 0;
+  List< List< int > > zeroResult{};
   try
   {
+    if (l.begin() == l.end())
+    {
+      List< int > zeroList;
+      zeroList.add(0);
+      zeroResult.add(zeroList);
+    }
+
     while (true)
     {
       List< int > listOfVal{};
@@ -152,15 +171,21 @@ lachugin::List< lachugin::List< int > > lachugin::process(List< pair > l)
     listOfLists.clear();
     throw;
   }
-
-  return listOfLists;
+  if (l.begin() == l.end())
+  {
+    return zeroResult;
+  } else
+  {
+    return listOfLists;
+  }
 }
 
 void lachugin::output(List< List< int > > lVal, List< pair > l)
 {
   auto it = l.begin();
 
-  while (it != l.end()) {
+  while (it != l.end())
+  {
     std::cout << (*it).first << " ";
     ++it;
   }
