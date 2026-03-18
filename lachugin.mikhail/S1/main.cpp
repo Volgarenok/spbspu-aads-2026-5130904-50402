@@ -7,8 +7,9 @@ int main()
   lachugin::List< lachugin::pair > l;
   try
   {
+    std::cout << "beg\n";
     l = lachugin::getline(std::cin);
-
+    std::cout << "end\n";
     if (l.begin() == l.end())
     {
       std::cout << "EMPTY\n";
@@ -20,7 +21,7 @@ int main()
 
     lachugin::output(lachugin::process(l), l);
   }
-  catch (const std::bad_alloc& e)
+  catch (...)
   {
     return 1;
   }

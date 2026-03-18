@@ -3,61 +3,81 @@
 #include "itters.hpp"
 #include <iostream>
 
-lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
+lachugin::List< lachugin::pair > lachugin::getline(std::istream& in)
 {
-  List < pair > listOfLists{};
-  Node < pair >* currOfLists = nullptr;
+  List<pair> listOfLists{};
+  Node<pair>* currOfLists = nullptr;
   std::string name;
+
   try
   {
     while (in >> name)
     {
-      List< int > list;
-      Node< int >* curr = nullptr;
+      List<int> list;
+      Node<int>* curr = nullptr;
+
+      in >> std::noskipws;
 
       while (true)
       {
-        if (!(in >> std::ws))
+        int c = in.peek();
+
+        // конец ввода
+        if (c == EOF)
+          break;
+
+        // конец строки → конец списка
+        if (c == '\n')
         {
+          in.get();
           break;
         }
 
-        if (!std::isdigit(in.peek()) && in.peek() != '-')
+        // пропускаем пробелы и табы
+        if (c == ' ' || c == '\t')
         {
-          break;
+          in.get();
+          continue;
         }
 
-        int value;
-        in >> value;
+        // если начинается число
+        if (std::isdigit(static_cast<unsigned char>(c)) || c == '-')
+        {
+          in >> std::skipws;   // включили нормальное чтение
 
-        if (curr == nullptr)
-        {
-          curr = list.add(value);
+          int value;
+          in >> value;
+
+          in >> std::noskipws; // обратно в ручной режим
+
+          if (curr == nullptr)
+            curr = list.add(value);
+          else
+            curr = list.addNext(value, curr);
+
+          continue;
         }
-        else
-        {
-          curr = list.addNext(value, curr);
-        }
+
+        // если что-то неожиданное — выходим
+        break;
       }
+
+      in >> std::skipws; // вернуть нормальное состояние
 
       pair p{name, list};
 
       if (currOfLists == nullptr)
-      {
         currOfLists = listOfLists.add(p);
-      }
       else
-      {
         currOfLists = listOfLists.addNext(p, currOfLists);
-      }
     }
   }
-  catch (const std::bad_alloc& e)
+  catch (const std::bad_alloc&)
   {
-    std::cout << e.what();
     listOfLists.clear();
     throw;
   }
+
   return listOfLists;
 }
 
