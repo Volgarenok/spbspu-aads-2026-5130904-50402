@@ -11,6 +11,8 @@ namespace lachugin
   public:
     List();
     List(const List< T >& other);
+    List &operator=(const List< T > &other);
+
     Node< T >* addNext(const T& val, Node< T >* h);
     Node< T >* add(const T& val);
 
@@ -37,11 +39,42 @@ namespace lachugin
     for (auto it = other.begin(); it != other.end(); ++it)
     {
       if (curr == nullptr)
+      {
         curr = add(*it);
+      }
       else
+      {
         curr = addNext(*it, curr);
+      }
     }
   }
+
+  template<class T>
+  List<T> &List<T>::operator=(const List<T> &other)
+  {
+    if (this != other)
+    {
+      clear();
+      auto itO = other.begin();
+      auto itT = this->begin();
+
+      while (itO != other.end())
+      {
+        Node< T >* n = nullptr;
+        if (itT == fake)
+        {
+          n = this->add(*itO);
+        }
+        else
+        {
+          n = this->addNext(*itO, n);
+        }
+        ++itO;
+      }
+    }
+    return *this;
+  }
+
 
   template < class T >
   Node< T >* List< T >::add(const T& val)

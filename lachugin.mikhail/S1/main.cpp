@@ -4,24 +4,12 @@
 
 int main()
 {
-  lachugin::List< lachugin::pair > l;
   try
   {
-    std::cout << "beg\n";
-    l = lachugin::getline(std::cin);
-    std::cout << "end\n";
-    if (l.begin() == l.end())
-    {
-      std::cout << "EMPTY\n";
-    }
-    else
-    {
-      std::cout << "NOT EMPTY\n";
-    }
-
+    lachugin::List< lachugin::pair > l;
     lachugin::output(lachugin::process(l), l);
   }
-  catch (...)
+  catch (const std::bad_alloc&)
   {
     return 1;
   }
