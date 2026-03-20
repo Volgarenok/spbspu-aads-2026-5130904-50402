@@ -3,6 +3,7 @@
 
 #include "stack.hpp"
 #include "queue.hpp"
+
 #include <string>
 #include <cctype>
 
@@ -29,31 +30,6 @@ bool isOperator(const std::string& op)
       || op == "/"
       || op == "%"
       || op == "^";
-}
-
-bool isNumber(const std::string& token)
-{
-  if (token.empty())
-  {
-    return false;
-  }
-
-  size_t i = 0;
-
-  if (token[0] == '-' && token.size() > 1)
-  {
-    i = 1;
-  }
-
-  for (; i < token.size(); ++i)
-  {
-    if (!std::isdigit(token[i]))
-    {
-      return false;
-    }
-  }
-
-  return true;
 }
 
 bool isGcd(const std::string& op)
@@ -84,6 +60,59 @@ int precedence(const std::string& op)
   }
 
   return 0;
+}
+
+bool isNumber(const std::string& token)
+{
+  if (token.empty())
+  {
+    return false;
+  }
+
+  size_t i = 0;
+
+  if (token[0] == '-' && token.size() > 1)
+  {
+    i = 1;
+  }
+
+  for (; i < token.size(); ++i)
+  {
+    if (!std::isdigit(token[i]))
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool isLeftParen(const std::string& token)
+{
+  return token == "(";
+}
+
+bool isRightParen(const std::string& token)
+{
+  return token == ")";
+}
+
+Queue<std::string> toPostfix(Queue<std::string> input)
+{
+  Queue<std::string> output;
+  Stack<std::string> operators;
+
+  while (!input.empty())
+  {
+    std::string token = input.drop();
+
+    if (isNumber(token))
+    {
+      output.push(token);
+    }
+  }
+
+  return output;
 }
 
 }
