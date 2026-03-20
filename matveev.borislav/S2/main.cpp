@@ -44,10 +44,18 @@ int main(int argc, char* argv[])
       infix.push(token);
     }
 
-    auto postfix = matveev::toPostfix(infix);
-    long result = matveev::evaluatePostfix(postfix);
+    try
+    {
+      auto postfix = matveev::toPostfix(infix);
+      long result = matveev::evaluatePostfix(postfix);
 
-    results.push(result);
+      results.push(result);
+    }
+    catch (const std::exception&)
+    {
+      std::cerr << "Error\n";
+      return 1;
+    }
   }
 
   bool first = true;
