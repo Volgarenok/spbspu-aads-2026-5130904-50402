@@ -110,6 +110,38 @@ Queue<std::string> toPostfix(Queue<std::string> input)
     {
       output.push(token);
     }
+    else if (isLeftParen(token))
+    {
+      operators.push(token);
+    }
+    else if (isRightParen(token))
+    {
+      while (!operators.empty() && !isLeftParen(operators.top()))
+      {
+        output.push(operators.drop());
+      }
+
+      if (!operators.empty())
+      {
+        operators.drop();
+      }
+    }
+    else if (isOperator(token) || isGcd(token))
+    {
+      while (!operators.empty() &&
+             (isOperator(operators.top()) || isGcd(operators.top())) &&
+             precedence(operators.top()) >= precedence(token))
+      {
+        output.push(operators.drop());
+      }
+
+      operators.push(token);
+    }
+  }
+
+  while (!operators.empty())
+  {
+    output.push(operators.drop());
   }
 
   return output;
