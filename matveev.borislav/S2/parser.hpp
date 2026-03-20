@@ -147,6 +147,62 @@ Queue<std::string> toPostfix(Queue<std::string> input)
   return output;
 }
 
+long evaluatePostfix(Queue<std::string> postfix)
+{
+  Stack<long> values;
+
+  while (!postfix.empty())
+  {
+    std::string token = postfix.drop();
+
+    if (isNumber(token))
+    {
+      values.push(std::stol(token));
+    }
+    else
+    {
+      long b = values.drop();
+      long a = values.drop();
+
+      if (token == "+")
+      {
+        values.push(a + b);
+      }
+      else if (token == "-")
+      {
+        values.push(a - b);
+      }
+      else if (token == "*")
+      {
+        values.push(a * b);
+      }
+      else if (token == "/")
+      {
+        values.push(a / b);
+      }
+      else if (token == "%")
+      {
+        values.push(a % b);
+      }
+      else if (token == "^")
+      {
+        long result = 1;
+        for (long i = 0; i < b; ++i)
+        {
+          result *= a;
+        }
+        values.push(result);
+      }
+      else if (token == "gcd")
+      {
+        values.push(gcd(a, b));
+      }
+    }
+  }
+
+  return values.drop();
+}
+
 }
 
 #endif
