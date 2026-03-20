@@ -6,6 +6,7 @@
 
 #include <string>
 #include <cctype>
+#include <stdexcept>
 
 namespace matveev
 {
@@ -161,6 +162,11 @@ long evaluatePostfix(Queue<std::string> postfix)
     }
     else
     {
+      if (values.size() < 2)
+      {
+        throw std::runtime_error("invalid expression");
+      }
+
       long b = values.drop();
       long a = values.drop();
 
@@ -178,19 +184,31 @@ long evaluatePostfix(Queue<std::string> postfix)
       }
       else if (token == "/")
       {
+        if (b == 0)
+        {
+          throw std::runtime_error("division by zero");
+        }
+
         values.push(a / b);
       }
       else if (token == "%")
       {
+        if (b == 0)
+        {
+          throw std::runtime_error("modulo by zero");
+        }
+
         values.push(a % b);
       }
       else if (token == "^")
       {
         long result = 1;
+
         for (long i = 0; i < b; ++i)
         {
           result *= a;
         }
+
         values.push(result);
       }
       else if (token == "gcd")
@@ -198,6 +216,11 @@ long evaluatePostfix(Queue<std::string> postfix)
         values.push(gcd(a, b));
       }
     }
+  }
+
+  if (values.size() != 1)
+  {
+    throw std::runtime_error("invalid expression");
   }
 
   return values.drop();

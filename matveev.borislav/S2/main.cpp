@@ -13,6 +13,13 @@ int main(int argc, char* argv[])
   if (argc > 1)
   {
     file.open(argv[1]);
+
+    if (!file)
+    {
+      std::cerr << "Error\n";
+      return 1;
+    }
+
     input = &file;
   }
 
