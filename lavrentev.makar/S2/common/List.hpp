@@ -68,7 +68,7 @@ namespace lavrentev
     T &front();
     const T &front() const;
     bool empty() const;
-    void pushFront(const T& v);
+    void pushFront(const T &v);
 
   private:
     Node *head;
@@ -76,9 +76,9 @@ namespace lavrentev
 
   lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>>
   getline(std::istream &in);
-  void
-  printTrans(lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>> arr);
-}
+  void printTrans(
+      lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>> arr);
+} // namespace lavrentev
 
 inline lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>>
 lavrentev::getline(std::istream &in)
@@ -136,9 +136,11 @@ lavrentev::getline(std::istream &in)
   return sequences;
 }
 
-inline void lavrentev::printTrans(lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>> arr)
+inline void lavrentev::printTrans(
+    lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>> arr)
 {
-  lavrentev::LIter<std::pair<std::string, lavrentev::List<size_t>>> iterator = arr.begin();
+  lavrentev::LIter<std::pair<std::string, lavrentev::List<size_t>>> iterator =
+      arr.begin();
   lavrentev::List<lavrentev::LIter<size_t>> iters = {};
   while (iterator != arr.end())
   {
@@ -357,7 +359,8 @@ template <class T> void lavrentev::List<T>::clear()
 }
 
 template <class T>
-lavrentev::LIter<T> lavrentev::List<T>::insert(lavrentev::LIter<T> h, const T &v)
+lavrentev::LIter<T> lavrentev::List<T>::insert(lavrentev::LIter<T> h,
+                                               const T &v)
 {
   Node *newNode = new Node;
   newNode->val = v;
@@ -386,7 +389,8 @@ lavrentev::LIter<T> lavrentev::List<T>::insert(lavrentev::LIter<T> h, const T &v
 }
 
 template <class T>
-lavrentev::LCIter<T> lavrentev::List<T>::insert(lavrentev::LCIter<T> h, const T &v)
+lavrentev::LCIter<T> lavrentev::List<T>::insert(lavrentev::LCIter<T> h,
+                                                const T &v)
 {
   Node *newNode = new Node;
   newNode->val = v;
@@ -479,11 +483,10 @@ template <class T> bool lavrentev::List<T>::empty() const
   }
 }
 
-template <class T>
-void lavrentev::List<T>::pushFront(const T& value)
+template <class T> void lavrentev::List<T>::pushFront(const T &value)
 {
-    Node* newNode = new Node{value, head};
-    head = newNode;
+  Node *newNode = new Node{value, head};
+  head = newNode;
 }
 
 #endif
