@@ -2,6 +2,8 @@
 #include "queue.hpp"
 #include "stack.hpp"
 #include <cstddef>
+#include <limits>
+#include <stdexcept>
 
 bool dirko::getPriority(const std::string &op1, const std::string &op2)
 {
@@ -69,3 +71,52 @@ dirko::Queue< std::string > dirko::convert(dirko::Queue< std::string > inf)
   }
   return ret;
 }
+
+long long dirko::calc(const std::string &opt, long long a, long long b)
+{
+  if (opt == "+") {
+    if (std::numeric_limits< long long >::max() - a < b) {
+      throw std::overflow_error("overflow");
+    }
+    return a + b;
+  } else if (opt == "-") {
+    if (std::numeric_limits< long long >::min() + a > b) {
+      throw std::underflow_error("underflow");
+    }
+    return a - b;
+  } else if (opt == "*") {
+    if (a > 0) {
+      if (b > 0 && a > std::numeric_limits< long long >::max() / b) {
+        throw std::overflow_error("Overflow");
+      }
+      if (b < 0 && b < std::numeric_limits< long long >::min() / a) {
+        throw std::overflow_error("Overflow");
+      }
+    } else {
+      if (b > 0 && a < std::numeric_limits< long long >::min() / b) {
+        throw std::overflow_error("Overflow");
+      }
+      if (b < 0 && a < std::numeric_limits< long long >::max() / b) {
+        throw std::overflow_error("Overflow");
+      }
+    }
+    return a * b;
+  } else if (opt == "/") {
+    if (b == 0) {
+      throw std::logic_error("zero dividion");
+    }
+    return a / b;
+  } else if (opt == "%") {
+    if (b == 0) {
+      throw std::logic_error("zero dividion");
+    }
+    return a % b;
+  } else if (opt == "lcm") {
+    return 0;
+  } else {
+    throw std::runtime_error("unknown opt");
+  }
+}
+
+long long dirko::calcExpr(Queue< std::string > expretion)
+{}
