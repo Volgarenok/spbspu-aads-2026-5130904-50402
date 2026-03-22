@@ -42,4 +42,10 @@ T &dirko::Stack< T >::get() noexcept
 {
   return data_.tail();
 }
+
+template < class T >
+void dirko::Stack< T >::pop() noexcept
+{
+  data_.pop_back();
+}
 #endif

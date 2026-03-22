@@ -42,4 +42,10 @@ T &dirko::Queue< T >::get() noexcept
 {
   return data_.head();
 }
+
+template < class T >
+void dirko::Queue< T >::pop() noexcept
+{
+  data_.pop_front();
+}
 #endif
