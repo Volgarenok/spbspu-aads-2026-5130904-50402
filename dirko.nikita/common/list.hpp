@@ -158,15 +158,22 @@ namespace dirko
     Node< T > *next = fake_->next->next;
     delete fake_->next;
     fake_->next = next;
-    next->prev = fake_;
+    if (!next) {
+      tail_ = fake_;
+    }
     --size_;
   }
   template < class T >
   void List< T >::pop_back() noexcept
   {
-    tail_ = tail_->prev;
-    delete tail_->next;
-    tail_->next = nullptr;
+    Node< T > *prev = tail_->prev;
+    delete tail_;
+    if (!prev) {
+      tail_ = fake_;
+    } else {
+      tail_ = prev;
+      tail_->next = nullptr;
+    }
     --size_;
   }
   template < class T >
