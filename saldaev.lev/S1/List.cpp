@@ -55,9 +55,7 @@ saldaev::List< T > &saldaev::List< T >::operator=(const List< T > &other)
 {
   if (this != &other) {
     List< T > tmp(other);
-    std::swap(head, tmp.head);
-    std::swap(tail, tmp.tail);
-    std::swap(length, tmp.length);
+    swap(tmp);
   }
   return *this;
 }
@@ -66,18 +64,14 @@ template < class T >
 saldaev::List< T >::List(List &&other):
   List()
 {
-  std::swap(head, other.head);
-  std::swap(tail, other.tail);
-  std::swap(length, other.length);
+  swap(other);
 }
 
 template < class T >
 saldaev::List< T > &saldaev::List< T >::operator=(List< T > &&other)
 {
   if (this != &other) {
-    std::swap(head, other.head);
-    std::swap(tail, other.tail);
-    std::swap(length, other.length);
+    swap(other);
   }
   return *this;
 }
@@ -130,6 +124,14 @@ void saldaev::List< T >::clear() noexcept
   while (length > 0) {
     cutHead();
   }
+}
+
+template < class T >
+void saldaev::List< T >::swap(List &other) noexcept
+{
+  std::swap(head, other.head);
+  std::swap(tail, other.tail);
+  std::swap(length, other.length);
 }
 
 template < class T >
