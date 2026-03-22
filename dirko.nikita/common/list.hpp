@@ -24,6 +24,10 @@ namespace dirko
     Iter< T > end();
     CIter< T > cbegin() const;
     CIter< T > cend() const;
+    T &head() noexcept;
+    T &tail() noexcept;
+    const T &chead() const noexcept;
+    const T &ctail() const noexcept;
     void push_front(const T &);
     void push_back(const T &);
     void pop_front();
@@ -188,7 +192,26 @@ namespace dirko
   {
     return CIter< T >{tail_->next};
   }
-
+  template < class T >
+  T &List< T >::head() noexcept
+  {
+    return fake_->next->val;
+  }
+  template < class T >
+  T &List< T >::tail() noexcept
+  {
+    return tail_->val;
+  }
+  template < class T >
+  const T &List< T >::chead() const noexcept
+  {
+    return fake_->next->val;
+  }
+  template < class T >
+  const T &List< T >::ctail() const noexcept
+  {
+    return tail_->val;
+  }
   template < class T >
   class Iter
   {

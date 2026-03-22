@@ -1,5 +1,5 @@
 #include <boost/test/unit_test.hpp>
-#include <list.hpp>
+#include "../common/list.hpp"
 
 using namespace dirko;
 
@@ -163,6 +163,37 @@ BOOST_AUTO_TEST_CASE(test_size)
 
   list.push_back(2);
   BOOST_CHECK_EQUAL(list.size(), 2);
+}
+
+BOOST_AUTO_TEST_CASE(test_front)
+{
+  List< int > list;
+  list.push_back(1);
+  list.push_back(2);
+  BOOST_CHECK_EQUAL(list.head(), 1);
+  list.head() = 3;
+  BOOST_CHECK_EQUAL(*list.begin(), 10);
+}
+
+BOOST_AUTO_TEST_CASE(test_back)
+{
+  List< int > list;
+  list.push_back(1);
+  list.push_back(2);
+  BOOST_CHECK_EQUAL(list.tail(), 2);
+  list.tail() = 5;
+  Iter< int > it = list.end();
+  it--;
+  BOOST_CHECK_EQUAL(*it, 20);
+}
+
+BOOST_AUTO_TEST_CASE(test_front_back_const)
+{
+  List< int > list;
+  list.push_back(5);
+  const List< int > &cref = list;
+  BOOST_CHECK_EQUAL(cref.chead(), 5);
+  BOOST_CHECK_EQUAL(cref.ctail(), 5);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
