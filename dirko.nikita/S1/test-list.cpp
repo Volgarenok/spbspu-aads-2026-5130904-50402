@@ -1,5 +1,5 @@
 #include <boost/test/unit_test.hpp>
-#include "../common/list.hpp"
+#include <list.hpp>
 
 using namespace dirko;
 
