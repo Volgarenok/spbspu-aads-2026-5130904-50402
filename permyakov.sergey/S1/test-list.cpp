@@ -8,7 +8,7 @@ BOOST_AUTO_TEST_SUITE(ListTests)
 BOOST_AUTO_TEST_CASE(test_default_constructor)
 {
   List < int > listNum;
-  BOOST_CHECK_EQUAL(listNum.size(), 0);
+  BOOST_CHECK(listNum.isEmpty());
 }
 
 BOOST_AUTO_TEST_CASE(test_copy_constructor)
@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(test_move_constructor)
   frstList.push_front(2);
   frstList.push_front(1);
   List < int > scndList(std::move(frstList));
-  BOOST_CHECK_EQUAL(frstList.size(), 0);
+  BOOST_CHECK(frstList.isEmpty());
   BOOST_CHECK_EQUAL(scndList.size(), 2);
   BOOST_CHECK_EQUAL(scndList.front(),1);
 }
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(test_move_operator)
   frstList.push_front(2);
   frstList.push_front(1);
   List < int > scndList =std::move(frstList);
-  BOOST_CHECK_EQUAL(frstList.size(), 0);
+  BOOST_CHECK(frstList.isEmpty());
   BOOST_CHECK_EQUAL(scndList.size(), 2);
   BOOST_CHECK_EQUAL(scndList.front(),1);
 }
@@ -76,31 +76,27 @@ BOOST_AUTO_TEST_CASE(test_destructor)
   BOOST_CHECK(true);
 }
 
-BOOST_AUTO_TEST_CASE(test_erase)
+BOOST_AUTO_TEST_CASE(test_erase_after)
 {
   List < int > list;
   list.push_front(2);
   list.push_front(1);
   list.push_front(0);
-  LIter < int > bItList = list.begin();
-  LIter < int > eItList = list.end();
-  ++bItList;
-  list.erase(bItList);
+  LIter < int > ItList = list.begin();
+  list.erase_after(ItList);
   BOOST_CHECK_EQUAL(list.size(), 2);
   BOOST_CHECK_EQUAL(list.front(), 0);
-  BOOST_CHECK(bItList == eItList);
+  list.pop_front();
+  BOOST_CHECK_EQUAL(list.front(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(test_clear)
 {
   List < int > list;
-  LIter < int > itList = list.begin();
   list.push_front(0);
   list.push_front(0);
   list.clear();
-  BOOST_CHECK_EQUAL(list.size(), 0);
-  LIter < int > sItList = list.begin();
-  BOOST_CHECK(itList == sItList);
+  BOOST_CHECK(list.isEmpty());
 }
 
 BOOST_AUTO_TEST_CASE(test_begin)

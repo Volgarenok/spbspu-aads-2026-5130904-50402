@@ -20,12 +20,13 @@ namespace permyakov
       List & operator=(List < T > &&);
       T front() const;
       size_t size() const;
+      bool isEmpty() const;
       LIter < T > begin();
       LIter < T > end();
       LCIter < T > beginC() const;
       LCIter < T > endC() const;
       LIter < T > insert_after(LIter < T > pos, const T value);
-      void erase(LIter < T > pos);
+      void erase_after(LIter < T > pos);
       void clear();
       void push_front(const T value);
       void pop_front();
@@ -81,7 +82,7 @@ namespace permyakov
 
   template < class T > T List < T >::front() const
   {
-    if(size_ == 0) {
+    if(isEmpty()) {
       throw std::logic_error("empty list");
     }
     return nodes -> val;
@@ -92,9 +93,14 @@ namespace permyakov
     return size_;
   }
 
+  template < class T > bool List < T >::isEmpty() const
+  {
+    return !size_;
+  }
+
   template < class T > LIter < T > List < T >::begin()
   {
-    if(size_ == 0) {
+    if(isEmpty()) {
       throw std::logic_error("empty list");
     }
     return LIter < T > (nodes);
@@ -102,7 +108,7 @@ namespace permyakov
   
   template < class T > LIter < T > List < T >::end()
   {
-    if(size_ == 0) {
+    if(isEmpty()) {
       throw std::logic_error("empty list");
     }
     LIter < T > iter = begin();
@@ -114,7 +120,7 @@ namespace permyakov
 
   template < class T > LCIter < T > List < T >::beginC() const
   {
-    if(size_ == 0) {
+    if(isEmpty()) {
       throw std::logic_error("empty list");
     }
     return LCIter < T > (nodes);
@@ -122,7 +128,7 @@ namespace permyakov
 
   template < class T > LCIter < T > List < T >::endC() const
   {
-    if(size_ == 0) {
+    if(isEmpty()) {
       throw std::logic_error("empty list");
     }
     LCIter < T > iter = beginC();
@@ -134,37 +140,53 @@ namespace permyakov
 
   template < class T > LIter < T > List < T >::insert_after(LIter < T > pos, const T value)
   {
+    if(!(pos.curr)) {
+      throw std::logic_error("iterator doesnt point to value");
+    }
     Node < T > * nextNode = pos.curr -> next;
     Node < T > * newNode = new Node < T > {value, nextNode};
     pos.curr -> next = newNode;
     return LIter < T > (newNode);
   }
 
-  template < class T > void List < T >::erase(LIter < T > pos)
+  template < class T > void List < T >::erase_after(LIter < T > pos)
   {
-    Node < T > * ersNode = pos.curr;
-    ++pos;
+    if(!(pos.curr)) {
+      throw std::logic_error("iterator doesnt point to value");
+    }
+    Node < T > * ersNode = pos.curr -> next;
+    pos.curr -> next = ersNode -> next;
     delete[] ersNode; 
     size_--;
   }
 
   template < class T > void List < T >::clear()
   {
-    LIter < T > iter = begin();
-    for(;size_ > 0; --size_) {
-      erase(iter);
+    if(isEmpty()) {
+      return;
     }
+    for(LIter < T > iter = begin(); size_ > 1; --size_) {
+      erase_after(iter);
+    }
+    delete[] nodes;
     nodes = new Node < T > {T(), nullptr};
   }
 
   template < class T > void List < T >::push_front(const T value)
   {
+    if(isEmpty()) {
+      delete[] nodes;
+      nodes = nullptr;
+    }
     nodes = new Node < T > {value, nodes};
     size_++;
   }
 
   template < class T > void List < T >::pop_front()
   {
+    if(isEmpty()) {
+      throw std::logic_error("empty list");
+    }
     Node < T > * ersNode = nodes;
     nodes = nodes -> next;
     delete[] ersNode; 
