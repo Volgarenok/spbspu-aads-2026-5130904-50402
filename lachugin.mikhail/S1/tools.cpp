@@ -14,11 +14,31 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
     {
       List< int > list;
       Node< int >* curr = nullptr;
-      int value;
 
-      while(in >> value)
+      while (true)
       {
-        if(curr == nullptr)
+        int tmp;
+
+        if (!(in >> tmp))
+        {
+          if (in.eof())
+          {
+            break;
+          }
+          in.clear();
+          break;
+        }
+
+        if (tmp > std::numeric_limits< int >::max() ||
+            tmp < std::numeric_limits< int >::min())
+        {
+          std::cerr << "overflow\n";
+          throw std::overflow_error("overflow");
+        }
+
+        int value = tmp;
+
+        if (curr == nullptr)
         {
           curr = list.add(value);
         }
@@ -41,9 +61,8 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
       }
     }
   }
-  catch (const std::bad_alloc& e)
+  catch (...)
   {
-    std::cout << e.what();
     listOfLists.clear();
     throw;
   }
