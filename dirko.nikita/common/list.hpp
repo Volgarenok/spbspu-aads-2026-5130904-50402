@@ -30,8 +30,8 @@ namespace dirko
     const T &ctail() const noexcept;
     void push_front(const T &);
     void push_back(const T &);
-    void pop_front();
-    void pop_back();
+    void pop_front() noexcept;
+    void pop_back() noexcept;
     void clear();
     size_t size() const noexcept;
     void swap(List< T > &) noexcept;
@@ -153,7 +153,7 @@ namespace dirko
     ++size_;
   }
   template < class T >
-  void List< T >::pop_front()
+  void List< T >::pop_front() noexcept
   {
     Node< T > *next = fake_->next->next;
     delete fake_->next;
@@ -162,7 +162,7 @@ namespace dirko
     --size_;
   }
   template < class T >
-  void List< T >::pop_back()
+  void List< T >::pop_back() noexcept
   {
     tail_ = tail_->prev;
     delete tail_->next;
