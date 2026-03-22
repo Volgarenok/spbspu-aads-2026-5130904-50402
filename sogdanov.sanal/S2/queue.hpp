@@ -7,33 +7,35 @@ namespace sogdanov {
   template<class T>
   class Queue {
     List<T> data_;
-    LIter<T> tailIter_;
   public:
     void push(const T& v);
-    void pop() noexcept;
+    void pop();
     bool empty() const noexcept;
     size_t size() const noexcept;
-    T& front() noexcept;
+    T& front();
   };
   template<class T>
-  void push(const T& v) {
-    if (data_.empty()) {
-      data_.push_front(v);
-      tailIter_ = data_.begin();
-    } else {
-      tailIter_ = data_.insert_after(tailIter_, v);
-    }
+  void Queue<T>::push(const T& v) {
+    data_.push_back(v);
   }
   template<class T>
-  void pop() noexcept {
+  void Queue<T>::pop() {
+    if (data_.empty()) {
+      throw std::runtime_error("pop on empty queue");
+    }
+    data_.pop_front();
+  }
   template<class T>
-  bool empty() const noexcept {
+  bool Queue<T>::empty() const noexcept {
     return data_.empty();
   }
   template<class T>
-  size_t size() const noexcept {
+  size_t Queue<T>::size() const noexcept {
     return data_.size();
   }
   template<class T>
-  T& front() noexcept {
-
+  T& Queue<T>::front() {
+    return *data_.begin();
+  }
+}
+#endif

@@ -200,12 +200,12 @@ namespace sogdanov {
   void List<T>::push_back(const T& val) {
     Node<T>* node = new Node<T>(val, nullptr);
     if (!tail_) {
-      head_ = tail_ = node_;
+      head_ = tail_ = node;
     } else {
       tail_->next = node;
       tail_ = node;
     }
-    ++size;
+    ++size_;
   }
   template<class T>
   void List<T>::pop_front() {

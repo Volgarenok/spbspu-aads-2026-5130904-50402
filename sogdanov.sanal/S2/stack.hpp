@@ -12,8 +12,7 @@ namespace sogdanov {
     void pop();
     bool empty() const noexcept;
     size_t size() const noexcept;
-    T& top() noexcept;
-    T drop();
+    T& top();
   };
   template<class T>
   void Stack<T>::push(const T& v) {
@@ -35,7 +34,7 @@ namespace sogdanov {
     return data_.size();
   }
   template<class T>
-  T& Stack<T>::top() noexcept {
+  T& Stack<T>::top() {
     if (data_.empty()) {
       throw std::runtime_error("top on empty stack");
     }
