@@ -2,15 +2,16 @@
 #include <string>
 #include <utility>
 #include "List.hpp"
+#include <limits>
 
 int main()
 {
-  int num = 0;
+  size_t num = 0;
   std::string name = "";
-  novikov::List< std::pair< std::string, novikov::List< int > > > main_seq;
+  novikov::List< std::pair< std::string, novikov::List< size_t > > > main_seq;
 
   while (std::cin >> name) {
-    std::pair< std::string, novikov::List< int > > seq(name, {});
+    std::pair< std::string, novikov::List< size_t > > seq(name, {});
 
     while (std::cin >> num) {
       seq.second.push_back(num);
@@ -36,7 +37,7 @@ int main()
 
     std::cout << "\n";
 
-    novikov::List< novikov::IterState< int > > states;
+    novikov::List< novikov::IterState< size_t > > states;
     m_h = main_head;
     size_t counter = 0;
 
@@ -49,7 +50,7 @@ int main()
     } while (m_h != main_head);
 
     if (counter < 2) {
-      std::cerr << "Can't sum.";
+      std::cout << "0" << "\n";
       return 1;
     }
 
@@ -57,7 +58,7 @@ int main()
     size_t sum = 0;
 
     while (!states.empty()) {
-      novikov::List< novikov::IterState< int > > next_state;
+      novikov::List< novikov::IterState< size_t > > next_state;
       auto head_state = states.begin();
       auto it_state = head_state;
       bool first = true;
@@ -65,10 +66,13 @@ int main()
       do {
         std::cout << (first ? "" : " ") << *it_state->current;
         first = false;
-
-        sum += *it_state->current;
-
-        novikov::LIter< int > tmp = it_state->current;
+        size_t value = *it_state->current;
+        if (sum > std::numeric_limits< size_t >::max() - value) {
+          std::cerr << "Overflow\n";
+          return 1;
+        }
+        sum += value;
+        novikov::LIter< size_t > tmp = it_state->current;
         ++tmp;
 
         if (tmp != it_state->start) {
@@ -94,7 +98,8 @@ int main()
       first = false;
       ++sum_res;
     } while (start_sum != sum_res);
+    std::cout << "\n";
   } else {
-    std::cout << 0 << "\n";
+    std::cout << 0;
   }
 }
