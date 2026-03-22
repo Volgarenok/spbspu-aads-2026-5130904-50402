@@ -1,5 +1,5 @@
 #include "actions.hpp"
-#include "queue.hpp"
+#include <iostream>
 #include <string>
 
 dirko::Queue< dirko::Queue< std::string > > dirko::input(std::istream &is)
@@ -28,4 +28,5 @@ dirko::Queue< dirko::Queue< std::string > > dirko::input(std::istream &is)
     }
     ret.push(expretion);
   }
+  return ret;
 }
