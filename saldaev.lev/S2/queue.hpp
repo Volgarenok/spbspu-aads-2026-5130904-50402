@@ -8,11 +8,11 @@ namespace saldaev
   struct Queue
   {
     Queue();
-    Queue(const Queue &other);
-    Queue(Queue &&other);
-    ~Queue();
-    Queue &operator=(const Queue &other);
-    Queue &operator=(Queue &&other);
+    Queue(const Queue &other) = default;
+    Queue(Queue &&other) = default;
+    ~Queue() = default;
+    Queue &operator=(const Queue &other) = default;
+    Queue &operator=(Queue &&other) = default;
 
     void push(const T &value);
     T &front();
