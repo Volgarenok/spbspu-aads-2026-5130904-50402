@@ -58,6 +58,7 @@ namespace sogdanov {
     LCIter<T> begin() const noexcept;
     LCIter<T> end() const noexcept;
     void push_front(const T& val);
+    void push_back(const T& val);
     void pop_front();
     LIter<T> insert_after(LIter<T> pos, const T& val);
     LIter<T> insert_after(LIter<T> pos, T&& val);
@@ -194,6 +195,17 @@ namespace sogdanov {
       tail_ = head_;
     }
     ++size_;
+  }
+  template<class T>
+  void List<T>::push_back(const T& val) {
+    Node<T>* node = new Node<T>(val, nullptr);
+    if (!tail_) {
+      head_ = tail_ = node_;
+    } else {
+      tail_->next = node;
+      tail_ = node;
+    }
+    ++size;
   }
   template<class T>
   void List<T>::pop_front() {

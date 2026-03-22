@@ -16,26 +16,26 @@ namespace sogdanov {
     T drop();
   };
   template<class T>
-  void push(const T& v) {
+  void Stack<T>::push(const T& v) {
     data_.push_front(v);
   }
   template<class T>
-  void pop() {
+  void Stack<T>::pop() {
     if (data_.empty()) {
       throw std::runtime_error("pop on empty stack");
     }
     data_.pop_front();
   }
   template<class T>
-  bool empty() const noexcept {
+  bool Stack<T>::empty() const noexcept {
     return data_.empty();
   }
   template<class T>
-  size_t size() const noexcept {
+  size_t Stack<T>::size() const noexcept {
     return data_.size();
   }
   template<class T>
-  T& top() noexcept {
+  T& Stack<T>::top() noexcept {
     if (data_.empty()) {
       throw std::runtime_error("top on empty stack");
     }
