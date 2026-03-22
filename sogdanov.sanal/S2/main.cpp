@@ -16,7 +16,7 @@ int main(int argc, char * argv[]) {
   try {
     sogdanov::input(*in, res);
     sogdanov::output(std::cout, res);
-  } catch (...) {
+  } catch (const std::exception& e) {
     std::cerr << e.what() << '\n';
     return 2;
   }
