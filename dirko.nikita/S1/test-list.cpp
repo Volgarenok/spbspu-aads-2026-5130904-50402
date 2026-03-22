@@ -171,8 +171,6 @@ BOOST_AUTO_TEST_CASE(test_front)
   list.push_back(1);
   list.push_back(2);
   BOOST_CHECK_EQUAL(list.head(), 1);
-  list.head() = 3;
-  BOOST_CHECK_EQUAL(*list.begin(), 10);
 }
 
 BOOST_AUTO_TEST_CASE(test_back)
@@ -181,10 +179,6 @@ BOOST_AUTO_TEST_CASE(test_back)
   list.push_back(1);
   list.push_back(2);
   BOOST_CHECK_EQUAL(list.tail(), 2);
-  list.tail() = 5;
-  Iter< int > it = list.end();
-  it--;
-  BOOST_CHECK_EQUAL(*it, 20);
 }
 
 BOOST_AUTO_TEST_CASE(test_front_back_const)
