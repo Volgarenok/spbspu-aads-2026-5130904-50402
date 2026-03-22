@@ -22,19 +22,19 @@ namespace dirko
 template < class T >
 bool dirko::Queue< T >::empty() const noexcept
 {
-  return false;
+  return !data_.size();
 }
 
 template < class T >
 size_t dirko::Queue< T >::size() const noexcept
 {
-  return 10;
+  return data_.size();
 }
 
 template < class T >
 void dirko::Queue< T >::push(const T &rhs)
 {
-  data_.push_back(10);
+  data_.push_back(rhs);
 }
 
 template < class T >
