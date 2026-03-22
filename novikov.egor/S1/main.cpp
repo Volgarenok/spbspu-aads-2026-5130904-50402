@@ -100,6 +100,6 @@ int main()
     } while (start_sum != sum_res);
     std::cout << "\n";
   } else {
-    std::cout << 0;
+    return 0;
   }
 }
