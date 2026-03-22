@@ -2,6 +2,7 @@
 #include "list.hpp"
 #include "itters.hpp"
 #include <iostream>
+#include <limits>
 
 lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
 {
