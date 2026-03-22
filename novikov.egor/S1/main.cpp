@@ -51,7 +51,7 @@ int main()
 
     if (counter < 2) {
       std::cout << "0" << "\n";
-      return 1;
+      return 0;
     }
 
     novikov::List< size_t > sums;
