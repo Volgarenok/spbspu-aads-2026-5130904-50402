@@ -18,4 +18,16 @@ namespace dirko
     List< T > data_;
   };
 }
+
+template < class T >
+bool dirko::Queue< T >::empty() const noexcept
+{
+  return false;
+}
+
+template < class T >
+size_t dirko::Queue< T >::size() const noexcept
+{
+  return 10;
+}
 #endif
