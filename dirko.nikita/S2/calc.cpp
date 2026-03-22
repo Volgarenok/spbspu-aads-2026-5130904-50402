@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <limits>
 #include <stdexcept>
+#include <string>
 
 bool dirko::getPriority(const std::string &op1, const std::string &op2)
 {
@@ -119,4 +120,29 @@ long long dirko::calc(const std::string &opt, long long a, long long b)
 }
 
 long long dirko::calcExpr(Queue< std::string > expretion)
-{}
+{
+  Stack< long long > st;
+  while (!expretion.empty()) {
+    std::string curr = expretion.get();
+    expretion.pop();
+    if (isOpt(curr)) {
+      if (st.empty()) {
+        throw std::runtime_error("invalid expretion");
+      }
+      long long b = st.get();
+      st.pop();
+      if (st.empty()) {
+        throw std::runtime_error("invalid expretion");
+      }
+      long long a = st.get();
+      st.pop();
+      st.push(calc(curr, a, b));
+    } else {
+      st.push(std::stoll(curr));
+    }
+  }
+  if (st.empty()) {
+    throw std::runtime_error("empty result");
+  }
+  return st.get();
+}
