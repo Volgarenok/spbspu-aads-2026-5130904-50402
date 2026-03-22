@@ -24,4 +24,12 @@ BOOST_AUTO_TEST_CASE(test_push_get)
   st.push(1);
   BOOST_CHECK_EQUAL(st.get(), 1);
 }
+BOOST_AUTO_TEST_CASE(test_pop)
+{
+  Stack< int > st;
+  st.push(1);
+  st.push(2);
+  st.pop();
+  BOOST_CHECK_EQUAL(st.get(), 1);
+}
 BOOST_AUTO_TEST_SUITE_END()
