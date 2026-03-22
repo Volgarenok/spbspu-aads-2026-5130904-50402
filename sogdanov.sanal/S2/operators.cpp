@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <stdexcept>
 #include <string>
+#include <climits>
 size_t sogdanov::getOp(char op) {
   if (op == '^') return 1;
   if (op == '+' || op == '-') return 2;
@@ -15,12 +16,38 @@ bool sogdanov::isOp(char c) {
 }
 long long sogdanov::applyOp(char op, long long a, long long b) {
   if (op == '+') {
+    if (a > 0 && b > LLONG_MAX - a) {
+      throw std::runtime_error("overflow");
+    }
+    if (a < 0 && b < LLONG_MAX - a) {
+      throw std::runtime_error("overflow");
+    }
     return a + b;
   }
   if (op == '-') {
+    if (b > 0 && a < LLONG_MAX + b) {
+      throw std::runtime_error("overflow");
+    }
+    if (b < 0 && a > LLONG_MAX + b) {
+      throw std::runtime_error("overflow");
+    }
     return a - b;
   }
   if (op == '*') {
+    if (a != 0 && b != 0) {
+      if (a > 0 && b > 0 && a > LLONG_MAX / b) {
+        throw std::runtime_error("overflow");
+      }
+      if (a < 0 && b < 0 && a < LLONG_MAX / b) {
+        throw std::runtime_error("overflow");
+      }
+      if (a > 0 && b < 0 && b < LLONG_MAX / a) {
+        throw std::runtime_error("overflow");
+      }
+      if (a < 0 && b > 0 && a > LLONG_MAX / b) {
+        throw std::runtime_error("overflow");
+      }
+    }
     return a * b;
   }
   if (op == '/') {
@@ -33,7 +60,7 @@ long long sogdanov::applyOp(char op, long long a, long long b) {
     if (b == 0) {
       throw std::runtime_error("Division by zero");
     }
-  return a % b;
+  return ((a % b) + b) & b;
   }
   if (op == '^') {
     return a ^ b;
