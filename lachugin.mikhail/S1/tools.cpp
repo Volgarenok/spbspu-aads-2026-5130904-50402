@@ -188,13 +188,22 @@ lachugin::List< lachugin::List< int > > lachugin::process(List< pair > l)
   }
 }
 
-void lachugin::output(List< List< int > > lVal, List< pair > l)
+void lachugin::output(const List< List< int > >& lVal, const List< pair >& l)
 {
   auto it = l.begin();
 
+  bool isFirst = true;
   while (it != l.end())
   {
-    std::cout << (*it).first << " ";
+    if (isFirst)
+    {
+      std::cout << (*it).first;
+      isFirst = false;
+    }
+    else
+    {
+      std::cout << " " << (*it).first;
+    }
     ++it;
   }
   std::cout << "\n";
@@ -202,13 +211,30 @@ void lachugin::output(List< List< int > > lVal, List< pair > l)
 
   while (itVal != lVal.end())
   {
-    auto iterator = (*itVal).begin();
-    while (iterator != (*itVal).end())
+    if ((*itVal).begin() == (*itVal).end())
     {
-      std::cout << (*iterator) << " ";
-      ++iterator;
+      std::cout << "0\n";
     }
-    std::cout << " \n";
+    else
+    {
+      auto iterator = (*itVal).begin();
+      bool isFirst = true;
+
+      while (iterator != (*itVal).end())
+      {
+        if (isFirst)
+        {
+          std::cout << (*iterator);
+          isFirst = false;
+        }
+        else
+        {
+          std::cout << ' ' << (*iterator);
+        }
+        ++iterator;
+      }
+      std::cout << "\n";
+    }
     ++itVal;
   }
 }

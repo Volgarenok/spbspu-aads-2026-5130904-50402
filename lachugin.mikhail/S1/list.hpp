@@ -10,6 +10,7 @@ namespace lachugin
     Node< T >* fake;
   public:
     List();
+    ~List();
     List(const List< T >& other);
     List &operator=(const List< T > &other);
 
@@ -49,8 +50,14 @@ namespace lachugin
     }
   }
 
-  template<class T>
-  List<T> &List<T>::operator=(const List<T> &other)
+  template< class T >
+  List<T>::~List()
+  {
+    clear();
+  }
+
+  template< class T >
+  List< T > &List< T >::operator=(const List< T > &other)
   {
     if (this != other)
     {
