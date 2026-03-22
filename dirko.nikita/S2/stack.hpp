@@ -30,4 +30,16 @@ size_t dirko::Stack< T >::size() const noexcept
 {
   return 10;
 }
+
+template < class T >
+void dirko::Stack< T >::push(const T &rhs)
+{
+  data_.push_back(10);
+}
+
+template < class T >
+T &dirko::Stack< T >::get() noexcept
+{
+  return data_.tail();
+}
 #endif

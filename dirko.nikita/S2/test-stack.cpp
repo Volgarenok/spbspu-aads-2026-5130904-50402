@@ -18,4 +18,10 @@ BOOST_AUTO_TEST_CASE(size)
   BOOST_CHECK_EQUAL(st.size(), 1);
 }
 
+BOOST_AUTO_TEST_CASE(test_push_get)
+{
+  Stack< int > st;
+  st.push(1);
+  BOOST_CHECK_EQUAL(st.get(), 1);
+}
 BOOST_AUTO_TEST_SUITE_END()
