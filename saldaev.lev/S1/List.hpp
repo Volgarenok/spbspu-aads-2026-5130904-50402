@@ -26,6 +26,7 @@ namespace saldaev
     void cutHead() noexcept;
     void cutTail() noexcept;
     void clear() noexcept;
+    void swap(List &other) noexcept;
 
     void setData(LIter< T > it, const T &d);
     void addBefore(LIter< T > it, const T &d);
