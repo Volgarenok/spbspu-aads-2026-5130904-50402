@@ -30,5 +30,13 @@ namespace saldaev
     throw std::logic_error("Cannot read from empty queue");
   }
 
+  template < class T >
+  void Queue< T >::pop() noexcept
+  {}
+
+  template < class T >
+  void Queue< T >::clear() noexcept
+  {}
+
   template struct Queue< int >;
 }
