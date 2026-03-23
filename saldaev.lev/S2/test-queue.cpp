@@ -110,6 +110,56 @@ namespace saldaev
     BOOST_TEST(b.empty());
   }
 
+  BOOST_AUTO_TEST_CASE(move_constructor)
+  {
+    Queue< int > src;
+    src.push(100);
+    src.push(200);
+
+    Queue< int > dst(std::move(src));
+    BOOST_TEST(dst.front() == 100);
+    dst.pop();
+    BOOST_TEST(dst.front() == 200);
+    dst.pop();
+    BOOST_TEST(dst.empty());
+
+    BOOST_TEST(src.empty());
+
+    Queue< int > empty;
+    Queue< int > movedEmpty(std::move(empty));
+    BOOST_TEST(movedEmpty.empty());
+    BOOST_TEST(empty.empty());
+  }
+
+  BOOST_AUTO_TEST_CASE(move_assignment)
+  {
+    Queue< int > a;
+    a.push(1);
+    a.push(2);
+
+    Queue< int > b;
+    b.push(3);
+
+    b = std::move(a);
+    BOOST_TEST(b.front() == 1);
+    b.pop();
+    BOOST_TEST(b.front() == 2);
+    b.pop();
+    BOOST_TEST(b.empty());
+
+    BOOST_TEST(a.empty());
+
+    b = std::move(b);
+    BOOST_TEST(b.empty());
+
+    Queue< int > empty;
+    Queue< int > target;
+    target.push(42);
+    target = std::move(empty);
+    BOOST_TEST(target.empty());
+    BOOST_TEST(empty.empty());
+  }
+
   BOOST_AUTO_TEST_SUITE_END()
 
 }
