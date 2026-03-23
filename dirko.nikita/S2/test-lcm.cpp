@@ -1,11 +1,10 @@
+#include <boost/test/unit_test.hpp>
+#include <sstream>
+#include <string>
 #include "queue.hpp"
 #include "stack.hpp"
 #include "calc.hpp"
 #include "actions.hpp"
-#include <boost/test/tools/old/interface.hpp>
-#include <boost/test/unit_test.hpp>
-#include <sstream>
-#include <string>
 
 BOOST_AUTO_TEST_SUITE(lcmTtest)
 

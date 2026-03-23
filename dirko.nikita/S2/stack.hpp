@@ -1,6 +1,6 @@
 #ifndef STACK_HPP
 #define STACK_HPP
-#include "../common/list.hpp"
+#include <list.hpp>
 
 namespace dirko
 {

@@ -1,6 +1,6 @@
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
-#include "../common/list.hpp"
+#include <list.hpp>
 
 namespace dirko
 {
