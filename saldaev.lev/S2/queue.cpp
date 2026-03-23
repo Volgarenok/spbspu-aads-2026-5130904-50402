@@ -32,11 +32,15 @@ namespace saldaev
 
   template < class T >
   void Queue< T >::pop() noexcept
-  {}
+  {
+    data_.cutHead();
+  }
 
   template < class T >
   void Queue< T >::clear() noexcept
-  {}
+  {
+    data_.clear();
+  }
 
   template struct Queue< int >;
 }
