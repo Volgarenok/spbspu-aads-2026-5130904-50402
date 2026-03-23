@@ -95,7 +95,7 @@ bool shirokov::BiList< T >::empty() const noexcept
 }
 
 template < class T >
-shirokov::BiList< T >::~BiList()
+shirokov::BiList< T >::BiList::~BiList()
 {
   clear();
 }
@@ -138,9 +138,9 @@ bool shirokov::BLIter< T >::operator==(const shirokov::BLIter< T >& other) const
 }
 
 template < class T >
-shirokov::BLIter< T >::BLIter(typename BiList< T >::Node* node): curr(node)
-{
-}
+shirokov::BLIter< T >::BLIter(typename BiList< T >::Node* node):
+  curr(node)
+{}
 
 template < class T >
 void shirokov::BiList< T >::pushBack(T&& value)
@@ -429,9 +429,9 @@ shirokov::BLCIter< T >& shirokov::BLCIter< T >::operator--()
 }
 
 template < class T >
-shirokov::BLCIter< T >::BLCIter(const typename BiList< T >::Node* node): curr(node)
-{
-}
+shirokov::BLCIter< T >::BLCIter(const typename BiList< T >::Node* node):
+  curr(node)
+{}
 
 template < class T >
 shirokov::BiList< T >::BiList(const BiList< T >& other)
@@ -499,7 +499,9 @@ shirokov::BiList< T >& shirokov::BiList< T >::operator=(const BiList< T >& other
 }
 
 template < class T >
-shirokov::BiList< T >::BiList(BiList< T >&& other): head(other.head), tail(other.tail)
+shirokov::BiList< T >::BiList(BiList< T >&& other):
+  head(other.head),
+  tail(other.tail)
 {
   other.head = nullptr;
   other.tail = nullptr;

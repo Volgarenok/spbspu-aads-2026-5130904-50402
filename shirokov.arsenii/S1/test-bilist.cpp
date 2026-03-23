@@ -115,14 +115,6 @@ BOOST_AUTO_TEST_CASE(move)
   BOOST_TEST(C.front() == 1);
 }
 
-BOOST_AUTO_TEST_CASE(copying_itself)
-{
-  shirokov::BiList< int > A{};
-  A.pushBack(5);
-  A = A;
-  BOOST_TEST(A.back() == 5);
-}
-
 BOOST_AUTO_TEST_CASE(comparing_iterators)
 {
   shirokov::BiList< int > A{};

@@ -1,13 +1,12 @@
-#include "bilist.hpp"
 #include <iostream>
 #include <limits>
 #include <utility>
+#include "bilist.hpp"
 
 int main()
 {
   shirokov::BiList< std::pair< std::string, shirokov::BiList< size_t > > > seq{};
 
-  // std::cout << "FIRST\n";
   std::string name;
   while (std::cin >> name)
   {
@@ -21,7 +20,6 @@ int main()
     seq.pushBack({name, nums});
   }
 
-  // std::cout << "SECOND\n";
   for (auto it = seq.begin(); it != seq.end(); ++it)
   {
     if (it != seq.begin())
@@ -35,14 +33,12 @@ int main()
     std::cout << '\n';
   }
 
-  // std::cout << "THIRD\n";
   shirokov::BiList< std::pair< shirokov::BLIter< size_t >, shirokov::BLIter< size_t > > > iterators{};
   for (auto it = seq.begin(); it != seq.end(); ++it)
   {
     iterators.pushBack({(*it).second.begin(), (*it).second.end()});
   }
 
-  // std::cout << "FOURTH\n";
   while (true)
   {
     bool areValid = false;
@@ -68,14 +64,12 @@ int main()
     std::cout << '\n';
   }
 
-  // std::cout << "FIFTH\n";
   iterators.clear();
   for (auto it = seq.begin(); it != seq.end(); ++it)
   {
     iterators.pushBack({(*it).second.begin(), (*it).second.end()});
   }
 
-  // std::cout << "SIXTH\n";
   shirokov::BiList< size_t > sums{};
   while (true)
   {
@@ -109,7 +103,6 @@ int main()
     return 0;
   }
 
-  // std::cout << "SEVENTH\n";
   bool isFirst = true;
   for (size_t s : sums)
   {
