@@ -68,7 +68,6 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
   catch (...)
   {
     listOfLists.clear();
-    std::cerr << "Error in getline" << "\n";
     throw;
   }
   return listOfLists;
