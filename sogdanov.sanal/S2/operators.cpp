@@ -19,13 +19,13 @@ long long sogdanov::applyOp(char op, long long a, long long b) {
     if (a > 0 && b > LLONG_MAX - a) {
       throw std::runtime_error("overflow");
     }
-    if (a < 0 && b < LLONG_MAX - a) {
+    if (a < 0 && b < LLONG_MIN - a) {
       throw std::runtime_error("overflow");
     }
     return a + b;
   }
   if (op == '-') {
-    if (b > 0 && a < LLONG_MAX + b) {
+    if (b > 0 && a < LLONG_MIN + b) {
       throw std::runtime_error("overflow");
     }
     if (b < 0 && a > LLONG_MAX + b) {
@@ -41,10 +41,10 @@ long long sogdanov::applyOp(char op, long long a, long long b) {
       if (a < 0 && b < 0 && a < LLONG_MAX / b) {
         throw std::runtime_error("overflow");
       }
-      if (a > 0 && b < 0 && b < LLONG_MAX / a) {
+      if (a > 0 && b < 0 && b < LLONG_MIN / a) {
         throw std::runtime_error("overflow");
       }
-      if (a < 0 && b > 0 && a > LLONG_MAX / b) {
+      if (a < 0 && b > 0 && a < LLONG_MIN / b) {
         throw std::runtime_error("overflow");
       }
     }
@@ -60,7 +60,7 @@ long long sogdanov::applyOp(char op, long long a, long long b) {
     if (b == 0) {
       throw std::runtime_error("Division by zero");
     }
-  return ((a % b) + b) & b;
+  return ((a % b) + b) % b;
   }
   if (op == '^') {
     return a ^ b;
