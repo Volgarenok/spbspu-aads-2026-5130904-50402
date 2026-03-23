@@ -42,6 +42,7 @@ namespace lavrentev
   bool isNumber(std::string exp);
   int gcd(int a, int b);
   int count(int a, int b, std::string operation);
+  int priority(std::string s);
 } // namespace lavrentev
 
 template <class T> void lavrentev::Queue<T>::push(const T &rhs)
@@ -184,7 +185,7 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp)
     }
     else if(operCond(buf))
     {
-      while (!op.empty() && op.top() != "(" && operCond(op.top()))
+      while (!op.empty() && op.top() != "(" && operCond(op.top()) && priority(op.top()) >= priority(buf))
       {
         std::string operation = op.drop();
         int oper2 = res.drop();
@@ -208,18 +209,38 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp)
       }
       if (operCond(operation))
       {
-        op.drop();
-        int oper1 = res.drop();
-        int oper2;
-        try{
-          oper2 = std::stoi(buf);
+        std::string expOper;
+        try {
+          expOper = exp.front();
+        } catch (...) {
+          expOper = "";
         }
-        catch(...)
+        if (operCond(expOper) && priority(expOper) > priority(operation))
         {
-          std::cerr << "Invalid number";
-          throw;
+          int oper2;
+          try{
+            oper2 = std::stoi(buf);
+          }
+          catch(...)
+          {
+            std::cerr << "Invalid number";
+            throw;
+          }
+          res.push(oper2);
+        } else {
+          op.drop();
+          int oper1 = res.drop();
+          int oper2;
+          try{
+            oper2 = std::stoi(buf);
+          }
+          catch(...)
+          {
+            std::cerr << "Invalid number";
+            throw;
+          }
+          res.push(count(oper1, oper2, operation));
         }
-        res.push(count(oper1, oper2, operation));
       } else {
         try{
           res.push(std::stoi(buf));
@@ -298,6 +319,21 @@ inline int lavrentev::count(int a, int b, std::string operation)
     std::cerr << "Invalid operation";
     throw;
   }
+}
+
+inline int lavrentev::priority(std::string s)
+{
+  if (s == "+" || s == "-")
+  {
+    return 1;
+  } else if (s == "*" || s == "/" || s == "%")
+  {
+    return 2;
+  } else if (s == "gcd")
+  {
+    return 3;
+  }
+  return 0;
 }
 
 #endif
