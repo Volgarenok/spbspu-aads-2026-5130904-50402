@@ -146,3 +146,15 @@ long long dirko::calcExpr(Queue< std::string > expretion)
   }
   return st.get();
 }
+
+long long dirko::lcm(long long a, long long b)
+{
+
+  long long res = std::min(a, b);
+  while (res > 1) {
+    if (a % res == 0 && b % res == 0)
+      break;
+    res--;
+  }
+  return a * b / res;
+}

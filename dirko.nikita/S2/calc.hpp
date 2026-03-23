@@ -11,5 +11,6 @@ namespace dirko
   bool getPriority(const std::string &op1, const std::string &op2);
   bool isOpt(std::string candidate);
   long long calc(const std::string &opt, long long a, long long b);
+  long long lcm(long long a, long long b);
 }
 #endif
