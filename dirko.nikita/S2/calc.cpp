@@ -1,10 +1,10 @@
 #include "calc.hpp"
-#include "queue.hpp"
-#include "stack.hpp"
 #include <cstddef>
 #include <limits>
 #include <stdexcept>
 #include <string>
+#include "queue.hpp"
+#include "stack.hpp"
 
 bool dirko::getPriority(const std::string &op1, const std::string &op2)
 {
@@ -111,7 +111,7 @@ long long dirko::calc(const std::string &opt, long long a, long long b)
     if (b == 0) {
       throw std::logic_error("zero dividion");
     }
-    return a % b;
+    return (a % b + b) % b;
   } else if (opt == "lcm") {
     return 0;
   } else {

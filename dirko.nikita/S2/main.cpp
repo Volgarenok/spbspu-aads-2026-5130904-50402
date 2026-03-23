@@ -21,10 +21,9 @@ int main(int argc, char *argv[])
     }
     is = &file;
   }
-  dirko::Queue< long long > res;
+  dirko::Stack< long long > res;
   try {
     dirko::Queue< dirko::Queue< std::string > > expretions = dirko::input(*is);
-    dirko::Stack< long long > res;
     while (!expretions.empty()) {
       dirko::Queue< std::string > post = dirko::convert(expretions.get());
       expretions.pop();
