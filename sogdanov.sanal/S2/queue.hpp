@@ -35,6 +35,9 @@ namespace sogdanov {
   }
   template<class T>
   T& Queue<T>::front() {
+    if (data_.empty()) {
+      throw std::runtime_error("front on empty file\n");
+    }
     return *data_.begin();
   }
 }
