@@ -18,17 +18,25 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
 
       while (true)
       {
-        int c = in.peek();
-        if (c == '\n' || c == EOF)
+        while (std::isspace(in.peek()) && in.peek() != '\n')
+        {
+          in.get();
+        }
+        if (in.peek() == '\n' || in.peek() == EOF)
         {
           break;
         }
-        if (!std::isdigit(c) && c != '-')
+        if (!std::isdigit(in.peek()) && in.peek() != '-')
         {
           break;
         }
         long long tmp;
-        in >> tmp;
+        if (!(in >> tmp))
+        {
+          std::cerr << "overflow\n";
+          throw std::overflow_error("overflow");
+        }
+
         if (tmp > std::numeric_limits< int >::max() ||
             tmp < std::numeric_limits< int >::min())
         {
@@ -45,7 +53,7 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
           curr = list.addNext(value, curr);
         }
       }
-      in.clear();
+
       pair p{name, list};
       if (currOfLists == nullptr)
       {
