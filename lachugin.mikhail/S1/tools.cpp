@@ -33,7 +33,6 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
         long long tmp;
         if (!(in >> tmp))
         {
-          std::cerr << "overflow\n";
           throw std::overflow_error("overflow");
         }
 

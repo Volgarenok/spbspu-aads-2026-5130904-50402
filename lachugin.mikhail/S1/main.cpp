@@ -10,6 +10,11 @@ int main()
 
     lachugin::output(lachugin::process(l), l);
   }
+  catch (const std::overflow_error& e)
+  {
+    std::cerr << e.what() << "\n";
+    return 1;
+  }
   catch (...)
   {
     return 1;
