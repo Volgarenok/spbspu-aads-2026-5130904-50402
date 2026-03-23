@@ -41,6 +41,7 @@ namespace lavrentev
   bool operCond(std::string buf);
   bool isNumber(std::string exp);
   int gcd(int a, int b);
+  int count(int a, int b, std::string operation);
 } // namespace lavrentev
 
 template <class T> void lavrentev::Queue<T>::push(const T &rhs)
@@ -120,6 +121,7 @@ template <class T> bool lavrentev::Stack<T>::empty() const
 
 template <class T> T &lavrentev::Stack<T>::top()
 {
+
   return data.front();
 }
 
@@ -188,9 +190,16 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp)
     {
       op.drop();
     } else {
-      std::string operation = op.top();
-      if (operCond(op.top()))
+      std::string operation;
+      try{
+        operation = op.top();
+      } catch(...)
       {
+        operation = "";
+      }
+      if (operCond(operation))
+      {
+        op.drop();
         int oper1 = res.drop();
         int oper2;
         try{
@@ -201,35 +210,38 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp)
           std::cerr << "Invalid number";
           throw;
         }
-        if (operation == "+")
+        res.push(count(oper1, oper2, operation));
+      } else {
+        try{
+          res.push(std::stoi(buf));
+        } catch(...)
         {
-          res.push(oper1 + oper2);
-        }
-        else if (operation == "-")
-        {
-          res.push(oper1 - oper2);
-        }
-        else if (operation == "*")
-        {
-          res.push(oper1 * oper2);
-        }
-        else if (operation == "-")
-        {
-          res.push(oper1 / oper2);
-        }
-        else if (operation == "gcd")
-        {
-          res.push(gcd(oper1, oper2));
+          std::cerr << "Invalid number";
+          throw;
         }
       }
     }
   }
+
+  while (!op.empty())
+  {
+    std::string operation = op.drop();
+    
+    if (operCond(operation))
+    {
+      int oper2 = res.drop();
+      int oper1 = res.drop();
+
+      res.push(count(oper1, oper2, operation));
+    }
+  }
+
   return res.drop();
 }
 
 inline bool lavrentev::operCond(std::string buf)
 {
-  return buf == "+" || buf == "-" || buf == "*" || buf == "/" || buf == "gcd";
+  return buf == "+" || buf == "-" || buf == "*" || buf == "/" || buf == "gcd" || buf == "%";
 }
 
 inline int lavrentev::gcd(int a, int b)
@@ -244,6 +256,39 @@ inline int lavrentev::gcd(int a, int b)
     }
   }
   return a + b;
+}
+
+inline int lavrentev::count(int a, int b, std::string operation)
+{
+  if (operation == "+")
+  {
+    return a + b;
+  }
+  else if (operation == "-")
+  {
+    return a - b;
+  }
+  else if (operation == "*")
+  {
+    return a * b;
+  }
+  else if (operation == "/")
+  {
+    return a / b;
+  }
+  else if (operation == "gcd")
+  {
+    return gcd(a, b);
+  }
+  else if (operation == "%")
+  {
+    return a % b;
+  }
+  else
+  {
+    std::cerr << "Invalid operation";
+    throw;
+  }
 }
 
 #endif

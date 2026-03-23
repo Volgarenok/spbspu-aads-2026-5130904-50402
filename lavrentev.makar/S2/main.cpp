@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
       std::cout << " " << res.front();
     } else {
       std::cout << res.front();
+      first = false;
     }
     res.drop();
   }
