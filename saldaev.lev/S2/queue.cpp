@@ -31,6 +31,13 @@ namespace saldaev
   }
 
   template < class T >
+  const T &Queue< T >::front() const
+  {
+    auto dummy = T();
+    return dummy;
+  }
+
+  template < class T >
   void Queue< T >::pop() noexcept
   {
     data_.cutHead();
