@@ -1,4 +1,5 @@
 #include "queue.hpp"
+#include <stdexcept>
 
 namespace saldaev
 {
@@ -10,18 +11,23 @@ namespace saldaev
   template < class T >
   bool Queue< T >::empty() const noexcept
   {
-    return false;
+    return !(data_.getLength());
   }
 
   template < class T >
   void Queue< T >::push(const T &value)
-  {}
+  {
+    data_.newTail(value);
+  }
 
   template < class T >
   T &Queue< T >::front()
   {
-    auto dummy = T();
-    return dummy;
+    if (!empty()) {
+      LIter h = data_.begin();
+      return h.getData();
+    }
+    throw std::logic_error("Cannot read from empty queue");
   }
 
   template struct Queue< int >;
