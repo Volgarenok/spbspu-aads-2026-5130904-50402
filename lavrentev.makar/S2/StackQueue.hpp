@@ -173,7 +173,7 @@ inline lavrentev::Queue<int> lavrentev::getline()
 
 inline int lavrentev::math(lavrentev::Queue<std::string> exp)
 {
-  Queue<int> res{};
+  Stack<int> res{};
   Stack<std::string> op{};
   while(!exp.empty())
   {
@@ -184,6 +184,15 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp)
     }
     else if(operCond(buf))
     {
+      while (!op.empty() && op.top() != "(" && operCond(op.top()))
+      {
+        std::string operation = op.drop();
+        int oper2 = res.drop();
+        int oper1 = res.drop();
+        
+        res.push(count(oper1, oper2, operation));
+      }
+      
       op.push(buf);
     }
     else if (buf == ")")
