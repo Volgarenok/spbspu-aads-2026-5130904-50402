@@ -12,7 +12,7 @@ namespace saldaev
     Queue(Queue &&other) = default;
     ~Queue() = default;
     Queue &operator=(const Queue &other) = default;
-    Queue &operator=(Queue &&other) = default;
+    Queue &operator=(Queue &&other);
 
     void push(const T &value);
     T &front();

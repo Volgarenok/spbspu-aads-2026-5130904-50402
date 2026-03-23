@@ -42,5 +42,15 @@ namespace saldaev
     data_.clear();
   }
 
+  template < class T >
+  Queue< T > &Queue< T >::operator=(Queue &&other)
+  {
+    if (&other != this) {
+      data_.swap(other.data_);
+      other.data_.clear();
+    }
+    return *this;
+  }
+
   template struct Queue< int >;
 }
