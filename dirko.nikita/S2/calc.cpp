@@ -113,7 +113,7 @@ long long dirko::calc(const std::string &opt, long long a, long long b)
     }
     return (a % b + b) % b;
   } else if (opt == "lcm") {
-    return 0;
+    return lcm(a, b);
   } else {
     throw std::runtime_error("unknown opt");
   }
