@@ -122,7 +122,6 @@ template <class T> bool lavrentev::Stack<T>::empty() const
 
 template <class T> T &lavrentev::Stack<T>::top()
 {
-
   return data.front();
 }
 
@@ -133,16 +132,16 @@ inline lavrentev::Queue<int> lavrentev::readFile(char *name)
   if (file.is_open())
   {
     std::string line;
-    while(std::getline(file, line))
+    while (std::getline(file, line))
     {
       lavrentev::Queue<std::string> exp{};
       std::istringstream iss(line);
       std::string symb;
-      while(iss >> symb)
+      while (iss >> symb)
       {
         exp.push(symb);
       }
-      
+
       ans.push(lavrentev::math(exp));
     }
     file.close();
@@ -158,17 +157,17 @@ inline lavrentev::Queue<int> lavrentev::getline()
 {
   lavrentev::Queue<int> ans{};
   std::string line;
-  while(std::getline(std::cin, line))
+  while (std::getline(std::cin, line))
+  {
+    lavrentev::Queue<std::string> exp{};
+    std::istringstream iss(line);
+    std::string symb;
+    while (iss >> symb)
     {
-      lavrentev::Queue<std::string> exp{};
-      std::istringstream iss(line);
-      std::string symb;
-      while(iss >> symb)
-      {
-        exp.push(symb);
-      }
-      ans.push(lavrentev::math(exp));
+      exp.push(symb);
     }
+    ans.push(lavrentev::math(exp));
+  }
   return ans;
 }
 
@@ -176,75 +175,85 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp)
 {
   Stack<int> res{};
   Stack<std::string> op{};
-  while(!exp.empty())
+  while (!exp.empty())
   {
     std::string buf = exp.drop();
     if (buf == "(")
     {
       op.push(buf);
     }
-    else if(operCond(buf))
+    else if (operCond(buf))
     {
       while (!op.empty() && op.top() != "(" && operCond(op.top()) && priority(op.top()) >= priority(buf))
       {
         std::string operation = op.drop();
         int oper2 = res.drop();
         int oper1 = res.drop();
-        
+
         res.push(count(oper1, oper2, operation));
       }
-      
+
       op.push(buf);
     }
     else if (buf == ")")
     {
       op.drop();
-    } else {
+    }
+    else
+    {
       std::string operation;
-      try{
+      try
+      {
         operation = op.top();
-      } catch(...)
+      } catch (...)
       {
         operation = "";
       }
       if (operCond(operation))
       {
         std::string expOper;
-        try {
+        try
+        {
           expOper = exp.front();
-        } catch (...) {
+        } catch (...)
+        {
           expOper = "";
         }
         if (operCond(expOper) && priority(expOper) > priority(operation))
         {
           int oper2;
-          try{
+          try
+          {
             oper2 = std::stoi(buf);
-          }
-          catch(...)
+          } catch (...)
           {
             std::cerr << "Invalid number";
             throw;
           }
           res.push(oper2);
-        } else {
+        }
+        else
+        {
           op.drop();
           int oper1 = res.drop();
           int oper2;
-          try{
+          try
+          {
             oper2 = std::stoi(buf);
-          }
-          catch(...)
+          } catch (...)
           {
             std::cerr << "Invalid number";
             throw;
           }
           res.push(count(oper1, oper2, operation));
         }
-      } else {
-        try{
+      }
+      else
+      {
+        try
+        {
           res.push(std::stoi(buf));
-        } catch(...)
+        } catch (...)
         {
           std::cerr << "Invalid number";
           throw;
@@ -256,7 +265,7 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp)
   while (!op.empty())
   {
     std::string operation = op.drop();
-    
+
     if (operCond(operation))
     {
       int oper2 = res.drop();
@@ -281,7 +290,9 @@ inline int lavrentev::gcd(int a, int b)
     if (a > b)
     {
       a = a % b;
-    } else {
+    }
+    else
+    {
       b = b % a;
     }
   }
@@ -326,10 +337,12 @@ inline int lavrentev::priority(std::string s)
   if (s == "+" || s == "-")
   {
     return 1;
-  } else if (s == "*" || s == "/" || s == "%")
+  }
+  else if (s == "*" || s == "/" || s == "%")
   {
     return 2;
-  } else if (s == "gcd")
+  }
+  else if (s == "gcd")
   {
     return 3;
   }

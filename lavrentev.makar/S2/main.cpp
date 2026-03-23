@@ -19,12 +19,14 @@ int main(int argc, char *argv[])
     return 2;
   }
   bool first = true;
-  while(!res.empty())
+  while (!res.empty())
   {
     if (!first)
     {
       std::cout << " " << res.front();
-    } else {
+    }
+    else
+    {
       std::cout << res.front();
       first = false;
     }
