@@ -83,7 +83,6 @@ namespace lachugin
     return* this;
   }
 
-
   template < class T >
   Node< T >* List< T >::add(const T& val)
   {

@@ -186,6 +186,11 @@ lachugin::List< lachugin::List< int > > lachugin::process(List< pair > l)
 
 void lachugin::output(const List< List< int > >& lVal, const List< pair >& l)
 {
+  if (l.begin() == l.end())
+  {
+    std::cout << "0\n";
+    return;
+  }
   auto it = l.begin();
 
   bool isFirst = true;
