@@ -50,15 +50,15 @@ namespace lachugin
     }
   }
 
-  template< class T >
+  template < class T >
   List<T>::~List()
   {
     clear();
     delete fake;
   }
 
-  template< class T >
-  List< T > &List< T >::operator=(const List< T > &other)
+  template < class T >
+  List< T >& List< T >::operator=(const List< T >& other)
   {
     if (this != other)
     {
@@ -80,7 +80,7 @@ namespace lachugin
         ++itO;
       }
     }
-    return *this;
+    return* this;
   }
 
 
