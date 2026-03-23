@@ -18,7 +18,7 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
 
       while (true)
       {
-        int tmp;
+        long long tmp;
 
         if (!(in >> tmp))
         {
@@ -29,15 +29,13 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
           in.clear();
           break;
         }
-
         if (tmp > std::numeric_limits< int >::max() ||
             tmp < std::numeric_limits< int >::min())
         {
           std::cerr << "overflow\n";
           throw std::overflow_error("overflow");
         }
-
-        int value = tmp;
+        int value = static_cast< int >(tmp);
 
         if (curr == nullptr)
         {
@@ -48,10 +46,8 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
           curr = list.addNext(value, curr);
         }
       }
-
       in.clear();
       pair p{name, list};
-
       if (currOfLists == nullptr)
       {
         currOfLists = listOfLists.add(p);
@@ -65,6 +61,7 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
   catch (...)
   {
     listOfLists.clear();
+    std::cerr << "Error in getline" << "\n";
     throw;
   }
   return listOfLists;
@@ -170,7 +167,6 @@ lachugin::List< lachugin::List< int > > lachugin::process(List< pair > l)
   catch (const std::bad_alloc& e)
   {
     std::cout << e.what();
-
     auto itDelete = listOfLists.begin();
     while (itDelete != listOfLists.end())
     {

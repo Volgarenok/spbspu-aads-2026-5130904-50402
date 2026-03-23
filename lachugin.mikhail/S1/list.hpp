@@ -54,6 +54,7 @@ namespace lachugin
   List<T>::~List()
   {
     clear();
+    delete fake;
   }
 
   template< class T >
@@ -126,14 +127,13 @@ namespace lachugin
   template < class T >
   void List< T >::clear()
   {
-    auto it = begin();
+    Node< T >* curr = fake->next;
 
-    while (it != end())
+    while (curr != fake)
     {
-      auto c = it;
-      ++it;
-      delete c.curr;
-      fake->next = it.curr;
+      Node< T >* next = curr->next;
+      delete curr;
+      curr = next;
     }
     fake->next = fake;
   }

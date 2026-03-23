@@ -10,14 +10,8 @@ int main()
 
     lachugin::output(lachugin::process(l), l);
   }
-  catch (const std::bad_alloc& e)
+  catch (...)
   {
-    std::cerr << e.what();
-    return 1;
-  }
-  catch (const std::overflow_error& e)
-  {
-    std::cerr << e.what();
     return 1;
   }
 }
