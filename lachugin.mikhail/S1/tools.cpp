@@ -193,7 +193,11 @@ void lachugin::output(List< List< size_t > >& lVal, List< pair >& l)
   }
   std::cout << "\n";
   auto itVal = lVal.begin();
-
+  if (itVal == lVal.end())
+  {
+    std::cout << "0\n";
+    return;
+  }
   while (itVal != lVal.end())
   {
     if ((*itVal).begin() == (*itVal).end())
