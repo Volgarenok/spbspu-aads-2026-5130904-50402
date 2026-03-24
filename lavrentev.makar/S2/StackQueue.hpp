@@ -37,11 +37,11 @@ namespace lavrentev
 
   Queue<int> readFile(char *name);
   Queue<int> getline();
-  int math(Queue<std::string> exp, int& res);
+  int math(Queue<std::string> exp, int &res);
   bool operCond(std::string buf);
   bool isNumber(std::string exp);
   int gcd(int a, int b);
-  int count(int a, int b, int& res, std::string operation);
+  int count(int a, int b, int &res, std::string operation);
   int priority(std::string s);
 } // namespace lavrentev
 
@@ -142,14 +142,12 @@ inline lavrentev::Queue<int> lavrentev::readFile(char *name)
         exp.push(symb);
       }
       int res = 0;
-      try{
-        if (lavrentev::math(exp, res))
-        {
-          throw;
-        }
-        ans.push(res);
+      if(lavrentev::math(exp, res))
+      {
+        std::cerr << "Error";
+        throw;
       }
-      catch(...){}
+      ans.push(res);
     }
     file.close();
   }
@@ -174,28 +172,35 @@ inline lavrentev::Queue<int> lavrentev::getline()
       exp.push(symb);
     }
     int res = 0;
-      try{
-        if (lavrentev::math(exp, res))
-        {
-          throw;
-        }
-        ans.push(res);
+    if(!exp.empty())
+    {
+      if(lavrentev::math(exp, res))
+      {
+        std::cerr << "Error";
+        throw;
       }
-      catch(...) {}
+    }
+    else
+    {
+      continue;
+    }
+    ans.push(res);
   }
   return ans;
 }
 
-inline int lavrentev::math(lavrentev::Queue<std::string> exp, int& res)
+inline int lavrentev::math(lavrentev::Queue<std::string> exp, int &res)
 {
   Stack<int> sRes{};
   Stack<std::string> op{};
+  int brackets = 0;
   while (!exp.empty())
   {
     std::string buf = exp.drop();
     if (buf == "(")
     {
       op.push(buf);
+      ++brackets;
     }
     else if (operCond(buf))
     {
@@ -204,13 +209,13 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int& res)
         std::string operation = op.drop();
         int oper2 = sRes.drop();
         int oper1 = sRes.drop();
-
-        //sRes.push(count(oper1, oper2, operation));
         int bufAns = 0;
-        if(!count(oper1, oper2, bufAns, operation))
+        if (!count(oper1, oper2, bufAns, operation))
         {
           sRes.push(bufAns);
-        } else {
+        }
+        else
+        {
           return 1;
         }
       }
@@ -219,6 +224,7 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int& res)
     else if (buf == ")")
     {
       op.drop();
+      --brackets;
     }
     else
     {
@@ -267,10 +273,12 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int& res)
             return 2;
           }
           int bufAns = 0;
-          if(!count(oper1, oper2, bufAns, operation))
+          if (!count(oper1, oper2, bufAns, operation))
           {
             sRes.push(bufAns);
-          } else {
+          }
+          else
+          {
             return 1;
           }
         }
@@ -288,7 +296,6 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int& res)
       }
     }
   }
-
   while (!op.empty())
   {
     std::string operation = op.drop();
@@ -298,13 +305,19 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int& res)
       int oper2 = sRes.drop();
       int oper1 = sRes.drop();
       int bufAns = 0;
-      if(!count(oper1, oper2, bufAns, operation))
+      if (!count(oper1, oper2, bufAns, operation))
       {
         sRes.push(bufAns);
-      } else {
+      }
+      else
+      {
         return 1;
       }
     }
+  }
+  if (brackets)
+  {
+    return 2;
   }
   res = sRes.drop();
   return 0;
@@ -331,7 +344,7 @@ inline int lavrentev::gcd(int a, int b)
   return a + b;
 }
 
-inline int lavrentev::count(int a, int b, int& res, std::string operation)
+inline int lavrentev::count(int a, int b, int &res, std::string operation)
 {
   if (operation == "+")
   {
@@ -354,7 +367,9 @@ inline int lavrentev::count(int a, int b, int& res, std::string operation)
     {
       res = a / b;
       return 0;
-    } else {
+    }
+    else
+    {
       std::cerr << "Zero division";
       return 1;
     }
@@ -370,7 +385,9 @@ inline int lavrentev::count(int a, int b, int& res, std::string operation)
     {
       res = a % b;
       return 0;
-    } else {
+    }
+    else
+    {
       std::cerr << "Zero division";
       return 1;
     }
