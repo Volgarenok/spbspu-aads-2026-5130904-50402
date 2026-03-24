@@ -31,7 +31,7 @@ int main()
   }
   catch (const std::overflow_error& e)
   {
-    std::cerr << "overflow\n";
+    std::cerr << 'overflow\n';
     return 1;
   }
   catch (...)
