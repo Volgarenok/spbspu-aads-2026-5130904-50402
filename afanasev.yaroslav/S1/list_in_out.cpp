@@ -57,7 +57,7 @@ namespace afanasev
 
         if (firstSum)
         {
-          sums.addFirst(rowSum);
+          sums.pushFront(rowSum);
           lastSum = sums.begin();
           firstSum = false;
         }
@@ -101,7 +101,7 @@ namespace afanasev
 
     if (in >> num)
     {
-      numbers.addFirst(num);
+      numbers.pushFront(num);
       LIter< size_t > lastNum = numbers.begin();
 
       while (in >> num)
@@ -112,7 +112,7 @@ namespace afanasev
     }
 
     in.clear();
-    list.addFirst({name, numbers});
+    list.pushFront({name, numbers});
 
     LIter< std::pair< std::string, List< size_t > > > lastPair = list.begin();
 
@@ -123,7 +123,7 @@ namespace afanasev
 
       if (in >> num)
       {
-        numbers.addFirst(num);
+        numbers.pushFront(num);
         LIter< size_t > lastNum = numbers.begin();
 
         while (in >> num)
@@ -176,7 +176,7 @@ namespace afanasev
       }
       else
       {
-        numbers.addFirst(beginNum);
+        numbers.pushFront(beginNum);
         lastNumIter = numbers.begin();
         firstNum = false;
       }

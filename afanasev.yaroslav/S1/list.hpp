@@ -39,7 +39,6 @@ namespace afanasev
     T getValue(LCIter< T > pos) const noexcept;
     void pushFront(const T & val);
     T popFront();
-    void addFirst(const T & val);
     void insert(const T & val, LIter< T > pos);
     void deleteNext(LIter< T > pos) noexcept;
     void clear() noexcept;
