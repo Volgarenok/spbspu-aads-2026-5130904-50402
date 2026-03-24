@@ -15,7 +15,7 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
     {
       List< size_t > list;
       Node< size_t >* curr = nullptr;
-      int value;
+      size_t value;
 
       while(in >> value)
       {
