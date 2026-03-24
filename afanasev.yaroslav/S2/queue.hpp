@@ -20,18 +20,37 @@ namespace afanasev
 }
 
 template < class T >
-void afanasev::Queue< T >::push(const T &rhs)
+void afanasev::Queue< T >::push(const T & rhs)
 {
+  if (!data_.size())
+  {
+    data_.pushFront(rhs);
+  }
+  else
+  {
+    LIter< T > last = data_.begin();
+    while (last.curr_->next_)
+    {
+      ++last;
+    }
+    data_.insert(rhs, last);
+  }
 }
 
 template < class T >
 T & afanasev::Queue< T >::get() noexcept
 {
+  if (empty())
+  {
+    throw std::out_of_range("queue is empty");
+  }
+  return *data_.begin();
 }
 
 template < class T >
 void afanasev::Queue< T >::pop() noexcept
 {
+  data_.popFront();
 }
 
 template < class T >
