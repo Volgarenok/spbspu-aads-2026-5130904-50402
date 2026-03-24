@@ -33,8 +33,11 @@ namespace saldaev
   template < class T >
   const T &Stack< T >::top() const
   {
-    auto dummy = T();
-    return dummy;
+    if (!empty()) {
+      LCIter h = data_.begin();
+      return h.getData();
+    }
+    throw std::logic_error("Cannot read from empty stack");
   }
 
   template < class T >
