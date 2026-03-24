@@ -6,10 +6,10 @@
 
 namespace permyakov
 {
-  using pair_t = List< std::pair< std::string, List< size_t > > >;
+  using list_t = List < std::pair < std::string, List < size_t > > >;
 
-  void input(std::istream &in, pair_t & list);
-  void output(std::ostream &out, const pair_t & list);
+  void input(std::istream &in, list_t & list);
+  //void output(std::ostream &out, const list_t & list);
 }
 
 #endif
