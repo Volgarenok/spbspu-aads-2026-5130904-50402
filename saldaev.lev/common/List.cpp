@@ -419,18 +419,10 @@ T &saldaev::LIter< T >::getData() noexcept
   return curr->data;
 }
 
-template struct saldaev::List< size_t >;
-template struct saldaev::LIter< size_t >;
-template struct saldaev::LCIter< size_t >;
-
-template struct saldaev::List< std::pair< std::string, saldaev::List< size_t > > >;
-template struct saldaev::LIter< std::pair< std::string, saldaev::List< size_t > > >;
-template struct saldaev::LCIter< std::pair< std::string, saldaev::List< size_t > > >;
-
-template class saldaev::List< saldaev::LIter< size_t > >;
-template struct saldaev::LIter< saldaev::LIter< size_t > >;
-template struct saldaev::LCIter< saldaev::LIter< size_t > >;
-
 template struct saldaev::List< int >;
 template struct saldaev::LIter< int >;
 template struct saldaev::LCIter< int >;
+
+template struct saldaev::List< std::string >;
+template struct saldaev::LIter< std::string >;
+template struct saldaev::LCIter< std::string >;
