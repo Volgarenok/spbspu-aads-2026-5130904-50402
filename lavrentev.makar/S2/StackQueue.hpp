@@ -41,7 +41,7 @@ namespace lavrentev
   bool operCond(std::string buf);
   bool isNumber(std::string exp);
   int gcd(int a, int b);
-  int count(int a, int b, std::string operation);
+  int count(int a, int b, int& res, std::string operation);
   int priority(std::string s);
 } // namespace lavrentev
 
@@ -199,7 +199,14 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int& res)
         int oper2 = sRes.drop();
         int oper1 = sRes.drop();
 
-        sRes.push(count(oper1, oper2, operation));
+        //sRes.push(count(oper1, oper2, operation));
+        int bufAns = 0;
+        if(count(oper1, oper2, bufAns, operation))
+        {
+          sRes.push(bufAns);
+        } else {
+          return 1;
+        }
       }
       op.push(buf);
     }
@@ -253,7 +260,13 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int& res)
             std::cerr << "Invalid number" << "\n";
             return 2;
           }
-          sRes.push(count(oper1, oper2, operation));
+          int bufAns = 0;
+          if(count(oper1, oper2, bufAns, operation))
+          {
+            sRes.push(bufAns);
+          } else {
+            return 1;
+          }
         }
       }
       else
@@ -278,8 +291,13 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int& res)
     {
       int oper2 = sRes.drop();
       int oper1 = sRes.drop();
-
-      sRes.push(count(oper1, oper2, operation));
+      int bufAns = 0;
+      if(count(oper1, oper2, bufAns, operation))
+      {
+        sRes.push(bufAns);
+      } else {
+        return 1;
+      }
     }
   }
 
@@ -308,36 +326,54 @@ inline int lavrentev::gcd(int a, int b)
   return a + b;
 }
 
-inline int lavrentev::count(int a, int b, std::string operation)
+inline int lavrentev::count(int a, int b, int& res, std::string operation)
 {
   if (operation == "+")
   {
-    return a + b;
+    res = a + b;
+    return 0;
   }
   else if (operation == "-")
   {
-    return a - b;
+    res = a - b;
+    return 0;
   }
   else if (operation == "*")
   {
-    return a * b;
+    res = a * b;
+    return 0;
   }
   else if (operation == "/")
   {
-    return a / b;
+    if (b != 0)
+    {
+      res = a / b;
+      return 0;
+    } else {
+      std::cerr << "Zero division";
+      return 1;
+    }
   }
   else if (operation == "gcd")
   {
-    return gcd(a, b);
+    res = gcd(a, b);
+    return 0;
   }
   else if (operation == "%")
   {
-    return a % b;
+    if (b != 0)
+    {
+      res = a % b;
+      return 0;
+    } else {
+      std::cerr << "Zero division";
+      return 1;
+    }
   }
   else
   {
     std::cerr << "Invalid operation";
-    throw;
+    return 1;
   }
 }
 
