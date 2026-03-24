@@ -142,10 +142,17 @@ inline lavrentev::Queue<int> lavrentev::readFile(char *name)
         exp.push(symb);
       }
       int res = 0;
-      if(lavrentev::math(exp, res))
+      if(!exp.empty())
       {
-        std::cerr << "Error";
-        throw;
+        if(lavrentev::math(exp, res))
+        {
+          std::cerr << "Error";
+          throw;
+        }
+      }
+      else
+      {
+        continue;
       }
       ans.push(res);
     }

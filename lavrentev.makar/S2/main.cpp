@@ -45,4 +45,5 @@ int main(int argc, char *argv[])
     }
     res.drop();
   }
+  std::cout << "\n";
 }
