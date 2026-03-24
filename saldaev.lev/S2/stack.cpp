@@ -11,18 +11,23 @@ namespace saldaev
   template < class T >
   bool Stack< T >::empty() const noexcept
   {
-    return false;
+    return !(data_.getLength());
   }
 
   template < class T >
   void Stack< T >::push(const T &value)
-  {}
+  {
+    data_.newHead(value);
+  }
 
   template < class T >
   T &Stack< T >::top()
   {
-    auto dummy = T();
-    return dummy;
+    if (!empty()) {
+      LIter h = data_.begin();
+      return h.getData();
+    }
+    throw std::logic_error("Cannot read from empty stack");
   }
 
   template struct Stack< int >;
