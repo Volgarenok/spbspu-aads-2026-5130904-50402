@@ -160,6 +160,18 @@ namespace saldaev
     BOOST_TEST(empty.empty());
   }
 
+  BOOST_AUTO_TEST_CASE(const_front)
+  {
+    Stack< int > q;
+    q.push(42);
+    const Stack< int > &cq = q;
+
+    BOOST_TEST(cq.top() == 42);
+
+    const Stack< int > empty;
+    BOOST_CHECK_THROW(empty.top(), std::exception);
+  }
+
   BOOST_AUTO_TEST_SUITE_END()
 
 }

@@ -31,6 +31,13 @@ namespace saldaev
   }
 
   template < class T >
+  const T &Stack< T >::top() const
+  {
+    auto dummy = T();
+    return dummy;
+  }
+
+  template < class T >
   void Stack< T >::pop() noexcept
   {
     data_.cutHead();
