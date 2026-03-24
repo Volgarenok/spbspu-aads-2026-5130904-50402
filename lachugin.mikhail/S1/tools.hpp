@@ -4,9 +4,10 @@
 #include "list.hpp"
 namespace lachugin
 {
-  using pair = std::pair< std::string, List< int > >;
+  using pair = std::pair< std::string, List< size_t > >;
   List < pair > getline(std::istream& in);
-  List < List < int > > process(List< pair > l);
-  void output(const List< List< int > >& lVal, const List< pair >& l);
+  List < List < size_t> > process(List< pair > l);
+  void output(List< List< size_t > >& lVal, List< pair >& l);
+  List< size_t > listSums(List< List< size_t > > lVal);
 }
 #endif

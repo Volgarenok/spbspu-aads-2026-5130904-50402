@@ -13,37 +13,13 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
   {
     while (in >> name)
     {
-      List< int > list;
-      Node< int >* curr = nullptr;
+      List< size_t > list;
+      Node< size_t >* curr = nullptr;
+      int value;
 
-      while (true)
+      while(in >> value)
       {
-        while (std::isspace(in.peek()) && in.peek() != '\n')
-        {
-          in.get();
-        }
-        if (in.peek() == '\n' || in.peek() == EOF)
-        {
-          break;
-        }
-        if (!std::isdigit(in.peek()) && in.peek() != '-')
-        {
-          break;
-        }
-        long long tmp;
-        if (!(in >> tmp))
-        {
-          throw std::overflow_error("overflow");
-        }
-
-        if (tmp > std::numeric_limits< int >::max() ||
-            tmp < std::numeric_limits< int >::min())
-        {
-          std::cerr << "overflow\n";
-          throw std::overflow_error("overflow");
-        }
-        int value = static_cast< int >(tmp);
-        if (curr == nullptr)
+        if(curr == nullptr)
         {
           curr = list.add(value);
         }
@@ -53,7 +29,9 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
         }
       }
 
+      in.clear();
       pair p{name, list};
+
       if (currOfLists == nullptr)
       {
         currOfLists = listOfLists.add(p);
@@ -64,33 +42,34 @@ lachugin::List < lachugin::pair > lachugin::getline(std::istream& in)
       }
     }
   }
-  catch (...)
+  catch (const std::bad_alloc& e)
   {
+    std::cout << e.what();
     listOfLists.clear();
     throw;
   }
   return listOfLists;
 }
 
-lachugin::List< lachugin::List< int > > lachugin::process(List< pair > l)
+lachugin::List< lachugin::List< size_t > > lachugin::process(List< pair > l)
 {
-  List< List< int > > listOfLists{};
-  Node< List< int > >* currOfLists = nullptr;
+  List< List< size_t > > listOfLists{};
+  Node< List< size_t > >* currOfLists = nullptr;
   size_t k = 0;
-  List< List< int > > zeroResult{};
+  List< List< size_t > > zeroResult{};
   try
   {
     if (l.begin() == l.end())
     {
-      List< int > zeroList;
+      List< size_t > zeroList;
       zeroList.add(0);
       zeroResult.add(zeroList);
     }
 
     while (true)
     {
-      List< int > listOfVal{};
-      Node< int >* curr = nullptr;
+      List< size_t > listOfVal{};
+      Node< size_t >* curr = nullptr;
       bool added = false;
       auto iterator = l.begin();
 
@@ -134,40 +113,6 @@ lachugin::List< lachugin::List< int > > lachugin::process(List< pair > l)
       }
       ++k;
     }
-
-    List< int > sumList{};
-    Node< int >* currSum = nullptr;
-    auto itLists = listOfLists.begin();
-
-    while (itLists != listOfLists.end())
-    {
-      int sum = 0;
-      auto itVals = (*itLists).begin();
-      while (itVals != (*itLists).end())
-      {
-        sum += *itVals;
-        ++itVals;
-      }
-
-      if (currSum == nullptr)
-      {
-        currSum = sumList.add(sum);
-      }
-      else
-      {
-        currSum = sumList.addNext(sum, currSum);
-      }
-      ++itLists;
-    }
-
-    if (currOfLists == nullptr)
-    {
-      listOfLists.add(sumList);
-    }
-    else
-    {
-      listOfLists.addNext(sumList, currOfLists);
-    }
   }
   catch (const std::bad_alloc& e)
   {
@@ -190,7 +135,40 @@ lachugin::List< lachugin::List< int > > lachugin::process(List< pair > l)
   }
 }
 
-void lachugin::output(const List< List< int > >& lVal, const List< pair >& l)
+lachugin::List< size_t > lachugin::listSums(List< List< size_t > > lVal)
+{
+  List< size_t > sumList{};
+  Node< size_t >* curr = nullptr;
+  auto itLists = lVal.begin();
+  while (itLists != lVal.end())
+  {
+    size_t sum = 0;
+    auto itVals = (*itLists).begin();
+    while (itVals != (*itLists).end())
+    {
+      size_t val = *itVals;
+      if (sum > std::numeric_limits< size_t >::min() - val)
+      {
+        throw std::overflow_error("overflow");
+      }
+      sum += val;
+      ++itVals;
+    }
+
+    if (curr == nullptr)
+    {
+      curr = sumList.add(sum);
+    }
+    else
+    {
+      curr = sumList.addNext(sum, curr);
+    }
+    ++itLists;
+  }
+  return sumList;
+}
+
+void lachugin::output(List< List< size_t > >& lVal, List< pair >& l)
 {
   if (l.begin() == l.end())
   {
@@ -225,7 +203,7 @@ void lachugin::output(const List< List< int > >& lVal, const List< pair >& l)
     else
     {
       auto iterator = (*itVal).begin();
-      bool isFirst = true;
+      isFirst = true;
 
       while (iterator != (*itVal).end())
       {

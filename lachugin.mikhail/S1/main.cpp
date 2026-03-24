@@ -6,13 +6,32 @@ int main()
 {
   try
   {
-    lachugin::List< lachugin::pair > l = lachugin::getline(std::cin);
+    auto l = lachugin::getline(std::cin);
+    auto res = lachugin::process(l);
+    lachugin::output(res, l);
 
-    lachugin::output(lachugin::process(l), l);
+    auto sums = lachugin::listSums(res);
+    auto it = sums.begin();
+    bool isFirst = true;
+
+    while (it != sums.end())
+    {
+      if (isFirst)
+      {
+        std::cout << *it;
+        isFirst = false;
+      }
+      else
+      {
+        std::cout << " " << *it;
+      }
+      ++it;
+    }
+    std::cout << "\n";
   }
   catch (const std::overflow_error& e)
   {
-    std::cerr << e.what() << "\n";
+    std::cerr << e.what();
     return 1;
   }
   catch (...)
