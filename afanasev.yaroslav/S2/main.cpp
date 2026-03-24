@@ -3,6 +3,7 @@
 #include "input.hpp"
 #include "stack.hpp"
 #include "queue.hpp"
+#include "calc.hpp"
 
 int main(int argc, char * argv[])
 {
@@ -32,16 +33,20 @@ int main(int argc, char * argv[])
   try
   {
     afanasev::Queue<afanasev::Queue<std::string>> que = afanasev::input(*in);
+    while (!que.empty())
+    {
+      afanasev::Queue<std::string> infix = que.get();
+      que.pop();
+      afanasev::Queue<std::string> postfix = afanasev::convert(infix);
+      long long v = afanasev::calcExpr(postfix);
+      res.push(v);
+    }
   }
   catch (const std::exception & e)
   {
     std::cerr << e.what() << '\n';
     return 1;
   }
-
-
-
-
 
   if (!res.empty())
   {
