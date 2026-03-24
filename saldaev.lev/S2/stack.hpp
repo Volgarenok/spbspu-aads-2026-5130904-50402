@@ -12,7 +12,7 @@ namespace saldaev
     Stack(Stack &&other) = default;
     ~Stack() = default;
     Stack &operator=(const Stack &other) = default;
-    Stack &operator=(Stack &&other) = default;
+    Stack &operator=(Stack &&other);
 
     void push(const T &value);
     T &top();
