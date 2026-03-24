@@ -14,6 +14,7 @@ namespace permyakov
       LIter(Node< T > * node);
       T & operator*();
       LIter & operator++();
+      bool isIdle();
       bool operator==(LIter < T > & scndIter);
       bool operator!=(LIter < T > & scndIter);
   };
@@ -26,6 +27,7 @@ namespace permyakov
       LCIter(Node< T > * node);
       const T & operator*();
       LCIter & operator++();
+      bool isIdle();
       bool operator==(LCIter < T > & scndIter);
       bool operator!=(LCIter < T > & scndIter);
   };
@@ -58,6 +60,16 @@ namespace permyakov
   {
     curr = curr -> next;
     return *this;
+  }
+
+  template < class T > bool LIter < T >::isIdle()
+  {
+    return !curr;
+  }
+
+  template < class T > bool LCIter < T >::isIdle()
+  {
+    return !curr;
   }
 
   template < class T > bool LIter < T >::operator==(LIter < T > & scndIter)
