@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include "input.hpp"
 #include "stack.hpp"
 #include "queue.hpp"
 
@@ -30,7 +31,7 @@ int main(int argc, char * argv[])
 
   try
   {
-
+    afanasev::Queue<afanasev::Queue<std::string>> que = afanasev::input(*in);
   }
   catch (const std::exception & e)
   {
