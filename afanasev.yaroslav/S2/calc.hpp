@@ -33,36 +33,37 @@ bool afanasev::isOpt(const std::string & elem)
 	return false;
 }
 
-bool afanasev::getPriority(const std::string & op1, const std::string & op2) {
-    int pr1 = 0, pr2 = 0;
+bool afanasev::getPriority(const std::string & op1, const std::string & op2)
+{
+  int pr1 = 0, pr2 = 0;
 
-    if (op1 == "gcd")
-		{
-			pr1 = 3
-		}
-    else if (op1 == "*" || op1 == "/" || op1 == "%")
-		{
-			pr1 = 2
-		}
-    else if (op1 == "+" || op1 == "-")
-		{
-			pr1 = 1
-		}
+  if (op1 == "gcd")
+	{
+		pr1 = 3
+	}
+  else if (op1 == "*" || op1 == "/" || op1 == "%")
+	{
+		pr1 = 2
+	}
+  else if (op1 == "+" || op1 == "-")
+	{
+		pr1 = 1
+	}
 
-    if (op2 == "gcd")
-		{
-			pr2 = 3
-		}
-    else if (op2 == "*" || op2 == "/" || op2 == "%")
-		{
-			pr2 = 2
-		}
-    else if (op2 == "+" || op2 == "-")
-		{
-			pr2 = 1
-		}
+  if (op2 == "gcd")
+	{
+		pr2 = 3
+	}
+  else if (op2 == "*" || op2 == "/" || op2 == "%")
+	{
+		pr2 = 2
+	}
+  else if (op2 == "+" || op2 == "-")
+	{
+		pr2 = 1
+	}
 
-    return pr1 >= pr2;
+  return pr1 >= pr2;
 }
 
 #endif
