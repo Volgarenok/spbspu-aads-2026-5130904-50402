@@ -32,11 +32,15 @@ namespace saldaev
 
   template < class T >
   void Stack< T >::pop() noexcept
-  {}
+  {
+    data_.cutHead();
+  }
 
   template < class T >
   void Stack< T >::clear() noexcept
-  {}
+  {
+    data_.clear();
+  }
 
   template struct Stack< int >;
 }
