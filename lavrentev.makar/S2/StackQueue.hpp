@@ -37,7 +37,7 @@ namespace lavrentev
 
   Queue<int> readFile(char *name);
   Queue<int> getline();
-  int math(Queue<std::string> exp);
+  int math(Queue<std::string> exp, int& res);
   bool operCond(std::string buf);
   bool isNumber(std::string exp);
   int gcd(int a, int b);
@@ -141,8 +141,12 @@ inline lavrentev::Queue<int> lavrentev::readFile(char *name)
       {
         exp.push(symb);
       }
-
-      ans.push(lavrentev::math(exp));
+      int res = 0;
+      if (lavrentev::math(exp, res))
+      {
+        throw;
+      }
+      ans.push(res);
     }
     file.close();
   }
@@ -166,14 +170,19 @@ inline lavrentev::Queue<int> lavrentev::getline()
     {
       exp.push(symb);
     }
-    ans.push(lavrentev::math(exp));
+    int res = 0;
+      if (lavrentev::math(exp, res))
+      {
+        throw;
+      }
+      ans.push(res);
   }
   return ans;
 }
 
-inline int lavrentev::math(lavrentev::Queue<std::string> exp)
+inline int lavrentev::math(lavrentev::Queue<std::string> exp, int& res)
 {
-  Stack<int> res{};
+  Stack<int> sRes{};
   Stack<std::string> op{};
   while (!exp.empty())
   {
@@ -187,12 +196,11 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp)
       while (!op.empty() && op.top() != "(" && operCond(op.top()) && priority(op.top()) >= priority(buf))
       {
         std::string operation = op.drop();
-        int oper2 = res.drop();
-        int oper1 = res.drop();
+        int oper2 = sRes.drop();
+        int oper1 = sRes.drop();
 
-        res.push(count(oper1, oper2, operation));
+        sRes.push(count(oper1, oper2, operation));
       }
-
       op.push(buf);
     }
     else if (buf == ")")
@@ -230,12 +238,12 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp)
             std::cerr << "Invalid number" << "\n";
             return 2;
           }
-          res.push(oper2);
+          sRes.push(oper2);
         }
         else
         {
           op.drop();
-          int oper1 = res.drop();
+          int oper1 = sRes.drop();
           int oper2;
           try
           {
@@ -245,14 +253,14 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp)
             std::cerr << "Invalid number" << "\n";
             return 2;
           }
-          res.push(count(oper1, oper2, operation));
+          sRes.push(count(oper1, oper2, operation));
         }
       }
       else
       {
         try
         {
-          res.push(std::stoi(buf));
+          sRes.push(std::stoi(buf));
         } catch (...)
         {
           std::cerr << "Invalid number" << "\n";
@@ -268,14 +276,15 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp)
 
     if (operCond(operation))
     {
-      int oper2 = res.drop();
-      int oper1 = res.drop();
+      int oper2 = sRes.drop();
+      int oper1 = sRes.drop();
 
-      res.push(count(oper1, oper2, operation));
+      sRes.push(count(oper1, oper2, operation));
     }
   }
 
-  return res.drop();
+  res = sRes.drop();
+  return 0;
 }
 
 inline bool lavrentev::operCond(std::string buf)
