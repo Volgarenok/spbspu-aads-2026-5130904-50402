@@ -7,19 +7,24 @@ int main()
   try
   {
     auto l = lachugin::getline(std::cin);
+    if (l.begin() == l.end())
+    {
+      std::cout << "0\n";
+      return 0;
+    }
+
     auto res = lachugin::process(l);
     lachugin::output(res, l);
-
     auto sums = lachugin::listSums(res);
     auto it = sums.begin();
-    bool isFirst = true;
+    bool first = true;
 
     while (it != sums.end())
     {
-      if (isFirst)
+      if (first)
       {
         std::cout << *it;
-        isFirst = false;
+        first = false;
       }
       else
       {
@@ -29,9 +34,9 @@ int main()
     }
     std::cout << "\n";
   }
-  catch (const std::overflow_error& e)
+  catch (const std::overflow_error&)
   {
-    std::cerr << e.what() << '\n';
+    std::cerr << "overflow\n";
     return 1;
   }
 }
