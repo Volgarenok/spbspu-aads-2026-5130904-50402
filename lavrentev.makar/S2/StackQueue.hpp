@@ -227,8 +227,8 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp)
             oper2 = std::stoi(buf);
           } catch (...)
           {
-            std::cerr << "Invalid number";
-            throw;
+            std::cerr << "Invalid number" << "\n";
+            return 2;
           }
           res.push(oper2);
         }
@@ -242,8 +242,8 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp)
             oper2 = std::stoi(buf);
           } catch (...)
           {
-            std::cerr << "Invalid number";
-            throw;
+            std::cerr << "Invalid number" << "\n";
+            return 2;
           }
           res.push(count(oper1, oper2, operation));
         }
@@ -255,8 +255,8 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp)
           res.push(std::stoi(buf));
         } catch (...)
         {
-          std::cerr << "Invalid number";
-          throw;
+          std::cerr << "Invalid number" << "\n";
+          return 2;
         }
       }
     }
