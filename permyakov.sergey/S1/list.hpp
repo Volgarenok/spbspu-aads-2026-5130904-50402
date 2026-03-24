@@ -10,6 +10,7 @@ namespace permyakov
   template < class T > class List
   {
     Node < T > * nodes;
+    Node < T > * tail;
     size_t size_;
     public:
       List();
@@ -26,37 +27,45 @@ namespace permyakov
       LCIter < T > beginC() const;
       LCIter < T > endC() const;
       LIter < T > insert_after(LIter < T > pos, const T value);
+      void swap(List< T > & scndList);
       void erase_after(LIter < T > pos);
       void clear();
       void push_front(const T value);
+      void push_back(const T value);
       void pop_front();
   };
 
   template < class T > List < T >::List():
     nodes(new Node < T > {T(), nullptr}),
+    tail(nodes),
     size_(0)
   {}
 
   template < class T > List < T >::List(const List < T > & scndList):
-    nodes(new Node < T > {scndList.front(), nullptr}),
-    size_(scndList.size())
+    nodes(new Node < T > {T(), nullptr}),
+    tail(nodes),
+    size_(0)
   {
-    LCIter < T > iIter = scndList.beginC();
-    LCIter < T > endIter = scndList.endC();
-    LIter < T > fIter = begin();
-    while(iIter != endIter) {
-      insert_after(fIter, *(++iIter));
-      ++fIter;
+    for(LCIter < T > iIter = scndList.beginC(); size_ != scndList.size_; ++iIter) {
+      push_back(*iIter);
     }
   }
 
   template < class T > List < T >::List(List< T > && scndList):
     nodes(scndList.nodes),
-    size_(scndList.size())
+    tail(scndList.tail),
+    size_(scndList.size_)
   {
     scndList.nodes = new Node < T > {T(), nullptr};
+    scndList.tail = scndList.nodes;
     scndList.size_ = 0;
   }
+
+  template < class T > List < T >::~List()
+    {
+      clear();
+      delete[] nodes;
+    }
 
   template < class T > List < T > & List < T >::operator=(const List < T > & scndList)
   {
@@ -67,17 +76,7 @@ namespace permyakov
   template < class T > List < T > & List < T >::operator=(List< T > && scndList)
   {
     clear();
-    delete[] nodes;
-    nodes = scndList.nodes;
-    size = scndList.size();
-    scndList.nodes = new Node < T > {T(), nullptr};
-    scndList.size_ = 0;
-  }
-
-  template < class T > List < T >::~List()
-  {
-    clear();
-    delete nodes;
+    swap(scndList);
   }
 
   template < class T > T List < T >::front() const
@@ -111,11 +110,7 @@ namespace permyakov
     if(isEmpty()) {
       throw std::logic_error("empty list");
     }
-    LIter < T > iter = begin();
-    while(iter.curr -> next) {
-      ++iter;
-    }
-    return iter;
+    return LIter < T > (tail);
   }
 
   template < class T > LCIter < T > List < T >::beginC() const
@@ -131,11 +126,7 @@ namespace permyakov
     if(isEmpty()) {
       throw std::logic_error("empty list");
     }
-    LCIter < T > iter = beginC();
-    while(iter.curr -> next) {
-      ++iter;
-    }
-    return iter;
+    return LCIter < T > (tail);
   }
 
   template < class T > LIter < T > List < T >::insert_after(LIter < T > pos, const T value)
@@ -146,7 +137,23 @@ namespace permyakov
     Node < T > * nextNode = pos.curr -> next;
     Node < T > * newNode = new Node < T > {value, nextNode};
     pos.curr -> next = newNode;
+    if(!(newNode -> next)) {
+      tail = newNode;
+    }
     return LIter < T > (newNode);
+  }
+
+  template < class T > void List < T >::swap(List< T > & scndList)
+  {
+    Node < T > * cpyNodes = nodes;
+    Node < T > * cpyTail = tail;
+    size_t cpySize = size_;
+    nodes = scndList.nodes;
+    tail = scndList.tail;
+    size_ = scndList.size_;
+    scndList.nodes = cpyNodes;
+    scndList.tail = cpyTail;
+    scndList.size_ = cpySize;
   }
 
   template < class T > void List < T >::erase_after(LIter < T > pos)
@@ -158,18 +165,16 @@ namespace permyakov
     pos.curr -> next = ersNode -> next;
     delete[] ersNode; 
     size_--;
+    if(isEmpty()) {
+      nodes = new Node < T > {T(), nullptr};
+    }
   }
 
   template < class T > void List < T >::clear()
   {
-    if(isEmpty()) {
-      return;
+    while(size_ > 0) {
+      pop_front();
     }
-    for(LIter < T > iter = begin(); size_ > 1; --size_) {
-      erase_after(iter);
-    }
-    delete[] nodes;
-    nodes = new Node < T > {T(), nullptr};
   }
 
   template < class T > void List < T >::push_front(const T value)
@@ -179,6 +184,22 @@ namespace permyakov
       nodes = nullptr;
     }
     nodes = new Node < T > {value, nodes};
+    size_++;
+    if(size_ == 1) {
+      tail = nodes;
+    }
+  }
+
+  template < class T > void List < T >::push_back(const T value)
+  {
+    Node < T > * nwNode = new Node < T > {value, nullptr};
+    if(isEmpty()) {
+      delete[] nodes;
+      nodes = nwNode;
+    } else {
+      tail -> next = nwNode;
+    }
+    tail = nwNode;
     size_++;
   }
 
@@ -191,6 +212,9 @@ namespace permyakov
     nodes = nodes -> next;
     delete[] ersNode; 
     size_--;
+    if(isEmpty()) {
+      nodes = new Node < T > {T(), nullptr};
+    }
   }
 }
 

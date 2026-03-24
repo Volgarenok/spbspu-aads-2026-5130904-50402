@@ -14,13 +14,17 @@ BOOST_AUTO_TEST_CASE(test_default_constructor)
 BOOST_AUTO_TEST_CASE(test_copy_constructor)
 {
   List < int > frstList;
-  frstList.push_front(2);
-  frstList.push_front(1);
+  frstList.push_back(1);
+  frstList.push_back(2);
+  frstList.push_back(3);
   List < int > scndList(frstList);
   BOOST_CHECK_EQUAL(frstList.size(), scndList.size());
-  LIter < int > frstIter = frstList.begin();
-  LIter < int > frstEndIter = frstList.end();
-  LIter < int > scndIter = scndList.begin();
+  LCIter < int > frstIter = frstList.beginC();
+  LCIter < int > frstEndIter = frstList.endC();
+  LCIter < int > scndIter = scndList.beginC();
+  LCIter < int > scndEndIter = scndList.endC();
+  BOOST_CHECK(frstIter == scndIter);
+  BOOST_CHECK(frstEndIter == scndEndIter);
   while(frstIter != frstEndIter) {
     BOOST_CHECK(frstIter == scndIter);
     ++frstIter;
