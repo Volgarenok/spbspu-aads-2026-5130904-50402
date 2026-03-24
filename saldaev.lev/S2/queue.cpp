@@ -64,5 +64,5 @@ namespace saldaev
 
   template struct Queue< int >;
   template struct Queue< std::string >;
-
+  template struct Queue< saldaev::Queue< std::string > >;
 }

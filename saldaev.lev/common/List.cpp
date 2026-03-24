@@ -1,4 +1,5 @@
 #include "List.hpp"
+#include "../S2/queue.hpp"
 #include <string>
 #include <utility>
 
@@ -426,3 +427,7 @@ template struct saldaev::LCIter< int >;
 template struct saldaev::List< std::string >;
 template struct saldaev::LIter< std::string >;
 template struct saldaev::LCIter< std::string >;
+
+template struct saldaev::List< saldaev::Queue< std::string > >;
+template struct saldaev::LIter< saldaev::Queue< std::string > >;
+template struct saldaev::LCIter< saldaev::Queue< std::string > >;
