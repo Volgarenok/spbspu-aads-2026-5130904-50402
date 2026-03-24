@@ -8,11 +8,11 @@ namespace saldaev
   struct Stack
   {
     Stack();
-    Stack(const Stack &other);
-    Stack(Stack &&other);
-    ~Stack();
-    Stack &operator=(const Stack &other);
-    Stack &operator=(Stack &&other);
+    Stack(const Stack &other) = default;
+    Stack(Stack &&other) = default;
+    ~Stack() = default;
+    Stack &operator=(const Stack &other) = default;
+    Stack &operator=(Stack &&other) = default;
 
     void push(const T &value);
     T &top();
