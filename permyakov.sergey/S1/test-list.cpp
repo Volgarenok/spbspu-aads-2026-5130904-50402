@@ -14,9 +14,9 @@ BOOST_AUTO_TEST_CASE(test_default_constructor)
 BOOST_AUTO_TEST_CASE(test_copy_constructor)
 {
   List < int > frstList;
-  frstList.push_back(1);
-  frstList.push_back(2);
-  frstList.push_back(3);
+  frstList.push_front(3);
+  frstList.push_front(2);
+  frstList.push_front(1);
   List < int > scndList(frstList);
   BOOST_CHECK_EQUAL(frstList.size(), scndList.size());
   LCIter < int > frstIter = frstList.beginC();
@@ -35,8 +35,8 @@ BOOST_AUTO_TEST_CASE(test_copy_constructor)
 BOOST_AUTO_TEST_CASE(test_move_constructor)
 {
   List < int > frstList;
-  frstList.push_back(1);
-  frstList.push_back(2);
+  frstList.push_front(2);
+  frstList.push_front(1);
   List < int > scndList(std::move(frstList));
   BOOST_CHECK(frstList.isEmpty());
   BOOST_CHECK_EQUAL(scndList.size(), 2);
@@ -46,8 +46,8 @@ BOOST_AUTO_TEST_CASE(test_move_constructor)
 BOOST_AUTO_TEST_CASE(test_copy_operator)
 {
   List < int > frstList;
-  frstList.push_back(1);
-  frstList.push_back(2);
+  frstList.push_front(2);
+  frstList.push_front(1);
   List < int > scndList = frstList;
   BOOST_CHECK_EQUAL(frstList.size(), scndList.size());
   LIter < int > frstIter = frstList.begin();
@@ -63,19 +63,19 @@ BOOST_AUTO_TEST_CASE(test_copy_operator)
 BOOST_AUTO_TEST_CASE(test_move_operator)
 {
   List < int > frstList;
-  frstList.push_back(1);
-  frstList.push_back(2);
+  frstList.push_front(2);
+  frstList.push_front(1);
   List < int > scndList =std::move(frstList);
   BOOST_CHECK(frstList.isEmpty());
   BOOST_CHECK_EQUAL(scndList.size(), 2);
-  BOOST_CHECK_EQUAL(scndList.front(),1);
+  BOOST_CHECK_EQUAL(scndList.front(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(test_destructor)
 {
   {
     List < int > list;
-    list.push_back(1);
+    list.push_front(1);
   }
   BOOST_CHECK(true);
 }
@@ -83,9 +83,9 @@ BOOST_AUTO_TEST_CASE(test_destructor)
 BOOST_AUTO_TEST_CASE(test_erase_after)
 {
   List < int > list;
-  list.push_back(0);
-  list.push_back(1);
-  list.push_back(2);
+  list.push_front(2);
+  list.push_front(1);
+  list.push_front(0);
   LIter < int > ItList = list.begin();
   list.erase_after(ItList);
   BOOST_CHECK_EQUAL(list.size(), 2);
@@ -97,8 +97,8 @@ BOOST_AUTO_TEST_CASE(test_erase_after)
 BOOST_AUTO_TEST_CASE(test_clear)
 {
   List < int > list;
-  list.push_back(0);
-  list.push_back(1);
+  list.push_front(2);
+  list.push_front(1);
   list.clear();
   BOOST_CHECK(list.isEmpty());
 }
@@ -106,46 +106,46 @@ BOOST_AUTO_TEST_CASE(test_clear)
 BOOST_AUTO_TEST_CASE(test_begin)
 {
   List < int > list;
-  list.push_back(0);
-  list.push_back(1);
+  list.push_front(2);
+  list.push_front(1);
   LIter < int > itList = list.begin();
-  BOOST_CHECK_EQUAL(*itList, 0);
+  BOOST_CHECK_EQUAL(*itList, 1);
 }
 
 BOOST_AUTO_TEST_CASE(test_end)
 {
   List < int > list;
-  list.push_back(0);
-  list.push_back(1);
+  list.push_front(2);
+  list.push_front(1);
   LIter < int > itList = list.end();
-  BOOST_CHECK_EQUAL(*itList, 1);
+  BOOST_CHECK_EQUAL(*itList, 2);
 }
 
 BOOST_AUTO_TEST_CASE(test_beginC)
 {
   List < int > list;
-  list.push_back(0);
-  list.push_back(1);
+  list.push_front(2);
+  list.push_front(1);
   LCIter < int > itList = list.beginC();
-  BOOST_CHECK_EQUAL(*itList, 0);
+  BOOST_CHECK_EQUAL(*itList, 1);
 }
 
 BOOST_AUTO_TEST_CASE(test_endC)
 {
   List < int > list;
-  list.push_back(0);
-  list.push_back(1);
+  list.push_front(2);
+  list.push_front(1);
   LCIter < int > itList = list.endC();
-  BOOST_CHECK_EQUAL(*itList, 1);
+  BOOST_CHECK_EQUAL(*itList, 2);
 }
 
 BOOST_AUTO_TEST_CASE(test_size)
 {
   List < int > list;
   BOOST_CHECK_EQUAL(list.size(), 0);
-  list.push_back(0);
+  list.push_front(2);
   BOOST_CHECK_EQUAL(list.size(), 1);
-  list.push_back(1);
+  list.push_front(1);
   BOOST_CHECK_EQUAL(list.size(), 2);
 }
 
@@ -158,20 +158,11 @@ BOOST_AUTO_TEST_CASE(test_push_front)
   BOOST_CHECK_EQUAL(list.front(), 2);
 }
 
-BOOST_AUTO_TEST_CASE(test_push_back)
-{
-  List < int > list;
-  list.push_back(1);
-  list.push_back(2);
-  BOOST_CHECK_EQUAL(list.size(), 2);
-  BOOST_CHECK_EQUAL(list.front(), 1);
-}
-
 BOOST_AUTO_TEST_CASE(test_pop_front)
 {
   List < int > list;
-  list.push_back(0);
-  list.push_back(1);
+  list.push_front(1);
+  list.push_front(2);
   list.pop_front();
   BOOST_CHECK_EQUAL(list.size(), 1);
   BOOST_CHECK_EQUAL(list.front(), 1);
