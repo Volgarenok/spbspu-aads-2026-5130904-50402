@@ -62,6 +62,54 @@ namespace saldaev
     BOOST_TEST(q.top() == 10);
   }
 
+  BOOST_AUTO_TEST_CASE(copy_constructor)
+  {
+    Stack< int > original;
+    original.push(5);
+    original.push(6);
+
+    Stack< int > copy(original);
+    BOOST_TEST(copy.top() == 6);
+    copy.pop();
+    BOOST_TEST(copy.top() == 5);
+    copy.pop();
+    BOOST_TEST(copy.empty());
+
+    BOOST_TEST(!original.empty());
+    BOOST_TEST(original.top() == 6);
+
+    Stack< int > empty;
+    Stack< int > copyEmpty(empty);
+    BOOST_TEST(copyEmpty.empty());
+  }
+
+  BOOST_AUTO_TEST_CASE(copy_assignment)
+  {
+    Stack< int > a;
+    a.push(10);
+    a.push(20);
+
+    Stack< int > b;
+    b.push(30);
+
+    b = a;
+    BOOST_TEST(b.top() == 20);
+    b.pop();
+    BOOST_TEST(b.top() == 10);
+    b.pop();
+    BOOST_TEST(b.empty());
+
+    BOOST_TEST(a.top() == 20);
+    BOOST_TEST(!a.empty());
+
+    b = b;
+    BOOST_TEST(b.empty());
+
+    Stack< int > empty;
+    b = empty;
+    BOOST_TEST(b.empty());
+  }
+
   BOOST_AUTO_TEST_SUITE_END()
 
 }
