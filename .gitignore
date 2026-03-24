@@ -1,0 +1,15 @@
+# Local configuration
+.boost_location
+# Built files
+out
+# Emacs temporaries
+\#*\#
+.\#*
+# Various backups
+*.bak
+*~
+# Test configuration
+.config
+# Helpers
+update-student-stats.sh
+generate-stats
