@@ -30,5 +30,13 @@ namespace saldaev
     throw std::logic_error("Cannot read from empty stack");
   }
 
+  template < class T >
+  void Stack< T >::pop() noexcept
+  {}
+
+  template < class T >
+  void Stack< T >::clear() noexcept
+  {}
+
   template struct Stack< int >;
 }
