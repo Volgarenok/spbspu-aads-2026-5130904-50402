@@ -5,36 +5,46 @@
 
 namespace ListTools
 {
+  template <class T> class List;
+  template <class T> class NamedList;
+  template <class T> class LIter;
+  template <class T> class LCIter;
+  template <class T> class NamedLIter;
+
   template <class T>
   class List
   {
-    private:
+    public:
       T val;
       List<T>* next;
+      List();
+      List(T vl, List<T>* nxt);
   };
 
   template <class T>
   class NamedList
   {
-    private:
+    public:
       std::string name;
-      NamedList<T>* next;
       List<T>* data;
+      NamedList<T>* next;
+      NamedList();
+      NamedList(std::string nm, List<T>* dt, NamedList<T>* nxt);
   };
 
   template <class T>
   class NamedLIter
   {
-    friend class NamedList<T>;
-    private:
-      NamedList<T>* curr;
     public:
+      friend class NamedList<T>;
+      NamedList<T>* curr;
       NamedLIter();
       NamedLIter(NamedList<T>* h);
       List<T>* value();
       void operator++();
       std::string getName();
-      void setData(NamedList<T>* h);
+      void setCurr(NamedList<T>* h);
+      void setData(List<T>* dta);
       bool hasNext();
       void end();
       void insert(List<T>* d, std::string name);
@@ -44,13 +54,12 @@ namespace ListTools
   template <class T>
   class LIter
   {
-    friend class List<T>;
-    private:
-      List<T>* curr;
     public:
+      friend class List<T>;
+      List<T>* curr;
       LIter();
       LIter(List<T>* h);
-      T* value();
+      T value();
       void operator++();
       void set(List<T>* h);
       bool hasNext();
@@ -62,10 +71,9 @@ namespace ListTools
   template <class T>
   class LCIter
   {
-    friend class List<T>;
-    private:
-      const List<T>* curr;
     public:
+      friend class List<T>;
+      const List<T>* curr;
       LCIter();
       LCIter(const List<T>* h);
       void operator++();

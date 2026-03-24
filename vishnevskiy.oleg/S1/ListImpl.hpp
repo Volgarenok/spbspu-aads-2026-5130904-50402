@@ -2,10 +2,37 @@
 #define LISTIMPL_HPP
 #include <cstddef>
 #include <string>
+#include <iostream>
 #include "ListTools.hpp"
 
 namespace ListTools
 {
+  template <class T>
+  List<T>::List():
+    val(T()),
+    next(nullptr)
+  {}
+
+  template <class T>
+  List<T>::List(T vl, List<T>* nxt):
+    val(vl),
+    next(nxt)
+  {}
+
+  template <class T>
+  NamedList<T>::NamedList():
+    name(""),
+    data(nullptr),
+    next(nullptr)
+  {}
+
+  template <class T>
+  NamedList<T>::NamedList(std::string nm, List<T>* dt, NamedList<T>* nxt):
+    name(nm),
+    data(dt),
+    next(nxt)
+  {}
+
   template <class T>
   LIter<T>::LIter(): 
     curr(nullptr)
@@ -17,21 +44,9 @@ namespace ListTools
   {}
 
   template <class T>
-  T* LIter<T>::value()
+  T LIter<T>::value()
   {
     return (curr->val);
-  }
-
-  template <class T>
-  void LIter<T>::operator++()
-  {
-    curr = curr -> next;
-  }
-
-  template <class T>
-  bool LIter<T>::hasNext()
-  {
-    return curr -> next != nullptr;
   }
 
   template <class T>
@@ -41,11 +56,27 @@ namespace ListTools
   }
 
   template <class T>
+  void LIter<T>::operator++()
+  {
+    set(curr->next);
+  }
+
+  template <class T>
+  bool LIter<T>::hasNext()
+  {
+    if (curr)
+    {
+      return curr -> next;
+    }
+    return false;
+  }
+
+  template <class T>
   void LIter<T>::end()
   {
     while (hasNext())
     {
-      this++;
+      ++this;
     }
   }
 
@@ -53,10 +84,18 @@ namespace ListTools
   void LIter<T>::insert(T& d)
   {
     List<T>* s = new List<T>{d, nullptr};
-    curr -> next = s;
-    if (curr -> next)
+    if (curr)
     {
       s -> next = curr -> next;
+      curr -> next = s;
+    }
+    else
+    {
+      curr = s;
+    }
+    if (curr == curr -> next)
+    {
+      curr -> next = nullptr;
     }
   }
   
@@ -85,7 +124,7 @@ namespace ListTools
   template <class T>
   List<T>* NamedLIter<T>::value()
   {
-    return curr -> data;
+    return (curr -> data);
   }
 
   template <class T>
@@ -95,21 +134,31 @@ namespace ListTools
   }
 
   template <class T>
+  void NamedLIter<T>::setCurr(NamedList<T>* h)
+  {
+    curr = h;
+  }
+
+  template <class T>
   void NamedLIter<T>::operator++()
   {
-    curr = curr -> next;
+    setCurr(curr->next);
   }
 
   template <class T>
   bool NamedLIter<T>::hasNext()
   {
-    return curr -> next != nullptr;
+    if (curr)
+    {
+      return curr -> next;
+    }
+    return false;
   }
 
   template <class T>
-  void NamedLIter<T>::setData(NamedList<T>* h)
+  void NamedLIter<T>::setData(List<T>* dta)
   {
-    curr = h;
+    curr -> data = dta;
   }
 
   template <class T>
@@ -117,7 +166,7 @@ namespace ListTools
   {
     while (hasNext())
     {
-      this++;
+      ++this;
     }
   }
 
@@ -125,10 +174,14 @@ namespace ListTools
   void NamedLIter<T>::insert(List<T>* d, std::string name)
   {
     NamedList<T>* s = new NamedList<T>{name, d, nullptr};
-    curr -> next = s;
-    if (curr -> next)
+    if (curr)
     {
       s -> next = curr -> next;
+      curr -> next = s;
+    }
+    else
+    {
+      curr = s;
     }
   }
   
@@ -163,13 +216,17 @@ namespace ListTools
   template <class T>
   T* LCIter<T>::value()
   {
-    return (curr->val);
+    return *(curr->val);
   }
 
   template <class T>
   bool LCIter<T>::hasNext()
   {
-    return curr -> next != nullptr;
+    if (curr)
+    {
+      return curr -> next;
+    }
+    return false;
   }
 }
 #endif
