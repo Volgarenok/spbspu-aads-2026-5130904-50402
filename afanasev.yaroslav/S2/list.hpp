@@ -17,7 +17,7 @@ namespace afanasev
   template< class T >
   class Node
   {
-   public:
+  public:
     T val_;
     Node< T > * next_;
   };
@@ -28,7 +28,7 @@ namespace afanasev
     Node< T > * fake_;
     size_t size_;
 
-   public:
+  public:
     List();
     ~List();
 
@@ -37,7 +37,8 @@ namespace afanasev
 
     T getValue(LIter< T > pos) noexcept;
     T getValue(LCIter< T > pos) const noexcept;
-    void addFirst(const T & val);
+    void pushFront(const T & val);
+    T popFront();
     void insert(const T & val, LIter< T > pos);
     void deleteNext(LIter< T > pos) noexcept;
     void clear() noexcept;
@@ -88,11 +89,26 @@ namespace afanasev
   }
 
   template < class T >
-  void List< T >::addFirst(const T & val)
+  void List< T >::pushFront(const T & val)
   {
     Node< T > * new_node = new Node< T >{val, fake_->next_};
     fake_->next_ = new_node;
     ++size_;
+  }
+
+  template < class T >
+  T List< T >::popFront()
+  {
+    if (!size_)
+    {
+      return nullptr;
+    }
+    Node< T > * first = fake_->next_;
+    T value = first->val_;
+    fake_->next_ = first->next_;
+    delete first;
+    --size_;
+    return value;
   }
 
   template < class T >
