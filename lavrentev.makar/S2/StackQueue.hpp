@@ -201,7 +201,7 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int& res)
 
         //sRes.push(count(oper1, oper2, operation));
         int bufAns = 0;
-        if(count(oper1, oper2, bufAns, operation))
+        if(!count(oper1, oper2, bufAns, operation))
         {
           sRes.push(bufAns);
         } else {
@@ -261,7 +261,7 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int& res)
             return 2;
           }
           int bufAns = 0;
-          if(count(oper1, oper2, bufAns, operation))
+          if(!count(oper1, oper2, bufAns, operation))
           {
             sRes.push(bufAns);
           } else {
@@ -292,7 +292,7 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int& res)
       int oper2 = sRes.drop();
       int oper1 = sRes.drop();
       int bufAns = 0;
-      if(count(oper1, oper2, bufAns, operation))
+      if(!count(oper1, oper2, bufAns, operation))
       {
         sRes.push(bufAns);
       } else {

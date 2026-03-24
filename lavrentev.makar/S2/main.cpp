@@ -18,12 +18,12 @@ int main(int argc, char *argv[])
     }
     else
     {
-      std::cerr << "No data" << "\n";
-      return 2;
+      std::cout << "\n";
+      return 0;
     }
     if (res.empty())
     {
-      std::cerr << "No data" << "\n";
+      std::cerr << "Fail data" << "\n";
       return 2;
     }
   } catch (const std::exception &e)
