@@ -142,11 +142,14 @@ inline lavrentev::Queue<int> lavrentev::readFile(char *name)
         exp.push(symb);
       }
       int res = 0;
-      if (lavrentev::math(exp, res))
-      {
-        throw;
+      try{
+        if (lavrentev::math(exp, res))
+        {
+          throw;
+        }
+        ans.push(res);
       }
-      ans.push(res);
+      catch(...){}
     }
     file.close();
   }
@@ -171,11 +174,14 @@ inline lavrentev::Queue<int> lavrentev::getline()
       exp.push(symb);
     }
     int res = 0;
-      if (lavrentev::math(exp, res))
-      {
-        throw;
+      try{
+        if (lavrentev::math(exp, res))
+        {
+          throw;
+        }
+        ans.push(res);
       }
-      ans.push(res);
+      catch(...) {}
   }
   return ans;
 }
@@ -300,7 +306,6 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int& res)
       }
     }
   }
-
   res = sRes.drop();
   return 0;
 }

@@ -23,8 +23,8 @@ int main(int argc, char *argv[])
     }
     if (res.empty())
     {
-      std::cerr << "Fail data" << "\n";
-      return 2;
+      std::cout << "\n";
+      return 0;
     }
   } catch (const std::exception &e)
   {
