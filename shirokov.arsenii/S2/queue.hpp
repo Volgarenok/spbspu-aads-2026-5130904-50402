@@ -44,4 +44,12 @@ const T& shirokov::Queue< T >::front() const
   return list_.front();
 }
 
+template < class T >
+T& shirokov::Queue< T >::front()
+{
+  const Queue< T >* cthis = this;
+  const T& ret = cthis->front();
+  return const_cast< T& >(ret);
+}
+
 #endif
