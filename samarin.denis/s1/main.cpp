@@ -104,3 +104,19 @@ void List< T >::clear() {
   }
   next = nullptr;
 }
+
+template< class T >
+void clear(List< std::pair< std::string, List< T > * > > * h) {
+  List< std::pair< std::string, List< T > * > > * cur = h;
+  while (cur != nullptr) {
+    List< std::pair< std::string, List< T > * > > * next_outer = cur->next;
+    List< T > * inner = cur->value.second;
+    while (inner != nullptr) {
+      List< T > * next_inner = inner->next;
+      delete inner;
+      inner = next_inner;
+    }
+    delete cur;
+    cur = next_outer;
+  }
+}
