@@ -13,10 +13,12 @@ struct Node {
 };
 
 template< class T > class List;
+template< class T > class LCIter;
 
 template< class T >
 class LIter {
   friend class List< T >;
+  friend class LCIter< T >;
   Node< T > * node;
   explicit LIter(Node< T > * n): node(n) {}
 public:
@@ -26,7 +28,7 @@ public:
   T* operator->() {
     return &node->value;
   }
-  LIter< T > & operator++() {
+  LIter< T >& operator++() {
     node = node->next;
     return *this;
   }
@@ -35,6 +37,34 @@ public:
     node = node->next;
     return tmp;
   }
+  bool operator==(const LIter< T >& other) const { return node == other.node; }
+  bool operator!=(const LIter< T >& other) const { return node != other.node; }
+};
+
+template< class T >
+class LCIter {
+  friend class List< T >;
+  const Node< T > * node;
+  explicit LCIter(const Node< T > * n): node(n) {}
+public:
+  LCIter(const LIter< T >& it): node(it.node) {}
+  const T& operator*() const {
+    return node->value;
+  }
+  const T* operator->() const {
+    return &node->value;
+  }
+  LCIter< T >& operator++() {
+    node = node->next;
+    return *this;
+  }
+  LCIter< T > operator++(int) {
+    LCIter< T > tmp = *this;
+    node = node->next;
+    return tmp;
+  }
+  bool operator==(const LCIter< T >& other) const { return node == other.node; }
+  bool operator!=(const LCIter< T >& other) const { return node != other.node; }
 };
 
 template< class T >
@@ -52,7 +82,7 @@ public:
   {
     head->next = nullptr;
     LIter< T > tail = before_begin();
-    for (LIter< T > it = other.begin(); it != other.end(); ++it) {
+    for (LCIter< T > it = other.cbegin(); it != other.cend(); ++it) {
       tail = insert_after(tail, *it);
     }
   }
