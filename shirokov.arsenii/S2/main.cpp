@@ -2,6 +2,7 @@
 #define ERROR_INVALID_ARGS 1
 #define ERROR_OUT_OF_RANGE 2
 #define ERROR_BAD_ALLOC 3
+#define ERROR_CALCULATE 4
 
 #include <fstream>
 #include <iostream>
@@ -60,21 +61,21 @@ int main(int argc, char** argv)
     }
     catch (const std::invalid_argument&)
     {
-      std::cerr << "invalid arg\n"; // TODO добавить описание ошибки
+      std::cerr << "invalid arg\n";
       return ERROR_INVALID_ARGS;
     }
     catch (const std::out_of_range&)
     {
-      std::cerr << "out of range\n"; // TODO добавить описание ошибки
+      std::cerr << "out of range\n";
       return ERROR_OUT_OF_RANGE;
     }
-    catch (...) // TODO еще ошибки
+    catch (...)
     {
-      std::cerr << "Error\n";
-      return -1;
+      std::cerr << "Calculate error\n";
+      return ERROR_CALCULATE;
     }
     std::cout << res;
-    expressions.pop(); // ?может тут быть ошибка?
+    expressions.pop();
     if (!expressions.empty())
     {
       std::cout << ' ';
