@@ -41,7 +41,7 @@ void shirokov::Queue< T >::push(T&& value)
 template < class T >
 const T& shirokov::Queue< T >::front() const
 {
-  return list_.back();
+  return list_.front();
 }
 
 #endif
