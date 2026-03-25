@@ -23,7 +23,7 @@ namespace shirokov
 template < class T >
 bool shirokov::Stack< T >::empty() const noexcept
 {
-  return false;
+  return list_.empty();
 }
 
 #endif
