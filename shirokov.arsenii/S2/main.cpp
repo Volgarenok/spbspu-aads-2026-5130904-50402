@@ -40,3 +40,14 @@ int main(int argc, char** argv)
   }
   std::cout << '\n';
 }
+
+shirokov::Stack< std::string > shirokov::input(std::istream& in)
+{
+  shirokov::Stack< std::string > res;
+  std::string exp;
+  while (std::getline(in, exp))
+  {
+    res.push(exp);
+  }
+  return res;
+}
