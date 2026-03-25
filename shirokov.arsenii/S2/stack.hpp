@@ -26,4 +26,10 @@ bool shirokov::Stack< T >::empty() const noexcept
   return list_.empty();
 }
 
+template < class T >
+void shirokov::Stack< T >::push(const T&)
+{
+  return;
+}
+
 #endif
