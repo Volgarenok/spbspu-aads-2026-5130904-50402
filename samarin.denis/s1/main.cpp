@@ -6,7 +6,17 @@ int main() {
 
 }
 
-template< class T > class List;
+template<class T>
+class List {
+  struct Node { T value; Node * next; };
+  Node* head;
+public:
+  T value;
+  List< T >* next;
+  void push(const T& v);
+  void clear();
+  LIter< T > begin() { return LIter< T >(head->next); }
+};
 
 template< class T >
 class LIter {
@@ -29,18 +39,6 @@ public:
     node = node->next;
     return tmp;
   }
-};
-
-template<class T>
-class List {
-  struct Node { T value; Node * next; };
-  Node* head;
-public:
-  T value;
-  List< T >* next;
-  void push(const T& v);
-  void clear();
-  LIter<T> begin() { return LIter< T >(head->next); }
 };
 
 template< class T >
@@ -93,4 +91,16 @@ template< class T >
   }
 
   return res;
+}
+
+template<class T>
+void List< T >::clear() {
+  List< T > * temp = next;
+
+  while (temp != nullptr) {
+    List< T > * temp2 = temp->next;
+    delete temp;
+    temp = temp2;
+  }
+  next = nullptr;
 }
