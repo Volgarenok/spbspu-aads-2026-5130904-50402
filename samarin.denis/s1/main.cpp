@@ -6,22 +6,20 @@ int main() {
 
 }
 
-template<class T>
-class List {
-  struct Node { T value; Node * next; };
-  Node* head;
-public:
-  void push(const T& v);
-  void clear();
-  LIter< T > begin() { return LIter< T >(head->next); }
+template< class T >
+struct Node {
+  T value;
+  Node< T > * next;
 };
+
+template< class T > class List;
 
 template< class T >
 class LIter {
   friend class List< T >;
   Node< T > * node;
-public:
   explicit LIter(Node< T > * n): node(n) {}
+public:
   T& operator*() {
     return node->value;
   }
@@ -33,10 +31,31 @@ public:
     return *this;
   }
   LIter< T > operator++(int) {
-    Liter< T > tmp = *this;
+    LIter< T > tmp = *this;
     node = node->next;
     return tmp;
   }
+};
+
+template< class T >
+class List {
+  Node< T > * head;
+public:
+  List():
+    head(new Node< T >)
+  {
+    head->next = nullptr;
+  }
+
+  ~List() {
+    clear();
+    delete head;
+  }
+
+  void push(const T& v);
+  void clear();
+  LIter< T > begin() { return LIter< T >(head->next); }
+  LIter< T > end()   { return LIter< T >(nullptr); }
 };
 
 template< class T >
