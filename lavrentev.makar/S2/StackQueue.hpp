@@ -35,7 +35,7 @@ namespace lavrentev
     List<T> data;
   };
 
-  Queue<long long> readFile(char *name);
+  Stack<long long> readFile(char *name);
   Queue<long long> getline();
   long long math(Queue<std::string> exp, long long &res);
   bool operCond(std::string buf);
@@ -125,9 +125,9 @@ template <class T> T &lavrentev::Stack<T>::top()
   return data.front();
 }
 
-inline lavrentev::Queue<long long> lavrentev::readFile(char *name)
+inline lavrentev::Stack<long long> lavrentev::readFile(char *name)
 {
-  lavrentev::Queue<long long> ans{};
+  lavrentev::Stack<long long> ans{};  // Stack вместо Queue
   std::ifstream file(name);
   if (file.is_open())
   {
@@ -154,7 +154,7 @@ inline lavrentev::Queue<long long> lavrentev::readFile(char *name)
       {
         continue;
       }
-      ans.push(res);
+      ans.push(res);  // push в стек
     }
     file.close();
   }
