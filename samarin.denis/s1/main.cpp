@@ -69,6 +69,16 @@ public:
 
   LIter< T > before_begin() { return LIter< T >(head); }
 
+  T& front() {
+    return head->next->value;
+  }
+
+  void pop_front() {
+    Node< T > * temp = head->next;
+    head->next = temp->next;
+    delete temp;
+  }
+
   void clear();
   LIter< T > begin() { return LIter< T >(head->next); }
   LIter< T > end()   { return LIter< T >(nullptr); }
