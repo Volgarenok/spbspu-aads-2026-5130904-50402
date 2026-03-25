@@ -1,6 +1,6 @@
 #ifndef STACKQUEUE_HPP
 #define STACKQUEUE_HPP
-#include "common/List.hpp"
+#include <List.hpp>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
@@ -198,7 +198,7 @@ inline lavrentev::Queue<int> lavrentev::getline()
 
 inline int lavrentev::math(lavrentev::Queue<std::string> exp, int &res)
 {
-  Stack<int> sRes{};
+  Queue<int> sRes{};
   Stack<std::string> op{};
   int brackets = 0;
   while (!exp.empty())
