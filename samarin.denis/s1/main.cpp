@@ -60,8 +60,7 @@ public:
   List(List< T >&& other) noexcept:
     head(other.head)
   {
-    other.head = new Node< T >;
-    other.head->next = nullptr;
+    other.head = nullptr;
   }
 
   List< T >& operator=(const List< T >& other) {
@@ -74,14 +73,19 @@ public:
 
   List< T >& operator=(List< T >&& other) noexcept {
     if (this != &other) {
-      std::swap(head, other.head);
+      clear();
+      delete head;
+      head = other.head;
+      other.head = nullptr;
     }
     return *this;
   }
 
   ~List() {
-    clear();
-    delete head;
+    if (head != nullptr) {
+      clear();
+      delete head;
+    }
   }
 
   void push_front(const T& v) {
