@@ -43,3 +43,54 @@ public:
   LIter<T> begin() { return LIter< T >(head->next); }
 };
 
+template< class T >
+ List< std::pair< std::string, List< T >* > >* readInput(std::istream& in) {
+
+  List< std::pair< std::string, List< T >* > >* res = nullptr;
+
+  while (!in.eof() && !in.bad()) {
+    std::string name = "";
+    in >> name;
+    if (in.fail()) {
+      break;
+    }
+
+    List< T >* sublist = nullptr;
+    T val;
+    while (in >> val) {
+      List< T >* node = nullptr;
+      try {
+        node = new List< T >;
+      }
+      catch (const std::bad_alloc& e) {
+        freeList(sublist);
+        freeList(res);
+        throw;
+      }
+      node->value = val;
+      node->next = nullptr;
+      pushBack(sublist, node);
+    }
+
+    if (!in.eof()) {
+      in.clear();
+    }
+
+    std::pair< std::string, List< T >* > p(name, sublist);
+
+    List< std::pair< std::string, List< T >* > >* newNode = nullptr;
+    try {
+      newNode = new List< std::pair< std::string, List< T >* > >;
+    }
+    catch (const std::bad_alloc& e) {
+      freeList(sublist);
+      freeList(res);
+      throw;
+    }
+    newNode->value = p;
+    newNode->next = nullptr;
+    pushBack(res, newNode);
+  }
+
+  return res;
+}
