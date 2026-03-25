@@ -158,52 +158,29 @@ public:
 };
 
 template< class T >
- List< std::pair< std::string, List< T >* > >* readInput(std::istream& in) {
-
-  List< std::pair< std::string, List< T >* > >* res = nullptr;
+List< std::pair< std::string, List< T > > > readInput(std::istream& in) {
+  List< std::pair< std::string, List< T > > > res;
+  LIter< std::pair< std::string, List< T > > > res_tail = res.before_begin();
 
   while (!in.eof() && !in.bad()) {
-    std::string name = "";
+    std::string name;
     in >> name;
     if (in.fail()) {
       break;
     }
 
-    List< T >* sublist = nullptr;
+    List< T > sublist;
+    LIter< T > tail = sublist.before_begin();
     T val;
     while (in >> val) {
-      List< T >* node = nullptr;
-      try {
-        node = new List< T >;
-      }
-      catch (const std::bad_alloc& e) {
-        freeList(sublist);
-        freeList(res);
-        throw;
-      }
-      node->value = val;
-      node->next = nullptr;
-      pushBack(sublist, node);
+      tail = sublist.insert_after(tail, val);
     }
 
     if (!in.eof()) {
       in.clear();
     }
 
-    std::pair< std::string, List< T >* > p(name, sublist);
-
-    List< std::pair< std::string, List< T >* > >* newNode = nullptr;
-    try {
-      newNode = new List< std::pair< std::string, List< T >* > >;
-    }
-    catch (const std::bad_alloc& e) {
-      freeList(sublist);
-      freeList(res);
-      throw;
-    }
-    newNode->value = p;
-    newNode->next = nullptr;
-    pushBack(res, newNode);
+    res_tail = res.insert_after(res_tail, std::make_pair(name, std::move(sublist)));
   }
 
   return res;
