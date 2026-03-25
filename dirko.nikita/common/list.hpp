@@ -1,6 +1,7 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 #include <cstddef>
+#include <stdexcept>
 #include <utility>
 #include "node.hpp"
 
@@ -30,8 +31,8 @@ namespace dirko
     const T &ctail() const noexcept;
     void push_front(const T &);
     void push_back(const T &);
-    void pop_front() noexcept;
-    void pop_back() noexcept;
+    void pop_front();
+    void pop_back();
     void clear();
     size_t size() const noexcept;
     void swap(List< T > &) noexcept;
@@ -153,8 +154,11 @@ namespace dirko
     ++size_;
   }
   template < class T >
-  void List< T >::pop_front() noexcept
+  void List< T >::pop_front()
   {
+    if (size_ == 0) {
+      throw std::logic_error("Empty list");
+    }
     Node< T > *next = fake_->next->next;
     delete fake_->next;
     fake_->next = next;
@@ -164,8 +168,11 @@ namespace dirko
     --size_;
   }
   template < class T >
-  void List< T >::pop_back() noexcept
+  void List< T >::pop_back()
   {
+    if (size_ == 0) {
+      throw std::logic_error("Empty list");
+    }
     Node< T > *prev = tail_->prev;
     delete tail_;
     if (!prev) {
