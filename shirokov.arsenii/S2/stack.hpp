@@ -52,4 +52,10 @@ T& shirokov::Stack< T >::top()
   return const_cast< T& >(ret);
 }
 
+template < class T >
+void shirokov::Stack< T >::pop()
+{
+  return;
+}
+
 #endif

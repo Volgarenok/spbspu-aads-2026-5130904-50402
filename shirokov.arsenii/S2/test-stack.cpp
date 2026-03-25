@@ -32,14 +32,14 @@ BOOST_AUTO_TEST_CASE(top_method_return_last_elem)
   BOOST_TEST(rs.top() == 3);
 }
 
-BOOST_AUTO_TEST_CASE(pop_throws_exception_if_container_is_empty)
+BOOST_AUTO_TEST_CASE(pop_throws_exception_if_stack_is_empty)
 {
   shirokov::Stack< int > s;
   BOOST_REQUIRE(s.empty());
   BOOST_CHECK_THROW(s.pop(), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE(when_using_pop_front_returns_following_element)
+BOOST_AUTO_TEST_CASE(when_using_pop_front_returns_following_element_in_stack)
 {
   shirokov::Stack< int > s;
   s.push(1);

@@ -34,14 +34,14 @@ BOOST_AUTO_TEST_CASE(front_method_return_first_elem)
   BOOST_TEST(rq.front() == 1);
 }
 
-BOOST_AUTO_TEST_CASE(pop_throws_exception_if_container_is_empty)
+BOOST_AUTO_TEST_CASE(pop_throws_exception_if_queue_is_empty)
 {
   shirokov::Queue< int > q;
   BOOST_REQUIRE(q.empty());
   BOOST_CHECK_THROW(q.pop(), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE(when_using_pop_front_returns_following_element)
+BOOST_AUTO_TEST_CASE(when_using_pop_front_returns_following_element_in_queue)
 {
   shirokov::Queue< int > q;
   q.push(1);
