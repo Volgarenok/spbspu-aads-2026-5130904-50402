@@ -38,4 +38,10 @@ void shirokov::Stack< T >::push(T&& value)
   list_.pushBack(value);
 }
 
+template < class T >
+const T& shirokov::Stack< T >::top() const
+{
+  return list_.front();
+}
+
 #endif
