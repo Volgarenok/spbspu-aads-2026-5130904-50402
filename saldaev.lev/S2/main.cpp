@@ -5,6 +5,8 @@
 
 saldaev::Queue< std::string > parse(std::string rawLine);
 saldaev::Queue< std::string > toPostfixNotation(saldaev::Queue< std::string > parsedLine);
+long long evaluate(saldaev::Queue< std::string > postfixedLines);
+long long apply(const std::string &op, long long left, long long right);
 
 int main(int argc, char *argv[])
 {
@@ -143,4 +145,31 @@ saldaev::Queue< std::string > toPostfixNotation(saldaev::Queue< std::string > pa
     stack.pop();
   }
   return newLine;
+}
+
+long long evaluate(saldaev::Queue< std::string > postfixedLines)
+{
+  saldaev::Stack< long long > stack;
+  while (!postfixedLines.empty()) {
+    std::string token = postfixedLines.front();
+    postfixedLines.pop();
+    if (isNumber(token)) {
+      stack.push(std::stoi(token));
+    } else if (isOperator(token)) {
+      if (stack.size() < 2) {
+        throw std::logic_error("Not enough operands");
+      }
+      long long op1 = stack.top();
+      stack.pop();
+      long long op2 = stack.top();
+      stack.pop();
+      stack.push(apply(token, op2, op1));
+    } else {
+      throw std::logic_error("Ivalid token");
+    }
+  }
+  if (stack.size() > 1) {
+    throw std::logic_error("Redundant operands");
+  }
+  return stack.top();
 }
