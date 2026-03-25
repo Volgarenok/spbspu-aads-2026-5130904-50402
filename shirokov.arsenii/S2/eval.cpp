@@ -80,7 +80,24 @@ namespace
     return postfix;
   }
 
-  shirokov::Queue< std::string > split(const std::string& line);
+  shirokov::Queue< std::string > split(const std::string& line, char delimiter = ' ')
+  {
+    shirokov::Queue< std::string > res;
+    std::string curr;
+    for (size_t i = 0; i < line.length(); ++i)
+    {
+      if (line[i] == delimiter)
+      {
+        res.push(curr);
+        curr.clear();
+      }
+      else
+      {
+        curr += line[i];
+      }
+    }
+    return res;
+  }
 }
 
 long long shirokov::eval(std::string line)
