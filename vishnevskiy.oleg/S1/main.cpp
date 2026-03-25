@@ -106,7 +106,7 @@ int main()
         catch (const std::bad_alloc& e)
         {
           std::cerr << "Bad alloc\n";
-          
+
           return 1;
         }
         lIt.setData(embedIt.curr);

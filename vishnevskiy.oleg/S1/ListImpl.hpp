@@ -34,12 +34,12 @@ namespace vishnevskiy
   {}
 
   template <class T>
-  LIter<T>::LIter(): 
+  LIter<T>::LIter():
     curr(nullptr)
   {}
 
   template <class T>
-  LIter<T>::LIter(List<T>* h): 
+  LIter<T>::LIter(List<T>* h):
     curr(h)
   {}
 
@@ -94,7 +94,7 @@ namespace vishnevskiy
       curr = s;
     }
   }
-  
+
   template <class T>
   void LIter<T>::clear(LIter<T>* head)
   {
@@ -119,12 +119,12 @@ namespace vishnevskiy
   }
 
   template <class T>
-  NamedLIter<T>::NamedLIter(): 
+  NamedLIter<T>::NamedLIter():
     curr(nullptr)
   {}
 
   template <class T>
-  NamedLIter<T>::NamedLIter(NamedList<T>* h): 
+  NamedLIter<T>::NamedLIter(NamedList<T>* h):
     curr(h)
   {}
 
@@ -191,7 +191,7 @@ namespace vishnevskiy
       curr = s;
     }
   }
-  
+
   template <class T>
   void NamedLIter<T>::clear(NamedLIter<T>* head)
   {
