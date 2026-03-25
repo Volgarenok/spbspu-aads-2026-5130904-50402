@@ -32,4 +32,10 @@ void shirokov::Stack< T >::push(const T& value)
   list_.pushBack(value);
 }
 
+template < class T >
+void shirokov::Stack< T >::push(T&&)
+{
+  return;
+}
+
 #endif
