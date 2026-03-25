@@ -55,7 +55,7 @@ T& shirokov::Queue< T >::front()
 template < class T >
 void shirokov::Queue< T >::pop()
 {
-  return;
+  list_.popFront();
 }
 
 #endif
