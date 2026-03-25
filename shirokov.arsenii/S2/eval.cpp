@@ -1,5 +1,4 @@
 #include "eval.hpp"
-#include <iostream>
 #include <string>
 #include "queue.hpp"
 #include "stack.hpp"
@@ -43,37 +42,13 @@ namespace
     return res;
   }
 
-  template < class T >
-  void printQueue(shirokov::Queue< T > q)
-  {
-    while (!q.empty())
-    {
-      // std::cout << q.front() << ' ';
-      q.pop();
-    }
-    // std::cout << '\n';
-  }
-
-  template < class T >
-  void printStack(shirokov::Stack< T > s)
-  {
-    while (!s.empty())
-    {
-      // std::cout << s.top() << ' ';
-      s.pop();
-    }
-    // std::cout << '\n';
-  }
-
   shirokov::Queue< std::string > infixToPostfix(shirokov::Queue< std::string > infix)
   {
-    // std::cout << "START CALCULATE POSTFIX\n";
     shirokov::Queue< std::string > postfix;
     shirokov::Stack< std::string > stack;
     while (!infix.empty())
     {
       std::string val = infix.front();
-      // std::cout << "CURR VAL: " << val << '\n';
       if (val == "(")
       {
         stack.push(val);
@@ -115,17 +90,12 @@ namespace
         postfix.push(val);
       }
       infix.pop();
-      // std::cout << "POSTFIX\n";
-      printQueue(postfix);
-      // std::cout << "STACK\n";
-      printStack(stack);
     }
     while (!stack.empty())
     {
       postfix.push(stack.top());
       stack.pop();
     }
-    // std::cout << "END OF CALCULATE\n";
     return postfix;
   }
 
@@ -156,14 +126,8 @@ namespace
 long long shirokov::eval(std::string line)
 {
   Queue< std::string > infix = split(line);
-  // std::cout << "INFIX\n";
-  printQueue(infix);
-
   Queue< std::string > postfix = infixToPostfix(infix);
-  // std::cout << "POSTFIX\n";
-  printQueue(postfix);
   Stack< long long > results;
-  // std::cout << "WHILE IS STARTED\n";
   while (!postfix.empty())
   {
     std::string val = postfix.front();
@@ -207,6 +171,10 @@ long long shirokov::eval(std::string line)
       else if (val == "%")
       {
         res = op1 % op2;
+        if (op1 < 0 || op2 < 0)
+        {
+          res += op2;
+        }
       }
       else if (val == "<<")
       {
@@ -214,11 +182,6 @@ long long shirokov::eval(std::string line)
       }
       results.push(res);
     }
-    // std::cout << "POSTFIX: ";
-    printQueue(postfix);
-    // std::cout << "RESULTS: ";
-    printStack(results);
-    // std::cout << '\n';
   }
   return results.top();
 }

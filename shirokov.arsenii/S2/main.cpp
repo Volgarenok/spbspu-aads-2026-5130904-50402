@@ -90,7 +90,10 @@ shirokov::Stack< std::string > shirokov::input(std::istream& in)
   std::string exp;
   while (std::getline(in, exp))
   {
-    res.push(exp);
+    if (!exp.empty())
+    {
+      res.push(exp);
+    }
   }
   return res;
 }
