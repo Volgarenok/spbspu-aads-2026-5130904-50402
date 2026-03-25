@@ -21,3 +21,13 @@ BOOST_AUTO_TEST_CASE(move_push_make_stack_non_empty)
   s.push(1);
   BOOST_TEST(!s.empty());
 }
+
+BOOST_AUTO_TEST_CASE(top_method_return_last_elem)
+{
+  shirokov::Stack< int > s;
+  s.push(1);
+  s.push(2);
+  s.push(3);
+  const shirokov::Stack< int > rs = s;
+  BOOST_TEST(rs.top() == 3);
+}
