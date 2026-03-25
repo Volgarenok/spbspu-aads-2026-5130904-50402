@@ -28,5 +28,6 @@ BOOST_AUTO_TEST_CASE(front_method_return_first_elem)
   q.push(1);
   q.push(2);
   q.push(3);
-  BOOST_TEST(q.front() == 1);
+  const shirokov::Queue< int > rq = q;
+  BOOST_TEST(rq.front() == 1);
 }
