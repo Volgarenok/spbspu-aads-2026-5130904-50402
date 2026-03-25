@@ -52,4 +52,10 @@ T& shirokov::Queue< T >::front()
   return const_cast< T& >(ret);
 }
 
+template < class T >
+void shirokov::Queue< T >::pop()
+{
+  return;
+}
+
 #endif
