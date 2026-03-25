@@ -10,7 +10,7 @@ namespace shirokov
   public:
     T& top();
     const T& top() const;
-    bool empty() const;
+    bool empty() const noexcept;
     void push(const T& value);
     void push(T&& value);
     void pop();
