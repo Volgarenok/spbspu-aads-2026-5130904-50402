@@ -4,8 +4,7 @@
 #include <iostream>
 
 saldaev::Queue< std::string > parse(std::string rawLine);
-saldaev::Queue< saldaev::Queue< std::string > >
-toPostfixNotation(saldaev::Queue< saldaev::Queue< std::string > > parsedLines);
+saldaev::Queue< std::string > toPostfixNotation(saldaev::Queue< std::string > parsedLine);
 
 int main(int argc, char *argv[])
 {
@@ -36,17 +35,20 @@ int main(int argc, char *argv[])
     rawLines.pop();
   }
 
-  saldaev::Queue< saldaev::Queue< std::string > > rearrangedLines;
-  try {
-    rearrangedLines = toPostfixNotation(parsedLines);
-  } catch (const std::logic_error &e) {
-    std::cerr << e.what() << '\n';
-    return 1;
+  saldaev::Queue< saldaev::Queue< std::string > > postfixedLines;
+  while (!parsedLines.empty()) {
+    try {
+      postfixedLines.push(toPostfixNotation(parsedLines.front()));
+    } catch (const std::logic_error &e) {
+      std::cerr << e.what() << '\n';
+      return 1;
+    }
+    parsedLines.pop();
   }
 
-  while (!rearrangedLines.empty()) {
-    saldaev::Queue< std::string > tokens = rearrangedLines.front();
-    rearrangedLines.pop();
+  while (!postfixedLines.empty()) {
+    saldaev::Queue< std::string > tokens = postfixedLines.front();
+    postfixedLines.pop();
 
     while (!tokens.empty()) {
       std::cout << tokens.front() << " ";
@@ -103,49 +105,42 @@ int getPriority(const std::string &op)
   return 0;
 }
 
-saldaev::Queue< saldaev::Queue< std::string > >
-toPostfixNotation(saldaev::Queue< saldaev::Queue< std::string > > parsedLines)
+saldaev::Queue< std::string > toPostfixNotation(saldaev::Queue< std::string > parsedLine)
 {
-  saldaev::Queue< saldaev::Queue< std::string > > rearrangedLines;
-  while (!parsedLines.empty()) {
-    saldaev::Queue< std::string > currLine = parsedLines.front();
-    parsedLines.pop();
+  saldaev::Queue< std::string > newLine;
+  saldaev::Stack< std::string > stack;
+  std::string token = "";
+  while (!parsedLine.empty()) {
+    token = parsedLine.front();
+    parsedLine.pop();
 
-    saldaev::Queue< std::string > newLine;
-    saldaev::Stack< std::string > stack;
-    std::string token = "";
-    while (!currLine.empty()) {
-      token = currLine.front();
-      currLine.pop();
-      if (isOperator(token)) {
-        while (!stack.empty() && getPriority(stack.top()) >= getPriority(token)) {
-          newLine.push(stack.top());
-          stack.pop();
-        }
-        stack.push(token);
-      } else if (token == "(") {
-        stack.push(token);
-      } else if (token == ")") {
-        while (!stack.empty() && stack.top() != "(") {
-          newLine.push(stack.top());
-          stack.pop();
-        }
-        if (stack.empty()) {
-          throw std::logic_error("invalid (unpaired ')')");
-        }
+    if (isOperator(token)) {
+      while (!stack.empty() && getPriority(stack.top()) >= getPriority(token)) {
+        newLine.push(stack.top());
         stack.pop();
-      } else {
-        newLine.push(token);
       }
-    }
-    while (!stack.empty()) {
-      if (stack.top() == "(") {
-        throw std::logic_error("invalid (unpaired '(')");
+      stack.push(token);
+    } else if (token == "(") {
+      stack.push(token);
+    } else if (token == ")") {
+      while (!stack.empty() && stack.top() != "(") {
+        newLine.push(stack.top());
+        stack.pop();
       }
-      newLine.push(stack.top());
+      if (stack.empty()) {
+        throw std::logic_error("invalid (unpaired ')')");
+      }
       stack.pop();
+    } else {
+      newLine.push(token);
     }
-    rearrangedLines.push(newLine);
   }
-  return rearrangedLines;
+  while (!stack.empty()) {
+    if (stack.top() == "(") {
+      throw std::logic_error("invalid (unpaired '(')");
+    }
+    newLine.push(stack.top());
+    stack.pop();
+  }
+  return newLine;
 }
