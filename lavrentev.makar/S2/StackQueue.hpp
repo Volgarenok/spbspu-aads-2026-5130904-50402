@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <climits>
 
 namespace lavrentev
 {
@@ -355,16 +356,34 @@ inline long long lavrentev::count(long long a, long long b, long long &res, std:
 {
   if (operation == "+")
   {
+    if ((a > 0 && b > LLONG_MAX - a) || (a < 0 && b < LLONG_MIN - a))
+    {
+      std::cerr << "Overflow error";
+      throw;
+    } 
     res = a + b;
     return 0;
   }
   else if (operation == "-")
   {
+    if ((a > 0 && b < LLONG_MIN + a) || (a < 0 && b > LLONG_MAX + a))
+    {
+      std::cerr << "Overflow error";
+      throw;
+    } 
     res = a - b;
     return 0;
   }
   else if (operation == "*")
   {
+    if ((a > 0 && b > 0 && a > LLONG_MAX / b) ||
+        (a < 0 && b < 0 && a < LLONG_MAX / b) ||
+        (a > 0 && b < 0 && b < LLONG_MIN / a) ||
+        (a < 0 && b > 0 && a < LLONG_MIN / b))
+    {
+      std::cerr << "Overflow error";
+      throw;
+    } 
     res = a * b;
     return 0;
   }
@@ -372,6 +391,11 @@ inline long long lavrentev::count(long long a, long long b, long long &res, std:
   {
     if (b != 0)
     {
+      if (a == LLONG_MIN && b == -1)
+      {
+        std::cerr << "Overflow" << "\n";
+        return true;
+      }
       res = a / b;
       return 0;
     }
