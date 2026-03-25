@@ -52,7 +52,23 @@ public:
     delete head;
   }
 
-  void push(const T& v);
+  void push_front(const T& v) {
+    Node< T > * node = new Node< T >;
+    node->value = v;
+    node->next = head->next;
+    head->next = node;
+  }
+
+  LIter< T > insert_after(LIter< T > pos, const T& v) {
+    Node< T > * node = new Node< T >;
+    node->value = v;
+    node->next = pos.node->next;
+    pos.node->next = node;
+    return LIter< T >(node);
+  }
+
+  LIter< T > before_begin() { return LIter< T >(head); }
+
   void clear();
   LIter< T > begin() { return LIter< T >(head->next); }
   LIter< T > end()   { return LIter< T >(nullptr); }
