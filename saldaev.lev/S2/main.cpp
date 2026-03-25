@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 
-saldaev::Queue< saldaev::Queue< std::string > > parse(saldaev::Queue< std::string > rawLines);
+saldaev::Queue< std::string > parse(std::string rawLine);
 saldaev::Queue< saldaev::Queue< std::string > >
 toPostfixNotation(saldaev::Queue< saldaev::Queue< std::string > > parsedLines);
 
@@ -30,7 +30,11 @@ int main(int argc, char *argv[])
     }
   }
 
-  saldaev::Queue< saldaev::Queue< std::string > > parsedLines = parse(rawLines);
+  saldaev::Queue< saldaev::Queue< std::string > > parsedLines;
+  while (!rawLines.empty()) {
+    parsedLines.push(parse(rawLines.front()));
+    rawLines.pop();
+  }
 
   saldaev::Queue< saldaev::Queue< std::string > > rearrangedLines;
   try {
@@ -52,29 +56,22 @@ int main(int argc, char *argv[])
   }
 }
 
-saldaev::Queue< saldaev::Queue< std::string > > parse(saldaev::Queue< std::string > rawLines)
+saldaev::Queue< std::string > parse(std::string rawLine)
 {
-  saldaev::Queue< saldaev::Queue< std::string > > parsedLines;
-  while (!rawLines.empty()) {
-    saldaev::Queue< std::string > tokens;
-    std::string currLine = rawLines.front();
-    rawLines.pop();
-
-    size_t start = 0;
-    size_t index = currLine.find(' ');
-    std::string token = "";
-    while (index != std::string::npos) {
-      token = currLine.substr(start, index - start);
-      tokens.push(token);
-      start = index + 1;
-      index = currLine.find(' ', start);
-    }
-    token = currLine.substr(start);
+  saldaev::Queue< std::string > tokens;
+  size_t start = 0;
+  size_t index = rawLine.find(' ');
+  std::string token = "";
+  while (index != std::string::npos) {
+    token = rawLine.substr(start, index - start);
     tokens.push(token);
-
-    parsedLines.push(tokens);
+    start = index + 1;
+    index = rawLine.find(' ', start);
   }
-  return parsedLines;
+  token = rawLine.substr(start);
+  tokens.push(token);
+
+  return tokens;
 }
 
 bool isNumber(std::string token)
