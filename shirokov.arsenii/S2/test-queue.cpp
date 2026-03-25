@@ -14,3 +14,10 @@ BOOST_AUTO_TEST_CASE(copy_push_make_queue_non_empty)
   q.push(a);
   BOOST_TEST(!q.empty());
 }
+
+BOOST_AUTO_TEST_CASE(move_push_make_queue_non_empty)
+{
+  shirokov::Queue< int > q;
+  q.push(1);
+  BOOST_TEST(!q.empty());
+}
