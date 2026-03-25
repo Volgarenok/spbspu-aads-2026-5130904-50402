@@ -1,7 +1,6 @@
 #include <stdexcept>
 #define BOOST_TEST_MODULE StackQueueTest
 #include <boost/test/included/unit_test.hpp>
-#include <sstream>
 #include "StackQueue.hpp"
 
 BOOST_AUTO_TEST_CASE(Stack_push_test)
@@ -81,4 +80,11 @@ BOOST_AUTO_TEST_CASE(Queue_front_test)
   s.push(1);
   s.push(2);
   BOOST_TEST(s.front() == 1);
+}
+
+BOOST_AUTO_TEST_CASE(Gcd_test)
+{
+  BOOST_TEST(lavrentev::gcd(1, 0) == 1);
+  BOOST_TEST(lavrentev::gcd(0, 1) == 1);
+  BOOST_TEST(lavrentev::gcd(25, 15) == 5);
 }
