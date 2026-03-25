@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     }
     else if (argc == 1)
     {
-      lavrentev::Queue<long long> res = lavrentev::getline();
+      lavrentev::Stack<long long> res = lavrentev::getline();
       if (res.empty())
       {
         std::cout << "\n";
@@ -44,11 +44,11 @@ int main(int argc, char *argv[])
       {
         if (!first)
         {
-          std::cout << " " << res.front();
+          std::cout << " " << res.top();
         }
         else
         {
-          std::cout << res.front();
+          std::cout << res.top();
           first = false;
         }
         res.drop();

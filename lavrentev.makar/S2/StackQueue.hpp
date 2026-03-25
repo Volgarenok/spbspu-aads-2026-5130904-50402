@@ -37,7 +37,7 @@ namespace lavrentev
   };
 
   Stack<long long> readFile(char *name);
-  Queue<long long> getline();
+  Stack<long long> getline();
   long long math(Queue<std::string> exp, long long &res);
   bool operCond(std::string buf);
   bool isNumber(std::string exp);
@@ -166,9 +166,9 @@ inline lavrentev::Stack<long long> lavrentev::readFile(char *name)
   return ans;
 }
 
-inline lavrentev::Queue<long long> lavrentev::getline()
+inline lavrentev::Stack<long long> lavrentev::getline()
 {
-  lavrentev::Queue<long long> ans{};
+  lavrentev::Stack<long long> ans{};
   std::string line;
   while (std::getline(std::cin, line))
   {
