@@ -44,4 +44,12 @@ const T& shirokov::Stack< T >::top() const
   return list_.back();
 }
 
+template < class T >
+T& shirokov::Stack< T >::top()
+{
+  const Stack< T >* cthis = this;
+  const T& ret = cthis->top();
+  return const_cast< T& >(ret);
+}
+
 #endif
