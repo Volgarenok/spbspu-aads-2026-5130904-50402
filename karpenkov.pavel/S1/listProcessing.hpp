@@ -63,6 +63,7 @@ namespace karpenkov
           output << **it_it;
           first = false;
           if (**it_it > std::numeric_limits< size_t >::max() - sum) {
+            output << '\n';
             throw std::overflow_error("Number is too big");
           }
           sum += **it_it;
