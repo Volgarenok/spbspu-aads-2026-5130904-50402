@@ -1,10 +1,23 @@
 #include "eval.hpp"
+#include <iostream>
 #include <string>
 #include "queue.hpp"
 #include "stack.hpp"
 
 namespace
 {
+  bool isNumber(const std::string& line)
+  {
+    for (size_t i = 0; i < line.length(); ++i)
+    {
+      if (!('0' <= line[i] && line[i] <= '9'))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
   int getPriority(const std::string& op)
   {
     if (op == "<<")
@@ -30,13 +43,37 @@ namespace
     return res;
   }
 
+  template < class T >
+  void printQueue(shirokov::Queue< T > q)
+  {
+    while (!q.empty())
+    {
+      // std::cout << q.front() << ' ';
+      q.pop();
+    }
+    // std::cout << '\n';
+  }
+
+  template < class T >
+  void printStack(shirokov::Stack< T > s)
+  {
+    while (!s.empty())
+    {
+      // std::cout << s.top() << ' ';
+      s.pop();
+    }
+    // std::cout << '\n';
+  }
+
   shirokov::Queue< std::string > infixToPostfix(shirokov::Queue< std::string > infix)
   {
+    // std::cout << "START CALCULATE POSTFIX\n";
     shirokov::Queue< std::string > postfix;
     shirokov::Stack< std::string > stack;
-    while (!postfix.empty())
+    while (!infix.empty())
     {
       std::string val = infix.front();
+      // std::cout << "CURR VAL: " << val << '\n';
       if (val == "(")
       {
         stack.push(val);
@@ -57,12 +94,19 @@ namespace
       }
       else if (isOperation(val))
       {
-        std::string op = stack.top();
-        while (getPriority(op) <= getPriority(val))
+        if (!stack.empty())
         {
-          postfix.push(op);
-          stack.pop();
-          op = stack.top();
+          std::string op = stack.top();
+          while (op != "(" && getPriority(op) >= getPriority(val))
+          {
+            postfix.push(op);
+            stack.pop();
+            if (stack.empty())
+            {
+              break;
+            }
+            op = stack.top();
+          }
         }
         stack.push(val);
       }
@@ -71,12 +115,17 @@ namespace
         postfix.push(val);
       }
       infix.pop();
+      // std::cout << "POSTFIX\n";
+      printQueue(postfix);
+      // std::cout << "STACK\n";
+      printStack(stack);
     }
     while (!stack.empty())
     {
       postfix.push(stack.top());
       stack.pop();
     }
+    // std::cout << "END OF CALCULATE\n";
     return postfix;
   }
 
@@ -96,6 +145,10 @@ namespace
         curr += line[i];
       }
     }
+    if (!curr.empty())
+    {
+      res.push(curr);
+    }
     return res;
   }
 }
@@ -103,149 +156,69 @@ namespace
 long long shirokov::eval(std::string line)
 {
   Queue< std::string > infix = split(line);
-  Queue< std::string > postfix = infixToPostfix(infix);
-  Stack< long long > results;
-  results.push(0);
-  long long operand1 = 0, operand2 = 0;
-  int status = 0;
+  // std::cout << "INFIX\n";
+  printQueue(infix);
 
+  Queue< std::string > postfix = infixToPostfix(infix);
+  // std::cout << "POSTFIX\n";
+  printQueue(postfix);
+  Stack< long long > results;
+  // std::cout << "WHILE IS STARTED\n";
   while (!postfix.empty())
   {
     std::string val = postfix.front();
-    if (val == "+")
+    postfix.pop();
+    if (isNumber(val))
     {
-      if (status == 2)
-      {
-        results.push(operand1 + operand2);
-      }
-      else if (status == 1)
-      {
-        results.top() += operand1;
-      }
-      else if (status == 0)
-      {
-        long long op1 = results.top();
-        results.pop();
-        long long op2 = results.top();
-        results.pop();
-        results.top() = op1 + op2;
-      }
-      status = 0;
-    }
-    else if (val == "-")
-    {
-      if (status == 2)
-      {
-        results.push(operand1 - operand2);
-      }
-      else if (status == 1)
-      {
-        results.top() -= operand1;
-      }
-      else if (status == 0)
-      {
-        long long op1 = results.top();
-        results.pop();
-        long long op2 = results.top();
-        results.pop();
-        results.top() = op1 - op2;
-      }
-      status = 0;
-    }
-    else if (val == "*")
-    {
-      if (status == 2)
-      {
-        results.push(operand1 * operand2);
-      }
-      else if (status == 1)
-      {
-        results.top() *= operand1;
-      }
-      else if (status == 0)
-      {
-        long long op1 = results.top();
-        results.pop();
-        long long op2 = results.top();
-        results.pop();
-        results.top() = op1 * op2;
-      }
-      status = 0;
-    }
-    else if (val == "/")
-    {
-      if (status == 2)
-      {
-        results.push(operand1 / operand2);
-      }
-      else if (status == 1)
-      {
-        results.top() /= operand1;
-      }
-      else if (status == 0)
-      {
-        long long op1 = results.top();
-        results.pop();
-        long long op2 = results.top();
-        results.pop();
-        results.top() = op1 / op2;
-      }
-      status = 0;
-    }
-    else if (val == "%")
-    {
-      if (status == 2)
-      {
-        results.push(operand1 % operand2);
-      }
-      else if (status == 1)
-      {
-        results.top() %= operand1;
-      }
-      else if (status == 0)
-      {
-        long long op1 = results.top();
-        results.pop();
-        long long op2 = results.top();
-        results.pop();
-        results.top() = op1 % op2;
-      }
-      status = 0;
-    }
-    else if (val == "<<")
-    {
-      if (status == 2)
-      {
-        results.push(operand1 << operand2);
-      }
-      else if (status == 1)
-      {
-        results.top() <<= operand1;
-      }
-      else if (status == 0)
-      {
-        long long op1 = results.top();
-        results.pop();
-        long long op2 = results.top();
-        results.pop();
-        results.top() = op1 << op2;
-      }
-      status = 0;
+      results.push(std::stoll(val));
     }
     else
     {
-      if (status == 0)
+      if (results.empty())
       {
-        operand1 = std::stoll(val);
-        status = 1;
+        throw std::runtime_error("Not enough operands");
       }
-      else if (status == 1)
+      long long op2 = results.top();
+      results.pop();
+      if (results.empty())
       {
-        operand2 = std::stoll(val);
-        status = 2;
+        throw std::runtime_error("Not enough operands");
       }
+      long long op1 = results.top();
+      results.pop();
+
+      long long res = 0;
+      if (val == "+")
+      {
+        res = op1 + op2;
+      }
+      else if (val == "-")
+      {
+        res = op1 - op2;
+      }
+      else if (val == "*")
+      {
+        res = op1 * op2;
+      }
+      else if (val == "/")
+      {
+        res = op1 / op2;
+      }
+      else if (val == "%")
+      {
+        res = op1 % op2;
+      }
+      else if (val == "<<")
+      {
+        res = op1 << op2;
+      }
+      results.push(res);
     }
-    postfix.pop();
+    // std::cout << "POSTFIX: ";
+    printQueue(postfix);
+    // std::cout << "RESULTS: ";
+    printStack(results);
+    // std::cout << '\n';
   }
   return results.top();
 }
