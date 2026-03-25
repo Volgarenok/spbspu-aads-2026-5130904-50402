@@ -11,8 +11,6 @@ class List {
   struct Node { T value; Node * next; };
   Node* head;
 public:
-  T value;
-  List< T >* next;
   void push(const T& v);
   void clear();
   LIter< T > begin() { return LIter< T >(head->next); }
@@ -95,14 +93,14 @@ template< class T >
 
 template<class T>
 void List< T >::clear() {
-  List< T > * temp = next;
+  Node * temp = head->next;
 
   while (temp != nullptr) {
-    List< T > * temp2 = temp->next;
+    Node * temp2 = temp->next;
     delete temp;
     temp = temp2;
   }
-  next = nullptr;
+  head->next = nullptr;
 }
 
 template< class T >
