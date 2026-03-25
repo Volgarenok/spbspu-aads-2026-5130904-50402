@@ -47,6 +47,38 @@ public:
     head->next = nullptr;
   }
 
+  List(const List< T >& other):
+    head(new Node< T >)
+  {
+    head->next = nullptr;
+    LIter< T > tail = before_begin();
+    for (LIter< T > it = other.begin(); it != other.end(); ++it) {
+      tail = insert_after(tail, *it);
+    }
+  }
+
+  List(List< T >&& other) noexcept:
+    head(other.head)
+  {
+    other.head = new Node< T >;
+    other.head->next = nullptr;
+  }
+
+  List< T >& operator=(const List< T >& other) {
+    if (this != &other) {
+      List< T > tmp(other);
+      std::swap(head, tmp.head);
+    }
+    return *this;
+  }
+
+  List< T >& operator=(List< T >&& other) noexcept {
+    if (this != &other) {
+      std::swap(head, other.head);
+    }
+    return *this;
+  }
+
   ~List() {
     clear();
     delete head;
