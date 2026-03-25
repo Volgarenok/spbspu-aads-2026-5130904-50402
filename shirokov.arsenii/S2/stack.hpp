@@ -27,9 +27,9 @@ bool shirokov::Stack< T >::empty() const noexcept
 }
 
 template < class T >
-void shirokov::Stack< T >::push(const T&)
+void shirokov::Stack< T >::push(const T& value)
 {
-  return;
+  list_.pushBack(value);
 }
 
 #endif
