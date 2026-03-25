@@ -28,4 +28,10 @@ bool shirokov::Queue< T >::empty() const
   return list_.empty();
 }
 
+template < class T >
+void shirokov::Queue< T >::push(const T&)
+{
+  return;
+}
+
 #endif
