@@ -1,13 +1,10 @@
-#include <new>
 #define ERROR_INVALID_ARGS 1
-#define ERROR_OUT_OF_RANGE 2
-#define ERROR_BAD_ALLOC 3
-#define ERROR_CALCULATE 4
-
+#define ERROR_BAD_ALLOC 2
+#define ERROR_CALCULATE 3
 #include <fstream>
 #include <iostream>
 #include <istream>
-#include <stdexcept>
+#include <new>
 #include <string>
 #include "eval.hpp"
 #include "stack.hpp"
@@ -58,16 +55,6 @@ int main(int argc, char** argv)
     try
     {
       res = shirokov::eval(expressions.top());
-    }
-    catch (const std::invalid_argument&)
-    {
-      std::cerr << "invalid arg\n";
-      return ERROR_INVALID_ARGS;
-    }
-    catch (const std::out_of_range&)
-    {
-      std::cerr << "out of range\n";
-      return ERROR_OUT_OF_RANGE;
     }
     catch (...)
     {

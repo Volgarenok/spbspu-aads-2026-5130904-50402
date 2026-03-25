@@ -1,4 +1,6 @@
 #include "eval.hpp"
+#include <limits>
+#include <stdexcept>
 #include <string>
 #include "queue.hpp"
 #include "stack.hpp"
@@ -128,6 +130,8 @@ long long shirokov::eval(std::string line)
   Queue< std::string > infix = split(line);
   Queue< std::string > postfix = infixToPostfix(infix);
   Stack< long long > results;
+  long long llmax = std::numeric_limits< long long >::max();
+  long long llmin = std::numeric_limits< long long >::min();
   while (!postfix.empty())
   {
     std::string val = postfix.front();
@@ -154,14 +158,38 @@ long long shirokov::eval(std::string line)
       long long res = 0;
       if (val == "+")
       {
+        if (op1 < 0 && op2 < 0 && op1 < llmin - op2)
+        {
+          throw std::underflow_error("Underflow error");
+        }
+        else if (op1 > 0 && op2 > 0 && op1 > llmax - op2)
+        {
+          throw std::overflow_error("Overflow error");
+        }
         res = op1 + op2;
       }
       else if (val == "-")
       {
+        if (op1 > 0 && op2 < 0 && op1 > llmax + op2)
+        {
+          throw std::overflow_error("Overflow error");
+        }
+        else if (op1 < 0 && op2 > 0 && op1 < llmin + op2)
+        {
+          throw std::underflow_error("Underflow error");
+        }
         res = op1 - op2;
       }
       else if (val == "*")
       {
+        if (((op1 > 0 && op2 > 0) || (op1 < 0 && op2 < 0)) && op1 > llmax / op2)
+        {
+          throw std::overflow_error("Overflow error");
+        }
+        else if (((op1 > 0 && op2 < 0) || (op1 < 0 && op2 > 0)) && op1 < llmin / op2)
+        {
+          throw std::underflow_error("Underflow error");
+        }
         res = op1 * op2;
       }
       else if (val == "/")
@@ -178,6 +206,14 @@ long long shirokov::eval(std::string line)
       }
       else if (val == "<<")
       {
+        if (op2 > 62)
+        {
+          throw std::overflow_error("Overflow error");
+        }
+        else if (op2 < 0)
+        {
+          throw std::underflow_error("Underflow error");
+        }
         res = op1 << op2;
       }
       results.push(res);
