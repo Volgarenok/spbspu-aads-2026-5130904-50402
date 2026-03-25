@@ -55,7 +55,7 @@ T& shirokov::Stack< T >::top()
 template < class T >
 void shirokov::Stack< T >::pop()
 {
-  return;
+  list_.popBack();
 }
 
 #endif
