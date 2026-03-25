@@ -44,7 +44,7 @@ namespace lavrentev
   long long gcd(long long a, long long b);
   long long count(long long a, long long b, long long &res, std::string operation);
   long long priority(std::string s);
-} // namespace lavrentev
+}
 
 template <class T> void lavrentev::Queue<T>::push(const T &rhs)
 {
@@ -128,7 +128,7 @@ template <class T> T &lavrentev::Stack<T>::top()
 
 inline lavrentev::Stack<long long> lavrentev::readFile(char *name)
 {
-  lavrentev::Stack<long long> ans{};  // Stack вместо Queue
+  lavrentev::Stack<long long> ans{};
   std::ifstream file(name);
   if (file.is_open())
   {
@@ -143,9 +143,9 @@ inline lavrentev::Stack<long long> lavrentev::readFile(char *name)
         exp.push(symb);
       }
       long long res = 0;
-      if(!exp.empty())
+      if (!exp.empty())
       {
-        if(lavrentev::math(exp, res))
+        if (lavrentev::math(exp, res))
         {
           std::cerr << "Error";
           throw;
@@ -155,7 +155,7 @@ inline lavrentev::Stack<long long> lavrentev::readFile(char *name)
       {
         continue;
       }
-      ans.push(res);  // push в стек
+      ans.push(res);
     }
     file.close();
   }
@@ -180,11 +180,10 @@ inline lavrentev::Queue<long long> lavrentev::getline()
       exp.push(symb);
     }
     long long res = 0;
-    if(!exp.empty())
+    if (!exp.empty())
     {
-      if(lavrentev::math(exp, res))
+      if (lavrentev::math(exp, res))
       {
-        //std::cerr << "Error";
         throw;
       }
     }
@@ -356,21 +355,21 @@ inline long long lavrentev::count(long long a, long long b, long long &res, std:
 {
   if (operation == "+")
   {
-    if ((a > 0 && b > LLONG_MAX - a) || (a < 0 && b < LLONG_MIN - a))
+    if ((b > 0 && a > LLONG_MAX - b) || (b < 0 && a < LLONG_MIN - b))
     {
-      std::cerr << "Overflow error";
+      std::cerr << "Overflow error" << "\n";
       throw;
-    } 
+    }
     res = a + b;
     return 0;
   }
   else if (operation == "-")
   {
-    if ((a > 0 && b < LLONG_MIN + a) || (a < 0 && b > LLONG_MAX + a))
+    if ((b < 0 && a > LLONG_MAX + b) || (b > 0 && a < LLONG_MIN + b))
     {
-      std::cerr << "Overflow error";
+      std::cerr << "Overflow error" << "\n";
       throw;
-    } 
+    }
     res = a - b;
     return 0;
   }
@@ -381,9 +380,9 @@ inline long long lavrentev::count(long long a, long long b, long long &res, std:
         (a > 0 && b < 0 && b < LLONG_MIN / a) ||
         (a < 0 && b > 0 && a < LLONG_MIN / b))
     {
-      std::cerr << "Overflow error";
+      std::cerr << "Overflow error" << "\n";
       throw;
-    } 
+    }
     res = a * b;
     return 0;
   }
@@ -393,8 +392,8 @@ inline long long lavrentev::count(long long a, long long b, long long &res, std:
     {
       if (a == LLONG_MIN && b == -1)
       {
-        std::cerr << "Overflow" << "\n";
-        return true;
+        std::cerr << "Overflow error" << "\n";
+        throw;
       }
       res = a / b;
       return 0;
