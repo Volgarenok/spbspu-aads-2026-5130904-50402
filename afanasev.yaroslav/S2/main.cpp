@@ -52,21 +52,15 @@ int main(int argc, char * argv[])
   {
     std::cout << res.get();
     res.pop();
-  }
-  else
-  {
+
+    while (!res.empty())
+    {
+      std::cout << ' ' << res.get();
+      res.pop();
+    }
+
     std::cout << '\n';
-    std::cerr << "file is empty\n";
-    return 1;
   }
-
-  while (!res.empty())
-  {
-    std::cout << ' ' << res.get();
-    res.pop();
-  }
-
-  std::cout << '\n';
 
   return 0;
 }
