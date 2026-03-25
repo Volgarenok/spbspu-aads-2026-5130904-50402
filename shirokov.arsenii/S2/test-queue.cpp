@@ -21,3 +21,12 @@ BOOST_AUTO_TEST_CASE(move_push_make_queue_non_empty)
   q.push(1);
   BOOST_TEST(!q.empty());
 }
+
+BOOST_AUTO_TEST_CASE(front_method_return_first_elem)
+{
+  shirokov::Queue< int > q;
+  q.push(1);
+  q.push(2);
+  q.push(3);
+  BOOST_TEST(q.front() == 1);
+}
