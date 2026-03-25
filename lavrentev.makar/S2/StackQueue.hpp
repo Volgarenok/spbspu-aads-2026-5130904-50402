@@ -35,14 +35,14 @@ namespace lavrentev
     List<T> data;
   };
 
-  Queue<int> readFile(char *name);
-  Queue<int> getline();
-  int math(Queue<std::string> exp, int &res);
+  Queue<long long> readFile(char *name);
+  Queue<long long> getline();
+  long long math(Queue<std::string> exp, long long &res);
   bool operCond(std::string buf);
   bool isNumber(std::string exp);
-  int gcd(int a, int b);
-  int count(int a, int b, int &res, std::string operation);
-  int priority(std::string s);
+  long long gcd(long long a, long long b);
+  long long count(long long a, long long b, long long &res, std::string operation);
+  long long priority(std::string s);
 } // namespace lavrentev
 
 template <class T> void lavrentev::Queue<T>::push(const T &rhs)
@@ -125,9 +125,9 @@ template <class T> T &lavrentev::Stack<T>::top()
   return data.front();
 }
 
-inline lavrentev::Queue<int> lavrentev::readFile(char *name)
+inline lavrentev::Queue<long long> lavrentev::readFile(char *name)
 {
-  lavrentev::Queue<int> ans{};
+  lavrentev::Queue<long long> ans{};
   std::ifstream file(name);
   if (file.is_open())
   {
@@ -141,7 +141,7 @@ inline lavrentev::Queue<int> lavrentev::readFile(char *name)
       {
         exp.push(symb);
       }
-      int res = 0;
+      long long res = 0;
       if(!exp.empty())
       {
         if(lavrentev::math(exp, res))
@@ -165,9 +165,9 @@ inline lavrentev::Queue<int> lavrentev::readFile(char *name)
   return ans;
 }
 
-inline lavrentev::Queue<int> lavrentev::getline()
+inline lavrentev::Queue<long long> lavrentev::getline()
 {
-  lavrentev::Queue<int> ans{};
+  lavrentev::Queue<long long> ans{};
   std::string line;
   while (std::getline(std::cin, line))
   {
@@ -178,7 +178,7 @@ inline lavrentev::Queue<int> lavrentev::getline()
     {
       exp.push(symb);
     }
-    int res = 0;
+    long long res = 0;
     if(!exp.empty())
     {
       if(lavrentev::math(exp, res))
@@ -196,11 +196,11 @@ inline lavrentev::Queue<int> lavrentev::getline()
   return ans;
 }
 
-inline int lavrentev::math(lavrentev::Queue<std::string> exp, int &res)
+inline long long lavrentev::math(lavrentev::Queue<std::string> exp, long long &res)
 {
-  Queue<int> sRes{};
+  Stack<long long> sRes{};
   Stack<std::string> op{};
-  int brackets = 0;
+  long long brackets = 0;
   while (!exp.empty())
   {
     std::string buf = exp.drop();
@@ -214,9 +214,9 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int &res)
       while (!op.empty() && op.top() != "(" && operCond(op.top()) && priority(op.top()) >= priority(buf))
       {
         std::string operation = op.drop();
-        int oper2 = sRes.drop();
-        int oper1 = sRes.drop();
-        int bufAns = 0;
+        long long oper2 = sRes.drop();
+        long long oper1 = sRes.drop();
+        long long bufAns = 0;
         if (!count(oper1, oper2, bufAns, operation))
         {
           sRes.push(bufAns);
@@ -255,7 +255,7 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int &res)
         }
         if (operCond(expOper) && priority(expOper) > priority(operation))
         {
-          int oper2;
+          long long oper2;
           try
           {
             oper2 = std::stoi(buf);
@@ -269,8 +269,8 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int &res)
         else
         {
           op.drop();
-          int oper1 = sRes.drop();
-          int oper2;
+          long long oper1 = sRes.drop();
+          long long oper2;
           try
           {
             oper2 = std::stoi(buf);
@@ -279,7 +279,7 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int &res)
             std::cerr << "Invalid number" << "\n";
             return 2;
           }
-          int bufAns = 0;
+          long long bufAns = 0;
           if (!count(oper1, oper2, bufAns, operation))
           {
             sRes.push(bufAns);
@@ -309,9 +309,9 @@ inline int lavrentev::math(lavrentev::Queue<std::string> exp, int &res)
 
     if (operCond(operation))
     {
-      int oper2 = sRes.drop();
-      int oper1 = sRes.drop();
-      int bufAns = 0;
+      long long oper2 = sRes.drop();
+      long long oper1 = sRes.drop();
+      long long bufAns = 0;
       if (!count(oper1, oper2, bufAns, operation))
       {
         sRes.push(bufAns);
@@ -335,7 +335,7 @@ inline bool lavrentev::operCond(std::string buf)
   return buf == "+" || buf == "-" || buf == "*" || buf == "/" || buf == "gcd" || buf == "%";
 }
 
-inline int lavrentev::gcd(int a, int b)
+inline long long lavrentev::gcd(long long a, long long b)
 {
   while (a != 0 && b != 0)
   {
@@ -351,7 +351,7 @@ inline int lavrentev::gcd(int a, int b)
   return a + b;
 }
 
-inline int lavrentev::count(int a, int b, int &res, std::string operation)
+inline long long lavrentev::count(long long a, long long b, long long &res, std::string operation)
 {
   if (operation == "+")
   {
@@ -406,7 +406,7 @@ inline int lavrentev::count(int a, int b, int &res, std::string operation)
   }
 }
 
-inline int lavrentev::priority(std::string s)
+inline long long lavrentev::priority(std::string s)
 {
   if (s == "+" || s == "-")
   {

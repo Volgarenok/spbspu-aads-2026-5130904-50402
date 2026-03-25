@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
   std::string name;
-  lavrentev::Queue<int> res;
+  lavrentev::Queue<long long> res;
   try
   {
     if (argc == 2)
