@@ -3,6 +3,7 @@
 #include <iostream>
 
 saldaev::Queue< saldaev::Queue< std::string > > parse(saldaev::Queue< std::string > rawLines);
+saldaev::Queue< saldaev::Queue< std::string > > rearrange(saldaev::Queue< saldaev::Queue< std::string > > parsedLines);
 
 int main(int argc, char *argv[])
 {
@@ -64,4 +65,33 @@ saldaev::Queue< saldaev::Queue< std::string > > parse(saldaev::Queue< std::strin
     parsedLines.push(tokens);
   }
   return parsedLines;
+}
+
+bool isNumber(std::string token)
+{
+  for (size_t i = 0; i < token.size(); ++i) {
+    if (!std::isdigit(token[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool isOperator(std::string token)
+{
+  if (token == "+" || token == "-" || token == "*" || token == "/" || token == "%" || token == "!") {
+    return true;
+  }
+  return false;
+}
+
+int getPriority(const std::string &op)
+{
+  if (op == "+" || op == "-") {
+    return 1;
+  }
+  if (op == "*" || op == "/" || op == "%") {
+    return 2;
+  }
+  return 0;
 }
