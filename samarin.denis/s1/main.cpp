@@ -145,9 +145,16 @@ public:
     delete temp;
   }
 
+  bool empty() const { return head->next == nullptr; }
+
   void clear();
-  LIter< T > begin() { return LIter< T >(head->next); }
-  LIter< T > end()   { return LIter< T >(nullptr); }
+  LIter< T >  begin()         { return LIter< T >(head->next); }
+  LIter< T >  end()           { return LIter< T >(nullptr); }
+  LCIter< T > begin()  const  { return LCIter< T >(head->next); }
+  LCIter< T > end()    const  { return LCIter< T >(nullptr); }
+  LCIter< T > cbegin() const  { return LCIter< T >(head->next); }
+  LCIter< T > cend()   const  { return LCIter< T >(nullptr); }
+  LCIter< T > cbefore_begin() const { return LCIter< T >(head); }
 };
 
 template< class T >
@@ -204,10 +211,10 @@ template< class T >
 
 template<class T>
 void List< T >::clear() {
-  Node * temp = head->next;
+  Node< T > * temp = head->next;
 
   while (temp != nullptr) {
-    Node * temp2 = temp->next;
+    Node< T > * temp2 = temp->next;
     delete temp;
     temp = temp2;
   }
