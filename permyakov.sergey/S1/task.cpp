@@ -3,7 +3,8 @@
 
 namespace permyakov
 {
-  using list_t = List < std::pair < std::string, List < size_t > > >;
+  using pair_t = std::pair < std::string, List < size_t > >;
+  using list_t = List < pair_t >;
 
   void input(std::istream & in, list_t & list)
   {
@@ -20,7 +21,8 @@ namespace permyakov
         ++iter;
       }
       in.clear();
-      list.push_front(std::pair < std::string, List < size_t > > (title, numbers));
+      pair_t pairL(title, numbers);
+      list.push_front(pairL);
     }
   }
 

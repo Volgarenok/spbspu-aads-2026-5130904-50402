@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include "iterators.hpp"
 
+#include <iostream>
+
 namespace permyakov
 {
   template < class T > class List
@@ -41,14 +43,17 @@ namespace permyakov
   {}
 
   template < class T > List < T >::List(const List < T > & scndList):
-    nodes(new Node < T > {scndList.front(), nullptr}),
+    nodes(new Node < T > {T(), nullptr}),
     tail(nodes),
-    size_(1)
+    size_(0)
   {
-    LIter < T > iter = begin();
-    for(LCIter < T > iIter = scndList.beginC(); size_ < scndList.size_; ++iter) {
-      ++iIter;
-      insert_after(iter, *iIter);
+    if(!scndList.isEmpty()) {
+      push_front(scndList.front());
+      LIter < T > iter = begin();
+      for(LCIter < T > iIter = scndList.beginC(); size_ < scndList.size_; ++iter) {
+        ++iIter;
+        insert_after(iter, *iIter);
+      }
     }
   }
 
@@ -65,7 +70,7 @@ namespace permyakov
   template < class T > List < T >::~List()
     {
       clear();
-      delete[] nodes;
+      delete nodes;
     }
 
   template < class T > List < T > & List < T >::operator=(const List < T > & scndList)
@@ -182,8 +187,7 @@ namespace permyakov
   template < class T > void List < T >::push_front(const T value)
   {
     if(isEmpty()) {
-      delete[] nodes;
-      nodes = nullptr;
+      delete nodes;
     }
     nodes = new Node < T > {value, nodes};
     size_++;
@@ -199,7 +203,7 @@ namespace permyakov
     }
     Node < T > * ersNode = nodes;
     nodes = nodes -> next;
-    delete[] ersNode; 
+    delete ersNode; 
     size_--;
     if(isEmpty()) {
       nodes = new Node < T > {T(), nullptr};
