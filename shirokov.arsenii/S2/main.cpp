@@ -1,5 +1,7 @@
+#include <new>
 #define ERROR_INVALID_ARGS 1
 #define ERROR_OUT_OF_RANGE 2
+#define ERROR_BAD_ALLOC 3
 
 #include <fstream>
 #include <iostream>
@@ -19,12 +21,29 @@ int main(int argc, char** argv)
   shirokov::Stack< std::string > expressions;
   if (argc == 1)
   {
-    expressions = shirokov::input(std::cin);
+    try
+    {
+      expressions = shirokov::input(std::cin);
+    }
+    catch (const std::bad_alloc&)
+    {
+      std::cerr << "Memory allocation error when adding an element\n";
+      return ERROR_BAD_ALLOC;
+    }
   }
   else if (argc == 2)
   {
-    std::ifstream in(argv[1]);
-    expressions = shirokov::input(in);
+    try
+    {
+      std::ifstream in(argv[1]);
+      expressions = shirokov::input(in);
+      in.close();
+    }
+    catch (const std::bad_alloc&)
+    {
+      std::cerr << "Memory allocation error when adding an element\n";
+      return ERROR_BAD_ALLOC;
+    }
   }
   else
   {
@@ -41,16 +60,21 @@ int main(int argc, char** argv)
     }
     catch (const std::invalid_argument&)
     {
-      std::cerr << "invalid arg\n";
+      std::cerr << "invalid arg\n"; // TODO добавить описание ошибки
       return ERROR_INVALID_ARGS;
     }
     catch (const std::out_of_range&)
     {
-      std::cerr << "out of range\n";
+      std::cerr << "out of range\n"; // TODO добавить описание ошибки
       return ERROR_OUT_OF_RANGE;
     }
+    catch (...) // TODO еще ошибки
+    {
+      std::cerr << "Error\n";
+      return -1;
+    }
     std::cout << res;
-    expressions.pop();
+    expressions.pop(); // ?может тут быть ошибка?
     if (!expressions.empty())
     {
       std::cout << ' ';
