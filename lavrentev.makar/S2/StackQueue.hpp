@@ -390,7 +390,7 @@ inline long long lavrentev::count(long long a, long long b, long long &res, std:
   {
     if (b != 0)
     {
-      res = a % b;
+      res = a % b + b;
       return 0;
     }
     else
