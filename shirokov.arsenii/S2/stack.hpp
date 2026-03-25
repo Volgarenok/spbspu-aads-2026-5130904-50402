@@ -41,7 +41,7 @@ void shirokov::Stack< T >::push(T&& value)
 template < class T >
 const T& shirokov::Stack< T >::top() const
 {
-  return list_.front();
+  return list_.back();
 }
 
 #endif
