@@ -63,4 +63,5 @@ namespace saldaev
   }
 
   template struct Stack< int >;
+  template struct Stack< std::string >;
 }
