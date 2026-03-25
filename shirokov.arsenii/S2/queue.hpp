@@ -10,8 +10,6 @@ namespace shirokov
   public:
     T& front();
     const T& front() const;
-    T& back();
-    const T& back() const;
     bool empty() const noexcept;
     void push(const T& value);
     void push(T&& value);
