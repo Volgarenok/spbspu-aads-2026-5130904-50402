@@ -34,4 +34,10 @@ void shirokov::Queue< T >::push(const T& value)
   list_.pushBack(value);
 }
 
+template < class T >
+void shirokov::Queue< T >::push(T&&)
+{
+  return;
+}
+
 #endif
