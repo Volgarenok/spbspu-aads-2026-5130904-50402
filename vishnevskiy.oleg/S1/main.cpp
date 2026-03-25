@@ -148,7 +148,7 @@ int main()
   int* sums = nullptr;
   try
   {
-    int* sums = new int[lSize];
+    sums = new int[lSize];
   }
   catch (const std::bad_alloc& e)
   {
