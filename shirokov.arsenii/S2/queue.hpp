@@ -12,7 +12,7 @@ namespace shirokov
     const T& front() const;
     T& back();
     const T& back() const;
-    bool empty() const;
+    bool empty() const noexcept;
     void push(const T& value);
     void push(T&& value);
     void pop();
@@ -23,15 +23,15 @@ namespace shirokov
 }
 
 template < class T >
-bool shirokov::Queue< T >::empty() const
+bool shirokov::Queue< T >::empty() const noexcept
 {
   return list_.empty();
 }
 
 template < class T >
-void shirokov::Queue< T >::push(const T&)
+void shirokov::Queue< T >::push(const T& value)
 {
-  return;
+  list_.pushBack(value);
 }
 
 #endif
