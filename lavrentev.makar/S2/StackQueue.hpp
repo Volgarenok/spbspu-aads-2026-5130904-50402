@@ -183,7 +183,7 @@ inline lavrentev::Queue<long long> lavrentev::getline()
     {
       if(lavrentev::math(exp, res))
       {
-        std::cerr << "Error";
+        //std::cerr << "Error";
         throw;
       }
     }
@@ -258,7 +258,7 @@ inline long long lavrentev::math(lavrentev::Queue<std::string> exp, long long &r
           long long oper2;
           try
           {
-            oper2 = std::stoi(buf);
+            oper2 = std::stoll(buf);
           } catch (...)
           {
             std::cerr << "Invalid number" << "\n";
@@ -273,7 +273,7 @@ inline long long lavrentev::math(lavrentev::Queue<std::string> exp, long long &r
           long long oper2;
           try
           {
-            oper2 = std::stoi(buf);
+            oper2 = std::stoll(buf);
           } catch (...)
           {
             std::cerr << "Invalid number" << "\n";
@@ -294,7 +294,7 @@ inline long long lavrentev::math(lavrentev::Queue<std::string> exp, long long &r
       {
         try
         {
-          sRes.push(std::stoi(buf));
+          sRes.push(std::stoll(buf));
         } catch (...)
         {
           std::cerr << "Invalid number" << "\n";
