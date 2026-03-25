@@ -14,3 +14,10 @@ BOOST_AUTO_TEST_CASE(copy_push_make_stack_non_empty)
   s.push(a);
   BOOST_TEST(!s.empty());
 }
+
+BOOST_AUTO_TEST_CASE(move_push_make_stack_non_empty)
+{
+  shirokov::Stack< int > s;
+  s.push(1);
+  BOOST_TEST(!s.empty());
+}
