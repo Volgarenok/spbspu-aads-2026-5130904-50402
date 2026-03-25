@@ -22,4 +22,10 @@ namespace shirokov
   };
 }
 
+template < class T >
+bool shirokov::Queue< T >::empty() const
+{
+  return false;
+}
+
 #endif
