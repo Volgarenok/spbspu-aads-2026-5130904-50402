@@ -101,6 +101,19 @@ void cleanup(vishnevskiy::NamedLIter<int>& lt, vishnevskiy::LIter<int>& em, vish
   lt.clear(&lt);
 }
 
+int stoi_err(const std::string& str)
+{
+  try
+  {
+    return std::stoi(str);
+  }
+  catch (const std::out_of_range& e)
+  {
+    throw std::overflow_error("Overflow error");
+  }
+  return 0;
+}
+
 int main()
 {
   vishnevskiy::NamedList<int>* lhead = nullptr;
@@ -116,11 +129,11 @@ int main()
       int number = 0;
       try
       {
-        number = std::stoi(data);
+        number = stoi_err(data);
       }
-      catch (const std::out_of_range& e)
+      catch (const std::overflow_error& e)
       {
-        std::cerr << "Overflow error\n";
+        std::cerr << e.what() << "\n";
         cleanup(lIt, embedIt, lhead);
         return 1;
       }
