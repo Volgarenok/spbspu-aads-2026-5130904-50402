@@ -83,6 +83,19 @@ void printSeq(vishnevskiy::NamedLIter<int> lt, size_t depth, int* sums, size_t i
   }
 }
 
+void cleanup(vishnevskiy::NamedLIter<int>& lt, vishnevskiy::LIter<int>& em, vishnevskiy::NamedList<int>* h)
+{
+  lt.setCurr(h);
+  while (lt.curr)
+  {
+    em.set(lt.value());
+    em.clear(&em);
+    ++lt;
+  }
+  lt.setCurr(h);
+  lt.clear(&lt);
+}
+
 int main()
 {
   vishnevskiy::NamedList<int>* lhead = nullptr;
@@ -103,6 +116,7 @@ int main()
       catch (const std::out_of_range& e)
       {
         std::cerr << "Overflow error\n";
+        cleanup(lIt, embedIt, lhead);
         return 1;
       }
       if (!lIt.value())
@@ -162,14 +176,7 @@ int main()
   catch (const std::bad_alloc& e)
   {
     std::cerr << "Bad alloc\n";
-    while (lIt.curr)
-    {
-      embedIt.set(lIt.value());
-      embedIt.clear(&embedIt);
-    }
-    ++lIt;
-    lIt.setCurr(lhead);
-    lIt.clear(&lIt);
+    cleanup(lIt, embedIt, lhead);
     return 1;
   }
   printNames(lIt);
@@ -181,14 +188,6 @@ int main()
   }
   std::cout << "\n";
   delete[] sums;
-  lIt.setCurr(lhead);
-  while (lIt.curr)
-  {
-    embedIt.set(lIt.value());
-    embedIt.clear(&embedIt);
-    ++lIt;
-  }
-  lIt.setCurr(lhead);
-  lIt.clear(&lIt);
+  cleanup(lIt, embedIt, lhead);
   return 0;
 }
