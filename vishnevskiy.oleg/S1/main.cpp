@@ -4,16 +4,6 @@
 #include <sstream>
 #include <cctype>
 
-bool isNumber(std::string& str)
-{
-  for (char ch : str) {
-    if (!std::isdigit(ch)) {
-      return false;
-    }
-  }
-  return true;
-}
-
 bool hasDepth(vishnevskiy::LIter<int> em, size_t depth)
 {
   size_t d = 0;
@@ -101,39 +91,29 @@ void cleanup(vishnevskiy::NamedLIter<int>& lt, vishnevskiy::LIter<int>& em, vish
   lt.clear(&lt);
 }
 
-int stoi_err(const std::string& str)
-{
-  try
-  {
-    return std::stoi(str);
-  }
-  catch (const std::out_of_range& e)
-  {
-    throw std::overflow_error("Overflow error");
-  }
-  return 0;
-}
-
 int main()
 {
   vishnevskiy::NamedList<int>* lhead = nullptr;
   vishnevskiy::NamedLIter<int> lIt(lhead);
   vishnevskiy::LIter<int> embedIt(nullptr);
-  std::string data;
+  std::string name;
   size_t lSize = 0;
   size_t cSize = 0;
-  while (std::cin >> data)
+  
+  while (std::cin)
   {
-    if (isNumber(data))
+    std::cin >> std::ws;
+    int c = std::cin.peek();
+    if (std::isdigit(c))
     {
       int number = 0;
       try
       {
-        number = stoi_err(data);
+        std::cin >> number;
       }
       catch (const std::overflow_error& e)
       {
-        std::cerr << e.what() << "\n";
+        std::cerr << "Overflow error\n";
         cleanup(lIt, embedIt, lhead);
         return 1;
       }
@@ -165,12 +145,13 @@ int main()
     }
     else
     {
+      std::cin >> name;
       cSize = 0;
       if (!lhead)
       {
         try
         {
-          lhead = new vishnevskiy::NamedList<int>{data, nullptr, nullptr};
+          lhead = new vishnevskiy::NamedList<int>{name, nullptr, nullptr};
         }
         catch (const std::bad_alloc& e)
         {
@@ -182,7 +163,7 @@ int main()
       }
       else
       {
-        lIt.insert(nullptr, data);
+        lIt.insert(nullptr, name);
         ++lIt;
       }
     }
