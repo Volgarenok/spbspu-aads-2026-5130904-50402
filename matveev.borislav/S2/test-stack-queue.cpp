@@ -3,6 +3,9 @@
 
 #include "../S2/stack.hpp"
 #include "../S2/queue.hpp"
+#include "../S2/parser.hpp"
+
+#include <string>
 
 BOOST_AUTO_TEST_CASE(stack_basic_operations)
 {
@@ -39,6 +42,14 @@ BOOST_AUTO_TEST_CASE(stack_string)
   BOOST_CHECK_EQUAL(s.drop(), "a");
 }
 
+BOOST_AUTO_TEST_CASE(stack_exceptions)
+{
+  matveev::Stack<int> s;
+
+  BOOST_CHECK_THROW(s.drop(), std::runtime_error);
+  BOOST_CHECK_THROW(s.top(), std::runtime_error);
+}
+
 BOOST_AUTO_TEST_CASE(queue_basic_operations)
 {
   matveev::Queue<int> q;
@@ -72,4 +83,105 @@ BOOST_AUTO_TEST_CASE(queue_string)
   BOOST_CHECK_EQUAL(q.front(), "one");
   BOOST_CHECK_EQUAL(q.drop(), "one");
   BOOST_CHECK_EQUAL(q.drop(), "two");
+}
+
+BOOST_AUTO_TEST_CASE(queue_exceptions)
+{
+  matveev::Queue<int> q;
+
+  BOOST_CHECK_THROW(q.drop(), std::runtime_error);
+  BOOST_CHECK_THROW(q.front(), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(parser_simple_expression)
+{
+  matveev::Queue<std::string> q;
+
+  q.push("2");
+  q.push("+");
+  q.push("3");
+
+  auto postfix = matveev::toPostfix(q);
+  long result = matveev::evaluatePostfix(postfix);
+
+  BOOST_CHECK_EQUAL(result, 5);
+}
+
+BOOST_AUTO_TEST_CASE(parser_precedence)
+{
+  matveev::Queue<std::string> q;
+
+  q.push("2");
+  q.push("+");
+  q.push("3");
+  q.push("*");
+  q.push("4");
+
+  auto postfix = matveev::toPostfix(q);
+  long result = matveev::evaluatePostfix(postfix);
+
+  BOOST_CHECK_EQUAL(result, 14);
+}
+
+BOOST_AUTO_TEST_CASE(parser_parentheses)
+{
+  matveev::Queue<std::string> q;
+
+  q.push("(");
+  q.push("2");
+  q.push("+");
+  q.push("3");
+  q.push(")");
+  q.push("*");
+  q.push("4");
+
+  auto postfix = matveev::toPostfix(q);
+  long result = matveev::evaluatePostfix(postfix);
+
+  BOOST_CHECK_EQUAL(result, 20);
+}
+
+BOOST_AUTO_TEST_CASE(parser_gcd)
+{
+  matveev::Queue<std::string> q;
+
+  q.push("12");
+  q.push("gcd");
+  q.push("18");
+
+  auto postfix = matveev::toPostfix(q);
+  long result = matveev::evaluatePostfix(postfix);
+
+  BOOST_CHECK_EQUAL(result, 6);
+}
+
+BOOST_AUTO_TEST_CASE(parser_complex)
+{
+  matveev::Queue<std::string> q;
+
+  q.push("(");
+  q.push("10");
+  q.push("+");
+  q.push("5");
+  q.push(")");
+  q.push("gcd");
+  q.push("5");
+
+  auto postfix = matveev::toPostfix(q);
+  long result = matveev::evaluatePostfix(postfix);
+
+  BOOST_CHECK_EQUAL(result, 5);
+}
+
+BOOST_AUTO_TEST_CASE(parser_invalid_expression)
+{
+  matveev::Queue<std::string> q;
+
+  q.push("+");
+  q.push("2");
+
+  BOOST_CHECK_THROW(
+    matveev::evaluatePostfix(matveev::toPostfix(q)),
+    std::runtime_error
+  );
 }
