@@ -51,7 +51,7 @@ bool printEmbed(vishnevskiy::LIter<int> em, size_t depth, int& sm)
   }
   if (em.curr)
   {
-    std::cout << em.value() << " ";
+    std::cout << em.value();
     sm += em.value();
     return true;
   }
@@ -70,6 +70,11 @@ void printSeq(vishnevskiy::NamedLIter<int> lt, size_t depth, int* sums, size_t i
       vishnevskiy::LIter<int> temp(currIt.value());
       if (hasDepth(temp, depth))
       {
+        if (f)
+        {
+          std::cout << " ";
+        }
+
         f = printEmbed(temp, depth, sm);
       }
     }
@@ -189,7 +194,11 @@ int main()
   printSeq(lIt, 0, sums, 0);
   for (size_t i = 0; i < lSize; i++)
   {
-    std::cout << sums[i] << " ";
+    std::cout << sums[i];
+    if (i != lSize - 1)
+    {
+      std::cout << " ";
+    }
   }
   std::cout << "\n";
   delete[] sums;
