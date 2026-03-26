@@ -20,6 +20,7 @@ namespace saldaev
     void pop() noexcept;
     void clear() noexcept;
     bool empty() const noexcept;
+    size_t size() const noexcept;
 
   private:
     List< T > data_;

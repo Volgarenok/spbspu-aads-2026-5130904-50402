@@ -62,6 +62,13 @@ namespace saldaev
     return *this;
   }
 
+  template < class T >
+  size_t Stack< T >::size() const noexcept
+  {
+    return 0;
+  }
+
   template struct Stack< int >;
+  template struct Stack< long long >;
   template struct Stack< std::string >;
 }

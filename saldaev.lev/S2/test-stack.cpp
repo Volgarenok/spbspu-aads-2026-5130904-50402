@@ -172,6 +172,26 @@ namespace saldaev
     BOOST_CHECK_THROW(empty.top(), std::exception);
   }
 
+  BOOST_AUTO_TEST_CASE(size)
+  {
+    Stack< int > q;
+    BOOST_TEST(q.size() == 0);
+
+    q.push(1);
+    BOOST_TEST(q.size() == 1);
+    q.push(2);
+    BOOST_TEST(q.size() == 2);
+    q.push(3);
+    BOOST_TEST(q.size() == 3);
+
+    q.pop();
+    BOOST_TEST(q.size() == 2);
+    q.pop();
+    BOOST_TEST(q.size() == 1);
+    q.pop();
+    BOOST_TEST(q.size() == 0);
+  }
+
   BOOST_AUTO_TEST_SUITE_END()
 
 }

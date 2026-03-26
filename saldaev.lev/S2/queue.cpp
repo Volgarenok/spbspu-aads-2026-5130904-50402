@@ -62,6 +62,12 @@ namespace saldaev
     return *this;
   }
 
+  template < class T >
+  size_t Queue< T >::size() const noexcept
+  {
+    return 0;
+  }
+
   template struct Queue< int >;
   template struct Queue< std::string >;
   template struct Queue< saldaev::Queue< std::string > >;
