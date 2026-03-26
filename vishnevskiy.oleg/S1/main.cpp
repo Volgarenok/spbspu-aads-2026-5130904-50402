@@ -118,7 +118,7 @@ int main()
       {
         number = std::stoi(data);
       }
-      catch (const std::out_of_range& e)
+      catch (const std::overflow_error& e)
       {
         std::cerr << "Overflow error\n";
         cleanup(lIt, embedIt, lhead);
