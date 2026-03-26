@@ -7,6 +7,8 @@
 #include <string>
 #include <cctype>
 #include <stdexcept>
+#include <limits>
+#include <cmath>
 
 namespace matveev
 {
@@ -19,18 +21,13 @@ long gcd(long a, long b)
     b = a % b;
     a = t;
   }
-
   return a;
 }
 
 bool isOperator(const std::string& op)
 {
-  return op == "+"
-      || op == "-"
-      || op == "*"
-      || op == "/"
-      || op == "%"
-      || op == "^";
+  return op == "+" || op == "-" || op == "*" ||
+         op == "/" || op == "%" || op == "^";
 }
 
 bool isGcd(const std::string& op)
@@ -96,6 +93,63 @@ bool isLeftParen(const std::string& token)
 bool isRightParen(const std::string& token)
 {
   return token == ")";
+}
+
+bool willAddOverflow(long a, long b)
+{
+  if (b > 0 && a > std::numeric_limits<long>::max() - b)
+  {
+    return true;
+  }
+
+  if (b < 0 && a < std::numeric_limits<long>::min() - b)
+  {
+    return true;
+  }
+
+  return false;
+}
+
+bool willMulOverflow(long a, long b)
+{
+  if (a == 0 || b == 0)
+  {
+    return false;
+  }
+
+  if (a == -1 && b == std::numeric_limits<long>::min())
+  {
+    return true;
+  }
+
+  if (b == -1 && a == std::numeric_limits<long>::min())
+  {
+    return true;
+  }
+
+  if (a > std::numeric_limits<long>::max() / b)
+  {
+    return true;
+  }
+
+  if (a < std::numeric_limits<long>::min() / b)
+  {
+    return true;
+  }
+
+  return false;
+}
+
+long mod(long a, long b)
+{
+  long r = a % b;
+
+  if (r < 0)
+  {
+    r += std::abs(b);
+  }
+
+  return r;
 }
 
 Queue<std::string> toPostfix(Queue<std::string> input)
@@ -172,14 +226,29 @@ long evaluatePostfix(Queue<std::string> postfix)
 
       if (token == "+")
       {
+        if (willAddOverflow(a, b))
+        {
+          throw std::runtime_error("overflow");
+        }
+
         values.push(a + b);
       }
       else if (token == "-")
       {
+        if (willAddOverflow(a, -b))
+        {
+          throw std::runtime_error("overflow");
+        }
+
         values.push(a - b);
       }
       else if (token == "*")
       {
+        if (willMulOverflow(a, b))
+        {
+          throw std::runtime_error("overflow");
+        }
+
         values.push(a * b);
       }
       else if (token == "/")
@@ -195,10 +264,10 @@ long evaluatePostfix(Queue<std::string> postfix)
       {
         if (b == 0)
         {
-          throw std::runtime_error("modulo by zero");
+          throw std::runtime_error("division by zero");
         }
 
-        values.push(a % b);
+        values.push(mod(a, b));
       }
       else if (token == "^")
       {
@@ -206,6 +275,11 @@ long evaluatePostfix(Queue<std::string> postfix)
 
         for (long i = 0; i < b; ++i)
         {
+          if (willMulOverflow(result, a))
+          {
+            throw std::runtime_error("overflow");
+          }
+
           result *= a;
         }
 
