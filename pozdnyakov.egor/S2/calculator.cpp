@@ -1,11 +1,79 @@
-#include <cctype>
-#include <stdexcept>
 #include "calculator.hpp"
+#include <cctype>
+#include <limits>
+#include <stdexcept>
 #include "queue.hpp"
 #include "stack.hpp"
 
 namespace pozdnyakov
 {
+  namespace
+  {
+    long long safeAdd(long long left, long long right)
+    {
+      if (right > 0 && left > std::numeric_limits< long long >::max() - right) {
+        throw std::runtime_error("Overflow");
+      }
+      if (right < 0 && left < std::numeric_limits< long long >::min() - right) {
+        throw std::runtime_error("Underflow");
+      }
+      return left + right;
+    }
+
+    long long safeSub(long long left, long long right)
+    {
+      if (right < 0 && left > std::numeric_limits< long long >::max() + right) {
+        throw std::runtime_error("Overflow");
+      }
+      if (right > 0 && left < std::numeric_limits< long long >::min() + right) {
+        throw std::runtime_error("Underflow");
+      }
+      return left - right;
+    }
+
+    long long safeMul(long long left, long long right)
+    {
+      if (left == 0 || right == 0) {
+        return 0;
+      }
+      if (left > 0 && right > 0 && left > std::numeric_limits< long long >::max() / right) {
+        throw std::runtime_error("Overflow");
+      }
+      if (left > 0 && right < 0 && right < std::numeric_limits< long long >::min() / left) {
+        throw std::runtime_error("Underflow");
+      }
+      if (left < 0 && right > 0 && left < std::numeric_limits< long long >::min() / right) {
+        throw std::runtime_error("Underflow");
+      }
+      if (left < 0 && right < 0 && left < std::numeric_limits< long long >::max() / right) {
+        throw std::runtime_error("Overflow");
+      }
+      return left * right;
+    }
+
+    long long safeDiv(long long left, long long right)
+    {
+      if (right == 0) {
+        throw std::runtime_error("Division by zero");
+      }
+      if (left == std::numeric_limits< long long >::min() && right == -1) {
+        throw std::runtime_error("Overflow");
+      }
+      return left / right;
+    }
+
+    long long safeMod(long long left, long long right)
+    {
+      if (right == 0) {
+        throw std::runtime_error("Modulo by zero");
+      }
+      if (left == std::numeric_limits< long long >::min() && right == -1) {
+        throw std::runtime_error("Overflow");
+      }
+      return left % right;
+    }
+  }
+
   enum class TokenType { Number, Operator, LParen, RParen };
 
   struct Token
@@ -43,7 +111,13 @@ namespace pozdnyakov
       if (std::isdigit(expr[i])) {
         long long val = 0;
         while (i < expr.length() && std::isdigit(expr[i])) {
-          val = val * 10 + (expr[i] - '0');
+          int digit = expr[i] - '0';
+
+          if (val > (std::numeric_limits< long long >::max() - digit) / 10) {
+            throw std::runtime_error("Number too large");
+          }
+
+          val = val * 10 + digit;
           ++i;
         }
         tokens.push({TokenType::Number, val, '\0'});
@@ -137,25 +211,19 @@ namespace pozdnyakov
         long long result = 0;
         switch (token.op) {
         case '+':
-          result = left + right;
+          result = safeAdd(left, right);
           break;
         case '-':
-          result = left - right;
+          result = safeSub(left, right);
           break;
         case '*':
-          result = left * right;
+          result = safeMul(left, right);
           break;
         case '/':
-          if (right == 0) {
-            throw std::runtime_error("Division by zero");
-          }
-          result = left / right;
+          result = safeDiv(left, right);
           break;
         case '%':
-          if (right == 0) {
-            throw std::runtime_error("Modulo by zero");
-          }
-          result = left % right;
+          result = safeMod(left, right);
           break;
         case '&':
           result = left & right;
