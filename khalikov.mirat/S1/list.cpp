@@ -181,8 +181,16 @@ namespace khalikov
     }
   }
 
-  
-
+  template< class T >
+  void List< T >::sort()
+  {
+    auto i = begin();
+    auto j = ++i;
+    for (; i.curr != nullptr; ++i)
+    {
+      for (; j.curr != nullptr; ++j)
+      {
+        if (i.curr->val;)
 }
 
 #endif
