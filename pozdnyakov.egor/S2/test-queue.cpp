@@ -38,8 +38,8 @@ BOOST_AUTO_TEST_CASE(testCopyConstructorTailRecovery)
 
   copied.push(3);
 
-  copied.pop();             
-  copied.pop();        
+  copied.pop();
+  copied.pop();
   BOOST_CHECK_EQUAL(copied.front(), 3);
 }
 
