@@ -1,3 +1,5 @@
+#ifndef DATASTRUCTS_HPP
+#define DATASTRUCTS_HPP
 #include "../common/iters.hpp"
 #include "../common/list.hpp"
 #include "../common/node.hpp"
@@ -87,3 +89,5 @@ namespace strelnikov
     return data_.empty();
   }
 }
+
+#endif
