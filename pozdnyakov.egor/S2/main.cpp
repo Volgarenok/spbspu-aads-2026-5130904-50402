@@ -1,3 +1,4 @@
+#include <cctype>
 #include <exception>
 #include <fstream>
 #include <iostream>
@@ -13,10 +14,12 @@ int main(int argc, char *argv[])
   if (argc == 2) {
     fileStream.open(argv[1]);
     if (!fileStream.is_open()) {
+      std::cerr << "Error: Could not open file\n";
       return 1;
     }
     input = &fileStream;
   } else if (argc > 2) {
+    std::cerr << "Error: Too many arguments\n";
     return 1;
   }
 
@@ -24,10 +27,23 @@ int main(int argc, char *argv[])
   std::string line;
 
   while (std::getline(*input, line)) {
+    bool isEmpty = true;
+    for (size_t i = 0; i < line.length(); ++i) {
+      if (!std::isspace(static_cast< unsigned char >(line[i]))) {
+        isEmpty = false;
+        break;
+      }
+    }
+
+    if (isEmpty) {
+      continue;
+    }
+
     try {
       long long currentResult = pozdnyakov::evaluateExpression(line);
       results.push(currentResult);
-    } catch (const std::exception &) {
+    } catch (const std::exception &e) {
+      std::cerr << "Error: " << e.what() << "\n";
       return 1;
     }
   }

@@ -70,7 +70,13 @@ namespace pozdnyakov
       if (left == std::numeric_limits< long long >::min() && right == -1) {
         throw std::runtime_error("Overflow");
       }
-      return left % right;
+
+      long long result = left % right;
+      if (result < 0) {
+        result += (right < 0) ? -right : right;
+      }
+
+      return result;
     }
   }
 
@@ -103,14 +109,14 @@ namespace pozdnyakov
     size_t i = 0;
 
     while (i < expr.length()) {
-      if (std::isspace(expr[i])) {
+      if (std::isspace(static_cast< unsigned char >(expr[i]))) {
         ++i;
         continue;
       }
 
-      if (std::isdigit(expr[i])) {
+      if (std::isdigit(static_cast< unsigned char >(expr[i]))) {
         long long val = 0;
-        while (i < expr.length() && std::isdigit(expr[i])) {
+        while (i < expr.length() && std::isdigit(static_cast< unsigned char >(expr[i]))) {
           int digit = expr[i] - '0';
 
           if (val > (std::numeric_limits< long long >::max() - digit) / 10) {
