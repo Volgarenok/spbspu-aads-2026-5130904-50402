@@ -21,9 +21,14 @@ bool hasDepth(vishnevskiy::LIter<int> em, size_t depth)
 
 void printNames(vishnevskiy::NamedLIter<int> lt)
 {
+  if (lt.hasNext())
+  {
+    std::cout << lt.getName();
+    ++lt;
+  }
   while (lt.hasNext())
   {
-    std::cout << lt.getName() << " ";
+    std::cout << " " << lt.getName();
     ++lt;
   }
 }
