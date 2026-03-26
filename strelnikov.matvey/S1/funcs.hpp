@@ -1,9 +1,9 @@
 #ifndef FUNCS_HPP
 #define FUNCS_HPP
 
-#include "iters.hpp"
-#include "list.hpp"
-#include "node.hpp"
+#include "../common/iters.hpp"
+#include "../common/list.hpp"
+#include "../common/node.hpp"
 #include <iostream>
 
 namespace strelnikov

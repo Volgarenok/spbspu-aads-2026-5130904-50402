@@ -1,6 +1,6 @@
-#include "iters.hpp"
-#include "list.hpp"
-#include "node.hpp"
+#include "../common/iters.hpp"
+#include "../common/list.hpp"
+#include "../common/node.hpp"
 #include "funcs.hpp"
 #include <iostream>
 #include <limits>
