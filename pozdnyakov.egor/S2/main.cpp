@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     }
     input = &fileStream;
   } else if (argc > 2) {
-    std::cerr << "Error: Too many arguments. Usage: ./lab [filename]\n";
+    std::cerr << "Error: Too many arguments\n";
     return 1;
   }
 
