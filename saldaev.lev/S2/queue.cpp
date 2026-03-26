@@ -65,7 +65,7 @@ namespace saldaev
   template < class T >
   size_t Queue< T >::size() const noexcept
   {
-    return 0;
+    return data_.getLength();
   }
 
   template struct Queue< int >;

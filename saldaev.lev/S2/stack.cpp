@@ -65,7 +65,7 @@ namespace saldaev
   template < class T >
   size_t Stack< T >::size() const noexcept
   {
-    return 0;
+    return data_.getLength();
   }
 
   template struct Stack< int >;
