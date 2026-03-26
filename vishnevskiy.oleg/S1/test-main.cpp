@@ -1,7 +1,5 @@
-#include <stdexcept>
-#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE S1
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "ListImpl.hpp"
 
 BOOST_AUTO_TEST_CASE(test_empty)
@@ -44,5 +42,5 @@ BOOST_AUTO_TEST_CASE(test_end)
   it.insert(to_ins2);
   it.insert(to_ins3);
   it.end();
-  BOOST_TEST(it.value() == 12);
+  BOOST_TEST(it.value() == 6);
 }

@@ -76,7 +76,7 @@ namespace vishnevskiy
   {
     while (hasNext())
     {
-      ++curr;
+      ++(*this);
     }
   }
 
@@ -173,7 +173,7 @@ namespace vishnevskiy
   {
     while (hasNext())
     {
-      ++this;
+      ++(*this);
     }
   }
 
@@ -211,7 +211,7 @@ namespace vishnevskiy
     while (curr)
     {
       func(this -> value());
-      ++this;
+      ++(*this);
     }
   }
 
