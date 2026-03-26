@@ -199,6 +199,7 @@ int main()
   if (!embedIt.curr)
   {
     std::cout << 0 << "\n";
+    cleanup(lIt, embedIt, lhead);
     return 0;
   }
   printSeq(lIt, 0, sums, 0);
