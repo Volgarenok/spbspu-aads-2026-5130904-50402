@@ -424,6 +424,10 @@ template struct saldaev::List< int >;
 template struct saldaev::LIter< int >;
 template struct saldaev::LCIter< int >;
 
+template struct saldaev::List< long long >;
+template struct saldaev::LIter< long long >;
+template struct saldaev::LCIter< long long >;
+
 template struct saldaev::List< std::string >;
 template struct saldaev::LIter< std::string >;
 template struct saldaev::LCIter< std::string >;

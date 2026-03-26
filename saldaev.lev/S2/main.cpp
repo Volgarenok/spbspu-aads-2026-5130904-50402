@@ -48,16 +48,24 @@ int main(int argc, char *argv[])
     parsedLines.pop();
   }
 
+  saldaev::Stack< long long > answers;
   while (!postfixedLines.empty()) {
-    saldaev::Queue< std::string > tokens = postfixedLines.front();
-    postfixedLines.pop();
-
-    while (!tokens.empty()) {
-      std::cout << tokens.front() << " ";
-      tokens.pop();
+    try {
+      answers.push(evaluate(postfixedLines.front()));
+    } catch (const std::logic_error &e) {
+      std::cerr << e.what() << '\n';
+      return 1;
     }
-    std::cout << '\n';
+    postfixedLines.pop();
   }
+
+  std::cout << answers.top();
+  answers.pop();
+  while (!answers.empty()) {
+    std::cout << ' ' << answers.top();
+    answers.pop();
+  }
+  std::cout << '\n';
 }
 
 saldaev::Queue< std::string > parse(std::string rawLine)
@@ -172,4 +180,21 @@ long long evaluate(saldaev::Queue< std::string > postfixedLines)
     throw std::logic_error("Redundant operands");
   }
   return stack.top();
+}
+
+long long apply(const std::string &op, long long left, long long right)
+{
+  if (op == "+") {
+    return left + right;
+  } else if (op == "-") {
+    return left - right;
+  } else if (op == "*") {
+    return left * right;
+  } else if (op == "/") {
+    return left / right;
+  } else if (op == "%") {
+    return left % right;
+  } else {
+    throw std::logic_error("invalid operator");
+  }
 }
