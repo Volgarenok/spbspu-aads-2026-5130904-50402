@@ -1,6 +1,6 @@
 #ifndef ITER_HPP
 #define ITER_HPP
-
+#include <stdexcept>
 #include <cstddef>
 
 namespace khalikov
@@ -17,10 +17,9 @@ namespace khalikov
     friend class List< T >;
   public:
     LIter();
-    LIter(Node< T > * h);
+    explicit LIter(Node< T > * h);
     LIter(const LIter< T > & other) = default;
     ~LIter() = default;
-    T & operator[](size_t index);
     T & operator*();
     T * operator->();
     LIter< T > & operator++();
@@ -31,6 +30,67 @@ namespace khalikov
   private:
     Node< T > * curr;
   };
+}
+
+template< class T >
+khalikov::LIter< T >::LIter():
+	curr(nullptr)
+{}
+
+template< class T >
+khalikov::LIter< T >::LIter(Node< T > * h)
+	curr(h)
+{}
+
+template< class T >
+T & khalikov::LIter< T >::operator*()
+{
+  if (!curr)
+  {
+    throw std::runtime_error();
+  }
+  return curr->val;
+}
+
+template< class T >
+T * khalikov::LIter< T >::operator->()
+{
+  if (!curr)
+  {
+    throw std::runtime_error();
+  }
+  return &(curr->val);
+}
+
+template< class T >
+khalikov::LIter< T > & khalikov::LIter< T >::operator++()
+{
+  if (!curr)
+  {
+    throw std::out_of_range();
+  }
+  curr = curr->next;
+  return *this;
+}
+
+template< class T >
+khalikov::LIter< T > khalikov::LIter< T >::operator++(int)
+{
+  LIter< T > temp = *this;
+  ++(*this);
+  return temp;
+}
+
+template< class T >
+bool khalikov::LIter< T >::operator==(const LIter< T > & other) const
+{
+  return curr == other.curr;
+}
+
+template< class T >
+bool khalikov::LIter< T >::operator!=(const LIter< T > & other) const
+{
+  return !(*this == other);
 }
 
 #endif
