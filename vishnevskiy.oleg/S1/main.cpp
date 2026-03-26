@@ -118,7 +118,7 @@ int main()
       {
         number = std::stoi(data);
       }
-      catch (const std::overflow_error& e)
+      catch (const std::out_of_range& e)
       {
         std::cerr << "Overflow error\n";
         cleanup(lIt, embedIt, lhead);
@@ -134,7 +134,7 @@ int main()
         catch (const std::bad_alloc& e)
         {
           std::cerr << "Bad alloc\n";
-
+          cleanup(lIt, embedIt, lhead);
           return 1;
         }
         lIt.setData(embedIt.curr);
@@ -155,7 +155,16 @@ int main()
       cSize = 0;
       if (!lhead)
       {
-        lhead = new vishnevskiy::NamedList<int>{data, nullptr, nullptr};
+        try
+        {
+          lhead = new vishnevskiy::NamedList<int>{data, nullptr, nullptr};
+        }
+        catch (const std::bad_alloc& e)
+        {
+          std::cerr << "Bad alloc\n";
+          cleanup(lIt, embedIt, lhead);
+          return 1;
+        }
         lIt.setCurr(lhead);
       }
       else
@@ -182,6 +191,7 @@ int main()
   {
     std::cerr << "Bad alloc\n";
     cleanup(lIt, embedIt, lhead);
+    delete[] sums;
     return 1;
   }
   printNames(lIt);
