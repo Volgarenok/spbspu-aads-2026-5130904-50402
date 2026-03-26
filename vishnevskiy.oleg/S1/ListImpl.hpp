@@ -103,7 +103,7 @@ namespace vishnevskiy
     {
       prev = head;
       head -> curr = head -> curr -> next;
-      delete prev;
+      delete prev -> curr;
     }
   }
 
@@ -200,7 +200,7 @@ namespace vishnevskiy
     {
       prev = head;
       head -> curr = head -> curr -> next;
-      delete prev;
+      delete prev -> curr;
     }
   }
 
