@@ -14,7 +14,7 @@ namespace pozdnyakov
   public:
     Stack() = default;
 
-    void push(const T& val)
+    void push(const T &val)
     {
       container.pushFront(val);
     }
@@ -24,12 +24,12 @@ namespace pozdnyakov
       container.popFront();
     }
 
-    T& top()
+    T &top()
     {
       return container.front();
     }
 
-    const T& top() const
+    const T &top() const
     {
       return container.front();
     }

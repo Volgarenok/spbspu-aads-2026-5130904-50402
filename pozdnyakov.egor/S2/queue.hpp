@@ -13,14 +13,16 @@ namespace pozdnyakov
     LIter< T > tail;
 
   public:
-    Queue() : tail(container.end()) {}
+    Queue():
+      tail(container.end())
+    {}
 
-    Queue(const Queue& other) : container(other.container)
+    Queue(const Queue &other):
+      container(other.container)
     {
       if (container.empty()) {
         tail = container.end();
-      }
-      else {
+      } else {
         tail = container.begin();
         LIter< T > next = tail;
         ++next;
@@ -31,14 +33,13 @@ namespace pozdnyakov
       }
     }
 
-    Queue& operator=(const Queue& other)
+    Queue &operator=(const Queue &other)
     {
       if (this != &other) {
         container = other.container;
         if (container.empty()) {
           tail = container.end();
-        }
-        else {
+        } else {
           tail = container.begin();
           LIter< T > next = tail;
           ++next;
@@ -51,13 +52,12 @@ namespace pozdnyakov
       return *this;
     }
 
-    void push(const T& val)
+    void push(const T &val)
     {
       if (empty()) {
         container.pushFront(val);
         tail = container.begin();
-      }
-      else {
+      } else {
         container.insertAfter(tail, val);
         ++tail;
       }
@@ -71,12 +71,12 @@ namespace pozdnyakov
       }
     }
 
-    T& front()
+    T &front()
     {
       return container.front();
     }
 
-    const T& front() const
+    const T &front() const
     {
       return container.front();
     }
