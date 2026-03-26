@@ -95,8 +95,10 @@ int main()
   {
     if (isNumber(data))
     {
-      try{
-        int number = std::stoi(data);
+      int number = 0;
+      try
+      {
+        number = std::stoi(data);
       }
       catch (const std::out_of_range& e)
       {
