@@ -5,7 +5,7 @@
 #include <cctype>
 #include <cstdlib>
 
-#include "list.hpp"
+#include "../common/list.hpp"
 
 int main()
 {
