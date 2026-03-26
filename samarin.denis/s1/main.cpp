@@ -1,10 +1,7 @@
 #include <iostream>
 #include <utility>
 #include <string>
-
-int main() {
-
-}
+#include <limits>
 
 template< class T >
 struct Node {
@@ -20,6 +17,7 @@ class LIter {
   friend class List< T >;
   friend class LCIter< T >;
   Node< T > * node;
+  LIter(): node(nullptr) {}
   explicit LIter(Node< T > * n): node(n) {}
 public:
   T& operator*() {
@@ -47,6 +45,7 @@ class LCIter {
   const Node< T > * node;
   explicit LCIter(const Node< T > * n): node(n) {}
 public:
+  LCIter(): node(nullptr) {}
   LCIter(const LIter< T >& it): node(it.node) {}
   const T& operator*() const {
     return node->value;
@@ -81,9 +80,15 @@ public:
     head(new Node< T >)
   {
     head->next = nullptr;
-    LIter< T > tail = before_begin();
-    for (LCIter< T > it = other.cbegin(); it != other.cend(); ++it) {
-      tail = insert_after(tail, *it);
+    try {
+      LIter< T > tail = before_begin();
+      for (LCIter< T > it = other.cbegin(); it != other.cend(); ++it) {
+        tail = insert_after(tail, *it);
+      }
+    } catch (...) {
+      clear();
+      delete head;
+      throw;
     }
   }
 
@@ -139,6 +144,10 @@ public:
     return head->next->value;
   }
 
+  const T& front() const {
+    return head->next->value;
+  }
+
   void pop_front() {
     Node< T > * temp = head->next;
     head->next = temp->next;
@@ -162,12 +171,8 @@ List< std::pair< std::string, List< T > > > readInput(std::istream& in) {
   List< std::pair< std::string, List< T > > > res;
   LIter< std::pair< std::string, List< T > > > res_tail = res.before_begin();
 
-  while (!in.eof() && !in.bad()) {
-    std::string name;
-    in >> name;
-    if (in.fail()) {
-      break;
-    }
+  std::string name;
+  while (in >> name) {
 
     List< T > sublist;
     LIter< T > tail = sublist.before_begin();
@@ -196,4 +201,85 @@ void List< T >::clear() {
     temp = temp2;
   }
   head->next = nullptr;
+}
+
+int main() {
+  auto data = readInput< int >(std::cin);
+
+  if (data.empty()) {
+    std::cout << "0\n";
+    return 0;
+  }
+
+  // вывод имён
+  bool first = true;
+  for (auto it = data.cbegin(); it != data.cend(); ++it) {
+    if (!first) {
+      std::cout << " ";
+    }
+    std::cout << it->first;
+    first = false;
+  }
+  std::cout << "\n";
+
+  // итераторы текущих позиций в каждом подсписке
+  List< LCIter< int > > positions;
+  {
+    LIter< LCIter< int > > pos_tail = positions.before_begin();
+    for (auto it = data.cbegin(); it != data.cend(); ++it) {
+      pos_tail = positions.insert_after(pos_tail, it->second.cbegin());
+    }
+  }
+
+  // суммы зип-последовательностей
+  List< int > sums;
+  LIter< int > sums_tail = sums.before_begin();
+
+  LCIter< int > end_marker;
+  bool any_remaining = true;
+  while (any_remaining) {
+    any_remaining = false;
+    bool line_started = false;
+    int sum = 0;
+
+    for (auto pit = positions.begin(); pit != positions.end(); ++pit) {
+      if (*pit != end_marker) {
+        any_remaining = true;
+        int val = **pit;
+        if (line_started) {
+          std::cout << " ";
+        }
+        std::cout << val;
+        line_started = true;
+
+        if (val > 0 && sum > std::numeric_limits< int >::max() - val) {
+          std::cerr << "overflow" << "\n";
+          return 1;
+        }
+
+        sum += val;
+        ++(*pit);
+      }
+    }
+
+    if (any_remaining) {
+      std::cout << "\n";
+      sums_tail = sums.insert_after(sums_tail, sum);
+    }
+  }
+
+  // вывод сумм
+  if (!sums.empty()) {
+    first = true;
+    for (auto it = sums.cbegin(); it != sums.cend(); ++it) {
+      if (!first) {
+        std::cout << " ";
+      }
+      std::cout << *it;
+      first = false;
+    }
+    std::cout << "\n";
+  }
+
+  return 0;
 }
