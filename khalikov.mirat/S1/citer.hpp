@@ -25,7 +25,7 @@ namespace khalikov
     const T & operator*() const;
     const T * operator->() const;
     LCIter< T > & operator++();
-    LCIter< T > & operator++(int);
+    LCIter< T > operator++(int);
     bool operator==(const LCIter< T > & other) const;
     bool operator!=(const LCIter< T > & other) const;
     LCIter< T > & operator=(const LCIter< T > & other) = default;
@@ -53,13 +53,13 @@ template< class T >
 const T & khalikov::LCIter< T >::operator[](size_t index) const
 {
   const Node < T > * temp = curr;
-  for (size_t k = 0; k < index; k++)
+  for (size_t k = 0; k < index && temp; k++)
   {
-    if (!temp)
-    {
-      throw std::out_of_range();
-    }
     temp = temp->next;
+  }
+  if (!temp)
+  {
+    throw std::out_of_range();
   }
   return temp->val;
 }
@@ -96,7 +96,7 @@ khalikov::LCIter< T > & khalikov::LCIter< T >::operator++()
 }
 
 template< class T >
-khalikov::LCIter< T > & khalikov::LCIter< T >::operator++(int)
+khalikov::LCIter< T > khalikov::LCIter< T >::operator++(int)
 {
   LCIter< T > temp = *this;
   ++(*this);
