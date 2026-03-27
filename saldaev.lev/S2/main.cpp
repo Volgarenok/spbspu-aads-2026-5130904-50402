@@ -175,3 +175,12 @@ long long apply(const std::string &op, long long left, long long right)
     throw std::logic_error("invalid operator");
   }
 }
+
+long long apply(const std::string &op, long long rihgt)
+{
+  if (op == "!") {
+    return ~rihgt;
+  } else {
+    throw std::logic_error("invalid operator");
+  }
+}
