@@ -114,11 +114,12 @@ int main()
         {
           if (std::cin.fail())
           {
-            throw std::overflow_error("Overflow\n");
+            throw std::overflow_error("Overflow");
           }
         }
         catch (const std::overflow_error& e)
         {
+          std::cerr << e.what() << "\n";
           cleanup(lIt, embedIt, lhead);
           return 1;
         }
