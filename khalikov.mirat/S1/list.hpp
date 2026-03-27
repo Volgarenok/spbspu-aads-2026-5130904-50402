@@ -23,7 +23,7 @@ namespace khalikov
     ~List();
     List< T > & operator=(const List< T > & h);
     List(const List< T > & other);
-    List(List< T > && other);
+    List(List< T > && other) noexcept;
     List< T > & operator=(List< T > && h);
     LIter< T > begin();
     LCIter< T > cbegin() const;
@@ -112,10 +112,9 @@ khalikov::List< T >::List(const List< T > & other)
 }
 
 template< class T >
-khalikov::List< T >::List(List< T > && other):
+khalikov::List< T >::List(List< T > && other) noexcept:
 	h(other.h)
 {
-	clear(other.h);
 	other.h = nullptr;
 }
 

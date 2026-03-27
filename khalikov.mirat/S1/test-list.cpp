@@ -48,4 +48,21 @@ BOOST_AUTO_TEST_CASE(op_copy_test)
 	BOOST_TEST(pass);
 }
 
+BOOST_AUTO_TEST_CASE(move_constructor_test)
+{
+	List< int > list;
+	list.pushFront(3);
+	list.pushFront(2);
+	list.pushFront(1);
+	List< int > yalist(std::move(list));
+	auto it = yalist.cbegin();
+	bool pass = yalist.size() == 3;
+	pass = pass && list.isEmpty();
+	for (int i = 0; it != yalist.cend(); i++)
+	{
+		pass = pass && *it == i;
+		++it;
+	}
+	BOOST_TEST(pass);
+}
 
