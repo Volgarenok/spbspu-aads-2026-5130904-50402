@@ -6,5 +6,5 @@ using namespace khalikov;
 BOOST_AUTO_TEST_CASE(default_constructor_test)
 {
 	List< int > list;
-	BOOST_TEST(1 == 1);
+	BOOST_TEST(!list.isEmpty());
 }
