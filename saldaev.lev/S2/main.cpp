@@ -3,6 +3,8 @@
 #include "stack.hpp"
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
+#include <string>
 
 namespace saldaev
 {

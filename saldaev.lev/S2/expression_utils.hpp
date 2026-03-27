@@ -1,7 +1,9 @@
 #ifndef EXPRESSION_UTILS_HPP
 #define EXPRESSION_UTILS_HPP
+#include <cctype>
 #include <cstddef>
 #include <stdexcept>
+#include <string>
 
 namespace saldaev
 {
