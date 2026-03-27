@@ -18,8 +18,8 @@ int main(int argc, char *argv[])
       std::cerr << "failed to open file\n";
       return 1;
     }
-    std::istream &is = (argc == 2) ? file : std::cin;
   }
+  std::istream &is = (argc == 2) ? file : std::cin;
   dirko::Stack< long long > res;
   try {
     dirko::Queue< dirko::Queue< std::string > > expretions = dirko::input(is);
