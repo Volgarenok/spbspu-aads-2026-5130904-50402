@@ -7,7 +7,7 @@
 
 namespace saldaev
 {
-  bool isNumber(std::string token)
+  inline bool isNumber(std::string token)
   {
     for (size_t i = 0; i < token.size(); ++i) {
       if (!std::isdigit(token[i])) {
@@ -17,7 +17,7 @@ namespace saldaev
     return true;
   }
 
-  bool isOperator(std::string token)
+  inline bool isOperator(std::string token)
   {
     if (token == "+" || token == "-" || token == "*" || token == "/" || token == "%" || token == "!") {
       return true;
@@ -25,7 +25,7 @@ namespace saldaev
     return false;
   }
 
-  int getPriority(const std::string &op)
+  inline int getPriority(const std::string &op)
   {
     if (op == "+" || op == "-") {
       return 1;
@@ -36,7 +36,7 @@ namespace saldaev
     return 0;
   }
 
-  long long apply(const std::string &op, long long left, long long right)
+  inline long long apply(const std::string &op, long long left, long long right)
   {
     if (op == "+") {
       return left + right;
@@ -53,7 +53,7 @@ namespace saldaev
     }
   }
 
-  long long apply(const std::string &op, long long rihgt)
+  inline long long apply(const std::string &op, long long rihgt)
   {
     if (op == "!") {
       return ~rihgt;
