@@ -42,7 +42,7 @@ namespace petrov {
     }
     return tokens;
   }
-  
+
   Queue< std::string > infixToPostfix(Queue< std::string >& tokens)
   {
     Queue< std::string > output;
@@ -81,7 +81,7 @@ namespace petrov {
     }
     return output;
   }
-  
+
   long long evaluatePostfix(Queue< std::string >& postfix)
   {
     Stack< long long > operands;
