@@ -178,6 +178,7 @@ int main()
 
   if (overflow)
   {
+    cleanup(lIt, embedIt, lhead);
     return 1;
   }
 
