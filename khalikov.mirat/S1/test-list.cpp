@@ -109,3 +109,15 @@ BOOST_AUTO_TEST_CASE(swap_test)
 	pass = pass && *yait == 3;
 	BOOST_TEST(pass);
 }
+
+BOOST_AUTO_TEST_CASE(size_test)
+{
+	List< int > list;
+	bool pass = !list.size();
+	list.pushFront(3);
+	list.pushFront(2);
+	list.pushFront(1);
+	pass = pass && list.size() == 3;
+	BOOST_TEST(pass);
+}
+
