@@ -80,8 +80,7 @@ namespace novikov
     }
     if (op == "%") {
       if (b == 0) {
-        std::cerr << "Division by zero\n";
-        throw;
+        throw std::runtime_error("Division by zero");
       }
       return a % b;
     }
