@@ -28,3 +28,24 @@ BOOST_AUTO_TEST_CASE(copy_constructor_test)
 	BOOST_TEST(pass);
 }
 
+BOOST_AUTO_TEST_CASE(op_copy_test)
+{
+	List< int > list;
+	List< int > yalist;
+	list.pushFront(22);
+	list.pushFront(7);
+	list.pushFront(14);
+	yalist = list;
+	auto itlist = list.cbegin();
+	auto ityalist = yalist.cbegin();
+	bool pass = list.size() == yalist.size();
+	for (; itlist != list.cend() && ityalist != yalist.cend();)
+	{
+		pass = pass && *itlist == *ityalist;
+		++itlist;
+		++ityalist;
+	}
+	BOOST_TEST(pass);
+}
+
+
