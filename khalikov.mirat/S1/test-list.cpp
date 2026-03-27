@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE(copy_constructor_test)
 	BOOST_TEST(pass);
 }
 
-BOOST_AUTO_TEST_CASE(op_copy_test)
+BOOST_AUTO_TEST_CASE(copy_op_test)
 {
 	List< int > list;
 	List< int > yalist;
@@ -66,3 +66,21 @@ BOOST_AUTO_TEST_CASE(move_constructor_test)
 	BOOST_TEST(pass);
 }
 
+BOOST_AUTO_TEST_CASE(move_op_test)
+{
+	List< int > list;
+	List< int > yalist;
+	list.pushFront(3);
+	list.pushFront(2);
+	list.pushFront(1);
+	yalist = std::move(list);
+	auto it = yalist.cbegin();
+	bool pass = yalist.size() == 3;
+	pass = pass && list.isEmpty();
+	for (int i = 1; it != yalist.cend(); i++)
+	{
+		pass = pass && *it == i;
+		++it;
+	}
+	BOOST_TEST(pass);
+}
