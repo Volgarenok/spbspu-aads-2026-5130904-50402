@@ -24,7 +24,7 @@ namespace saldaev
   T &Queue< T >::front()
   {
     if (!empty()) {
-      LIter h = data_.begin();
+      LIter< T > h = data_.begin();
       return h.getData();
     }
     throw std::logic_error("Cannot read from empty queue");
@@ -34,7 +34,7 @@ namespace saldaev
   const T &Queue< T >::front() const
   {
     if (!empty()) {
-      LCIter h = data_.begin();
+      LCIter< T > h = data_.begin();
       return h.getData();
     }
     throw std::logic_error("Cannot read from empty queue");
