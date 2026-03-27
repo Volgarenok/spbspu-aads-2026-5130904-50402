@@ -100,6 +100,9 @@ int main()
   std::string name;
   size_t lSize = 0;
   size_t cSize = 0;
+  int iMax = std::numeric_limits<int>::max();
+  int iMin = std::numeric_limits<int>::min();
+  bool overflow = false;
   while (std::cin)
   {
     std::cin >> std::ws;
@@ -113,8 +116,8 @@ int main()
         if (std::cin.fail())
         {
           std::cerr << "Overflow error\n";
-          cleanup(lIt, embedIt, lhead);
-          return 1;
+          std::cin.clear();
+          overflow = true;
         }
         if (!lIt.value())
         {
@@ -167,6 +170,10 @@ int main()
         }
       }
     }
+  }
+  if (overflow)
+  {
+    return 1;
   }
 
   if (!lhead)
