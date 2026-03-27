@@ -22,8 +22,7 @@ namespace novikov
     T drop()
     {
       if (empty()) {
-        std::cerr << "Stack is empty\n";
-        throw;
+        throw std::runtime_error("Stack is empty");
       }
       T val = *data.begin();
       data.pop_front();
@@ -32,16 +31,14 @@ namespace novikov
     T &front()
     {
       if (empty()) {
-        std::cerr << "Stack is empty\n";
-        throw;
+        throw std::runtime_error("Stack is empty");
       }
       return *data.begin();
     }
     const T &front() const
     {
       if (empty()) {
-        std::cerr << "Stack is empty\n";
-        throw;
+        throw std::runtime_error("Stack is empty");
       }
       return *data.begin();
     }

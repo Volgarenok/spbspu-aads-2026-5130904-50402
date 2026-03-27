@@ -47,8 +47,7 @@ namespace novikov
           output.push(ops.drop());
         }
         if (ops.empty()) {
-          std::cerr << "Bracket mismatch\n";
-          throw;
+          throw std::runtime_error("Bracket mismatch");
         }
         ops.drop();
       } else {
@@ -75,8 +74,7 @@ namespace novikov
       return a * b;
     if (op == "/") {
       if (b == 0) {
-        std::cerr << "Division by zero\n";
-        throw;
+        throw std::runtime_error("Division by zero");
       }
       return a / b;
     }
@@ -90,8 +88,7 @@ namespace novikov
     if (op == "^") {
       return a ^ b;
     }
-    std::cerr << "Unknown operator: " << op << "\n";
-    throw;
+    throw std::runtime_error("Unknown operator: " + op);
   }
 
   int eval(const std::string &expr)
