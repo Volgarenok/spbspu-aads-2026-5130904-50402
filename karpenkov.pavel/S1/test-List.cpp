@@ -1,6 +1,6 @@
 #define BOOST_TEST_MODULE ListTests
 #include <boost/test/included/unit_test.hpp>
-#include "list.hpp"
+#include "../common/list.hpp"
 
 using namespace karpenkov;
 

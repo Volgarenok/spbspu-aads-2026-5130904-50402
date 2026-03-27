@@ -1,6 +1,6 @@
 #ifndef LISTPROCESSING_HPP
 #define LISTPROCESSING_HPP
-#include "list.hpp"
+#include "../common/list.hpp"
 #include <limits>
 namespace karpenkov
 {
