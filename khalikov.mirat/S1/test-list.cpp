@@ -121,3 +121,15 @@ BOOST_AUTO_TEST_CASE(size_test)
 	BOOST_TEST(pass);
 }
 
+BOOST_AUTO_TEST_CASE(clear_test)
+{
+	List< int > list;
+	bool pass = list.isEmpty();
+	list.pushFront(3);
+	list.pushFront(2);
+	list.pushFront(1);
+	pass = pass && list.size() == 3;
+	list.clear();
+	pass = pass && list.isEmpty();
+	BOOST_TEST(pass);
+}
