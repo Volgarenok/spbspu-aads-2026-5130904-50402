@@ -2,7 +2,6 @@
 #include <fstream>
 #include "expression.hpp"
 #include "stack.hpp"
-#include "queue.hpp"
 
 int main(int argc, char* argv[]) {
   std::istream* input = &std::cin;

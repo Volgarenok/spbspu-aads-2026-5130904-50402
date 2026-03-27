@@ -2,7 +2,6 @@
 #include <stdexcept>
 #include <string>
 #include "stack.hpp"
-#include "queue.hpp"
 
 namespace petrov {
   bool isOperator(const std::string& token) {
