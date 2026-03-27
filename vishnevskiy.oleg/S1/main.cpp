@@ -100,8 +100,6 @@ int main()
   std::string name;
   size_t lSize = 0;
   size_t cSize = 0;
-  int iMax = std::numeric_limits<int>::max();
-  int iMin = std::numeric_limits<int>::min();
   bool overflow = false;
   while (std::cin)
   {
