@@ -3,6 +3,7 @@
 #include "node.hpp"
 #include "iter.hpp"
 #include "citer.hpp"
+#include <iostream>
 
 namespace khalikov
 {
@@ -35,9 +36,9 @@ namespace khalikov
     void erase(LIter< T > pos);
     void remove(const T & value);
     void sort();
-    void unique();
+    void uniqueSort();
     void reverse();
-    void print(const List< T > curr);
+    void print() const;
   };
 }
 
@@ -53,7 +54,7 @@ khalikov::List< T >::~List()
 }
 
 template< class T >
-List< T >::List(const List< T > & other)
+khalikov::List< T >::List(const List< T > & other)
 {
   if(!other.h)
   {
@@ -230,7 +231,7 @@ void khalikov::List< T >::remove(const T & value)
 }
 
 template< class T >
-void List< T >::sort()
+void khalikov::List< T >::sort()
 {
   for (auto i = begin(); i.curr != nullptr; ++i)
   {
@@ -242,6 +243,54 @@ void List< T >::sort()
       }
     }
   }
+}
+
+template< class T >
+void khalikov::List< T >::uniqueSort()
+{
+	sort();
+	for (auto current = begin(); current.curr != nullptr; )
+	{
+		auto next = current;
+		++next;
+		if (next.curr != nullptr && *current == *next)
+		{
+			eraseAfter(current);
+		}
+		else
+		{
+			++current;
+		}
+	}
+}
+
+template< class T >
+void khalikov::List< T >::print() const
+{
+	auto it = cbegin();
+	std::cout << *it;
+	++it;
+	for (; it.curr != nullptr; ++it)
+	{
+		std::cout << " " << *it;
+	}
+	std::cout << '\n';
+}
+
+template< class T >
+void khalikov::List< T >::reverse()
+{
+	Node< T > * prev = nullptr;
+	Node< T > * curr = h;
+	Node< T > * next = nullptr;
+	while (curr != nullptr)
+	{
+		next = curr->next;
+		curr->next = prev;
+		prev = curr;
+		curr = next;
+	}
+	h = prev;
 }
 
 #endif

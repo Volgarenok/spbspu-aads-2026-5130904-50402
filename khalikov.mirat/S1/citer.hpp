@@ -30,7 +30,7 @@ namespace khalikov
     bool operator!=(const LCIter< T > & other) const;
     LCIter< T > & operator=(const LCIter< T > & other) = default;
   private:
-    Node< T > * curr;
+    const Node< T > * curr;
   };
 }
 
@@ -59,7 +59,7 @@ const T & khalikov::LCIter< T >::operator[](size_t index) const
   }
   if (!temp)
   {
-    throw std::out_of_range();
+    throw std::out_of_range("Invalid operation");
   }
   return temp->val;
 }
@@ -69,7 +69,7 @@ const T & khalikov::LCIter< T >::operator*() const
 {
   if (!curr)
   {
-    throw std::runtime_error();
+    throw std::out_of_range("Invalid operation");
   }
   return curr->val;
 }
@@ -79,7 +79,7 @@ const T * khalikov::LCIter< T >::operator->() const
 {
   if (!curr)
   {
-    throw std::runtime_error();
+    throw std::out_of_range("Invalid operation");
   }
   return &(curr->val);
 }
@@ -89,7 +89,7 @@ khalikov::LCIter< T > & khalikov::LCIter< T >::operator++()
 {
   if (!curr)
   {
-    throw std::out_of_range();
+    throw std::out_of_range("Invalid operation");
   }
   curr = curr->next;
   return *this;

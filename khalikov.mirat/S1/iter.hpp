@@ -24,7 +24,7 @@ namespace khalikov
     T & operator*();
     T * operator->();
     LIter< T > & operator++();
-    LIter< T > & operator++(int);
+    LIter< T > operator++(int);
     bool operator==(const LIter< T > & other) const;
     bool operator!=(const LIter< T > & other) const;
     LIter< T > & operator=(const LIter< T > & other) = default;
@@ -39,7 +39,7 @@ khalikov::LIter< T >::LIter():
 {}
 
 template< class T >
-khalikov::LIter< T >::LIter(Node< T > * h)
+khalikov::LIter< T >::LIter(Node< T > * h):
 	curr(h)
 {}
 
@@ -53,7 +53,7 @@ T & khalikov::LIter< T >::operator[](size_t index)
 	}
 	if (!temp)
   {
-    throw std::out_of_range();
+    throw std::out_of_range("Invalid operation");
   }
 	return temp->val;
 }
@@ -63,7 +63,7 @@ T & khalikov::LIter< T >::operator*()
 {
   if (!curr)
   {
-    throw std::runtime_error();
+    throw std::out_of_range("Invalid operation");
   }
   return curr->val;
 }
@@ -73,7 +73,7 @@ T * khalikov::LIter< T >::operator->()
 {
   if (!curr)
   {
-    throw std::runtime_error();
+    throw std::out_of_range("Invalid operation");
   }
   return &(curr->val);
 }
@@ -83,7 +83,7 @@ khalikov::LIter< T > & khalikov::LIter< T >::operator++()
 {
   if (!curr)
   {
-    throw std::out_of_range();
+    throw std::out_of_range("Invalid operation");
   }
   curr = curr->next;
   return *this;

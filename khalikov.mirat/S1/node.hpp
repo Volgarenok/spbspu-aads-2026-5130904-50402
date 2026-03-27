@@ -6,9 +6,8 @@ namespace khalikov
   template< class T >
   struct Node
   {
-  private:
-    T val;
-    Node< T > * next;
+	  T val;
+		Node< T > * next;
   };
 }
 
