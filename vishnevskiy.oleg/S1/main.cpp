@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <cctype>
+#include <limits>
 
 bool hasDepth(vishnevskiy::LIter<int> em, size_t depth)
 {
@@ -103,19 +104,18 @@ int main()
   std::string name;
   size_t lSize = 0;
   size_t cSize = 0;
-
+  //int maxV = std::numeric_limits<int>::max();
+  //int minV = std::numeric_limits<int>::min();
   while (std::cin)
   {
     std::cin >> std::ws;
     int c = std::cin.peek();
     if (std::isdigit(c))
     {
+      //long long buffer = 0;
       int number = 0;
-      try
-      {
-        std::cin >> number;
-      }
-      catch (const std::overflow_error& e)
+      std::cin >> number;
+      if (std::cin.fail())
       {
         std::cerr << "Overflow error\n";
         cleanup(lIt, embedIt, lhead);
