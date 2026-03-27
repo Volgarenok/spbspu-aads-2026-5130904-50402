@@ -2,6 +2,7 @@
 #include <fstream>
 #include "expression.hpp"
 #include "stack.hpp"
+#include "queue.hpp"
 
 int main(int argc, char* argv[]) {
   std::istream* input = &std::cin;
@@ -24,7 +25,13 @@ int main(int argc, char* argv[]) {
       continue;
     }
     try {
-
+      petrov::Queue< std::string > tokens = petrov::tokenize(line);
+      if (tokens.empty()) {
+        continue;
+      }
+      petrov::Queue< std::string > postfix = petrov::infixToPostfix(tokens);
+      const long long value = petrov::evaluatePostfix(postfix);
+      results.push(value);
     } catch (const std::exception& e) {
       std::cerr << e.what() << '\n';
       return 1;
