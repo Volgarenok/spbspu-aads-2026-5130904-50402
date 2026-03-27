@@ -15,8 +15,8 @@ namespace chernikov {
     Queue() = default;
     bool empty() const;
     size_t size() const;
-    void push(const List< T > &val);
-    List< T > drop();
+    void push(const T &val);
+    T drop();
     const T &front() const;
     T &front();
   };
@@ -29,17 +29,17 @@ namespace chernikov {
   {
     return data.size();
   }
-  template < typename T > void Queue< T >::push(const List< T > &val)
+  template < typename T > void Queue< T >::push(const T &val)
   {
     data.push_back(val);
   }
-  template < typename T > List< T > Queue< T >::drop()
+  template < typename T > T Queue< T >::drop()
   {
     if (empty())
     {
       throw std::logic_error("Stack is empty");
     }
-    List< T > val = data.front();
+    T val = data.front();
     data.first_delete();
     return val;
   }

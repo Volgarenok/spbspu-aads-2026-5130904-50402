@@ -1,6 +1,9 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 
+#include <cstddef>
+#include <stdexcept>
+
 namespace chernikov {
   template < typename T > struct Node
   {
@@ -63,7 +66,7 @@ namespace chernikov {
       ptr = ptr->next;
       return tmp;
     }
-    friend std::ostream &operator<<(std::ostream &os, const LIter< T > &it)
+    /*friend std::ostream &operator<<(std::ostream &os, const LIter< T > &it)
     {
       if (it == LIter< T >())
       {
@@ -73,7 +76,7 @@ namespace chernikov {
         os << "LIter(" << *it << ")";
       }
       return os;
-    }
+    }*/
   };
 
   template < typename T > class LCIter
@@ -126,7 +129,7 @@ namespace chernikov {
       ptr = ptr->next;
       return tmp;
     }
-    friend std::ostream &operator<<(std::ostream &os, const LCIter &it)
+    /*friend std::ostream &operator<<(std::ostream &os, const LCIter &it)
     {
       if (it.ptr == nullptr)
       {
@@ -136,7 +139,7 @@ namespace chernikov {
         os << "LCIter(" << it.ptr->data << ")";
       }
       return os;
-    }
+    }*/
   };
 
   template < typename T > class List
