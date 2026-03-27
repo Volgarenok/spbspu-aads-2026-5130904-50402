@@ -27,7 +27,7 @@ namespace strelnikov
     void pop_front();
     void clear();
     void swap(list &);
-    bool empty();
+    bool empty() const noexcept;
     node *get_head();
 
     iterator insert_after(const_iterator, const T &);
@@ -151,7 +151,7 @@ namespace strelnikov
     std::swap(head_, other.head_);
   }
 
-  template < class T > bool List< T >::empty()
+  template < class T > bool List< T >::empty() const noexcept
   {
     return head_ == nullptr;
   }
