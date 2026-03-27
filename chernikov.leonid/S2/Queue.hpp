@@ -1,39 +1,39 @@
-#ifndef STACK_HPP
-#define STACK_HPP
+#ifndef QUEUE_HPP
+#define QUEUE_HPP
 
 #include "List.hpp"
 #include <stdexcept>
 
 namespace chernikov {
 
-  template < typename T > class Stack
+  template < typename T > class Queue
   {
   private:
     List< T > data;
 
   public:
-    Stack() = default;
+    Queue() = default;
     bool empty() const;
     size_t size() const;
     void push(const List< T > &val);
     List< T > drop();
-    const T &top() const;
-    T &top();
+    const T &front() const;
+    T &front();
   };
 
-  template < typename T > bool Stack< T >::empty() const
+  template < typename T > bool Queue< T >::empty() const
   {
     return data.empty();
   }
-  template < typename T > size_t Stack< T >::size() const
+  template < typename T > size_t Queue< T >::size() const
   {
     return data.size();
   }
-  template < typename T > void Stack< T >::push(const List< T > &val)
+  template < typename T > void Queue< T >::push(const List< T > &val)
   {
-    data.add(val);
+    data.push_back(val);
   }
-  template < typename T > List< T > Stack< T >::drop()
+  template < typename T > List< T > Queue< T >::drop()
   {
     if (empty())
     {
@@ -43,7 +43,7 @@ namespace chernikov {
     data.first_delete();
     return val;
   }
-  template < typename T > const T &Stack< T >::top() const
+  template < typename T > const T &Queue< T >::front() const
   {
     if (empty())
     {
@@ -51,7 +51,7 @@ namespace chernikov {
     }
     return data.front();
   }
-  template < typename T > T &Stack< T >::top()
+  template < typename T > T &Queue< T >::front()
   {
     if (empty())
     {
