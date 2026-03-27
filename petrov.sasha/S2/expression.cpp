@@ -24,7 +24,7 @@ namespace petrov {
     return 0;
   }
 
-  petrov::Queue< std::string > petrov::tokenize(const std::string& line)
+  Queue< std::string > tokenize(const std::string& line)
   {
     Queue< std::string > tokens;
     std::size_t pos = 0;
@@ -82,7 +82,7 @@ namespace petrov {
     }
     return output;
   }
-  long long petrov::evaluatePostfix(Queue< std::string >& postfix)
+  long long evaluatePostfix(Queue< std::string >& postfix)
   {
     Stack< long long > operands;
     while (!postfix.empty()) {
