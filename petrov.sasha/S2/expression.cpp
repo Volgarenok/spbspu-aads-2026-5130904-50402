@@ -1,24 +1,23 @@
 #include "expression.hpp"
 #include <stdexcept>
 #include <string>
-#include <stack.hpp>
-#include <queue.hpp>
+#include "stack.hpp"
+#include "queue.hpp"
 
 namespace petrov {
   bool isOperator(const std::string& token) {
-    bool tok = token == '+' || token == '-' || token == '|' ||
-    tok = token == '%' || token == '/' || token == '*';
-    return tok;
+    return token == "+" || token == "-" || token == "|" ||
+           token == "%" || token == "/" || token == "*";
   }
 
   int getPrecedence(const std::string& op) {
-    if (op == '|') {
+    if (op == "|") {
       return 1;
     }
-    if (op == '+' || op == '-') {
+    if (op == "+" || op == "-") {
       return 2;
     }
-    if (op == '*' || op  == '/' || op == '%') {
+    if (op == "*" || op == "/" || op == "%") {
       return 3;
     }
     return 0;
@@ -44,6 +43,7 @@ namespace petrov {
     }
     return tokens;
   }
+  
   Queue< std::string > infixToPostfix(Queue< std::string >& tokens)
   {
     Queue< std::string > output;
@@ -82,6 +82,7 @@ namespace petrov {
     }
     return output;
   }
+  
   long long evaluatePostfix(Queue< std::string >& postfix)
   {
     Stack< long long > operands;
@@ -140,5 +141,3 @@ namespace petrov {
     return finalResult;
   }
 }
-#endif
-

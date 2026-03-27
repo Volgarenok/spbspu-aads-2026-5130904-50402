@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
       std::cerr << "Error open file\n";
       return 1;
     }
-    input &file;
+    input = &file;
   } else if (argc > 2) {
     std::cerr << "Invalid arguments\n";
     return 1;
