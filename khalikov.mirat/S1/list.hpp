@@ -23,9 +23,15 @@ namespace khalikov
     ~List();
     List< T > & operator=(const List< T > & h);
     List(const List< T > & other);
+    List(const List< T > && other);
+    List< T > & operator(const List< T > && h);
     LIter< T > begin();
     LCIter< T > cbegin() const;
+    LIter< T > end();
+    LCIter< T > end() const;
+
     void swap(List< T > & other) noexcept;
+    void size() const noexcept;
 		void clear();
     bool isEmpty() const noexcept;
     void eraseAfter(LIter< T > pos);
