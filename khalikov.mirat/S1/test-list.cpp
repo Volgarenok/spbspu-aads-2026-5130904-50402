@@ -16,11 +16,15 @@ BOOST_AUTO_TEST_CASE(copy_constructor_test)
 	list.pushFront(5);
 	list.pushFront(3);
 	List< int > yalist(list);
-	auto itlist = list.begin();
-	auto ityalist = yalist.begin();
-	bool pass = itlist == ityalist;
-	while (itlist !=)
-	pass = pass && list.h->next->val == yalist.h->next->val;
+	auto itlist = list.cbegin();
+	auto ityalist = yalist.cbegin();
+	bool pass = list.size() == yalist.size();
+	for (; itlist != list.cend() && ityalist != yalist.cend();)
+	{
+		pass = pass && *itlist == *ityalist;
+		++itlist;
+		++ityalist;
+	}
 	BOOST_TEST(pass);
 }
 

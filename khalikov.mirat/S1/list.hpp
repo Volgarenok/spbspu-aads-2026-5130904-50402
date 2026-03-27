@@ -23,15 +23,15 @@ namespace khalikov
     ~List();
     List< T > & operator=(const List< T > & h);
     List(const List< T > & other);
-    List(const List< T > && other);
-    List< T > & operator(const List< T > && h);
+    List(List< T > && other);
+    List< T > & operator=(List< T > && h);
     LIter< T > begin();
     LCIter< T > cbegin() const;
     LIter< T > end();
-    LCIter< T > end() const;
+    LCIter< T > cend() const;
 
     void swap(List< T > & other) noexcept;
-    void size() const noexcept;
+    size_t size() const noexcept;
 		void clear();
     bool isEmpty() const noexcept;
     void eraseAfter(LIter< T > pos);
@@ -46,6 +46,29 @@ namespace khalikov
     void reverse();
     void print() const;
   };
+}
+
+template < class T >
+khalikov::LIter< T > khalikov::List< T >::end()
+{
+	return LIter< T >(nullptr);
+}
+
+template< class T >
+khalikov::LCIter< T > khalikov::List< T >::cend() const
+{
+	return LCIter< T >(nullptr);
+}
+
+template< class T >
+size_t khalikov::List< T >::size() const noexcept
+{
+	size_t k = 0;
+	for (auto it = cbegin(); it != cend(); ++it)
+	{
+		k++;
+	}
+	return k;
 }
 
 template< class T >
@@ -88,11 +111,30 @@ khalikov::List< T >::List(const List< T > & other)
 	}
 }
 
+template< class T >
+khalikov::List< T >::List(List< T > && other):
+	h(other.h)
+{
+	clear(other.h);
+	other.h = nullptr;
+}
+
+template< class T >
+khalikov::List< T > & khalikov::List< T >::operator=(List< T > && other)
+{
+	if (this == std::addressof(other))
+	{
+		return *this;
+	}
+	List< T > cpy(std::move(other));
+	swap(cpy);
+	return *this;
+}
 
 template< class T >
 khalikov::List< T > & khalikov::List< T >::operator=(const List< T > & other)
 {
-  if (this != addressof(other))
+  if (this != std::addressof(other))
   {
     List< T > cpy(other);
     swap(cpy);
