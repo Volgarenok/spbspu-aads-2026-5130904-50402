@@ -149,7 +149,8 @@ namespace saldaev
 
     BOOST_TEST(a.empty());
 
-    b = std::move(b);
+    Stack< int > &ref = b;
+    b = std::move(ref);
     BOOST_TEST(b.empty());
 
     Stack< int > empty;
