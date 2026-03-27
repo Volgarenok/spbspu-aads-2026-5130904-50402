@@ -60,24 +60,46 @@ void bukreev::output(std::ostream& out, const List< Sequence >& seqs)
     numIts[i] = {(*it).second.cbegin(), (*it).second.cend()};
   }
 
+  bukreev::List< int > sums;
+
   bool display = true;
   while (display)
   {
     display = false;
+    int s = 0;
     for (i = 0; i < size; i++)
     {
       if (numIts[i].first != numIts[i].second)
       {
         display = true;
 
-        out << *numIts[i].first << ' ';
+        int n = *numIts[i].first;
+        out << n << ' ';
+        s += n;
 
         numIts[i].first = numIts[i].first.next();
       }
     }
 
-    out << '\n';
+    if (display)
+    {
+      sums.pushBack(s);
+      out << '\n';
+    }
   }
 
   delete[] numIts;
+
+  LCIter< int > sumit = sums.cbegin();
+  if (sumit != sums.cend())
+  {
+    out << *sumit;
+    sumit = sumit.next();
+  }
+  for (; sumit != sums.cend(); sumit = sumit.next())
+  {
+    out << ' ' << *sumit;
+  }
+
+  out << '\n';
 }
