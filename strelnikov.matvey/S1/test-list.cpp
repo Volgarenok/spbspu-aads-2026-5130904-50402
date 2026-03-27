@@ -1,5 +1,5 @@
-#include "../common/list.hpp"
 #include "boost/test/unit_test.hpp"
+#include "../common/list.hpp"
 #include "funcs.hpp"
 
 using namespace strelnikov;

@@ -1,4 +1,3 @@
-#include "funcs.hpp"
 #include <cctype>
 #include <cstddef>
 #include <iostream>
@@ -6,6 +5,7 @@
 #include "../common/iters.hpp"
 #include "../common/list.hpp"
 #include "../common/node.hpp"
+#include "funcs.hpp"
 
 strelnikov::List< std::pair< std::string, strelnikov::List< size_t > > > strelnikov::input(std::istream &in)
 {
