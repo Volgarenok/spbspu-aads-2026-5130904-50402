@@ -1,5 +1,5 @@
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include "actions.hpp"
 #include "calc.hpp"
 #include "queue.hpp"
@@ -12,18 +12,17 @@ int main(int argc, char *argv[])
     return 1;
   }
   std::ifstream file;
-  std::istream *is = &std::cin;
   if (argc == 2) {
     file.open(argv[1]);
     if (!file.is_open()) {
       std::cerr << "failed to open file\n";
       return 1;
     }
-    is = &file;
+    std::istream &is = (argc == 2) ? file : std::cin;
   }
   dirko::Stack< long long > res;
   try {
-    dirko::Queue< dirko::Queue< std::string > > expretions = dirko::input(*is);
+    dirko::Queue< dirko::Queue< std::string > > expretions = dirko::input(is);
     while (!expretions.empty()) {
       dirko::Queue< std::string > post = dirko::convert(expretions.get());
       expretions.pop();
