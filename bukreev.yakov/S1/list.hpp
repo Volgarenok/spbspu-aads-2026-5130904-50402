@@ -1,6 +1,8 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 
+#include <cstddef>
+
 namespace bukreev
 {
   template< class T >
@@ -18,13 +20,12 @@ namespace bukreev
     friend class List< T >;
 
   public:
+    LIter() = default;
+    LIter(Node< T >* node) noexcept;
     LIter< T > next() const noexcept;
     T& operator*() const;
     bool operator==(const LIter< T >& other);
     bool operator!=(const LIter< T >& other);
-
-  private:
-    LIter(Node< T >* node) noexcept;
 
   private:
     Node< T >* m_cur;
@@ -36,13 +37,12 @@ namespace bukreev
     friend class List< T >;
 
   public:
+    LCIter() = default;
+    LCIter(Node< T >* node) noexcept;
     LCIter< T > next() const noexcept;
-    T operator*() const;
+    T& operator*() const;
     bool operator==(const LCIter< T >& other);
     bool operator!=(const LCIter< T >& other);
-
-  private:
-    LCIter(Node< T >* node) noexcept;
 
   private:
     Node< T >* m_cur;
@@ -57,6 +57,7 @@ namespace bukreev
     ~List() noexcept;
     List< T >& operator=(const List< T >& other);
     void clear() noexcept;
+    size_t size() const noexcept;
     LIter< T > begin() const noexcept;
     LIter< T > end() const noexcept;
     LCIter< T > cbegin() const noexcept;
@@ -119,6 +120,18 @@ namespace bukreev
 
     m_fake.next = nullptr;
     m_tail = nullptr;
+  }
+
+  template< class T >
+  size_t List< T >::size() const noexcept
+  {
+    size_t res = 0;
+    for (LCIter< T > it = cbegin(); it != cend(); it = it.next())
+    {
+      res++;
+    }
+
+    return res;
   }
 
   template< class T >
@@ -200,7 +213,7 @@ namespace bukreev
   }
 
   template< class T >
-  T LCIter< T >::operator*() const
+  T& LCIter< T >::operator*() const
   {
     return m_cur->val;
   }
