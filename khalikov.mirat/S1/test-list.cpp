@@ -133,3 +133,21 @@ BOOST_AUTO_TEST_CASE(clear_test)
 	pass = pass && list.isEmpty();
 	BOOST_TEST(pass);
 }
+
+BOOST_AUTO_TEST_CASE(eraseAfter_test)
+{
+	List< int > list;
+	bool pass = list.isEmpty();
+	list.pushFront(3);
+	list.pushFront(2);
+	list.pushFront(1);
+	pass = pass && list.size() == 3;
+	auto it = list.begin();
+	list.eraseAfter(it);
+	pass = pass && list.size() == 2;
+	it = list.begin();
+	pass = pass && *it == 1;
+	++it;
+	pass = pass && *it == 3;
+	BOOST_TEST(pass);
+}
