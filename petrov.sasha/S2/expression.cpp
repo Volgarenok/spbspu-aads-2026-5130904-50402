@@ -6,8 +6,7 @@
 
 namespace petrov {
   bool isOperator(const std::string& token) {
-    return token == "+" || token == "-" || token == "|" ||
-           token == "%" || token == "/" || token == "*";
+    return token == "+" || token == "-" || token == "|" || token == "%" || token == "/" || token == "*";
   }
 
   int getPrecedence(const std::string& op) {
@@ -141,3 +140,4 @@ namespace petrov {
     return finalResult;
   }
 }
+
