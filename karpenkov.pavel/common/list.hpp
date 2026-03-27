@@ -67,6 +67,17 @@ namespace karpenkov
       }
       return *this;
     }
+    T &back()
+    {
+      if (!head) {
+        throw std::out_of_range("list if empty");
+      }
+      return tail->value;
+    }
+    bool empty()
+    {
+      return head == nullptr;
+    }
     void push_back(const T &v)
     {
       Node *newNode = new Node(v);
