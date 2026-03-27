@@ -1,11 +1,11 @@
+#include "funcs.hpp"
+#include <cctype>
+#include <cstddef>
+#include <iostream>
+#include <limits>
 #include "../common/iters.hpp"
 #include "../common/list.hpp"
 #include "../common/node.hpp"
-#include "funcs.hpp"
-#include <iostream>
-#include <limits>
-#include <cctype>
-#include <cstddef>
 
 strelnikov::List< std::pair< std::string, strelnikov::List< size_t > > > strelnikov::input(std::istream &in)
 {
@@ -157,7 +157,7 @@ std::ostream &strelnikov::printList(std::ostream &out, const List< List< size_t 
   }
 
   while (it != list.cend()) {
-    if(flag) {
+    if (flag) {
       out << '\n';
     }
     auto it_inner = (*it).cbegin();
