@@ -1,6 +1,7 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 #include <iostream>
+#include <stdexcept>
 namespace karpenkov
 {
   template < class T > class LIter;
@@ -67,10 +68,17 @@ namespace karpenkov
       }
       return *this;
     }
+    T &top()
+    {
+      if (!head) {
+        throw std::out_of_range("list is empty");
+      }
+      return head->value;
+    }
     T &back()
     {
       if (!head) {
-        throw std::out_of_range("list if empty");
+        throw std::out_of_range("list is empty");
       }
       return tail->value;
     }

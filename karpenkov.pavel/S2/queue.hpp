@@ -12,12 +12,17 @@ namespace karpenkov
 
   public:
     void push();
+    T &front();
   };
 }
 
 template < class T > void karpenkov::Queue< T >::push()
 {
   data.push_back();
+}
+template < class T > T &karpenkov::Queue< T >::front()
+{
+  return data.top();
 }
 
 #endif
