@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE(clear_test)
 	BOOST_TEST(pass);
 }
 
-BOOST_AUTO_TEST_CASE(eraseAfter_test)
+BOOST_AUTO_TEST_CASE(erase_after_test)
 {
 	List< int > list;
 	bool pass = list.isEmpty();
@@ -149,5 +149,25 @@ BOOST_AUTO_TEST_CASE(eraseAfter_test)
 	pass = pass && *it == 1;
 	++it;
 	pass = pass && *it == 3;
+	BOOST_TEST(pass);
+}
+
+BOOST_AUTO_TEST_CASE(insert_after_test)
+{
+	List< int > list;
+	bool pass = list.isEmpty();
+	list.pushFront(4);
+	list.pushFront(3);
+	list.pushFront(1);
+	pass = pass && list.size() == 3;
+	auto it = list.begin();
+	list.insertAfter(it, 2);
+	pass = pass && list.size() == 4;
+	it = list.begin();
+	for (int i = 1; it != list.end(); ++i)
+	{
+		pass = pass && *it == i;
+		++it;
+	}
 	BOOST_TEST(pass);
 }
