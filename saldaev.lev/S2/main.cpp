@@ -23,40 +23,17 @@ int main(int argc, char *argv[])
   }
   std::istream &input = (argc == 2) ? file : std::cin;
 
-  saldaev::Queue< std::string > rawLines;
+  saldaev::Stack< long long > answers;
   std::string currLine;
   while (std::getline(input, currLine)) {
     if (!currLine.empty()) {
-      rawLines.push(currLine);
+      try {
+        answers.push(evaluate(toPostfixNotation(parse(currLine))));
+      } catch (const std::logic_error &e) {
+        std::cerr << e.what() << '\n';
+        return 1;
+      }
     }
-  }
-
-  saldaev::Queue< saldaev::Queue< std::string > > parsedLines;
-  while (!rawLines.empty()) {
-    parsedLines.push(parse(rawLines.front()));
-    rawLines.pop();
-  }
-
-  saldaev::Queue< saldaev::Queue< std::string > > postfixedLines;
-  while (!parsedLines.empty()) {
-    try {
-      postfixedLines.push(toPostfixNotation(parsedLines.front()));
-    } catch (const std::logic_error &e) {
-      std::cerr << e.what() << '\n';
-      return 1;
-    }
-    parsedLines.pop();
-  }
-
-  saldaev::Stack< long long > answers;
-  while (!postfixedLines.empty()) {
-    try {
-      answers.push(evaluate(postfixedLines.front()));
-    } catch (const std::logic_error &e) {
-      std::cerr << e.what() << '\n';
-      return 1;
-    }
-    postfixedLines.pop();
   }
 
   std::cout << answers.top();
