@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(move_constructor_test)
 	auto it = yalist.cbegin();
 	bool pass = yalist.size() == 3;
 	pass = pass && list.isEmpty();
-	for (int i = 0; it != yalist.cend(); i++)
+	for (int i = 1; it != yalist.cend(); i++)
 	{
 		pass = pass && *it == i;
 		++it;
