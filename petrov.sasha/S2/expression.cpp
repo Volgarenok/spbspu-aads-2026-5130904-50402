@@ -82,5 +82,62 @@ namespace petrov {
     }
     return output;
   }
+  long long petrov::evaluatePostfix(Queue< std::string >& postfix)
+  {
+    Stack< long long > operands;
+    while (!postfix.empty()) {
+      const std::string token = postfix.front();
+      postfix.pop();
+      if (isOperator(token)) {
+        if (operands.empty()) {
+          throw std::invalid_argument("Invalid expression");
+        }
+        const long long right = operands.top();
+        operands.pop();
+        if (operands.empty()) {
+          throw std::invalid_argument("Invalid expression");
+        }
+        const long long left = operands.top();
+        operands.pop();
+        long long result = 0;
+        if (token == "+") {
+          result = left + right;
+        } else if (token == "-") {
+          result = left - right;
+        } else if (token == "*") {
+          result = left * right;
+        } else if (token == "/") {
+          if (right == 0) {
+            throw std::invalid_argument("Division by zero");
+          }
+          result = left / right;
+        } else if (token == "%") {
+          if (right == 0) {
+            throw std::invalid_argument("Division by zero");
+          }
+          result = left % right;
+        } else if (token == "|") {
+          result = left | right;
+        }
+        operands.push(result);
+      } else {
+        try {
+          const long long value = std::stoll(token);
+          operands.push(value);
+        } catch (const std::exception&) {
+          throw std::invalid_argument("Invalid operand");
+        }
+      }
+    }
+    if (operands.empty()) {
+      throw std::invalid_argument("Empty expression");
+    }
+    const long long finalResult = operands.top();
+    operands.pop();
+    if (!operands.empty()) {
+      throw std::invalid_argument("Invalid expression");
+    }
+    return finalResult;
+  }
 }
 #endif
