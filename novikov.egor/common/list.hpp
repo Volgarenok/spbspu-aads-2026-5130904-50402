@@ -166,7 +166,6 @@ namespace novikov
     void push_front(const T &val)
     {
     Node<T> *node = new Node<T>{val, nullptr};
-    
     if (!head) {
         head = node;
         node->next = head;
@@ -178,7 +177,7 @@ namespace novikov
     }
     node->next = head;
     last->next = node;
-    head = node; 
+    head = node;
     }
     void pop_front()
     {
