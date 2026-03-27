@@ -44,5 +44,43 @@ namespace petrov {
     }
     return tokens;
   }
+  Queue< std::string > infixToPostfix(Queue< std::string >& tokens)
+  {
+    Queue< std::string > output;
+    Stack< std::string > ops;
+    while (!tokens.empty()) {
+      const std::string token = tokens.front();
+      tokens.pop();
+      if (token == "(") {
+        ops.push(token);
+      } else if (token == ")") {
+        while (!ops.empty() && ops.top() != "(") {
+          output.push(ops.top());
+          ops.pop();
+        }
+        if (ops.empty()) {
+          throw std::invalid_argument("Mismatched parentheses");
+        }
+        ops.pop();
+      } else if (isOperator(token)) {
+        const int prec = getPrecedence(token);
+        while (!ops.empty() && ops.top() != "(" && getPrecedence(ops.top()) >= prec) {
+          output.push(ops.top());
+          ops.pop();
+        }
+        ops.push(token);
+      } else {
+        output.push(token);
+      }
+    }
+    while (!ops.empty()) {
+      if (ops.top() == "(" || ops.top() == ")") {
+        throw std::invalid_argument("Mismatched parentheses");
+      }
+      output.push(ops.top());
+      ops.pop();
+    }
+    return output;
+  }
 }
 #endif
