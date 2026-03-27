@@ -108,64 +108,67 @@ int main()
   {
     std::cin >> std::ws;
     int c = std::cin.peek();
-    if (std::isdigit(c))
+    if (c != EOF)
     {
-      int number = 0;
-      std::cin >> number;
-      if (std::cin.fail())
+      if (std::isdigit(c))
       {
-        std::cerr << "Overflow error\n";
-        cleanup(lIt, embedIt, lhead);
-        return 1;
-      }
-      if (!lIt.value())
-      {
-        try
+        int number = 0;
+        std::cin >> number;
+        if (std::cin.fail())
         {
-          vishnevskiy::List<int>* embed = new vishnevskiy::List<int>{number, nullptr};
-          embedIt.set(embed);
-        }
-        catch (const std::bad_alloc& e)
-        {
-          std::cerr << "Bad alloc\n";
+          std::cerr << "Overflow error\n";
           cleanup(lIt, embedIt, lhead);
           return 1;
         }
-        lIt.setData(embedIt.curr);
+        if (!lIt.value())
+        {
+          try
+          {
+            vishnevskiy::List<int>* embed = new vishnevskiy::List<int>{number, nullptr};
+            embedIt.set(embed);
+          }
+          catch (const std::bad_alloc& e)
+          {
+            std::cerr << "Bad alloc\n";
+            cleanup(lIt, embedIt, lhead);
+            return 1;
+          }
+          lIt.setData(embedIt.curr);
+        }
+        else
+        {
+          embedIt.insert(number);
+          ++embedIt;
+        }
+        cSize++;
+        if (cSize > lSize)
+        {
+          lSize = cSize;
+        }
       }
       else
       {
-        embedIt.insert(number);
-        ++embedIt;
-      }
-      cSize++;
-      if (cSize > lSize)
-      {
-        lSize = cSize;
-      }
-    }
-    else
-    {
-      std::cin >> name;
-      cSize = 0;
-      if (!lhead)
-      {
-        try
+        std::cin >> name;
+        cSize = 0;
+        if (!lhead)
         {
-          lhead = new vishnevskiy::NamedList<int>{name, nullptr, nullptr};
+          try
+          {
+            lhead = new vishnevskiy::NamedList<int>{name, nullptr, nullptr};
+          }
+          catch (const std::bad_alloc& e)
+          {
+            std::cerr << "Bad alloc\n";
+            cleanup(lIt, embedIt, lhead);
+            return 1;
+          }
+          lIt.setCurr(lhead);
         }
-        catch (const std::bad_alloc& e)
+        else
         {
-          std::cerr << "Bad alloc\n";
-          cleanup(lIt, embedIt, lhead);
-          return 1;
+          lIt.insert(nullptr, name);
+          ++lIt;
         }
-        lIt.setCurr(lhead);
-      }
-      else
-      {
-        lIt.insert(nullptr, name);
-        ++lIt;
       }
     }
   }
