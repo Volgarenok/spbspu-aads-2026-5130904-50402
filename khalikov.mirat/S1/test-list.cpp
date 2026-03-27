@@ -84,3 +84,28 @@ BOOST_AUTO_TEST_CASE(move_op_test)
 	}
 	BOOST_TEST(pass);
 }
+
+
+BOOST_AUTO_TEST_CASE(swap_test)
+{
+	List< int > list;
+	List< int > yalist;
+	list.pushFront(3);
+	list.pushFront(2);
+	list.pushFront(1);
+	yalist.pushFront(2);
+	yalist.pushFront(1);
+	list.swap(yalist);
+	auto yait = yalist.cbegin();
+	auto it = list.cbegin();
+	bool pass = yalist.size() == 3;
+	pass = pass && list.size() == 2;
+	for (int i = 1; it != list.cend(); i++)
+	{
+		pass = pass && *it == *yait;
+		++it;
+		++yait;
+	}
+	pass = pass && *yait == 3;
+	BOOST_TEST(pass);
+}
