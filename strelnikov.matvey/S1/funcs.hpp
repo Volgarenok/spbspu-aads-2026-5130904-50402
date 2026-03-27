@@ -1,15 +1,16 @@
 #ifndef FUNCS_HPP
 #define FUNCS_HPP
 
+#include <iostream>
 #include "../common/iters.hpp"
 #include "../common/list.hpp"
 #include "../common/node.hpp"
-#include <iostream>
 
 namespace strelnikov
 {
   List< std::pair< std::string, List< size_t > > > input(std::istream &in);
-  template < class T > size_t size(const List< T > &list)
+  template < class T >
+  size_t size(const List< T > &list)
   {
     size_t res = 0;
     auto it = list.cbegin();

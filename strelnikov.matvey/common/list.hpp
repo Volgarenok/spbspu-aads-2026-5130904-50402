@@ -1,14 +1,15 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 
-#include "node.hpp"
-#include "iters.hpp"
 #include <cstddef>
 #include <utility>
+#include "iters.hpp"
+#include "node.hpp"
 
 namespace strelnikov
 {
-  template < class T > class List
+  template < class T >
+  class List
   {
   public:
     using list = List< T >;
@@ -87,7 +88,8 @@ namespace strelnikov
     other.head_ = nullptr;
   }
 
-  template < class T > typename List< T >::list &List< T >::operator=(const list &other)
+  template < class T >
+  typename List< T >::list &List< T >::operator=(const list &other)
   {
     if (this == &other) {
       return *this;
@@ -98,7 +100,8 @@ namespace strelnikov
     return *this;
   }
 
-  template < class T > typename List< T >::list &List< T >::operator=(list &&other) noexcept
+  template < class T >
+  typename List< T >::list &List< T >::operator=(list &&other) noexcept
   {
     if (this == &other) {
       return *this;
@@ -109,12 +112,14 @@ namespace strelnikov
     return *this;
   }
 
-  template < class T > List< T >::~List()
+  template < class T >
+  List< T >::~List()
   {
     clear();
   }
 
-  template < class T > void List< T >::push_front(const T &value)
+  template < class T >
+  void List< T >::push_front(const T &value)
   {
     node *new_head = new node();
     new_head->next = head_;
@@ -123,7 +128,8 @@ namespace strelnikov
     head_ = new_head;
   }
 
-  template < class T > void List< T >::push_front(T &&value)
+  template < class T >
+  void List< T >::push_front(T &&value)
   {
     node *new_head = new node();
     new_head->next = head_;
@@ -132,31 +138,36 @@ namespace strelnikov
     head_ = new_head;
   }
 
-  template < class T > void List< T >::pop_front()
+  template < class T >
+  void List< T >::pop_front()
   {
     node *tmp_head = head_->next;
     delete head_;
     head_ = tmp_head;
   }
 
-  template < class T > void List< T >::clear()
+  template < class T >
+  void List< T >::clear()
   {
     while (head_) {
       pop_front();
     }
   }
 
-  template < class T > void List< T >::swap(list &other)
+  template < class T >
+  void List< T >::swap(list &other)
   {
     std::swap(head_, other.head_);
   }
 
-  template < class T > bool List< T >::empty() const noexcept
+  template < class T >
+  bool List< T >::empty() const noexcept
   {
     return head_ == nullptr;
   }
 
-  template < class T > typename List< T >::iterator List< T >::insert_after(const_iterator pos, const T &value)
+  template < class T >
+  typename List< T >::iterator List< T >::insert_after(const_iterator pos, const T &value)
   {
     node *curr = const_cast< node * >(pos.curr_);
     node *new_node = new node();
@@ -168,7 +179,8 @@ namespace strelnikov
     return iterator(new_node);
   }
 
-  template < class T > typename List< T >::iterator List< T >::insert_after(const_iterator pos, T &&value)
+  template < class T >
+  typename List< T >::iterator List< T >::insert_after(const_iterator pos, T &&value)
   {
     node *curr = const_cast< node * >(pos.curr_);
     node *new_node = new node();
@@ -190,7 +202,8 @@ namespace strelnikov
     return curr;
   }
 
-  template < class T > typename List< T >::iterator List< T >::erase_after(const_iterator pos)
+  template < class T >
+  typename List< T >::iterator List< T >::erase_after(const_iterator pos)
   {
     node *curr = const_cast< node * >(pos.curr_);
     node *to_delete = curr->next;
@@ -206,36 +219,43 @@ namespace strelnikov
     return iterator(curr->next);
   }
 
-  template < class T > typename List< T >::iterator List< T >::begin() noexcept
+  template < class T >
+  typename List< T >::iterator List< T >::begin() noexcept
   {
     return iterator(head_);
   }
 
-  template < class T > typename List< T >::const_iterator List< T >::begin() const noexcept
+  template < class T >
+  typename List< T >::const_iterator List< T >::begin() const noexcept
   {
     return const_iterator(head_);
   }
 
-  template < class T > typename List< T >::const_iterator List< T >::cbegin() const noexcept
+  template < class T >
+  typename List< T >::const_iterator List< T >::cbegin() const noexcept
   {
     return const_iterator(head_);
   }
 
-  template < class T > typename List< T >::iterator List< T >::end() noexcept
+  template < class T >
+  typename List< T >::iterator List< T >::end() noexcept
   {
     return iterator(nullptr);
   }
 
-  template < class T > typename List< T >::const_iterator List< T >::end() const noexcept
+  template < class T >
+  typename List< T >::const_iterator List< T >::end() const noexcept
   {
     return const_iterator(nullptr);
   }
 
-  template < class T > typename List< T >::const_iterator List< T >::cend() const noexcept
+  template < class T >
+  typename List< T >::const_iterator List< T >::cend() const noexcept
   {
     return const_iterator(nullptr);
   }
-  template < class T > typename List< T >::node *List< T >::get_head()
+  template < class T >
+  typename List< T >::node *List< T >::get_head()
   {
     return head_;
   }

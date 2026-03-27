@@ -1,8 +1,8 @@
+#include <iostream>
 #include "../common/iters.hpp"
 #include "../common/list.hpp"
 #include "../common/node.hpp"
 #include "funcs.hpp"
-#include <iostream>
 
 int main()
 {
@@ -25,7 +25,7 @@ int main()
   }
 
   strelnikov::printNames(std::cout, list) << '\n';
-  if(onlynums.cbegin() == nullptr) {
+  if (onlynums.cbegin() == nullptr) {
     std::cout << "0\n";
     return 0;
   }

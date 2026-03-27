@@ -63,18 +63,18 @@ namespace strelnikov
     if (!data_.empty()) {
       tail_ = data_.insert_after(tail_, val);
     } else {
-			data_.push_front(val);
-			tail_ = data_.get_head();
+      data_.push_front(val);
+      tail_ = data_.get_head();
     }
   }
 
   template < class T >
   void Queue< T >::pop() noexcept
   {
-		data_.pop_front();
-		if(data_.begin() == data_.end()) {
-			tail_ = LIter< T >();
-		}
+    data_.pop_front();
+    if (data_.begin() == data_.end()) {
+      tail_ = LIter< T >();
+    }
   }
 
   template < class T >

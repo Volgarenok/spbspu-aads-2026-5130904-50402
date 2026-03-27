@@ -1,10 +1,10 @@
-#include "funcs.hpp"
+#include <cctype>
 #include <iostream>
 #include <sstream>
-#include <string>
 #include <stdexcept>
-#include <cctype>
+#include <string>
 #include "datastructs.hpp"
+#include "funcs.hpp"
 
 int strelnikov::getPriority(const std::string &a)
 {
@@ -18,7 +18,7 @@ int strelnikov::getPriority(const std::string &a)
     return 3;
   }
 
-	return 0;
+  return 0;
 }
 
 bool strelnikov::checkPriority(const std::string &a, const std::string &b)
