@@ -116,7 +116,6 @@ int main()
           std::cerr << "Overflow\n";
           overflow = true;
           std::cin.clear();
-          std::cin.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
           continue;
         }
         if (!lIt.value())
