@@ -49,9 +49,7 @@ int main(int argc, char* argv[]) {
     results.pop();
     First = false;
   }
-  if (!First) {
-    std::cout << '\n';
-  }
+  std::cout << '\n';
   return 0;
 }
 
