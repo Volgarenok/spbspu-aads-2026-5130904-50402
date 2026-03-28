@@ -1,6 +1,25 @@
 #include "actions.hpp"
 #include <iostream>
 #include <string>
+#include "queue.hpp"
+
+dirko::Queue< std::string > dirko::parseString(std::string str)
+{
+  Queue< std::string > ret;
+  size_t start = 0;
+  size_t index = str.find(' ');
+  std::string subString = "";
+  while (index != std::string::npos) {
+    subString = str.substr(start, index - start);
+    ret.push(subString);
+    start = index + 1;
+    index = str.find(' ', start);
+  }
+  subString = str.substr(start);
+  ret.push(subString);
+
+  return ret;
+}
 
 dirko::Queue< dirko::Queue< std::string > > dirko::input(std::istream &is)
 {
@@ -10,23 +29,7 @@ dirko::Queue< dirko::Queue< std::string > > dirko::input(std::istream &is)
     if (str.empty()) {
       continue;
     }
-    Queue< std::string > expretion;
-    std::string item;
-    for (size_t i = 0; i < str.length(); i++) {
-      std::string token = str.substr(i, 1);
-      if (token == " ") {
-        if (!item.empty()) {
-          expretion.push(item);
-          item.clear();
-        }
-      } else {
-        item += token;
-      }
-    }
-    if (!item.empty()) {
-      expretion.push(item);
-    }
-    ret.push(expretion);
+    ret.push(parseString(str));
   }
   return ret;
 }
