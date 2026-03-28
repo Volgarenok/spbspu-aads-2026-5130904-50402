@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
     {
       if (line.empty())
       {
+        std::cout << std::endl;
         continue;
       }
       try
