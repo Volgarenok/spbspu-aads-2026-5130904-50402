@@ -111,17 +111,13 @@ int main()
       {
         int number = 0;
         std::cin >> number;
-        try
+        if (std::cin.fail())
         {
-          if (std::cin.fail())
-          {
-            throw std::overflow_error("Overflow");
-          }
-        }
-        catch (const std::overflow_error& e)
-        {
+          std::cerr << "Overflow\n";
           overflow = true;
           std::cin.clear();
+          std::cin.ignore(std::numeric_limits<std::streamsize>::max(), ' ');
+          continue;
         }
         if (!lIt.value())
         {
@@ -176,12 +172,6 @@ int main()
     }
   }
 
-  if (overflow)
-  {
-    cleanup(lIt, embedIt, lhead);
-    return 1;
-  }
-
   if (!lhead)
   {
     std::cout << 0 << "\n";
@@ -222,5 +212,9 @@ int main()
   std::cout << "\n";
   delete[] sums;
   cleanup(lIt, embedIt, lhead);
+  if (overflow)
+  {
+    return 1;
+  }
   return 0;
 }
