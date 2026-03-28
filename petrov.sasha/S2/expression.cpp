@@ -1,9 +1,13 @@
 #include "expression.hpp"
 #include <stdexcept>
 #include <string>
+#include <climits>
+#include <cstdlib>
 #include "stack.hpp"
+#include "queue.hpp"
 
 namespace petrov {
+
   bool isOperator(const std::string& token) {
     return token == "+" || token == "-" || token == "|" || token == "%" || token == "/" || token == "*";
   }
@@ -81,29 +85,77 @@ namespace petrov {
     return output;
   }
 
+  void checkAdditionOverflow(long long left, long long right) {
+    if ((right > 0 && left > LLONG_MAX - right) ||
+        (right < 0 && left < LLONG_MIN - right)) {
+      throw std::overflow_error("Overflow");
+    }
+  }
+
+  void checkSubtractionOverflow(long long left, long long right) {
+    if ((right < 0 && left > LLONG_MAX + right) ||
+        (right > 0 && left < LLONG_MIN + right)) {
+      throw std::overflow_error("Overflow");
+    }
+  }
+
+  void checkMultiplicationOverflow(long long left, long long right) {
+    if (left == 0 || right == 0) {
+      return;
+    }
+    
+    if (left > 0 && right > 0 && left > LLONG_MAX / right) {
+      throw std::overflow_error("Overflow");
+    }
+    if (left > 0 && right < 0 && right < LLONG_MIN / left) {
+      throw std::overflow_error("Overflow");
+    }
+    if (left < 0 && right > 0 && left < LLONG_MIN / right) {
+      throw std::overflow_error("Overflow");
+    }
+    if (left < 0 && right < 0 && left < LLONG_MAX / right) {
+      throw std::overflow_error("Overflow");
+    }
+  }
+
+  long long positiveModulo(long long left, long long right) {
+    long long result = left % right;
+    if (result < 0) {
+      result += llabs(right);
+    }
+    return result;
+  }
+
   long long evaluatePostfix(Queue< std::string >& postfix)
   {
     Stack< long long > operands;
     while (!postfix.empty()) {
       const std::string token = postfix.front();
       postfix.pop();
+      
       if (isOperator(token)) {
         if (operands.empty()) {
           throw std::invalid_argument("Invalid expression");
         }
         const long long right = operands.top();
         operands.pop();
+        
         if (operands.empty()) {
           throw std::invalid_argument("Invalid expression");
         }
         const long long left = operands.top();
         operands.pop();
+        
         long long result = 0;
+        
         if (token == "+") {
+          checkAdditionOverflow(left, right);
           result = left + right;
         } else if (token == "-") {
+          checkSubtractionOverflow(left, right);
           result = left - right;
         } else if (token == "*") {
+          checkMultiplicationOverflow(left, right);
           result = left * right;
         } else if (token == "/") {
           if (right == 0) {
@@ -114,10 +166,11 @@ namespace petrov {
           if (right == 0) {
             throw std::invalid_argument("Division by zero");
           }
-          result = left % right;
+          result = positiveModulo(left, right);
         } else if (token == "|") {
           result = left | right;
         }
+        
         operands.push(result);
       } else {
         try {
@@ -128,14 +181,18 @@ namespace petrov {
         }
       }
     }
+    
     if (operands.empty()) {
       throw std::invalid_argument("Empty expression");
     }
+    
     const long long finalResult = operands.top();
     operands.pop();
+    
     if (!operands.empty()) {
       throw std::invalid_argument("Invalid expression");
     }
+    
     return finalResult;
   }
 }

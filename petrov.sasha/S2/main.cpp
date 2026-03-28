@@ -17,8 +17,10 @@ int main(int argc, char* argv[]) {
     std::cerr << "Invalid arguments\n";
     return 1;
   }
+  
   petrov::Stack< long long > results;
   std::string line;
+  
   while (std::getline(*input, line)) {
     if (line.empty()) {
       continue;
@@ -31,6 +33,9 @@ int main(int argc, char* argv[]) {
       petrov::Queue< std::string > postfix = petrov::infixToPostfix(tokens);
       const long long value = petrov::evaluatePostfix(postfix);
       results.push(value);
+    } catch (const std::overflow_error& e) {
+      std::cerr << e.what() << '\n';
+      return 1;
     } catch (const std::exception& e) {
       std::cerr << e.what() << '\n';
       return 1;
@@ -51,3 +56,4 @@ int main(int argc, char* argv[]) {
   }
   return 0;
 }
+
