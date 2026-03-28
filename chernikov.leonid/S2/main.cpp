@@ -33,7 +33,6 @@ int main(int argc, char *argv[])
     {
       if (line.empty())
       {
-        std::cout << std::endl;
         continue;
       }
       try
@@ -47,17 +46,16 @@ int main(int argc, char *argv[])
         return 1;
       }
     }
-
+    for (auto it = results.rbegin(); it != results.rend(); ++it)
+    {
+      std::cout << *it;
+      if (it + 1 != results.rend())
+      {
+        std::cout << " ";
+      }
+    }
     if (!results.empty())
     {
-      for (auto it = results.rbegin(); it != results.rend(); ++it)
-      {
-        std::cout << *it;
-        if (it + 1 != results.rend())
-        {
-          std::cout << " ";
-        }
-      }
       std::cout << std::endl;
     }
   } catch (const std::exception &e)
