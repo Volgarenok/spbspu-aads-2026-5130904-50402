@@ -65,3 +65,4 @@ BOOST_AUTO_TEST_CASE(test_multiple_operations)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
