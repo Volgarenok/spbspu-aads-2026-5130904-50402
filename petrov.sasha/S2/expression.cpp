@@ -103,7 +103,6 @@ namespace petrov {
     if (left == 0 || right == 0) {
       return;
     }
-    
     if (left > 0 && right > 0 && left > LLONG_MAX / right) {
       throw std::overflow_error("Overflow");
     }
@@ -132,22 +131,18 @@ namespace petrov {
     while (!postfix.empty()) {
       const std::string token = postfix.front();
       postfix.pop();
-      
       if (isOperator(token)) {
         if (operands.empty()) {
           throw std::invalid_argument("Invalid expression");
         }
         const long long right = operands.top();
         operands.pop();
-        
         if (operands.empty()) {
           throw std::invalid_argument("Invalid expression");
         }
         const long long left = operands.top();
         operands.pop();
-        
         long long result = 0;
-        
         if (token == "+") {
           checkAdditionOverflow(left, right);
           result = left + right;
@@ -170,7 +165,6 @@ namespace petrov {
         } else if (token == "|") {
           result = left | right;
         }
-        
         operands.push(result);
       } else {
         try {
@@ -181,18 +175,14 @@ namespace petrov {
         }
       }
     }
-    
     if (operands.empty()) {
       throw std::invalid_argument("Empty expression");
     }
-    
     const long long finalResult = operands.top();
     operands.pop();
-    
     if (!operands.empty()) {
       throw std::invalid_argument("Invalid expression");
     }
-    
     return finalResult;
   }
 }

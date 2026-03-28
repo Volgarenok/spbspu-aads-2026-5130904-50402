@@ -17,10 +17,8 @@ int main(int argc, char* argv[]) {
     std::cerr << "Invalid arguments\n";
     return 1;
   }
-  
   petrov::Stack< long long > results;
   std::string line;
-  
   while (std::getline(*input, line)) {
     if (line.empty()) {
       continue;
