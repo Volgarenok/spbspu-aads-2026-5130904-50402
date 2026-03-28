@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
 {
   std::istream *input = &std::cin;
   std::ifstream file;
+  bool isFileInput = false;
   try
   {
     if (argc == 2)
@@ -22,6 +23,7 @@ int main(int argc, char *argv[])
         return 1;
       }
       input = &file;
+      isFileInput = true;
     } else if (argc > 2)
     {
       std::cerr << "Usage: " << argv[0] << " [filename]" << std::endl;
@@ -29,12 +31,14 @@ int main(int argc, char *argv[])
     }
     std::vector< long long > results;
     std::string line;
+    bool hasAnyExpression = false;
     while (std::getline(*input, line))
     {
       if (line.empty())
       {
         continue;
       }
+      hasAnyExpression = true;
       try
       {
         long long result = chernikov::evaluateExpression(line);
@@ -45,6 +49,11 @@ int main(int argc, char *argv[])
         std::cerr << "Reason: " << e.what() << std::endl;
         return 1;
       }
+    }
+    if (isFileInput && !hasAnyExpression)
+    {
+      std::cerr << "Error: File is empty or contains only empty lines" << std::endl;
+      return 1;
     }
     if (!results.empty())
     {
