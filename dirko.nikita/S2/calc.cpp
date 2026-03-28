@@ -9,14 +9,14 @@ bool dirko::getPriority(const std::string &op1, const std::string &op2)
 {
   short pr1 = 0, pr2 = 0;
   if (op1 == "lcm") {
-    pr1 = 3;
+    pr1 = 0;
   } else if (op1 == "+" || op1 == "-") {
     pr1 = 1;
   } else {
     pr1 = 2;
   }
   if (op2 == "lcm") {
-    pr2 = 3;
+    pr2 = 0;
   } else if (op2 == "+" || op2 == "-") {
     pr2 = 1;
   } else {
