@@ -40,9 +40,14 @@ void bukreev::input(std::istream& in, List< Sequence >& seqs)
 void bukreev::output(std::ostream& out, const List< Sequence >& seqs)
 {
   LCIter< Sequence > it = seqs.cbegin();
+  if (it == seqs.cend())
+  {
+    out << "0\n";
+    return;
+  }
   out << (*it).first;
-
   it = it.next();
+
   for (; it != seqs.cend(); it = it.next())
   {
     out << ' ' << (*it).first;
