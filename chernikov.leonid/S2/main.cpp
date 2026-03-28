@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
       try
       {
-        long long result = evaluateExpression(line);
+        long long result = chernikov::evaluateExpression(line);
         results.push_back(result);
       } catch (const std::exception &e)
       {

@@ -73,7 +73,7 @@ namespace chernikov {
       } else if (token == "+" || token == "-" || token == "*" || token == "/" || token == "%")
       {
         char op = token[0];
-        while (!operators.empty() && operators.top() != ')' && getPriority(operators.top()) >= getPriority(op))
+        while (!operators.empty() && operators.top() != '(' && getPriority(operators.top()) >= getPriority(op))
         {
           output.push(std::string(1, operators.drop()));
         }
@@ -145,10 +145,10 @@ namespace chernikov {
     }
     return values.drop();
   }
-}
-long long evaluateExpression(const std::string &expression)
-{
-  chernikov::Queue< std::string > postfix = chernikov::infixToPostfix(expression);
-  return evaluatePostfix(postfix);
+  inline long long evaluateExpression(const std::string &expression)
+  {
+    chernikov::Queue< std::string > postfix = chernikov::infixToPostfix(expression);
+    return evaluatePostfix(postfix);
+  }
 }
 #endif
