@@ -1,5 +1,4 @@
 #include "calc.hpp"
-#include <cstddef>
 #include <limits>
 #include <stdexcept>
 #include <string>
@@ -29,8 +28,8 @@ bool dirko::getPriority(const std::string &op1, const std::string &op2)
 bool dirko::isOpt(std::string candidate)
 {
   bool ret = false;
-  for (size_t i = 0; i < dirko::opt_size; ++i) {
-    ret = ret || (candidate == opts[i]);
+  for (const std::string &opt : opts) {
+    ret = ret || (candidate == opt);
   }
   return ret;
 }
@@ -76,42 +75,15 @@ dirko::Queue< std::string > dirko::convert(dirko::Queue< std::string > inf)
 long long dirko::calc(const std::string &opt, long long a, long long b)
 {
   if (opt == "+") {
-    if (std::numeric_limits< long long >::max() - a < b) {
-      throw std::overflow_error("overflow");
-    }
-    return a + b;
+    return sum(a, b);
   } else if (opt == "-") {
-    if (std::numeric_limits< long long >::min() + a > b) {
-      throw std::underflow_error("underflow");
-    }
-    return a - b;
+    return substract(a, b);
   } else if (opt == "*") {
-    if (a > 0) {
-      if (b > 0 && a > std::numeric_limits< long long >::max() / b) {
-        throw std::overflow_error("Overflow");
-      }
-      if (b < 0 && b < std::numeric_limits< long long >::min() / a) {
-        throw std::overflow_error("Overflow");
-      }
-    } else {
-      if (b > 0 && a < std::numeric_limits< long long >::min() / b) {
-        throw std::overflow_error("Overflow");
-      }
-      if (b < 0 && a < std::numeric_limits< long long >::max() / b) {
-        throw std::overflow_error("Overflow");
-      }
-    }
-    return a * b;
+    return multiply(a, b);
   } else if (opt == "/") {
-    if (b == 0) {
-      throw std::logic_error("zero dividion");
-    }
-    return a / b;
+    return divide(a, b);
   } else if (opt == "%") {
-    if (b == 0) {
-      throw std::logic_error("zero dividion");
-    }
-    return (a % b + b) % b;
+    return mod(a, b);
   } else if (opt == "lcm") {
     return lcm(a, b);
   } else {
@@ -157,4 +129,51 @@ long long dirko::lcm(long long a, long long b)
     res--;
   }
   return a * b / res;
+}
+long long dirko::sum(long long a, long long b)
+{
+  if (std::numeric_limits< long long >::max() - a < b) {
+    throw std::overflow_error("overflow");
+  }
+  return a + b;
+}
+long long dirko::substract(long long a, long long b)
+{
+  if (std::numeric_limits< long long >::min() + a > b) {
+    throw std::underflow_error("underflow");
+  }
+  return a - b;
+}
+long long dirko::multiply(long long a, long long b)
+{
+  if (a > 0) {
+    if (b > 0 && a > std::numeric_limits< long long >::max() / b) {
+      throw std::overflow_error("Overflow");
+    }
+    if (b < 0 && b < std::numeric_limits< long long >::min() / a) {
+      throw std::overflow_error("Overflow");
+    }
+  } else {
+    if (b > 0 && a < std::numeric_limits< long long >::min() / b) {
+      throw std::overflow_error("Overflow");
+    }
+    if (b < 0 && a < std::numeric_limits< long long >::max() / b) {
+      throw std::overflow_error("Overflow");
+    }
+  }
+  return a * b;
+}
+long long dirko::divide(long long a, long long b)
+{
+  if (b == 0) {
+    throw std::logic_error("zero dividion");
+  }
+  return a / b;
+}
+long long dirko::mod(long long a, long long b)
+{
+  if (b == 0) {
+    throw std::logic_error("zero dividion");
+  }
+  return (a % b + b) % b;
 }
