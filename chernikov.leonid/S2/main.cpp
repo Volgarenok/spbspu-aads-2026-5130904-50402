@@ -29,12 +29,14 @@ int main(int argc, char *argv[])
     }
     std::vector< long long > results;
     std::string line;
+    bool hasAnyInput = false;
     while (std::getline(*input, line))
     {
       if (line.empty())
       {
         continue;
       }
+      hasAnyInput = true;
       try
       {
         long long result = chernikov::evaluateExpression(line);
@@ -46,16 +48,20 @@ int main(int argc, char *argv[])
         return 1;
       }
     }
-    for (auto it = results.rbegin(); it != results.rend(); ++it)
-    {
-      std::cout << *it;
-      if (it + 1 != results.rend())
-      {
-        std::cout << " ";
-      }
-    }
     if (!results.empty())
     {
+      for (auto it = results.rbegin(); it != results.rend(); ++it)
+      {
+        std::cout << *it;
+        if (it + 1 != results.rend())
+        {
+          std::cout << " ";
+        }
+      }
+      std::cout << std::endl;
+    } else if (!hasAnyInput && argc == 2)
+    {
+      // Пустой файл - выводим одну пустую строку
       std::cout << std::endl;
     }
   } catch (const std::exception &e)
