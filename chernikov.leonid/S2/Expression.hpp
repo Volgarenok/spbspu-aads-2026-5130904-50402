@@ -6,9 +6,41 @@
 #include <string>
 #include <sstream>
 #include <cctype>
-#include <map>
+#include <climits>
+#include <limits>
 
 namespace chernikov {
+
+  inline bool willAddOverflow(long long a, long long b)
+  {
+    if (b > 0 && a > std::numeric_limits< long long >::max() - b)
+      return true;
+    if (b < 0 && a < std::numeric_limits< long long >::min() - b)
+      return true;
+    return false;
+  }
+  inline bool willSubOverflow(long long a, long long b)
+  {
+    if (b < 0 && a > std::numeric_limits< long long >::max() + b)
+      return true;
+    if (b > 0 && a < std::numeric_limits< long long >::min() + b)
+      return true;
+    return false;
+  }
+  inline bool willMulOverflow(long long a, long long b)
+  {
+    if (a == 0 || b == 0)
+      return false;
+    if (a > 0 && b > 0 && a > std::numeric_limits< long long >::max() / b)
+      return true;
+    if (a > 0 && b < 0 && b < std::numeric_limits< long long >::min() / a)
+      return true;
+    if (a < 0 && b > 0 && a < std::numeric_limits< long long >::min() / b)
+      return true;
+    if (a < 0 && b < 0 && a < std::numeric_limits< long long >::max() / b)
+      return true;
+    return false;
+  }
 
   inline int getPriority(char operation)
   {
@@ -93,7 +125,13 @@ namespace chernikov {
     }
     return output;
   }
-
+  inline long long modPositive(long long a, long long b)
+  {
+    long long result = a % b;
+    if (result < 0)
+      result += b;
+    return result;
+  }
   long long evaluatePostfix(Queue< std::string > &postfix)
   {
     Stack< long long > values;
@@ -115,12 +153,24 @@ namespace chernikov {
         switch (token[0])
         {
         case '+':
+          if (willAddOverflow(a, b))
+          {
+            throw std::logic_error("Addition overflow");
+          }
           result = a + b;
           break;
         case '-':
+          if (willSubOverflow(a, b))
+          {
+            throw std::logic_error("Subtraction overflow");
+          }
           result = a - b;
           break;
         case '*':
+          if (willMulOverflow(a, b))
+          {
+            throw std::logic_error("Multiplication overflow");
+          }
           result = a * b;
           break;
         case '/':
@@ -131,7 +181,7 @@ namespace chernikov {
         case '%':
           if (b == 0)
             throw std::logic_error("Modulo by zero");
-          result = a % b;
+          result = modPositive(a, b);
           break;
         default:
           throw std::logic_error("Unknown operator");
@@ -147,6 +197,10 @@ namespace chernikov {
   }
   inline long long evaluateExpression(const std::string &expression)
   {
+    if (expression.empty() || expression.find_first_not_of(" \t") == std::string::npos)
+    {
+      throw std::logic_error("Empty expression");
+    }
     chernikov::Queue< std::string > postfix = chernikov::infixToPostfix(expression);
     return evaluatePostfix(postfix);
   }
