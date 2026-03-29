@@ -360,3 +360,18 @@ BOOST_AUTO_TEST_CASE(push_back_test)
 	BOOST_TEST(pass);
 }
 
+BOOST_AUTO_TEST_CASE(pop_back_test)
+{
+	List< int > list;
+	bool pass = list.isEmpty();
+	list.pushBack(1);
+	list.pushBack(2);
+	list.pushBack(3);
+	pass = pass && list.size() == 3;
+	list.popBack();
+	pass = pass && list.size() == 2;
+	auto it = list.cbegin();
+	++it;
+	pass = pass && *it == 2;
+	BOOST_TEST(pass);
+}
