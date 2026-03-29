@@ -252,6 +252,13 @@ void khalikov::List< T >::pushFront(const T & value)
 template< class T >
 void khalikov::List< T >::erase(LIter< T > pos)
 {
+	if (pos.curr == h)
+	{
+		h = pos.curr->next;
+		delete pos.curr;
+		return;
+	}
+
   Node< T > * prev = h;
   while (prev->next != pos.curr)
   {
@@ -267,13 +274,17 @@ void khalikov::List< T >::remove(const T & value)
   auto it = begin();
   while (it.curr != nullptr)
   {
-    auto next = it;
-    next++;
     if (it.curr->val == value)
     {
+ 	    auto next = it;
+	    ++next;
       erase(it);
+      it = next;
     }
-    it = next;
+    else
+    {
+			++it;
+    }
   }
 }
 
