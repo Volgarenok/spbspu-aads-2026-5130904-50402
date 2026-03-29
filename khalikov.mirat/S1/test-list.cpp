@@ -171,3 +171,27 @@ BOOST_AUTO_TEST_CASE(insert_after_test)
 	}
 	BOOST_TEST(pass);
 }
+
+BOOST_AUTO_TEST_CASE(merge_test)
+{
+	List< int > list;
+	List< int > yalist;
+	list.pushFront(9);
+	list.pushFront(7);
+	list.pushFront(10);
+	yalist.pushFront(3);
+	yalist.pushFront(12);
+	yalist.sort();
+	list.sort();
+	list.merge(yalist);
+	auto it = list.cbegin();
+	bool pass = list.size() == 5;
+	int arr[5] = {3, 7, 9, 10, 12};
+	for (int i = 0; it != list.cend(); i++)
+	{
+		pass = pass && *it == arr[i];
+		++it;
+	}
+	pass = pass && yalist.size() == 0;
+	BOOST_TEST(pass);
+}
