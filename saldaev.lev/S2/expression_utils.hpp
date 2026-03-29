@@ -2,6 +2,7 @@
 #define EXPRESSION_UTILS_HPP
 #include <cctype>
 #include <cstddef>
+#include <limits>
 #include <stdexcept>
 #include <string>
 
@@ -39,15 +40,15 @@ namespace saldaev
   inline long long apply(const std::string &op, long long left, long long right)
   {
     if (op == "+") {
-      return left + right;
+      return sum(left, right);
     } else if (op == "-") {
-      return left - right;
+      return substract(left, right);
     } else if (op == "*") {
-      return left * right;
+      return multiply(left, right);
     } else if (op == "/") {
-      return left / right;
+      return division(left, right);
     } else if (op == "%") {
-      return left % right;
+      return mod(left, right);
     } else {
       throw std::logic_error("invalid operator");
     }
@@ -70,6 +71,102 @@ namespace saldaev
     }
     return result;
   }
+  long long sum(long long left, long long right)
+  {
+    if (left >= 0) {
+      if (std::numeric_limits< long long >::max() - left < right) {
+        throw std::overflow_error("overflow");
+      }
+    } else {
+      if (std::numeric_limits< long long >::min() - left > right) {
+        throw std::overflow_error("underflow");
+      }
+    }
+    return left + right;
+  }
+
+  long long substract(long long left, long long right)
+  {
+    if (left >= 0) {
+      if (std::numeric_limits< long long >::max() - left < right) {
+        throw std::overflow_error("overflow");
+      }
+    } else {
+      if (std::numeric_limits< long long >::min() + left > right) {
+        throw std::overflow_error("underflow");
+      }
+    }
+    return left - right;
+  }
+
+  long long multiply(long long left, long long right)
+  {
+    if (left == 0 || right == 0) {
+      return 0;
+    }
+
+    if (left == std::numeric_limits< long long >::min()) {
+      if (right == 1)
+        return std::numeric_limits< long long >::min();
+      throw std::overflow_error("overflow");
+    }
+    if (right == std::numeric_limits< long long >::min()) {
+      if (left == 1)
+        return std::numeric_limits< long long >::min();
+      throw std::overflow_error("overflow");
+    }
+
+    if (left > 0) {
+      if (right > 0) {
+        if (right > std::numeric_limits< long long >::max() / left) {
+          throw std::overflow_error("overflow");
+        }
+      } else {
+        if (right < std::numeric_limits< long long >::min() / left) {
+          throw std::overflow_error("underflow");
+        }
+      }
+    } else {
+      if (right > 0) {
+        if (right > std::numeric_limits< long long >::min() / left) {
+          throw std::overflow_error("underflow");
+        }
+      } else {
+        if (right < std::numeric_limits< long long >::max() / left) {
+          throw std::overflow_error("overflow");
+        }
+      }
+    }
+
+    return left * right;
+  }
+
+  long long division(long long left, long long right)
+  {
+    if (right == 0) {
+      throw std::logic_error("division by zero");
+    }
+
+    if (left == std::numeric_limits< long long >::min() && right == -1) {
+      throw std::overflow_error("overflow");
+    }
+
+    return left / right;
+  }
+
+  long long mod(long long left, long long right)
+  {
+    if (right == 0) {
+      throw std::logic_error("modulo by zero");
+    }
+
+    if (left == std::numeric_limits< long long >::min() && right == -1) {
+      throw std::overflow_error("overflow");
+    }
+
+    return left % right;
+  }
+
 }
 
 #endif
