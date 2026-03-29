@@ -353,4 +353,27 @@ void khalikov::List< T >::reverse() noexcept
 	h = prev;
 }
 
+template< class T >
+void khalikov::List< T >::pushBack(const T value)
+{
+	Node< T > * newNode = new Node< T > {value, nullptr};
+	if (!h)
+	{
+		h = newNode;
+		return;
+	}
+	Node< T > * curr = h;
+	while (curr->next)
+	{
+		curr = curr->next;
+	}
+	curr->next = newNode;
+}
+
+template< class T >
+void khalikov::List< T >::popBack() noexcept
+{
+
+}
+
 #endif
