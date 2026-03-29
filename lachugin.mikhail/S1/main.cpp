@@ -1,6 +1,6 @@
 #include <iostream>
 #include "tools.hpp"
-#include "list.hpp"
+#include "../common/list.hpp"
 
 int main()
 {
