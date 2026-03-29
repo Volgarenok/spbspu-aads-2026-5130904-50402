@@ -37,14 +37,16 @@ namespace khalikov
     void eraseAfter(LIter< T > pos);
     void insertAfter(LIter< T > pos, const T & value);
     void merge(List< T > & other);
-    void popFront();
+    void popFront() noexcept;
     void pushFront(const T & value);
     void erase(LIter< T > pos);
     void remove(const T & value);
     void sort();
     void uniqueSort();
-    void reverse();
+    void reverse() noexcept;
     void print() const;
+    void pushBack(const T & value);
+    void popBack() noexcept;
   };
 }
 
@@ -235,7 +237,7 @@ void khalikov::List< T >::merge(List< T > & other)
 }
 
 template< class T >
-void khalikov::List< T >::popFront()
+void khalikov::List< T >::popFront() noexcept
 {
   Node< T > * temp = h;
   h = h->next;
@@ -336,7 +338,7 @@ void khalikov::List< T >::print() const
 }
 
 template< class T >
-void khalikov::List< T >::reverse()
+void khalikov::List< T >::reverse() noexcept
 {
 	Node< T > * prev = nullptr;
 	Node< T > * curr = h;
