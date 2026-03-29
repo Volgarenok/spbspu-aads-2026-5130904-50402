@@ -354,7 +354,7 @@ void khalikov::List< T >::reverse() noexcept
 }
 
 template< class T >
-void khalikov::List< T >::pushBack(const T value)
+void khalikov::List< T >::pushBack(const T & value)
 {
 	Node< T > * newNode = new Node< T > {value, nullptr};
 	if (!h)

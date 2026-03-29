@@ -342,3 +342,21 @@ BOOST_AUTO_TEST_CASE(reverse_test)
 	}
 	BOOST_TEST(pass);
 }
+
+BOOST_AUTO_TEST_CASE(push_back_test)
+{
+	List< int > list;
+	bool pass = list.isEmpty();
+	list.pushBack(1);
+	list.pushBack(2);
+	list.pushBack(3);
+	pass = pass && list.size() == 3;
+	auto it = list.cbegin();
+	for (int i = 1; it != list.cend(); i++)
+	{
+		pass = pass && *it == i;
+		++it;
+	}
+	BOOST_TEST(pass);
+}
+
