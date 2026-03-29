@@ -1,5 +1,14 @@
 #include <iostream>
 #include "list.hpp"
+/*
+void enterSeq(std::cin)
+{
+	size_t num = 0;
+	while (std::cin >> num && )
+	{
+	}
+}
+*/
 
 int main()
 {

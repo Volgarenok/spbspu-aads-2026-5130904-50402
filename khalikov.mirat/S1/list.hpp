@@ -27,16 +27,14 @@ namespace khalikov
     List< T > & operator=(List< T > && h);
     LIter< T > begin();
     LCIter< T > cbegin() const;
-    LIter< T > end();
-    LCIter< T > cend() const;
 
+		Node< T > * findLast(Node< T > * h);
     void swap(List< T > & other) noexcept;
     size_t size() const noexcept;
 		void clear();
     bool isEmpty() const noexcept;
     void eraseAfter(LIter< T > pos);
     void insertAfter(LIter< T > pos, const T & value);
-    void merge(List< T > & other);
     void popFront() noexcept;
     void pushFront(const T & value);
     void erase(LIter< T > pos);
@@ -50,26 +48,36 @@ namespace khalikov
   };
 }
 
-template < class T >
-khalikov::LIter< T > khalikov::List< T >::end()
-{
-	return LIter< T >(nullptr);
-}
-
 template< class T >
-khalikov::LCIter< T > khalikov::List< T >::cend() const
+khalikov::Node< T > * khalikov::List< T >::findLast(khalikov::Node< T > * h)
 {
-	return LCIter< T >(nullptr);
+	if (!h)
+	{
+		return nullptr;
+	}
+	Node< T > * last = h;
+	while(last->next != h)
+	{
+		last = last->next;
+	}
+	return last;
 }
 
 template< class T >
 size_t khalikov::List< T >::size() const noexcept
 {
+	if (!h)
+	{
+		return 0;
+	}
 	size_t k = 0;
-	for (auto it = cbegin(); it != cend(); ++it)
+	Node< T > * temp = h;
+	do
 	{
 		k++;
+		temp = temp->next;
 	}
+	while (temp != h);
 	return k;
 }
 
@@ -85,7 +93,8 @@ khalikov::List< T >::~List()
 }
 
 template< class T >
-khalikov::List< T >::List(const List< T > & other)
+khalikov::List< T >::List(const List< T > & other):
+	h(nullptr)
 {
   if(!other.h)
   {
@@ -96,15 +105,17 @@ khalikov::List< T >::List(const List< T > & other)
 	try
 	{
 	  h = new Node< T > {other.h->val, nullptr};
+	  h->next = h;
 	  Node< T > * curr = h;
 	  Node< T > * curr_other = other.h->next;
 
-	  while(curr_other)
+	  while(curr_other != other.h)
 	  {
-	    curr->next = new Node< T > {curr_other->val, nullptr};
+	    curr->next = new Node< T > {curr_other->val, h};
 	    curr = curr->next;
 	    curr_other = curr_other->next;
 	  }
+	  curr->next = h;
 	}
 	catch (...)
 	{
@@ -152,12 +163,19 @@ void khalikov::List< T >::swap(List< T > & other) noexcept
 template< class T >
 void khalikov::List< T >::clear()
 {
-  while(h)
+	if (!h)
+	{
+		return;
+	}
+	Node< T > * curr = h->next;
+  while(curr != h)
   {
-    Node< T > * temp = h->next;
-    delete h;
-    h = temp;
+    Node< T > * temp = curr;
+    curr = curr->next;
+    delete temp;
   }
+  delete h;
+  h = nullptr;
 }
 
 template< class T >
@@ -194,70 +212,57 @@ void khalikov::List< T >::insertAfter(LIter< T > pos, const T & value)
 }
 
 template< class T >
-void khalikov::List< T >::merge(List< T > & other)
-{
-  Node< T > * res_h = nullptr;
-  if (h->val > other.h->val)
-  {
-    res_h = other.h;
-    other.h = other.h->next;
-  }
-  else
-  {
-    res_h = h;
-    h = h->next;
-  }
-  Node< T > * res_tail = res_h;
-  res_tail->next = nullptr;
-  while (h && other.h)
-  {
-    if (h->val > other.h->val)
-    {
-      res_tail->next = other.h;
-      other.h = other.h->next;
-    }
-    else
-    {
-      res_tail->next = h;
-      h = h->next;
-    }
-    res_tail = res_tail->next;
-    res_tail->next = nullptr;
-  }
-  if (h)
-  {
-    res_tail->next = h;
-  }
-  if (other.h)
-  {
-    res_tail->next = other.h;
-  }
-  other.h = nullptr;
-  h = res_h;
-}
-
-template< class T >
 void khalikov::List< T >::popFront() noexcept
 {
+	if (!h)
+	{
+		return;
+	}
+	if (h->next == h)
+	{
+		delete h;
+		h = nullptr;
+		return;
+	}
+	Node< T > * last = findLast(h);
   Node< T > * temp = h;
   h = h->next;
+  last->next = h;
   delete temp;
 }
 
 template< class T >
 void khalikov::List< T >::pushFront(const T & value)
 {
+	if (!h)
+	{
+		h = new Node< T > {value, nullptr};
+		h->next = h;
+		return;
+	}
+	Node< T > * last = findLast(h);
   Node< T > * temp = new Node< T > {value, h};
+  last->next = temp;
   h = temp;
 }
 
 template< class T >
 void khalikov::List< T >::erase(LIter< T > pos)
 {
+	if (pos.curr == h && h->next == h)
+	{
+		delete h;
+		h = nullptr;
+		return;
+	}
+
 	if (pos.curr == h)
 	{
-		h = pos.curr->next;
-		delete pos.curr;
+		Node< T > * last = findLast(h);
+		Node< T > * temp = h;
+		h = h->next;
+		last->next = h;
+		delete temp;
 		return;
 	}
 
@@ -273,53 +278,90 @@ void khalikov::List< T >::erase(LIter< T > pos)
 template< class T >
 void khalikov::List< T >::remove(const T & value)
 {
-  auto it = begin();
-  while (it.curr != nullptr)
-  {
-    if (it.curr->val == value)
-    {
- 	    auto next = it;
-	    ++next;
-      erase(it);
-      it = next;
-    }
-    else
-    {
-			++it;
-    }
-  }
+	if (!h)
+	{
+		return;
+	}
+	Node< T > * curr = h;
+	Node< T > * prev = findLast(h);
+	size_t count = size();
+	for (size_t i = 0; i < count; ++i)
+	{
+		if (curr->val == value)
+		{
+			if (curr == h)
+			{
+				if (h->next == h)
+				{
+					clear();
+					return;
+				}
+				Node< T > * temp = h;
+				h = h->next;
+				prev->next = h;
+				delete temp;
+				curr = h;
+			}
+			else
+			{
+				prev->next = curr->next;
+				delete curr;
+				curr = prev->next;
+			}
+		}
+		else
+		{
+			prev = curr;
+			curr = curr->next;
+		}
+		if (!h)
+		{
+			return;
+		}
+	}
 }
 
 template< class T >
 void khalikov::List< T >::sort()
 {
-  for (auto i = begin(); i.curr != nullptr; ++i)
-  {
-    for (auto j = i; j.curr != nullptr; ++j)
-    {
-      if (i.curr->val > j.curr->val)
-      {
-      	std::swap(i.curr->val, j.curr->val);
-      }
-    }
-  }
+	if (!h || h->next == h)
+	{
+		return;
+	}
+	bool swapped;
+	do
+	{
+		swapped = false;
+		Node< T > * curr = h;
+		while (curr->next != h)
+		{
+			if (curr->val > curr->next->val)
+			{
+				std::swap(curr->val, curr->next->val);
+				swapped = true;
+			}
+			curr = curr->next;
+		}
+	}
+	while (swapped);
 }
 
 template< class T >
 void khalikov::List< T >::uniqueSort()
 {
 	sort();
-	for (auto current = begin(); current.curr != nullptr; )
+	Node< T > * curr = h;
+	while (curr->next != h)
 	{
-		auto next = current;
-		++next;
-		if (next.curr != nullptr && *current == *next)
+		if (curr->val == curr->next->val)
 		{
-			eraseAfter(current);
+			Node< T > * temp = curr->next;
+			curr->next = temp->next;
+			delete temp;
 		}
 		else
 		{
-			++current;
+			curr = curr->next;
 		}
 	}
 }
@@ -327,22 +369,36 @@ void khalikov::List< T >::uniqueSort()
 template< class T >
 void khalikov::List< T >::print() const
 {
-	auto it = cbegin();
-	std::cout << *it;
-	++it;
-	for (; it.curr != nullptr; ++it)
+	if (!h)
 	{
-		std::cout << " " << *it;
+		return;
 	}
+	Node< T > * curr = h;
+	do
+	{
+		std::cout << curr->val;
+		if (curr->next != h)
+		{
+			std::cout << " ";
+		}
+		curr = curr->next;
+	}
+	while (curr != h);
 	std::cout << '\n';
 }
 
 template< class T >
 void khalikov::List< T >::reverse() noexcept
 {
+	if (!h || h->next == h)
+	{
+		return;
+	}
 	Node< T > * prev = nullptr;
 	Node< T > * curr = h;
 	Node< T > * next = nullptr;
+	Node< T > * last = findLast(h);
+	last->next = nullptr;
 	while (curr != nullptr)
 	{
 		next = curr->next;
@@ -350,20 +406,22 @@ void khalikov::List< T >::reverse() noexcept
 		prev = curr;
 		curr = next;
 	}
+	h->next = prev;
 	h = prev;
 }
 
 template< class T >
 void khalikov::List< T >::pushBack(const T & value)
 {
-	Node< T > * newNode = new Node< T > {value, nullptr};
 	if (!h)
 	{
-		h = newNode;
+		h = new Node< T > {value, nullptr};
+		h->next = h;
 		return;
 	}
+	Node< T > * newNode = new Node< T > {value, h};
 	Node< T > * curr = h;
-	while (curr->next)
+	while (curr->next != h)
 	{
 		curr = curr->next;
 	}
@@ -377,20 +435,19 @@ void khalikov::List< T >::popBack() noexcept
 	{
 		return;
 	}
-	if (!h->next)
+	if (h->next == h)
 	{
-		delete h;
-		return;
+		clear();
 	}
 	Node< T > * curr = h;
 	Node< T > * prev = nullptr;
-	while (curr->next)
+	while (curr->next != h)
 	{
 		prev = curr;
 		curr = curr->next;
 	}
+	prev->next = h;
 	delete curr;
-	prev->next = nullptr;
 }
 
 #endif

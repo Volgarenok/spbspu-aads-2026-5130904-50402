@@ -57,40 +57,24 @@ const T & khalikov::LCIter< T >::operator[](size_t index) const
   {
     temp = temp->next;
   }
-  if (!temp)
-  {
-    throw std::out_of_range("Invalid operation");
-  }
   return temp->val;
 }
 
 template< class T >
 const T & khalikov::LCIter< T >::operator*() const
 {
-  if (!curr)
-  {
-    throw std::out_of_range("Invalid operation");
-  }
   return curr->val;
 }
 
 template< class T >
 const T * khalikov::LCIter< T >::operator->() const
 {
-  if (!curr)
-  {
-    throw std::out_of_range("Invalid operation");
-  }
   return &(curr->val);
 }
 
 template< class T >
 khalikov::LCIter< T > & khalikov::LCIter< T >::operator++()
 {
-  if (!curr)
-  {
-    throw std::out_of_range("Invalid operation");
-  }
   curr = curr->next;
   return *this;
 }

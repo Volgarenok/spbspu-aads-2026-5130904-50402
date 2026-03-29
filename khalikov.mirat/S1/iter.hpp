@@ -51,40 +51,24 @@ T & khalikov::LIter< T >::operator[](size_t index)
 	{
 		temp = temp->next;
 	}
-	if (!temp)
-  {
-    throw std::out_of_range("Invalid operation");
-  }
 	return temp->val;
 }
 
 template< class T >
 T & khalikov::LIter< T >::operator*()
 {
-  if (!curr)
-  {
-    throw std::out_of_range("Invalid operation");
-  }
   return curr->val;
 }
 
 template< class T >
 T * khalikov::LIter< T >::operator->()
 {
-  if (!curr)
-  {
-    throw std::out_of_range("Invalid operation");
-  }
   return &(curr->val);
 }
 
 template< class T >
 khalikov::LIter< T > & khalikov::LIter< T >::operator++()
 {
-  if (!curr)
-  {
-    throw std::out_of_range("Invalid operation");
-  }
   curr = curr->next;
   return *this;
 }
