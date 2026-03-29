@@ -10,12 +10,14 @@ namespace saldaev
 {
   long long evaluate(saldaev::Queue< std::string > postfixedLines)
   {
+    long long tmp = 0;
     saldaev::Stack< long long > stack;
     while (!postfixedLines.empty()) {
       std::string token = postfixedLines.front();
       postfixedLines.pop();
       if (isNumber(token)) {
-        stack.push(std::stoi(token));
+        tmp = parseNumber(token);
+        stack.push(tmp);
       } else if (isOperator(token)) {
         if (stack.size() < 2) {
           throw std::logic_error("Not enough operands");

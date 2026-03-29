@@ -61,6 +61,15 @@ namespace saldaev
       throw std::logic_error("invalid operator");
     }
   }
+
+  long long parseNumber(const std::string &token)
+  {
+    long long result = 0;
+    for (char c : token) {
+      result = result * 10 + (c - '0');
+    }
+    return result;
+  }
 }
 
 #endif
