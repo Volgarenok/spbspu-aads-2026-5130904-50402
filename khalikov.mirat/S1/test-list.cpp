@@ -211,3 +211,17 @@ BOOST_AUTO_TEST_CASE(pop_front_test)
 	BOOST_TEST(pass);
 }
 
+BOOST_AUTO_TEST_CASE(push_front_test)
+{
+	List< int > list;
+	bool pass = list.isEmpty();
+	list.pushFront(3);
+	auto it = list.cbegin();
+	pass = pass && list.size() == 1;
+	pass = pass && *it == 3;
+	list.pushFront(2);
+	pass = pass && list.size() == 2;
+	it = list.cbegin();
+	pass = pass && *it == 2;
+	BOOST_TEST(pass);
+}
