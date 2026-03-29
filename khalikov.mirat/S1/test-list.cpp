@@ -299,3 +299,24 @@ BOOST_AUTO_TEST_CASE(sort_test)
 	BOOST_TEST(pass);
 }
 
+BOOST_AUTO_TEST_CASE(unique_sort_test)
+{
+	List< int > list;
+	bool pass = list.isEmpty();
+	list.pushFront(3);
+	list.pushFront(2);
+	list.pushFront(4);
+	list.pushFront(3);
+	list.pushFront(5);
+	list.pushFront(2);
+	list.pushFront(7);
+	list.uniqueSort();
+	auto it = list.cbegin();
+	int arr[5] = {2, 3, 4, 5, 7};
+	for (size_t i = 0; it != list.cend(); i++)
+	{
+		pass = pass && *it == arr[i];
+		++it;
+	}
+	BOOST_TEST(pass);
+}
