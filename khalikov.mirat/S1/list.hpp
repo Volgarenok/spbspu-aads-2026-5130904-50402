@@ -373,7 +373,24 @@ void khalikov::List< T >::pushBack(const T & value)
 template< class T >
 void khalikov::List< T >::popBack() noexcept
 {
-
+	if (!h)
+	{
+		return;
+	}
+	if (!h->next)
+	{
+		delete h;
+		return;
+	}
+	Node< T > * curr = h;
+	Node< T > * prev = nullptr;
+	while (curr->next)
+	{
+		prev = curr;
+		curr = curr->next;
+	}
+	delete curr;
+	prev->next = nullptr;
 }
 
 #endif
