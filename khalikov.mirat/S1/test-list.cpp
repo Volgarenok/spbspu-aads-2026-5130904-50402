@@ -195,3 +195,19 @@ BOOST_AUTO_TEST_CASE(merge_test)
 	pass = pass && yalist.size() == 0;
 	BOOST_TEST(pass);
 }
+
+BOOST_AUTO_TEST_CASE(pop_front_test)
+{
+	List< int > list;
+	bool pass = list.isEmpty();
+	list.pushFront(3);
+	list.pushFront(2);
+	list.pushFront(1);
+	pass = pass && list.size() == 3;
+	list.popFront();
+	pass = pass && list.size() == 2;
+	auto it = list.cbegin();
+	pass = pass && *it == 2;
+	BOOST_TEST(pass);
+}
+
