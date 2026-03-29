@@ -225,3 +225,31 @@ BOOST_AUTO_TEST_CASE(push_front_test)
 	pass = pass && *it == 2;
 	BOOST_TEST(pass);
 }
+
+BOOST_AUTO_TEST_CASE(erase_test)
+{
+	List< int > list;
+	bool pass = list.isEmpty();
+	list.pushFront(3);
+	list.pushFront(2);
+	list.pushFront(7);
+	list.pushFront(2);
+	list.pushFront(11);
+	list.pushFront(9);
+	list.pushFront(6);
+	pass = pass && list.size() == 7;
+	auto it = list.begin();
+	++it;
+	++it;
+	++it;
+	list.erase(it);
+	pass = pass && list.size() == 6;
+	it = list.begin();
+	int arr[6] = {6, 9, 11, 7, 2, 3};
+	for (size_t i = 0; it != list.end(); i++)
+	{
+		pass = pass && *it == arr[i];
+		++it;
+	}
+	BOOST_TEST(pass);
+}
