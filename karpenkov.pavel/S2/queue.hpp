@@ -11,20 +11,20 @@ namespace karpenkov
     karpenkov::List< T > data;
 
   public:
-    void push();
+    void push(const T &rhs);
     T &front();
     void pop();
     bool empty();
   };
 }
 
-template < class T > void karpenkov::Queue< T >::push()
+template < class T > void karpenkov::Queue< T >::push(const T &rhs)
 {
-  data.push_back();
+  data.push_back(rhs);
 }
 template < class T > T &karpenkov::Queue< T >::front()
 {
-  return data.top();
+  return data.front();
 }
 template < class T > void karpenkov::Queue< T >::pop()
 {

@@ -68,7 +68,7 @@ namespace karpenkov
       }
       return *this;
     }
-    T &top()
+    T &front()
     {
       if (!head) {
         throw std::out_of_range("list is empty");
