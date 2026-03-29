@@ -1,7 +1,7 @@
 #ifndef TOOLS_HPP
 #define TOOLS_HPP
 #include "iostream"
-#include "list.hpp"
+#include "../common/list.hpp"
 namespace lachugin
 {
   using pair = std::pair< std::string, List< size_t > >;

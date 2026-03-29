@@ -1,6 +1,6 @@
 #include "tools.hpp"
-#include "list.hpp"
-#include "itters.hpp"
+#include "../common/list.hpp"
+#include "../common/itters.hpp"
 #include <iostream>
 #include <limits>
 
