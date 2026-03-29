@@ -276,3 +276,26 @@ BOOST_AUTO_TEST_CASE(remove_test)
 	}
 	BOOST_TEST(pass);
 }
+
+BOOST_AUTO_TEST_CASE(sort_test)
+{
+	List< int > list;
+	bool pass = list.isEmpty();
+	list.pushFront(3);
+	list.pushFront(2);
+	list.pushFront(4);
+	list.pushFront(19);
+	list.pushFront(11);
+	list.pushFront(25);
+	list.pushFront(20);
+	list.sort();
+	auto it = list.cbegin();
+	int arr[7] = {2, 3, 4, 11, 19, 20, 25};
+	for (size_t i = 0; it != list.cend(); i++)
+	{
+		pass = pass && *it == arr[i];
+		++it;
+	}
+	BOOST_TEST(pass);
+}
+
