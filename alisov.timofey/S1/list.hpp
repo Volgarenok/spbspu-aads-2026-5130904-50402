@@ -7,9 +7,9 @@ namespace alisov
 
   template < class T > class BLIter
   {
-  public:
-    bool operator==(const BLIter< T > &other);
-    bool operator!=(BLIter< T > other);
+    BLIter(typename BiList< T >::Node *);
+    bool operator==(const BLIter< T > &other) const noexcept;
+    bool operator!=(const BLIter< T > &other) const noexcept;
     BLIter< T > operator++();
     BLIter< T > operator--();
     T &operator*();
@@ -21,9 +21,9 @@ namespace alisov
 
   template < class T > class BLCIter
   {
-  public:
-    bool operator==(BLCIter< T > other);
-    bool operator!=(BLCIter< T > other);
+    BLCIter(const typename BiList< T >::Node *);
+    bool operator==(const BLCIter< T > &other);
+    bool operator!=(const BLCIter< T > &other);
     BLCIter< T > operator++();
     BLCIter< T > operator--();
     const T &operator*();

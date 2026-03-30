@@ -2,7 +2,7 @@
 #include <boost/test/included/unit_test.hpp>
 #include "list.hpp"
 
-BOOST_AUTO_TEST_CASE(is_empty)
+BOOST_AUTO_TEST_CASE(just_created_it_means_empty)
 {
   alisov::BiList< int > v{};
   BOOST_TEST(v.empty());
