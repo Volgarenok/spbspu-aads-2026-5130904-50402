@@ -70,6 +70,11 @@ int main(int argc, char *argv[])
     }
   }
 
+  if (answers.empty()) {
+    std::cout << '\n';
+    return 0;
+  }
+
   std::cout << answers.top();
   answers.pop();
   while (!answers.empty()) {
