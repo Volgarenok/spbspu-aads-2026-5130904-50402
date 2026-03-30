@@ -148,7 +148,7 @@ namespace saldaev
       throw std::overflow_error("overflow");
     }
 
-    return left % right;
+    return (left % right + right) % right;
   }
 
   inline long long apply(const std::string &op, long long left, long long right)
