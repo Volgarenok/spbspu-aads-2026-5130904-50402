@@ -37,23 +37,6 @@ namespace saldaev
     return 0;
   }
 
-  inline long long apply(const std::string &op, long long left, long long right)
-  {
-    if (op == "+") {
-      return sum(left, right);
-    } else if (op == "-") {
-      return substract(left, right);
-    } else if (op == "*") {
-      return multiply(left, right);
-    } else if (op == "/") {
-      return division(left, right);
-    } else if (op == "%") {
-      return mod(left, right);
-    } else {
-      throw std::logic_error("invalid operator");
-    }
-  }
-
   inline long long apply(const std::string &op, long long rihgt)
   {
     if (op == "!") {
@@ -71,6 +54,7 @@ namespace saldaev
     }
     return result;
   }
+
   long long sum(long long left, long long right)
   {
     if (left >= 0) {
@@ -167,6 +151,22 @@ namespace saldaev
     return left % right;
   }
 
+  inline long long apply(const std::string &op, long long left, long long right)
+  {
+    if (op == "+") {
+      return sum(left, right);
+    } else if (op == "-") {
+      return substract(left, right);
+    } else if (op == "*") {
+      return multiply(left, right);
+    } else if (op == "/") {
+      return division(left, right);
+    } else if (op == "%") {
+      return mod(left, right);
+    } else {
+      throw std::logic_error("invalid operator");
+    }
+  }
 }
 
 #endif
