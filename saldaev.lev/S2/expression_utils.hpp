@@ -71,12 +71,12 @@ namespace saldaev
 
   long long substract(long long left, long long right)
   {
-    if (left >= 0) {
-      if (std::numeric_limits< long long >::max() - left < right) {
+    if (right >= 0) {
+      if (std::numeric_limits< long long >::min() + right > left) {
         throw std::overflow_error("overflow");
       }
     } else {
-      if (std::numeric_limits< long long >::min() + left > right) {
+      if (std::numeric_limits< long long >::max() + right < left) {
         throw std::overflow_error("underflow");
       }
     }
