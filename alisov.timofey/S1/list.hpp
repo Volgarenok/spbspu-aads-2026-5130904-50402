@@ -220,13 +220,13 @@ template < class T >
 void alisov::BiList< T >::push_back(T &&value)
 {
   if (!head) {
-    head = nullptr
+    head = nullptr;
   }
   try {
     head = new Node{std::move(value)};
     tail = head;
   } catch (...) {
-    deleat head;
+    delete head;
     throw;
   }
   else
@@ -247,13 +247,13 @@ template < class T >
 void alisov::BiList< T >::push_back(const T &value)
 {
   if (!head) {
-    head = nullptr
+    head = nullptr;
   }
   try {
     head = new Node{value};
     tail = head;
   } catch (...) {
-    deleat head;
+    deleteS head;
     throw;
   }
   else
@@ -274,13 +274,13 @@ template < class T >
 void alisov::BiList< T >::push_front(T &&value)
 {
   if (!head) {
-    head = nullptr
+    head = nullptr;
   }
   try {
     head = new Node{std::move(value)};
     tail = head;
   } catch (...) {
-    deleat head;
+    delete head;
     throw;
   }
   else
@@ -301,13 +301,13 @@ template < class T >
 void alisov::BiList< T >::push_front(const T &value)
 {
   if (!head) {
-    head = nullptr
+    head = nullptr;
   }
   try {
     head = new Node{value};
     tail = head;
   } catch (...) {
-    deleat head;
+    delete head;
     throw;
   }
   else
@@ -348,7 +348,7 @@ T &alisov::BiList< T >::back()
   if (!head) {
     throw std::out_of_range("Empty list");
   }
-  return tail->value
+  return tail->value;
 }
 
 template < class T >
@@ -357,7 +357,7 @@ const T &alisov::BiList< T >::back() const
   if (!head) {
     throw std::out_of_range("Empty list");
   }
-  return tail->value
+  return tail->value;
 }
 
 template < class T >
@@ -367,7 +367,7 @@ void alisov::BiList< T >::pop_front()
     throw std::out_of_range("Empty list");
   }
   Node *newHead = head->next;
-  deleat head;
+  delete head;
   head = newHead;
   if (head) {
     head->prev = nullptr;
@@ -383,7 +383,7 @@ void alisov::BiList< T >::pop_back()
     throw std::out_of_range("Empty list");
   }
   Node *newTail = tail->prev;
-  deleat tail;
+  delete tail;
   tail = newTail;
   if (tail) {
     tail->next = nullptr;
