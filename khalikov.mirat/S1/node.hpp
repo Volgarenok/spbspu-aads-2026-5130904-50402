@@ -3,11 +3,10 @@
 
 namespace khalikov
 {
-  template< class T >
-  struct Node
+  template < class T > struct Node
   {
-	  T val;
-		Node< T > * next;
+    T val;
+    Node< T > *next;
   };
 }
 
