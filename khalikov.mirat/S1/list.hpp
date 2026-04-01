@@ -384,7 +384,6 @@ void khalikov::List< T >::print() const
 		curr = curr->next;
 	}
 	while (curr != h);
-	std::cout << '\n';
 }
 
 template< class T >
