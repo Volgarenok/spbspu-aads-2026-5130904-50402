@@ -1,6 +1,52 @@
 #include <iostream>
 #include "list.hpp"
 
+using pair_t = std::pair< std::string, khalikov::List< size_t > >;
+
+void print(pair_t * res, size_t size)
+{
+	for (size_t i = 0; i < size; ++i)
+	{
+		std::cout << res[i].first << (i == size - 1 ? "" : " ");
+	}
+	std::cout << '\n';
+	khalikov::List< size_t > sums;
+	while (true)
+	{
+		size_t sum = 0;
+		bool hasNumbers = false;
+		bool isFirst = true;
+		for (size_t i = 0; i < size; ++i)
+		{
+			if (!res[i].second.isEmpty())
+			{
+				size_t val = *(res[i].second.begin());
+				std::cout << (isFirst ? "" : " ") << val;
+				sum += val;
+				res[i].second.popFront();
+				hasNumbers = true;
+				isFirst = false;
+			}
+		}
+		if (!hasNumbers)
+		{
+			break;
+		}
+		std::cout << '\n';
+		sums.pushBack(sum);
+	}
+	if (!sums.isEmpty())
+	{
+		auto it = sums.cbegin();
+		for (size_t i = 0; i < sums.size(); ++i)
+		{
+			std::cout << (i == 0 ? "" : " ") << *it;
+			++it;
+		}
+		std::cout << '\n';
+	}
+}
+
 std::pair< std::string, khalikov::List< size_t > > enterLine(std::istream & in)
 {
 	std::string name;
@@ -97,15 +143,11 @@ int main()
 		delete[] res;
 		return 1;
 	}
-	for (size_t i = 0; i < size; i++)
+	if (size == 0)
 	{
-		std::cout << res[i].first;
-		if (!res[i].second.isEmpty())
-		{
-			std::cout << " ";
-			res[i].second.print();
-		}
-		std::cout << '\n';
+		delete[] res;
+		return 0;
 	}
+	print(res, size);
 	delete[] res;
 }
