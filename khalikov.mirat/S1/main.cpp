@@ -19,10 +19,10 @@ void print(pair_t *res, size_t size)
     for (size_t i = 0; i < size; ++i) {
       if (!res[i].second.isEmpty()) {
         size_t val = *(res[i].second.begin());
-        std::cout << (isFirst ? "" : " ") << val;
         if (sum > std::numeric_limits< size_t >::max() - val) {
           throw std::overflow_error("overflow");
         }
+        std::cout << (isFirst ? "" : " ") << val;
         sum += val;
         res[i].second.popFront();
         hasNumbers = true;
@@ -130,8 +130,12 @@ int main()
   }
   try {
     print(res, size);
+  } catch (const std::overflow_error &) {
+    std::cerr << "overflow" << '\n';
+    delete[] res;
+    return 1;
   } catch (...) {
-    std::cerr << "error" << '\n';
+    std::cerr << "unknown_error" << '\n';
     delete[] res;
     return 1;
   }
