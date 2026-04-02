@@ -13,8 +13,8 @@ namespace alisov
   {
   public:
     explicit BLIter(typename BiList< T >::Node *);
-    bool operator==(const BLIter< T > &) const;
-    bool operator!=(const BLIter< T > &) const;
+    bool operator==(const BLIter< T > &) const noexcept;
+    bool operator!=(const BLIter< T > &) const noexcept;
     BLIter< T > &operator++();
     BLIter< T > &operator--();
     T &operator*();
@@ -61,20 +61,20 @@ namespace alisov
     BiList< T > &operator=(BiList< T > &&);
 
     BLIter< T > begin();
-    BLCIter< T > cbegin() const noexcept;
+    BLCIter< T > cbegin() const;
 
     BLIter< T > end();
-    BLCIter< T > cend() const noexcept;
+    BLCIter< T > cend() const;
 
     T &front();
     const T &front() const;
     T &back();
     const T &back() const;
 
-    void push_front(const T &);
-    void push_front(T &&);
-    void push_back(const T &);
-    void push_back(T &&);
+    void pushFront(const T &);
+    void pushFront(T &&);
+    void pushBack(const T &);
+    void pushBack(T &&);
 
     void pop_front();
     void pop_back();
@@ -106,7 +106,7 @@ alisov::BiList< T >::~BiList()
 }
 
 template < class T >
-alisov::BLCIter< T > alisov::BiList< T >::cend() const noexcept
+alisov::BLCIter< T > alisov::BiList< T >::cend() const
 {
   return alisov::BLCIter< T >(nullptr);
 }
@@ -134,7 +134,7 @@ alisov::BiList< T > &alisov::BiList< T >::operator=(BiList< T > &&other)
 }
 
 template < class T >
-bool alisov::BLIter< T >::operator!=(const BLIter< T > &other) const
+bool alisov::BLIter< T >::operator!=(const BLIter< T > &other) const noexcept
 {
   return !(*this == other);
 }
@@ -176,15 +176,9 @@ alisov::BLIter< T > alisov::BiList< T >::end()
 }
 
 template < class T >
-bool alisov::BLIter< T >::operator==(const alisov::BLIter< T > &other) const
+bool alisov::BLIter< T >::operator==(const alisov::BLIter< T > &other) const noexcept
 {
   return curr == other.curr;
-}
-
-template < class T >
-bool alisov::BLIter< T >::operator!=(const alisov::BLIter< T > &other) const
-{
-  return !(*this == other);
 }
 
 template < class T >
@@ -217,110 +211,106 @@ T const &alisov::BLCIter< T >::operator*()
 }
 
 template < class T >
-void alisov::BiList< T >::push_back(T &&value)
+void alisov::BiList< T >::pushBack(T &&value)
 {
   if (!head) {
     head = nullptr;
-  }
-  try {
-    head = new Node{std::move(value)};
-    tail = head;
-  } catch (...) {
-    delete head;
-    throw;
-  }
-  else
-  {
+    try {
+      head = new Node{std::move(value)};
+      tail = head;
+    } catch (...) {
+      delete head;
+      throw;
+    }
+  } else {
     Node *next = nullptr;
-  }
-  try {
-    next = new Node{std::move(value), nullptr, tail};
-    tail->next = next;
-    tail = next;
-  } catch (...) {
-    delete next;
-    throw;
+    try {
+      next = new Node{std::move(value), nullptr, tail};
+      tail->next = next;
+      tail = next;
+    } catch (...) {
+      delete next;
+      throw;
+    }
   }
 }
 
 template < class T >
-void alisov::BiList< T >::push_back(const T &value)
+void alisov::BiList< T >::pushBack(const T &value)
 {
   if (!head) {
     head = nullptr;
-  }
-  try {
-    head = new Node{value};
-    tail = head;
-  } catch (...) {
-    deleteS head;
-    throw;
-  }
-  else
-  {
+    try {
+      head = new Node{value};
+      tail = head;
+    } catch (...) {
+      delete head;
+      throw;
+    }
+  } else {
     Node *next = nullptr;
-  }
-  try {
-    next = new Node{value, nullptr, tail};
-    tail->next = next;
-    tail = next;
-  } catch (...) {
-    delete next;
-    throw;
+
+    try {
+      next = new Node{value, nullptr, tail};
+      tail->next = next;
+      tail = next;
+    } catch (...) {
+      delete next;
+      throw;
+    }
   }
 }
 
 template < class T >
-void alisov::BiList< T >::push_front(T &&value)
+void alisov::BiList< T >::pushFront(T &&value)
 {
   if (!head) {
     head = nullptr;
-  }
-  try {
-    head = new Node{std::move(value)};
-    tail = head;
-  } catch (...) {
-    delete head;
-    throw;
-  }
-  else
-  {
+
+    try {
+      head = new Node{std::move(value)};
+      tail = head;
+    } catch (...) {
+      delete head;
+      throw;
+    }
+  } else {
     Node *prev = nullptr;
-  }
-  try {
-    prev = new Node{std::move(value), head, nullptr};
-    head->prev = prev;
-    head = prev;
-  } catch (...) {
-    delete prev;
-    throw;
+
+    try {
+      prev = new Node{std::move(value), head, nullptr};
+      head->prev = prev;
+      head = prev;
+    } catch (...) {
+      delete prev;
+      throw;
+    }
   }
 }
 
 template < class T >
-void alisov::BiList< T >::push_front(const T &value)
+void alisov::BiList< T >::pushFront(const T &value)
 {
   if (!head) {
     head = nullptr;
-  }
-  try {
-    head = new Node{value};
-    tail = head;
-  } catch (...) {
-    delete head;
-    throw;
-  }
-  else
-  {
+    try {
+      head = new Node{value};
+      tail = head;
+    } catch (...) {
+      delete head;
+      throw;
+    }
+  } else {
     Node *prev = nullptr;
-  }
-  try {
-    prev = new Node{value, head, nullptr};
-    head->prev = prev;
-    head = prev;
-  } catch (...) {
-    delete prev;
-    throw;
+
+    try {
+      prev = new Node{value, head, nullptr};
+      head->prev = prev;
+      head = prev;
+    } catch (...) {
+      delete prev;
+      throw;
+    }
   }
 }
 
@@ -393,7 +383,7 @@ void alisov::BiList< T >::pop_back()
 }
 
 template < class T >
-alisov::BLCIter< T > alisov::BiList< T >::cbegin() const noexcept
+alisov::BLCIter< T > alisov::BiList< T >::cbegin() const
 {
   return alisov::BLCIter< T >(head);
 }
