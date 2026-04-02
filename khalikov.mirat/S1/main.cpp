@@ -15,22 +15,27 @@ void print(pair_t *res, size_t size)
   while (true) {
     size_t sum = 0;
     bool hasNumbers = false;
-    bool isFirst = true;
     for (size_t i = 0; i < size; ++i) {
       if (!res[i].second.isEmpty()) {
         size_t val = *(res[i].second.begin());
         if (sum > std::numeric_limits< size_t >::max() - val) {
           throw std::overflow_error("overflow");
         }
-        std::cout << (isFirst ? "" : " ") << val;
         sum += val;
-        res[i].second.popFront();
         hasNumbers = true;
-        isFirst = false;
       }
     }
     if (!hasNumbers) {
       break;
+    }
+    bool isFirst = true;
+    for (size_t i = 0; i < size; ++i) {
+      if (!res[i].second.isEmpty()) {
+        size_t val = *(res[i].second.begin());
+        std::cout << (isFirst ? "" : " ") << val;
+        res[i].second.popFront();
+        isFirst = false;
+      }
     }
     std::cout << '\n';
     sums.pushBack(sum);
