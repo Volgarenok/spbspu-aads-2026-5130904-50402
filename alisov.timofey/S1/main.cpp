@@ -28,7 +28,7 @@ int main()
       if (!(std::cin >> curr)) {
         if (std::cin.eof()) {
           pair = {name, seq};
-          sequences.push_back(pair);
+          sequences.pushBack(pair);
           break;
         }
         std::cin.clear();
@@ -46,12 +46,12 @@ int main()
             return 1;
           }
           pair = {name, seq};
-          sequences.push_back(pair);
+          sequences.pushBack(pair);
           seq.clear();
           name = bad;
         }
       } else {
-        seq.push_back(curr);
+        seq.pushBack(curr);
       }
     }
   }
@@ -66,7 +66,7 @@ int main()
   auto listOfSum = alisov::BiList< int >();
   alisov::BiList< alisov::BLEnds > iterators;
   for (auto &pair : sequences) {
-    iterators.push_back({pair.second.begin(), pair.second.end()});
+    iterators.pushBack({pair.second.begin(), pair.second.end()});
   }
 
   while (true) {
@@ -88,7 +88,7 @@ int main()
       break;
     }
     std::cout << '\n';
-    listOfSum.push_back(sum);
+    listOfSum.pushBack(sum);
   }
 
   if (listOfSum.empty()) {
