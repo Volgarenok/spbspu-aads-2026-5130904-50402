@@ -1,4 +1,6 @@
 #include <iostream>
+#include <limits>
+#include <stdexcept>
 #include "list.hpp"
 
 using pair_t = std::pair< std::string, khalikov::List< size_t > >;
@@ -18,6 +20,9 @@ void print(pair_t *res, size_t size)
       if (!res[i].second.isEmpty()) {
         size_t val = *(res[i].second.begin());
         std::cout << (isFirst ? "" : " ") << val;
+        if (sum > std::numeric_limits< size_t >::max() - val) {
+          throw std::overflow_error("overflow");
+        }
         sum += val;
         res[i].second.popFront();
         hasNumbers = true;
@@ -29,6 +34,9 @@ void print(pair_t *res, size_t size)
     }
     std::cout << '\n';
     sums.pushBack(sum);
+  }
+  if (sums.isEmpty() && size > 0) {
+    sums.pushBack(0);
   }
   if (!sums.isEmpty()) {
     auto it = sums.cbegin();
@@ -72,9 +80,6 @@ std::pair< std::string, khalikov::List< size_t > > enterLine(std::istream &in)
 
 template < class T > T *extend(T *arr, size_t &size, size_t &cap)
 {
-  if (size < cap) {
-    return arr;
-  }
   T *res = nullptr;
   size_t newCap = cap + 5;
   try {
@@ -83,7 +88,6 @@ template < class T > T *extend(T *arr, size_t &size, size_t &cap)
       res[i] = arr[i];
     }
   } catch (const std::bad_alloc &) {
-    delete[] res;
     throw;
   }
   delete[] arr;
@@ -109,15 +113,18 @@ int main()
         delete[] res;
         return 1;
       }
-      res = extend(res, size, cap);
+      if (size == cap) {
+        res = extend(res, size, cap);
+      }
       res[size++] = temp;
     }
   } catch (...) {
-    std::cerr << "memory_error" << '\n';
+    std::cerr << "Error" << '\n';
     delete[] res;
     return 1;
   }
   if (size == 0) {
+    std::cout << 0 << '\n';
     delete[] res;
     return 0;
   }
