@@ -118,8 +118,8 @@ int main()
       }
       res[size++] = temp;
     }
-  } catch (...) {
-    std::cerr << "Error" << '\n';
+  } catch (const std::bad_alloc &) {
+    std::cerr << "memory_error" << '\n';
     delete[] res;
     return 1;
   }
@@ -128,6 +128,12 @@ int main()
     delete[] res;
     return 0;
   }
-  print(res, size);
+  try {
+    print(res, size);
+  } catch (...) {
+    std::cerr << "error" << '\n';
+    delete[] res;
+    return 1;
+  }
   delete[] res;
 }
