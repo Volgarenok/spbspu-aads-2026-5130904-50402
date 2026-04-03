@@ -21,7 +21,7 @@ namespace alisov
 
   private:
     friend class BiList< T >;
-    const typename BiList< T >::Node *curr = nullptr;
+    typename BiList< T >::Node *curr = nullptr;
   };
 
   template < class T >
