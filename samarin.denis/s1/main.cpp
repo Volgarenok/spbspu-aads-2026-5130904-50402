@@ -1,34 +1,40 @@
 #include <iostream>
-#include <string>
 #include <limits>
+#include <string>
 #include "list.hpp"
 
-template< class T >
-List< std::pair< std::string, List< T > > > readInput(std::istream& in) {
-  List< std::pair< std::string, List< T > > > res;
-  LIter< std::pair< std::string, List< T > > > res_tail = res.before_begin();
+namespace samarin {
 
-  std::string name;
-  while (in >> name) {
+  template< class T >
+  List< std::pair< std::string, List< T > > > readInput(std::istream& in)
+  {
+    List< std::pair< std::string, List< T > > > res;
+    LIter< std::pair< std::string, List< T > > > resTail = res.before_begin();
 
-    List< T > sublist;
-    LIter< T > tail = sublist.before_begin();
-    T val;
-    while (in >> val) {
-      tail = sublist.insert_after(tail, val);
+    std::string name;
+    while (in >> name) {
+      List< T > sublist;
+      LIter< T > tail = sublist.before_begin();
+      T val = T();
+      while (in >> val) {
+        tail = sublist.insert_after(tail, val);
+      }
+
+      if (!in.eof()) {
+        in.clear();
+      }
+
+      resTail = res.insert_after(resTail, std::make_pair(name, std::move(sublist)));
     }
 
-    if (!in.eof()) {
-      in.clear();
-    }
-
-    res_tail = res.insert_after(res_tail, std::make_pair(name, std::move(sublist)));
+    return res;
   }
 
-  return res;
 }
 
-int main() {
+int main()
+{
+  using namespace samarin;
   auto data = readInput< int >(std::cin);
 
   if (data.empty()) {
@@ -36,7 +42,6 @@ int main() {
     return 0;
   }
 
-  // вывод имён
   bool first = true;
   for (auto it = data.cbegin(); it != data.cend(); ++it) {
     if (!first) {
@@ -47,35 +52,33 @@ int main() {
   }
   std::cout << "\n";
 
-  // итераторы текущих позиций в каждом подсписке
   List< LCIter< int > > positions;
   {
-    LIter< LCIter< int > > pos_tail = positions.before_begin();
+    LIter< LCIter< int > > posTail = positions.before_begin();
     for (auto it = data.cbegin(); it != data.cend(); ++it) {
-      pos_tail = positions.insert_after(pos_tail, it->second.cbegin());
+      posTail = positions.insert_after(posTail, it->second.cbegin());
     }
   }
 
-  // суммы зип-последовательностей
   List< int > sums;
-  LIter< int > sums_tail = sums.before_begin();
+  LIter< int > sumsTail = sums.before_begin();
 
-  LCIter< int > end_marker;
-  bool any_remaining = true;
-  while (any_remaining) {
-    any_remaining = false;
-    bool line_started = false;
+  const LCIter< int > endMarker;
+  bool anyRemaining = true;
+  while (anyRemaining) {
+    anyRemaining = false;
+    bool lineStarted = false;
     int sum = 0;
 
     for (auto pit = positions.begin(); pit != positions.end(); ++pit) {
-      if (*pit != end_marker) {
-        any_remaining = true;
-        int val = **pit;
-        if (line_started) {
+      if (*pit != endMarker) {
+        anyRemaining = true;
+        const int val = **pit;
+        if (lineStarted) {
           std::cout << " ";
         }
         std::cout << val;
-        line_started = true;
+        lineStarted = true;
 
         if (val > 0 && sum > std::numeric_limits< int >::max() - val) {
           std::cerr << "overflow" << "\n";
@@ -87,13 +90,12 @@ int main() {
       }
     }
 
-    if (any_remaining) {
+    if (anyRemaining) {
       std::cout << "\n";
-      sums_tail = sums.insert_after(sums_tail, sum);
+      sumsTail = sums.insert_after(sumsTail, sum);
     }
   }
 
-  // вывод сумм
   if (!sums.empty()) {
     first = true;
     for (auto it = sums.cbegin(); it != sums.cend(); ++it) {
