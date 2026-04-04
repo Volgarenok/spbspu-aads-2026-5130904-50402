@@ -60,6 +60,38 @@ int main()
     }
   }
 
+  auto listOfSum = alisov::BiList< size_t >();
+  alisov::BiList< alisov::BLEnds > iterators;
+  for (auto &pair : sequences) {
+    iterators.pushBack({pair.second.begin(), pair.second.end()});
+  }
+
+  while (true) {
+    bool flag = true;
+    size_t sum = 0;
+    for (alisov::BLEnds &ends : iterators) {
+      if (ends.curr == ends.end) {
+        continue;
+      }
+      if (sum > std::numeric_limits< size_t >::max() - *ends.curr) {
+        std::cerr << "Incorrect input\n";
+        return 1;
+      }
+      sum += *ends.curr;
+      ++ends.curr;
+      flag = false;
+    }
+    if (flag) {
+      break;
+    }
+    listOfSum.pushBack(sum);
+  }
+
+  iterators.clear();
+  for (auto &pair : sequences) {
+    iterators.pushBack({pair.second.begin(), pair.second.end()});
+  }
+
   bool firstName = true;
   for (const auto &pair : sequences) {
     if (!firstName) {
@@ -70,16 +102,9 @@ int main()
   }
   std::cout << '\n';
 
-  auto listOfSum = alisov::BiList< size_t >();
-  alisov::BiList< alisov::BLEnds > iterators;
-  for (auto &pair : sequences) {
-    iterators.pushBack({pair.second.begin(), pair.second.end()});
-  }
-
   while (true) {
     bool flag = true;
     bool firstValue = true;
-    size_t sum = 0;
     for (alisov::BLEnds &ends : iterators) {
       if (ends.curr == ends.end) {
         continue;
@@ -88,11 +113,6 @@ int main()
         std::cout << ' ';
       }
       std::cout << *ends.curr;
-      if (sum > std::numeric_limits< size_t >::max() - *ends.curr) {
-        std::cerr << "Incorrect input\n";
-        return 1;
-      }
-      sum += *ends.curr;
       ++ends.curr;
       flag = false;
       firstValue = false;
@@ -101,7 +121,6 @@ int main()
       break;
     }
     std::cout << '\n';
-    listOfSum.pushBack(sum);
   }
 
   if (listOfSum.empty()) {
