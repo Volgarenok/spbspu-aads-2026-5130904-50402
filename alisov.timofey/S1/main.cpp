@@ -88,8 +88,7 @@ int main()
         std::cout << ' ';
       }
       std::cout << *ends.curr;
-      if ((*ends.curr > 0 && sum > std::numeric_limits< size_t >::max() - *ends.curr)
-          || (*ends.curr < 0 && sum < std::numeric_limits< size_t >::min() - *ends.curr)) {
+      if (sum > std::numeric_limits< size_t >::max() - *ends.curr) {
         std::cerr << "Incorrect input\n";
         return 1;
       }
