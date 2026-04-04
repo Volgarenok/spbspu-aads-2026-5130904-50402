@@ -94,10 +94,13 @@ namespace novikov
 
     void push_front(const T &val)
     {
-      push_back(val);
-      head = head->next;
+      Node<T> *node = new Node<T>{val, nullptr};
+      if (!head) {
+        head = node;
+        node->next = head;
+        return;
+      }
     }
-
     void clear()
     {
       if (!head)
