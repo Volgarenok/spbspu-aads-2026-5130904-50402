@@ -99,10 +99,8 @@ int main()
       ++sum_res;
     } while (start_sum != sum_res);
     std::cout << "\n";
-    
-    if(is_overflow)
-    {
-      std::cerr<<"Overflow\n";
+    if (is_overflow) {
+      std::cerr << "Overflow\n";
       return 1;
     }
   } else {
