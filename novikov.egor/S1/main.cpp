@@ -56,6 +56,7 @@ int main()
 
     novikov::List< size_t > sums;
     size_t sum = 0;
+    bool is_overflow = false;
 
     while (!states.empty()) {
       novikov::List< novikov::IterState< size_t > > next_state;
@@ -67,9 +68,8 @@ int main()
         std::cout << (first ? "" : " ") << *it_state->current;
         first = false;
         size_t value = *it_state->current;
-        if (sum > std::numeric_limits< size_t >::max() - value) {
-          std::cerr << "Overflow\n";
-          return 1;
+        if (!is_overflow && sum > std::numeric_limits< size_t >::max() - value) {
+          is_overflow = true;
         }
         sum += value;
         novikov::LIter< size_t > tmp = it_state->current;
@@ -99,6 +99,12 @@ int main()
       ++sum_res;
     } while (start_sum != sum_res);
     std::cout << "\n";
+    
+    if(is_overflow)
+    {
+      std::cerr<<"Overflow\n";
+      return 1;
+    }
   } else {
     std::cout << "0" << "\n";
     return 0;
