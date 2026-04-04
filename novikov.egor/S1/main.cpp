@@ -83,7 +83,10 @@ int main()
       } while (it_state != head_state);
 
       std::cout << "\n";
-
+      if (is_overflow) {
+        std::cerr << "Overflow\n";
+        return 1;
+      }
       states = next_state;
       sums.push_back(sum);
       sum = 0;
@@ -99,10 +102,6 @@ int main()
       ++sum_res;
     } while (start_sum != sum_res);
     std::cout << "\n";
-    if (is_overflow) {
-      std::cerr << "Overflow\n";
-      return 1;
-    }
   } else {
     std::cout << "0" << "\n";
     return 0;
