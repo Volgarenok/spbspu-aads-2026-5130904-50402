@@ -13,7 +13,7 @@ namespace alisov
   };
 }
 
-size_t main()
+int main()
 {
   alisov::BiList< std::pair< std::string, alisov::BiList< size_t > > > sequences{};
 
