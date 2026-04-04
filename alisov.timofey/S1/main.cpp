@@ -8,21 +8,21 @@ namespace alisov
 {
   struct BLEnds
   {
-    alisov::BLIter< int > curr;
-    alisov::BLIter< int > end;
+    alisov::BLIter< size_t > curr;
+    alisov::BLIter< size_t > end;
   };
 }
 
-int main()
+size_t main()
 {
-  alisov::BiList< std::pair< std::string, alisov::BiList< int > > > sequences{};
+  alisov::BiList< std::pair< std::string, alisov::BiList< size_t > > > sequences{};
 
   {
-    std::pair< std::string, alisov::BiList< int > > pair;
+    std::pair< std::string, alisov::BiList< size_t > > pair;
     std::string name;
-    alisov::BiList< int > seq{};
+    alisov::BiList< size_t > seq{};
 
-    int curr = 0;
+    size_t curr = 0;
     if (!(std::cin >> name)) {
       std::cout << 0 << '\n';
       return 0;
@@ -70,7 +70,7 @@ int main()
   }
   std::cout << '\n';
 
-  auto listOfSum = alisov::BiList< int >();
+  auto listOfSum = alisov::BiList< size_t >();
   alisov::BiList< alisov::BLEnds > iterators;
   for (auto &pair : sequences) {
     iterators.pushBack({pair.second.begin(), pair.second.end()});
@@ -79,7 +79,7 @@ int main()
   while (true) {
     bool flag = true;
     bool firstValue = true;
-    int sum = 0;
+    size_t sum = 0;
     for (alisov::BLEnds &ends : iterators) {
       if (ends.curr == ends.end) {
         continue;
@@ -88,8 +88,8 @@ int main()
         std::cout << ' ';
       }
       std::cout << *ends.curr;
-      if ((*ends.curr > 0 && sum > std::numeric_limits< int >::max() - *ends.curr)
-          || (*ends.curr < 0 && sum < std::numeric_limits< int >::min() - *ends.curr)) {
+      if ((*ends.curr > 0 && sum > std::numeric_limits< size_t >::max() - *ends.curr)
+          || (*ends.curr < 0 && sum < std::numeric_limits< size_t >::min() - *ends.curr)) {
         std::cerr << "Incorrect input\n";
         return 1;
       }
@@ -111,7 +111,7 @@ int main()
   }
 
   bool firstSum = true;
-  for (int s : listOfSum) {
+  for (size_t s : listOfSum) {
     if (!firstSum) {
       std::cout << ' ';
     }
