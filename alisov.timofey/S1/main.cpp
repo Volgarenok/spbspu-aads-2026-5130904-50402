@@ -1,5 +1,6 @@
 #include <cctype>
 #include <iostream>
+#include <limits>
 #include <string>
 #include "list.hpp"
 
@@ -58,6 +59,7 @@ int main()
       }
     }
   }
+
   bool firstName = true;
   for (const auto &pair : sequences) {
     if (!firstName) {
@@ -76,18 +78,25 @@ int main()
 
   while (true) {
     bool flag = true;
+    bool firstValue = true;
     int sum = 0;
     for (alisov::BLEnds &ends : iterators) {
       if (ends.curr == ends.end) {
         continue;
       }
-      if (&ends != &iterators.front()) {
+      if (!firstValue) {
         std::cout << ' ';
       }
       std::cout << *ends.curr;
+      if ((*ends.curr > 0 && sum > std::numeric_limits< int >::max() - *ends.curr)
+          || (*ends.curr < 0 && sum < std::numeric_limits< int >::min() - *ends.curr)) {
+        std::cerr << "Incorrect input\n";
+        return 1;
+      }
       sum += *ends.curr;
       ++ends.curr;
       flag = false;
+      firstValue = false;
     }
     if (flag) {
       break;
@@ -98,12 +107,16 @@ int main()
 
   if (listOfSum.empty()) {
     std::cout << 0 << '\n';
+    return 0;
   }
+
+  bool firstSum = true;
   for (int s : listOfSum) {
-    if (s != listOfSum.front()) {
+    if (!firstSum) {
       std::cout << ' ';
     }
     std::cout << s;
+    firstSum = false;
   }
   std::cout << '\n';
 }
