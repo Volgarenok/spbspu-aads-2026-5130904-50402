@@ -34,28 +34,37 @@ karpenkov::Stack< queueExpr > toPostfix(karpenkov::Stack< queueExpr > expression
     karpenkov::Stack< std::string > tempStep;
     karpenkov::Queue< std::string > curExpr = expressions.top();
     while (!curExpr.empty()) {
-      size_t pr;
       std::string element = curExpr.front();
       if (element == "(") {
         tempStep.push(element);
-      } else if (element == ")") {
-        while (!tempStep.empty()) {
-          if (tempStep.top() != "(") {
-            while (pr < priority(tempStep.top())) {
-              resultExpr.push(tempStep.top());
-              pr = priority(tempStep.top());
-            }
-          }
+      }
+
+      else if (element == ")") {
+        while (!tempStep.empty() && tempStep.top() != "(") {
+          resultExpr.push(tempStep.top());
           tempStep.pop();
         }
-      } else if (isNumber(element)) {
+        tempStep.pop();
+      }
+
+      else if (isNumber(element)) {
         resultExpr.push(element);
-      } else if (isValidOperator(element)) {
-        pr = priority(element);
+      }
+
+      else if (isValidOperator(element)) {
+        while (!tempStep.empty() && tempStep.top() != "(" && priority(tempStep.top()) >= priority(element)) {
+          resultExpr.push(tempStep.top());
+          tempStep.pop();
+        }
         tempStep.push(element);
       }
       curExpr.pop();
     }
+    while (!tempStep.empty()) {
+      resultExpr.push(tempStep.top());
+      tempStep.pop();
+    }
+    expressions.pop();
     postFix.push(resultExpr);
   }
   return postFix;
