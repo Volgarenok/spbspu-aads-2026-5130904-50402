@@ -23,6 +23,8 @@ namespace lachugin
     LCIter< T > begin() const;
     T& front();
     const T& front() const;
+    T &back();
+    const T &back() const;
     LIter< T > end();
     LCIter< T > end() const;
 
@@ -131,6 +133,28 @@ namespace lachugin
   const T& List< T >::front() const
   {
     return fake->next->value;
+  }
+
+  template< class T >
+  T& List< T >::back()
+  {
+    auto it = this->begin();
+    while (it.curr->next != fake)
+    {
+      ++it;
+    }
+    return it.curr->value;
+  }
+
+  template< class T >
+  const T& List< T >::back() const
+  {
+    auto it = this->begin();
+    while (it.curr->next != fake)
+    {
+      ++it;
+    }
+    return it.curr->value;
   }
 
   template < class T >
