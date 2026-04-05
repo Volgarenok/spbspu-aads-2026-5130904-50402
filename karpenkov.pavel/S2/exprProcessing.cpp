@@ -1,5 +1,6 @@
 #include <cctype>
 #include <iostream>
+#include <stdexcept>
 #include "queue.hpp"
 #include "stack.hpp"
 
@@ -104,8 +105,12 @@ int eval(int &a, int &b, std::string &operation)
   } else if (operation == "*") {
     return a * b;
   } else if (operation == "/") {
+    if (b == 0) {
+      throw std::runtime_error("divide by 0");
+    }
     return a / b;
   }
+  throw std::runtime_error("unkown operation");
 }
 karpenkov::Stack< int > calculateExpr(karpenkov::Stack< queueExpr > &postfixExpr)
 {
@@ -116,10 +121,20 @@ karpenkov::Stack< int > calculateExpr(karpenkov::Stack< queueExpr > &postfixExpr
     while (!curExpr.empty()) {
       std::string element = curExpr.front();
       if (isNumber(element)) {
-        calculateStack.push(std::stoi(element));
+        try {
+          calculateStack.push(std::stoi(element));
+        } catch (...) {
+          throw std::runtime_error("element is not a number: " + element);
+        }
       } else {
+        if (calculateStack.empty()) {
+          throw std::runtime_error("Not enough operands");
+        }
         int b = calculateStack.top();
         calculateStack.pop();
+        if (calculateStack.empty()) {
+          throw std::runtime_error("Not enough operands");
+        }
         int a = calculateStack.top();
         calculateStack.pop();
         calculateStack.push(eval(a, b, element));
