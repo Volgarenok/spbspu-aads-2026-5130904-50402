@@ -107,9 +107,9 @@ int eval(int &a, int &b, std::string &operation)
     return a / b;
   }
 }
-karpenkov::Queue< int > calculateExpr(karpenkov::Stack< queueExpr > &postfixExpr)
+karpenkov::Stack< int > calculateExpr(karpenkov::Stack< queueExpr > &postfixExpr)
 {
-  karpenkov::Queue< int > res;
+  karpenkov::Stack< int > res;
   while (!postfixExpr.empty()) {
     queueExpr curExpr = postfixExpr.top();
     karpenkov::Stack< int > calculateStack;
@@ -131,10 +131,10 @@ karpenkov::Queue< int > calculateExpr(karpenkov::Stack< queueExpr > &postfixExpr
   }
   return res;
 }
-void queueOutput(std::ostream &out, karpenkov::Queue< int > result)
+void queueOutput(std::ostream &out, karpenkov::Stack< int > result)
 {
   while (!result.empty()) {
-    out << result.front() << '\n';
+    out << result.top() << ' ';
     result.pop();
   }
 }
