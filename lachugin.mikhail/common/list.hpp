@@ -1,5 +1,6 @@
 #ifndef LIST_HPP
 #define LIST_HPP
+#include <iostream>
 #include "node.hpp"
 #include "itters.hpp"
 namespace lachugin
@@ -8,6 +9,7 @@ namespace lachugin
     class List
   {
     Node< T >* fake;
+    size_t size_;
   public:
     List();
     ~List();
@@ -19,10 +21,15 @@ namespace lachugin
 
     LIter< T > begin();
     LCIter< T > begin() const;
+    T& front();
+    const T& front() const;
     LIter< T > end();
     LCIter< T > end() const;
 
+    size_t size() const;
+    bool empty() const;
     void clear();
+    void popFront();
   };
 
   template < class T >
@@ -30,6 +37,7 @@ namespace lachugin
   {
     fake = new Node< T >;
     fake->next = fake;
+    size_ = 0;
   }
 
   template < class T >
@@ -88,6 +96,7 @@ namespace lachugin
   {
     Node< T >* n = new Node< T >{val, fake->next};
     fake->next = n;
+    size_++;
     return n;
   }
 
@@ -96,6 +105,7 @@ namespace lachugin
   {
     Node< T >* n = new Node< T >{val, h->next};
     h->next = n;
+    size_++;
     return n;
   }
 
@@ -112,6 +122,18 @@ namespace lachugin
   }
 
   template < class T >
+  T& List< T >::front()
+  {
+    return fake->next->value;
+  }
+
+  template < class T >
+  const T& List< T >::front() const
+  {
+    return fake->next->value;
+  }
+
+  template < class T >
   LIter< T > List< T >::end()
   {
     return LIter< T > {fake};
@@ -121,6 +143,18 @@ namespace lachugin
   LCIter< T > List< T >::end() const
   {
     return LCIter< T > {fake};
+  }
+
+  template < class T >
+  size_t List< T >::size() const
+  {
+    return size_;
+  }
+
+  template < class T >
+  bool List< T >::empty() const
+  {
+    return this->begin() == this->end();
   }
 
   template < class T >
@@ -135,6 +169,22 @@ namespace lachugin
       curr = next;
     }
     fake->next = fake;
+    size_ = 0;
   }
+
+  template < class T >
+  void List< T >::popFront()
+  {
+    if (empty())
+    {
+      throw std::out_of_range("Queue is empty");
+    }
+    Node< T >* curr = fake->next;
+    Node< T >* n = curr->next;
+    delete curr;
+    size_ --;
+    fake->next = n;
+  }
+
 }
 #endif
