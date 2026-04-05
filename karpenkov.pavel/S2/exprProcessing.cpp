@@ -4,6 +4,7 @@
 #include "stack.hpp"
 
 using queueExpr = karpenkov::Queue< std::string >;
+using queueResult = karpenkov::Queue< int >;
 
 bool isNumber(std::string &element)
 {
@@ -93,4 +94,40 @@ karpenkov::Stack< queueExpr > inputCLI(std::istream &in)
     }
   }
   return exprs;
+}
+int eval(int &a, int &b, std::string &operation)
+{
+  if (operation == "+") {
+    return a + b;
+  } else if (operation == "-") {
+    return a - b;
+  } else if (operation == "*") {
+    return a * b;
+  } else if (operation == "/") {
+    return a / b;
+  }
+}
+karpenkov::Queue< int > calculateExpr(karpenkov::Queue< queueExpr > &postfixExpr)
+{
+  karpenkov::Queue< int > res;
+  while (!postfixExpr.empty()) {
+    queueExpr curExpr = postfixExpr.front();
+    karpenkov::Stack< int > calculateStack;
+    while (!curExpr.empty()) {
+      std::string element = curExpr.front();
+      if (isNumber(element)) {
+        calculateStack.push(std::stoi(element));
+      } else {
+        int b = calculateStack.top();
+        calculateStack.pop();
+        int a = calculateStack.top();
+        calculateStack.pop();
+        calculateStack.push(eval(a, b, element));
+      }
+      curExpr.pop();
+    }
+    res.push(calculateStack.top());
+    postfixExpr.pop();
+  }
+  return res;
 }
