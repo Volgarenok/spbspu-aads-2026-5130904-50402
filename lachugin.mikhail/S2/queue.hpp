@@ -5,12 +5,13 @@
 
 namespace lachugin
 {
-  template< typename T > class Queue {
+  template< typename T > class Queue
+  {
     List< T > l;
   public:
     void push(const T& rhs);
-    void pop();        // удалить
-    T& front();        // получить
+    void pop();//     удалить
+    T& front();//     получить
     bool empty() const;
     size_t size() const;
   };
@@ -24,7 +25,14 @@ namespace lachugin
   template< typename T >
   void Queue< T >::push(const T& rhs)
   {
-    l.add(rhs);
+    if (l.empty())
+    {
+      l.add(rhs);
+    }
+    else
+    {
+      l.addNext(rhs);
+    }
   }
 
   template< typename T >
