@@ -6,6 +6,7 @@ namespace lachugin
 {
   template < class T >
     class List
+
   {
     Node< T >* fake;
   public:
