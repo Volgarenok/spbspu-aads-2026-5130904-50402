@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "exprProcessing.cpp"
 #include "queue.hpp"
 
@@ -7,7 +8,19 @@ int main(int argc, char **argv)
   karpenkov::Stack< queueExpr > expression;
   if (argc == 1) {
     expression = inputCLI(std::cin);
-    expression = toPostfix(expression);
-    queueOutput(std::cout, calculateExpr(expression));
   }
+
+  else if (argc == 2) {
+    std::ifstream file(argv[1]);
+    if (!file.is_open()) {
+      std::cerr << "Reading file error";
+      return 1;
+    }
+    expression = inputCLI(file);
+  }
+  karpenkov::Stack< queueExpr > postFix = toPostfix(expression);
+  queueOutput(std::cout, calculateExpr(postFix));
+  std::cout << '\n';
+
+  return 0;
 }
