@@ -13,11 +13,11 @@ BOOST_AUTO_TEST_CASE(test_default_constructor)
   BOOST_CHECK(list.begin() == end);
 }
 
-BOOST_AUTO_TEST_CASE(test_addFirst)
+BOOST_AUTO_TEST_CASE(test_pushFront)
 {
   List< int > list;
-  list.addFirst(2);
-  list.addFirst(1);
+  list.pushFront(2);
+  list.pushFront(1);
   BOOST_CHECK_EQUAL(list.size(), 2);
   auto it = list.begin();
   BOOST_CHECK_EQUAL(*it, 1);
@@ -28,8 +28,8 @@ BOOST_AUTO_TEST_CASE(test_addFirst)
 BOOST_AUTO_TEST_CASE(test_insert_middle)
 {
   List< int > list;
-  list.addFirst(3);
-  list.addFirst(1);
+  list.pushFront(3);
+  list.pushFront(1);
   auto it = list.begin();
   list.insert(2, it);
   BOOST_CHECK_EQUAL(list.size(), 3);
@@ -44,8 +44,8 @@ BOOST_AUTO_TEST_CASE(test_insert_middle)
 BOOST_AUTO_TEST_CASE(test_deleteNext)
 {
   List< int > list;
-  list.addFirst(2);
-  list.addFirst(1);
+  list.pushFront(2);
+  list.pushFront(1);
   auto first = list.begin();
   list.deleteNext(first);
   BOOST_CHECK_EQUAL(list.size(), 1);
@@ -55,9 +55,9 @@ BOOST_AUTO_TEST_CASE(test_deleteNext)
 BOOST_AUTO_TEST_CASE(test_deleteNext_middle)
 {
   List< int > list;
-  list.addFirst(3);
-  list.addFirst(2);
-  list.addFirst(1);
+  list.pushFront(3);
+  list.pushFront(2);
+  list.pushFront(1);
   auto it = list.begin();
   list.deleteNext(it);
   BOOST_CHECK_EQUAL(list.size(), 2);
@@ -70,8 +70,8 @@ BOOST_AUTO_TEST_CASE(test_deleteNext_middle)
 BOOST_AUTO_TEST_CASE(test_clear)
 {
   List< int > list;
-  list.addFirst(1);
-  list.addFirst(2);
+  list.pushFront(1);
+  list.pushFront(2);
   list.clear();
   BOOST_CHECK_EQUAL(list.size(), 0);
   LIter< int > end(nullptr);
@@ -82,9 +82,9 @@ BOOST_AUTO_TEST_CASE(test_size)
 {
   List< int > list;
   BOOST_CHECK_EQUAL(list.size(), 0);
-  list.addFirst(1);
+  list.pushFront(1);
   BOOST_CHECK_EQUAL(list.size(), 1);
-  list.addFirst(2);
+  list.pushFront(2);
   BOOST_CHECK_EQUAL(list.size(), 2);
   list.deleteNext(list.begin());
   BOOST_CHECK_EQUAL(list.size(), 1);
@@ -93,8 +93,8 @@ BOOST_AUTO_TEST_CASE(test_size)
 BOOST_AUTO_TEST_CASE(test_copy_constructor)
 {
   List< int > list1;
-  list1.addFirst(2);
-  list1.addFirst(1);
+  list1.pushFront(2);
+  list1.pushFront(1);
   List< int > list2(list1);
   BOOST_CHECK_EQUAL(list2.size(), 2);
   auto it = list2.begin();
@@ -109,8 +109,8 @@ BOOST_AUTO_TEST_CASE(test_copy_constructor)
 BOOST_AUTO_TEST_CASE(test_move_constructor)
 {
   List< int > list1;
-  list1.addFirst(2);
-  list1.addFirst(1);
+  list1.pushFront(2);
+  list1.pushFront(1);
   List< int > list2(std::move(list1));
   BOOST_CHECK_EQUAL(list2.size(), 2);
   auto it = list2.begin();
@@ -123,7 +123,7 @@ BOOST_AUTO_TEST_CASE(test_move_constructor)
 BOOST_AUTO_TEST_CASE(test_copy_assignment)
 {
   List< int > list1;
-  list1.addFirst(1);
+  list1.pushFront(1);
   List< int > list2;
   list2 = list1;
   BOOST_CHECK_EQUAL(list2.size(), 1);
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE(test_copy_assignment)
 BOOST_AUTO_TEST_CASE(test_move_assignment)
 {
   List< int > list1;
-  list1.addFirst(1);
+  list1.pushFront(1);
   List< int > list2;
   list2 = std::move(list1);
   BOOST_CHECK_EQUAL(list2.size(), 1);
@@ -145,8 +145,8 @@ BOOST_AUTO_TEST_CASE(test_destructor)
 {
   {
     List< int > list;
-    list.addFirst(1);
-    list.addFirst(2);
+    list.pushFront(1);
+    list.pushFront(2);
   }
   BOOST_CHECK(true);
 }
@@ -154,14 +154,14 @@ BOOST_AUTO_TEST_CASE(test_destructor)
 BOOST_AUTO_TEST_CASE(test_begin)
 {
   List< int > list;
-  list.addFirst(5);
+  list.pushFront(5);
   BOOST_CHECK_EQUAL(*list.begin(), 5);
 }
 
 BOOST_AUTO_TEST_CASE(test_end)
 {
   List< int > list;
-  list.addFirst(1);
+  list.pushFront(1);
   LIter< int > it = list.begin();
   ++it;
   LIter< int > end(nullptr);
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_CASE(test_end)
 BOOST_AUTO_TEST_CASE(test_begin_const)
 {
   List< int > list;
-  list.addFirst(100);
+  list.pushFront(100);
   const List< int > & constList = list;
   LCIter< int > end(nullptr);
   BOOST_CHECK(constList.begin() != end);
