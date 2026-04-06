@@ -74,7 +74,7 @@ int main()
         continue;
       }
       if (sum > std::numeric_limits< size_t >::max() - *ends.curr) {
-        std::cerr << "Incorrect input\n";
+        std::cerr << "Overflow error\n";
         return 1;
       }
       sum += *ends.curr;
