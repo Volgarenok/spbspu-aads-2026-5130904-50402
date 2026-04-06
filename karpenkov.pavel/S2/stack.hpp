@@ -1,3 +1,5 @@
+#ifndef STACK_HPP
+#define STACK_HPP
 #include <iostream>
 #include "../common/list.hpp"
 namespace karpenkov
@@ -30,3 +32,4 @@ template < class T > bool karpenkov::Stack< T >::empty()
 {
   return data.empty();
 }
+#endif
