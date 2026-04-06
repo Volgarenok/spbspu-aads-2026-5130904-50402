@@ -2,139 +2,132 @@
 #include <iostream>
 #include <limits>
 #include <string>
+#include <utility>
 #include "list.hpp"
-
-namespace alisov
-{
-  struct BLEnds
-  {
-    alisov::BLIter< size_t > curr;
-    alisov::BLIter< size_t > end;
-  };
-}
 
 int main()
 {
-  alisov::BiList< std::pair< std::string, alisov::BiList< size_t > > > sequences{};
+  alisov::BiList< std::pair< std::string, alisov::BiList< size_t > > > seq{};
 
-  {
-    std::pair< std::string, alisov::BiList< size_t > > pair;
-    std::string name;
-    alisov::BiList< size_t > seq{};
-
-    size_t curr = 0;
-    if (!(std::cin >> name)) {
-      std::cout << 0 << '\n';
-      return 0;
-    }
-
-    while (true) {
-      if (!(std::cin >> curr)) {
-        if (std::cin.eof()) {
-          pair = {name, seq};
-          sequences.pushBack(pair);
-          break;
-        }
-        std::cin.clear();
-        std::string bad;
-        if (std::cin >> bad) {
-          bool flag = true;
-          for (char s : bad) {
-            if (!std::isdigit(static_cast< unsigned char >(s))) {
-              flag = false;
-              break;
-            }
-          }
-          if (flag) {
-            std::cerr << "Incorrect input\n";
-            return 1;
-          }
-          pair = {name, seq};
-          sequences.pushBack(pair);
-          seq.clear();
-          name = bad;
-        }
-      } else {
-        seq.pushBack(curr);
-      }
-    }
-  }
-
-  auto listOfSum = alisov::BiList< size_t >();
-  alisov::BiList< alisov::BLEnds > iterators;
-  for (auto &pair : sequences) {
-    iterators.pushBack({pair.second.begin(), pair.second.end()});
+  std::string name;
+  if (!(std::cin >> name)) {
+    std::cout << 0 << '\n';
+    return 0;
   }
 
   while (true) {
-    bool flag = true;
-    size_t sum = 0;
-    for (alisov::BLEnds &ends : iterators) {
-      if (ends.curr == ends.end) {
-        continue;
-      }
-      if (sum > std::numeric_limits< size_t >::max() - *ends.curr) {
-        std::cerr << "Overflow error\n";
-        return 1;
-      }
-      sum += *ends.curr;
-      ++ends.curr;
-      flag = false;
+    alisov::BiList< size_t > nums{};
+    size_t num = 0;
+
+    while (std::cin >> num) {
+      nums.pushBack(num);
     }
-    if (flag) {
+
+    if (std::cin.eof()) {
+      seq.pushBack({name, nums});
       break;
     }
-    listOfSum.pushBack(sum);
+
+    std::cin.clear();
+    std::string bad;
+    if (!(std::cin >> bad)) {
+      seq.pushBack({name, nums});
+      break;
+    }
+
+    bool isNumber = true;
+    for (char ch : bad) {
+      if (!std::isdigit(static_cast< unsigned char >(ch))) {
+        isNumber = false;
+        break;
+      }
+    }
+
+    if (isNumber) {
+      std::cerr << "Overflow error\n";
+      return 1;
+    }
+
+    seq.pushBack({name, nums});
+    name = bad;
+  }
+
+  alisov::BiList< std::pair< alisov::BLIter< size_t >, alisov::BLIter< size_t > > > iterators{};
+  for (auto it = seq.begin(); it != seq.end(); ++it) {
+    iterators.pushBack({(*it).second.begin(), (*it).second.end()});
+  }
+
+  alisov::BiList< size_t > sums{};
+  while (true) {
+    bool areValid = false;
+    size_t sum = 0;
+    for (auto &ends : iterators) {
+      if (ends.first != ends.second) {
+        if (sum > std::numeric_limits< size_t >::max() - *ends.first) {
+          std::cerr << "Overflow error\n";
+          return 1;
+        }
+        sum += *ends.first;
+        ++ends.first;
+        areValid = true;
+      }
+    }
+
+    if (!areValid) {
+      break;
+    }
+    sums.pushBack(sum);
+  }
+
+  for (auto it = seq.begin(); it != seq.end(); ++it) {
+    if (it != seq.begin()) {
+      std::cout << ' ';
+    }
+    std::cout << (*it).first;
+  }
+  if (!seq.empty()) {
+    std::cout << '\n';
   }
 
   iterators.clear();
-  for (auto &pair : sequences) {
-    iterators.pushBack({pair.second.begin(), pair.second.end()});
+  for (auto it = seq.begin(); it != seq.end(); ++it) {
+    iterators.pushBack({(*it).second.begin(), (*it).second.end()});
   }
-
-  bool firstName = true;
-  for (const auto &pair : sequences) {
-    if (!firstName) {
-      std::cout << ' ';
-    }
-    std::cout << pair.first;
-    firstName = false;
-  }
-  std::cout << '\n';
 
   while (true) {
-    bool flag = true;
-    bool firstValue = true;
-    for (alisov::BLEnds &ends : iterators) {
-      if (ends.curr == ends.end) {
-        continue;
+    bool areValid = false;
+    bool isFirst = true;
+    for (auto &ends : iterators) {
+      if (ends.first != ends.second) {
+        if (!isFirst) {
+          std::cout << ' ';
+        }
+        std::cout << *ends.first;
+        isFirst = false;
+        ++ends.first;
+        areValid = true;
       }
-      if (!firstValue) {
-        std::cout << ' ';
-      }
-      std::cout << *ends.curr;
-      ++ends.curr;
-      flag = false;
-      firstValue = false;
     }
-    if (flag) {
+    if (!areValid) {
       break;
     }
     std::cout << '\n';
   }
 
-  if (listOfSum.empty()) {
+  if (sums.empty()) {
     std::cout << 0 << '\n';
     return 0;
   }
 
-  bool firstSum = true;
-  for (size_t s : listOfSum) {
-    if (!firstSum) {
+  bool isFirst = true;
+  for (size_t s : sums) {
+    if (!isFirst) {
       std::cout << ' ';
     }
     std::cout << s;
-    firstSum = false;
+    isFirst = false;
   }
   std::cout << '\n';
+
+  return 0;
 }
