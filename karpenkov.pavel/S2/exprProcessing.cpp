@@ -3,23 +3,21 @@
 #include <stdexcept>
 #include "queue.hpp"
 #include "stack.hpp"
+#include "exprProcessing.hpp"
 
-using queueExpr = karpenkov::Queue< std::string >;
-using queueResult = karpenkov::Queue< int >;
-
-bool isNumber(std::string &element)
+bool isNumber(const std::string &element)
 {
   return std::isdigit(element[0]);
 }
 
-bool isValidOperator(std::string &element)
+bool isValidOperator(const std::string &element)
 {
   if (element == "+" || element == "-" || element == "*" || element == "/") {
     return true;
   }
   return false;
 }
-size_t priority(std::string &operation)
+size_t priority(const std::string &operation)
 {
   if (operation == "+" || operation == "-") {
     return 1;
@@ -97,7 +95,7 @@ karpenkov::Stack< queueExpr > inputCLI(std::istream &in)
   }
   return exprs;
 }
-int eval(int &a, int &b, std::string &operation)
+int eval(int a, int b, const std::string &operation)
 {
   if (operation == "+") {
     return a + b;
