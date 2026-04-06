@@ -1,4 +1,3 @@
-#include <cctype>
 #include <iostream>
 #include <limits>
 #include <utility>
@@ -21,30 +20,16 @@ int main()
       nums.pushBack(num);
     }
 
+    seq.pushBack({name, nums});
+
     if (std::cin.eof()) {
-      seq.pushBack({name, nums});
       break;
     }
 
     std::cin.clear();
-    std::string bad;
-    std::cin >> bad;
-
-    bool isNumber = true;
-    for (char ch : bad) {
-      if (!std::isdigit(ch)) {
-        isNumber = false;
-        break;
-      }
+    if (!(std::cin >> name)) {
+      break;
     }
-
-    if (isNumber) {
-      std::cerr << "Overflow error\n";
-      return 1;
-    }
-
-    seq.pushBack({name, nums});
-    name = bad;
   }
 
   alisov::BiList< std::pair< alisov::BLIter< size_t >, alisov::BLIter< size_t > > > iterators{};
