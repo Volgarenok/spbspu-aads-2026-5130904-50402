@@ -4,7 +4,8 @@
 #include <iostream>
 namespace lachugin
 {
-  template< typename T > class Stack {
+  template< typename T > class Stack
+  {
     List< T > l;
   public:
     void push(const T& rhs);

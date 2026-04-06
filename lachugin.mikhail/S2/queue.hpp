@@ -10,8 +10,8 @@ namespace lachugin
     List< T > l;
   public:
     void push(const T& rhs);
-    void pop();//     удалить
-    T& front();//     получить
+    void pop();
+    T& front();
     bool empty() const;
     size_t size() const;
   };
