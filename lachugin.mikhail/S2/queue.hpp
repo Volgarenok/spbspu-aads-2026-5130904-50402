@@ -2,7 +2,6 @@
 #define QUEUE_HPP
 #include "../common/list.hpp"
 #include <iostream>
-
 namespace lachugin
 {
   template< typename T > class Queue
@@ -53,5 +52,4 @@ namespace lachugin
     return l.size();
   }
 }
-
 #endif
