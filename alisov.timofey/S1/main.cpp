@@ -1,7 +1,6 @@
 #include <cctype>
 #include <iostream>
 #include <limits>
-#include <string>
 #include <utility>
 #include "list.hpp"
 
@@ -17,8 +16,7 @@ int main()
 
   while (true) {
     alisov::BiList< size_t > nums{};
-    size_t num = 0;
-
+    size_t num;
     while (std::cin >> num) {
       nums.pushBack(num);
     }
@@ -30,14 +28,11 @@ int main()
 
     std::cin.clear();
     std::string bad;
-    if (!(std::cin >> bad)) {
-      seq.pushBack({name, nums});
-      break;
-    }
+    std::cin >> bad;
 
     bool isNumber = true;
     for (char ch : bad) {
-      if (!std::isdigit(static_cast< unsigned char >(ch))) {
+      if (!std::isdigit(ch)) {
         isNumber = false;
         break;
       }
