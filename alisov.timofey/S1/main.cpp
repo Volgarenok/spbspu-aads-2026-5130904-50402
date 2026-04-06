@@ -5,109 +5,93 @@
 
 int main()
 {
-  alisov::BiList< std::pair< std::string, alisov::BiList< size_t > > > seq{};
+  alisov::BiList< std::pair< std::string, alisov::BiList< size_t > > > sequences{};
 
-  std::string name;
-  if (!(std::cin >> name)) {
-    std::cout << 0 << '\n';
-    return 0;
-  }
-
-  while (true) {
-    alisov::BiList< size_t > nums{};
-    size_t num;
-    while (std::cin >> num) {
-      nums.pushBack(num);
+  std::string sequenceName;
+  while (std::cin >> sequenceName) {
+    alisov::BiList< size_t > values{};
+    size_t value;
+    while (std::cin >> value) {
+      values.pushBack(value);
     }
-
-    seq.pushBack({name, nums});
-
-    if (std::cin.eof()) {
-      break;
-    }
-
     std::cin.clear();
-    if (!(std::cin >> name)) {
+    sequences.pushBack({sequenceName, values});
+  }
+
+  for (auto sequenceIt = sequences.begin(); sequenceIt != sequences.end(); ++sequenceIt) {
+    if (sequenceIt != sequences.begin()) {
+      std::cout << ' ';
+    }
+    std::cout << (*sequenceIt).first;
+  }
+  if (!sequences.empty()) {
+    std::cout << '\n';
+  }
+
+  alisov::BiList< std::pair< alisov::BLIter< size_t >, alisov::BLIter< size_t > > > sequenceIters{};
+  for (auto sequenceIt = sequences.begin(); sequenceIt != sequences.end(); ++sequenceIt) {
+    sequenceIters.pushBack({(*sequenceIt).second.begin(), (*sequenceIt).second.end()});
+  }
+
+  while (true) {
+    bool hasValues = false;
+    bool isFirstValue = true;
+    for (auto &iteratorPair : sequenceIters) {
+      if (iteratorPair.first != iteratorPair.second) {
+        if (!isFirstValue) {
+          std::cout << ' ';
+        }
+        std::cout << *iteratorPair.first;
+        isFirstValue = false;
+        ++iteratorPair.first;
+        hasValues = true;
+      }
+    }
+    if (!hasValues) {
       break;
     }
+    std::cout << '\n';
   }
 
-  alisov::BiList< std::pair< alisov::BLIter< size_t >, alisov::BLIter< size_t > > > iterators{};
-  for (auto it = seq.begin(); it != seq.end(); ++it) {
-    iterators.pushBack({(*it).second.begin(), (*it).second.end()});
+  sequenceIters.clear();
+  for (auto sequenceIt = sequences.begin(); sequenceIt != sequences.end(); ++sequenceIt) {
+    sequenceIters.pushBack({(*sequenceIt).second.begin(), (*sequenceIt).second.end()});
   }
 
-  alisov::BiList< size_t > sums{};
+  alisov::BiList< size_t > rowSums{};
   while (true) {
-    bool areValid = false;
-    size_t sum = 0;
-    for (auto &ends : iterators) {
-      if (ends.first != ends.second) {
-        if (sum > std::numeric_limits< size_t >::max() - *ends.first) {
+    bool hasValues = false;
+    size_t currentSum = 0;
+    for (auto &iteratorPair : sequenceIters) {
+      if (iteratorPair.first != iteratorPair.second) {
+        if (currentSum > std::numeric_limits< size_t >::max() - *iteratorPair.first) {
           std::cerr << "Overflow error\n";
           return 1;
         }
-        sum += *ends.first;
-        ++ends.first;
-        areValid = true;
+        currentSum += *iteratorPair.first;
+        ++iteratorPair.first;
+        hasValues = true;
       }
     }
 
-    if (!areValid) {
+    if (!hasValues) {
       break;
     }
-    sums.pushBack(sum);
+    rowSums.pushBack(currentSum);
   }
 
-  for (auto it = seq.begin(); it != seq.end(); ++it) {
-    if (it != seq.begin()) {
-      std::cout << ' ';
-    }
-    std::cout << (*it).first;
-  }
-  if (!seq.empty()) {
-    std::cout << '\n';
-  }
-
-  iterators.clear();
-  for (auto it = seq.begin(); it != seq.end(); ++it) {
-    iterators.pushBack({(*it).second.begin(), (*it).second.end()});
-  }
-
-  while (true) {
-    bool areValid = false;
-    bool isFirst = true;
-    for (auto &ends : iterators) {
-      if (ends.first != ends.second) {
-        if (!isFirst) {
-          std::cout << ' ';
-        }
-        std::cout << *ends.first;
-        isFirst = false;
-        ++ends.first;
-        areValid = true;
-      }
-    }
-    if (!areValid) {
-      break;
-    }
-    std::cout << '\n';
-  }
-
-  if (sums.empty()) {
+  if (rowSums.empty()) {
     std::cout << 0 << '\n';
     return 0;
   }
 
-  bool isFirst = true;
-  for (size_t s : sums) {
-    if (!isFirst) {
+  bool isFirstSum = true;
+  for (size_t sumValue : rowSums) {
+    if (!isFirstSum) {
       std::cout << ' ';
     }
-    std::cout << s;
-    isFirst = false;
+    std::cout << sumValue;
+    isFirstSum = false;
   }
   std::cout << '\n';
-
-  return 0;
 }
