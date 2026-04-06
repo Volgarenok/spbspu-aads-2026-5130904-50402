@@ -26,6 +26,7 @@ size_t priority(std::string &operation)
   } else if (operation == "/" || operation == "*") {
     return 2;
   }
+  return 0;
 }
 
 karpenkov::Stack< queueExpr > toPostfix(karpenkov::Stack< queueExpr > expressions)
