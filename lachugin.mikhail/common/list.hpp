@@ -32,6 +32,7 @@ namespace lachugin
     bool empty() const;
     void clear();
     void popFront();
+    void popEnd();
   };
 
   template < class T >
@@ -208,6 +209,25 @@ namespace lachugin
     delete curr;
     size_ --;
     fake->next = n;
+  }
+
+  template< class T >
+  void List< T >::popEnd()
+  {
+    if (empty())
+    {
+      throw std::out_of_range("Queue is empty");
+    }
+    Node< T >* curr = fake->next;
+    while (curr->next->next != fake)
+    {
+      curr = curr->next;
+    }
+    Node< T >* n = curr;
+    curr = curr->next;
+    delete curr;
+    size_--;
+    n->next = fake;
   }
 
 }
