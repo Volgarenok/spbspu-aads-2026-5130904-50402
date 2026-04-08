@@ -9,7 +9,7 @@
 
 namespace muhamadiarov
 {
-  const std::string oprts[] {'^', '+', '-', '*', '/', '%'};
+  const std::pair< std::string, int (*)(int, int)> oprts[] { {'^', xcor}, {'+', sum}, {'-', sub}, {'*', mult}, {'/', div}, {'%', mod} };
   Queque< *Queque< std::string > > input(std::iostream& in);
   QueQue< std::string > divideString(const std::string str);
   std::istrem& getLine(std::istream& in, std::string& str);

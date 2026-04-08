@@ -6,7 +6,7 @@
 
 namespace muh = muhamadiarov;
 
-std::istrem& getLine(std::istream& in, std::string& str)
+std::istrem& muh::getLine(std::istream& in, std::string& str)
 {
   str.clear();
   char c;
@@ -21,7 +21,7 @@ std::istrem& getLine(std::istream& in, std::string& str)
   return in;
 }
 
-QueQue< std::string > divideString(const std::string str)
+QueQue< std::string > muh::divideString(const std::string str)
 {
   Queque< std::string > result;
   std::string obj = '';
@@ -39,7 +39,7 @@ QueQue< std::string > divideString(const std::string str)
   return result;
 }
 
-Queque< *Queque< std::string > > input(std::iostream& in)
+Queque< *Queque< std::string > > muh::input(std::iostream& in)
 {
   Queque < *Queque <std::string>> result;
   std::string str;
@@ -54,7 +54,7 @@ Queque< *Queque< std::string > > input(std::iostream& in)
   return result;
 }
 
-int calcExpr(Queque< std::string >& expr)
+int muh::calcExpr(Queque< std::string >& expr)
 {
   Queque< std::string > postFix;
   Stack< std::string > stack;
@@ -133,7 +133,7 @@ int calcExpr(Queque< std::string >& expr)
   return numbers.top();
 }
 
-bool isDigit(const std::string& str)
+bool muh::isDigit(const std::string& str)
 {
   for (char c: str)
   {
@@ -145,11 +145,11 @@ bool isDigit(const std::string& str)
   return true;
 }
 
-bool isTrueOprt(const std::string op)
+bool muh::isTrueOprt(const std::string op)
 {
   for (size_t i = 0; i < 6; ++i)
   {
-    if (oprts[i] == op)
+    if (oprts[i].fisrt == op)
     {
       return true;
     }
@@ -157,20 +157,33 @@ bool isTrueOprt(const std::string op)
   return false;
 }
 
-bool isPriority(const std::string op1, const std::string op2)
+bool muh::isPriority(const std::string op1, const std::string op2)
 {
   size_t ind1 = 0; 
   size_t ind2 = 0;
   for (size_t i  = 0; i < 6; ++i)
   {
-    if (oprts[i] == op1)
+    if (oprts[i].first == op1)
     {
       ind1 = i;
     }
-    else if (oprts[i] == op2)
+    else if (oprts[i].first == op2)
     {
       ind2 = i;
     }
   }
   return ind1 > ind2;
 }
+
+int muh::calc(int a, int b, const std::string op)
+{
+  for (size_t i = 0; i < 6; ++i)
+  {
+    if (oprts[i].first == op)
+    {
+      return oprts[i].second(a, b);
+    }
+  }
+  throw std::logic_error("Not correct operation");
+}
+
