@@ -32,7 +32,7 @@ namespace lachugin
   template< typename T >
   void Stack< T >::pop()
   {
-    l.popFront();
+    l.popEnd();
   }
 
   template< typename T >
