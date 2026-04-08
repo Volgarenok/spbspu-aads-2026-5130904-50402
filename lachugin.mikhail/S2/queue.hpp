@@ -7,6 +7,7 @@ namespace lachugin
   template< typename T > class Queue
   {
     List< T > l;
+    Node< T >* curr = nullptr;
   public:
     void push(const T& rhs);
     void pop();
@@ -26,11 +27,11 @@ namespace lachugin
   {
     if (l.empty())
     {
-      l.add(rhs);
+      curr = l.add(rhs);
     }
     else
     {
-      l.addNext(rhs);
+     curr = l.addNext(rhs, curr);
     }
   }
 

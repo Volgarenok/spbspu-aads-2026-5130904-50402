@@ -7,24 +7,25 @@ namespace lachugin
   template< typename T > class Stack
   {
     List< T > l;
+    Node< T >* curr = nullptr;
   public:
     void push(const T& rhs);
     void pop();
     T& top();
     bool empty() const;
     size_t size() const;
-    };
+  };
 
   template< typename T >
   void Stack< T >::push(const T& rhs)
   {
     if (l.empty())
     {
-      l.add(rhs);
+      curr = l.add(rhs);
     }
     else
     {
-      l.addNext(rhs);
+      curr = l.addNext(rhs, curr);
     }
   }
 
