@@ -17,6 +17,7 @@ BOOST_AUTO_TEST_CASE(push)
   stack.push(5);
   stack.push(6);
   BOOST_CHECK(stack.size() == 2);
+  BOOST_CHECK(stack.top() == 6)
 }
 BOOST_AUTO_TEST_CASE(pop)
 {
