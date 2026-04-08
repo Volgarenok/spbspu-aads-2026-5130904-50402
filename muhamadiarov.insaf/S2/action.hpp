@@ -10,11 +10,13 @@
 namespace muhamadiarov
 {
   const std::string oprts[] {'^', '+', '-', '*', '/', '%'};
-  Queque< *Queque< char > > input(std::iostream& in);
-  QueQue< char > divideString(const& std::string str);
+  Queque< *Queque< std::string > > input(std::iostream& in);
+  QueQue< std::string > divideString(const std::string str);
   std::istrem& getLine(std::istream& in, std::string& str);
   std::ostream& output(std::ostream& out, const Stack< int >& result);
-  int calcExpr(const Queque< char >& expr);
+  int calcExpr(Queque< std::string >& expr);
+  bool isPriority(const std::string op1, const std::string op2)
+  bool isDigit(const std::string str);
   int calc(int a, int b, const std::string op);
   bool isTrueOprt(const std::string op);
   int sum(int a, int b);
