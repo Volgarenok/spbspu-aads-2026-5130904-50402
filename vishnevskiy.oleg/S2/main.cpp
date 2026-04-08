@@ -74,7 +74,7 @@ int main()
           else
           {
             int pr = getPriority(op);
-            while (pr <= getPriority(s.seeTop().second) && s.seeTop().second != "(")
+            while (!s.isEmpty() && pr <= getPriority(s.seeTop().second) && s.seeTop().second != "(")
             {
               q.push({-1, s.drop().second});
             }
@@ -87,11 +87,11 @@ int main()
         }
         else if (op == ")")
         {
-          while (s.seeTop().second != "(")
+          while (!s.isEmpty() && s.seeTop().second != "(")
           {
             q.push({-1, s.drop().second});
           }
-          q.drop();
+          s.drop();
         }
       }
     }
@@ -109,8 +109,8 @@ int main()
     else
     {
       std::string op = q.drop().second;
-      int num1 = s.drop().first;
       int num2 = s.drop().first;
+      int num1 = s.drop().first;
       s.push({performOp(num1, num2, op), ""});
     }
   }

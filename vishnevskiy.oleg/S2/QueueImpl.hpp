@@ -6,8 +6,7 @@ namespace Tools
 {
   template <class T>
   Queue<T>::Queue():
-    fake(new LIter<T>(new List<T>)),
-    last(nullptr)
+    fake(new LIter<T>(new List<T>))
   {}
 
   template <class T>
@@ -20,30 +19,28 @@ namespace Tools
   template <class T>
   void Queue<T>::push(T rhs)
   {
-    if (!last)
+    if (isEmpty())
     {
-      fake -> insert(rhs);
-      last = fake;
-      ++last;
+      fake->insert(rhs);
     }
     else
     {
-      last -> end();
-      last -> insert(rhs);
-      ++last;
+      LIter<T> temp = *fake;
+      temp.end(); 
+      temp.insert(rhs);
     }
   }
 
   template <class T>
   T Queue<T>::drop()
   {
-    LIter<T> temp;
-    temp.set(fake->curr);
-    ++temp;
-    if (!temp.curr)
+    if (isEmpty())
     {
       throw std::runtime_error("No data to drop!");
     }
+    LIter<T> temp;
+    temp.set(fake->curr);
+    ++temp;
     T tempVal = temp.value();
     fake -> curr -> next = temp.curr -> next;
     delete temp.curr;
@@ -53,7 +50,14 @@ namespace Tools
   template <class T>
   T Queue<T>::seeTop()
   {
-    return last -> value();
+    if (isEmpty())
+    {
+      throw std::runtime_error("No data!");
+    }
+    LIter<T> temp;
+    temp.set(fake->curr);
+    ++temp;
+    return temp.value();
   }
 
   template <class T>

@@ -25,13 +25,13 @@ namespace Tools
   template <class T>
   T Stack<T>::drop()
   {
-    LIter<T> temp;
-    temp.set(fake->curr);
-    ++temp;
-    if (!temp.curr)
+    if (isEmpty())
     {
       throw std::runtime_error("No data to drop!");
     }
+    LIter<T> temp;
+    temp.set(fake->curr);
+    ++temp;
     T tempVal = temp.value();
     fake -> curr -> next = temp.curr -> next;
     delete temp.curr;
@@ -41,6 +41,10 @@ namespace Tools
   template <class T>
   T Stack<T>::seeTop()
   {
+    if (isEmpty())
+    {
+      throw std::runtime_error("No data!");
+    }
     return fake -> curr -> next -> val;
   }
 

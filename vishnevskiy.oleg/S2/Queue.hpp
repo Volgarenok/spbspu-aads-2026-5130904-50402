@@ -16,7 +16,6 @@ namespace Tools
       ~Queue();
     private:
       LIter<T>* fake;
-      LIter<T>* last;
   };
 }
 
