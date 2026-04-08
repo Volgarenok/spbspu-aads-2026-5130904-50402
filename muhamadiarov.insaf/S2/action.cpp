@@ -144,3 +144,33 @@ bool isDigit(const std::string& str)
   }
   return true;
 }
+
+bool isTrueOprt(const std::string op)
+{
+  for (size_t i = 0; i < 6; ++i)
+  {
+    if (oprts[i] == op)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool isPriority(const std::string op1, const std::string op2)
+{
+  size_t ind1 = 0; 
+  size_t ind2 = 0;
+  for (size_t i  = 0; i < 6; ++i)
+  {
+    if (oprts[i] == op1)
+    {
+      ind1 = i;
+    }
+    else if (oprts[i] == op2)
+    {
+      ind2 = i;
+    }
+  }
+  return ind1 > ind2;
+}
