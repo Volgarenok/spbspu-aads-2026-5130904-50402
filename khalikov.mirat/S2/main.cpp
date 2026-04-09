@@ -24,6 +24,10 @@ long long op(const long long val1, const long long val2, const std::string& oper
 	{
 		res = val1 / val2;
 	}
+	else if (operation == "%")
+	{
+		res = val1 % val2;
+	}
 	else if (operation == "#")
 	{
 		std::string value1 = std::to_string(val1);
@@ -66,7 +70,7 @@ size_t priority(const std::string& operation)
 	{
 		return 0;
 	}
-	else if (operation == "*" || operation == "/")
+	else if (operation == "*" || operation == "/" || operation == "%")
 	{
 		return 1;
 	}
@@ -134,21 +138,40 @@ khalikov::Queue < std::string > transform(const std::string& str)
 	return queue;
 }
 
-void readExp(std::istream& in, std::string& str)
+void readExp(std::istream& in)
 {
+	std::string str;
+	khalikov::List < long long > res;
 	while (std::getline(in, str))
 	{
 		if (str.empty())
 		{
 			continue;
 		}
-		transform
+		try
+		{
+			khalikov::Queue < std::string > postfix = transform(str);
+			res.pushFront(result(postfix));
+		}
+		catch (...)
+		{
+			throw std::logic_error("Calculation error");
+		}
+	}
+	if (!res.isEmpty())
+	{
+		auto it = res.cbegin();
+		for (size_t i = 0; i < res.size() - 1; i++)
+		{
+			std::cout << *it << " ";
+			++it;
+		}
+		std::cout << *it << '\n';
 	}
 }
 
 int main(int argc, char ** argv)
 {
-	std::string str;
 	if (argc == 2)
 	{
 		std::ifstream inputFile(argv[1]);
@@ -157,10 +180,26 @@ int main(int argc, char ** argv)
 			std::cerr << "Read error" << '\n';
 			return 1;
 		}
-		readExp(inputFile, str);
+		try
+		{
+			readExp(inputFile);
+		}
+		catch (...)
+		{
+			std::cerr << "Read error" << '\n';
+			return 1;
+		}
 	}
 	else
 	{
-		readExp(std::cin, str);
+		try
+		{
+			readExp(std::cin);
+		}
+		catch (...)
+		{
+			std::cerr << "Read error" << '\n';
+			return 1;
+		}
 	}
 }
