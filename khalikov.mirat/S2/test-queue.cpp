@@ -3,6 +3,8 @@
 
 using namespace khalikov;
 
+BOOST_AUTO_TEST_SUITE(QueueTests)
+
 BOOST_AUTO_TEST_CASE(isEmpty_test)
 {
   Queue< int > queue;
@@ -88,3 +90,4 @@ BOOST_AUTO_TEST_CASE(drop_test)
   BOOST_CHECK_EQUAL(queue.size(), 1);
 }
 
+BOOST_AUTO_TEST_SUITE_END()

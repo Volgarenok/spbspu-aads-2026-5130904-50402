@@ -3,6 +3,8 @@
 
 using namespace khalikov;
 
+BOOST_AUTO_TEST_SUITE(StackTests)
+
 BOOST_AUTO_TEST_CASE(isEmpty_test)
 {
   Stack< int > stack;
@@ -60,3 +62,4 @@ BOOST_AUTO_TEST_CASE(drop_test)
   BOOST_CHECK_EQUAL(stack.size(), 1);
 }
 
+BOOST_AUTO_TEST_SUITE_END()
