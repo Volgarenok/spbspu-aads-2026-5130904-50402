@@ -66,3 +66,5 @@ bool khalikov::Stack < T >::isEmpty() const noexcept
 {
 	return list.isEmpty();
 }
+
+#endif

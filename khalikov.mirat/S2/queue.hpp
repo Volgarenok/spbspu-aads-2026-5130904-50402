@@ -21,3 +21,6 @@ namespace khalikov
 		void swap(Queue& rhs) noexcept;
 	};
 }
+
+
+#endif
