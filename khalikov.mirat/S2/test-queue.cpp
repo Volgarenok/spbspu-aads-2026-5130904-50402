@@ -42,10 +42,10 @@ BOOST_AUTO_TEST_CASE(swap_test)
   yaqueue.push(24);
   BOOST_CHECK_EQUAL(queue.front(), 12);
   BOOST_CHECK_EQUAL(yaqueue.front(), 24);
-	BOOST_CHECK_EQUAL(queue.size(), 2);
+  BOOST_CHECK_EQUAL(queue.size(), 2);
   BOOST_CHECK_EQUAL(yaqueue.size(), 1);
   queue.swap(yaqueue);
-	BOOST_CHECK_EQUAL(yaqueue.size(), 2);
+  BOOST_CHECK_EQUAL(yaqueue.size(), 2);
   BOOST_CHECK_EQUAL(queue.size(), 1);
   BOOST_CHECK_EQUAL(yaqueue.front(), 12);
   BOOST_CHECK_EQUAL(queue.front(), 24);
