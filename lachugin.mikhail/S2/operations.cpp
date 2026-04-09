@@ -49,4 +49,30 @@ namespace lachugin
     return a % b;
   }
 
+  bool isPriority(const std::string& o1, const std::string& o2)
+  {
+    int a = 0, b = 0;
+
+    if (o1 == "+" || o1 == "-")
+    {
+      a = 1;
+    }
+    else
+    {
+      a = 2;
+    }
+
+    if (o2 == "+" || o2 == "-")
+    {
+      b = 1;
+    }
+    else
+    {
+      b = 2;
+    }
+
+    return a >= b;
+  }
+
+
 }

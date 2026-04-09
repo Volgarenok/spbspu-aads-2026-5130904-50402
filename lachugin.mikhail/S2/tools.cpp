@@ -1,6 +1,7 @@
 #include "tools.hpp"
 #include "queue.hpp"
 #include "stack.hpp"
+#include "operations.hpp"
 #include <iostream>
 
 namespace lachugin
@@ -15,7 +16,7 @@ namespace lachugin
     }
   }
 
-  bool isOperator(std::string& val)
+  bool isOperator(const std::string& val)
   {
     return val == "+" || val == "-" || val == "*" || val == "/" || val == "%";
   }
@@ -40,7 +41,7 @@ namespace lachugin
         {
           throw std::invalid_argument ("Error with ) ");
         }
-        while (operators.top() != "(" && !operators.empty())
+        while (!operators.empty() && operators.top() != "(")
         {
           postfix.push(operators.top());
           operators.pop();
@@ -49,10 +50,17 @@ namespace lachugin
       }
       else if (isOperator(token))
       {
-        if (!operators.empty() && isOperator(operators.top()))
+        while (!operators.empty())
         {
-          postfix.push(operators.top());
-          operators.pop();
+          if (isOperator(operators.top()) && isPriority(token, operators.top()))
+          {
+            postfix.push(operators.top());
+            operators.pop();
+          }
+          else
+          {
+            break;
+          }
         }
         operators.push(token);
       }
@@ -63,7 +71,8 @@ namespace lachugin
     }
     while (!operators.empty())
     {
-      if (operators.top() == "(") {
+      if (operators.top() == "(")
+      {
         throw std::invalid_argument ("Error: extra (");
       }
       postfix.push(operators.top());

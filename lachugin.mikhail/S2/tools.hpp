@@ -8,7 +8,7 @@ namespace lachugin
 {
   void input(std::istream &in, Queue< std::string >& q);
   Queue< std::string > infixToPostfix(Queue< std::string >& q);
-  bool isOperator(std::string& val);
+  bool isOperator(const std::string& val);
 }
 
 #endif
