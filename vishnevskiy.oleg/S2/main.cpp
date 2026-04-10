@@ -2,7 +2,7 @@
 #include "QueueImpl.hpp"
 #include "StackImpl.hpp"
 
-int getPriority(std::string op)
+size_t getPriority(std::string op)
 {
   if (op == "+" || op == "-")
   {
@@ -15,7 +15,7 @@ int getPriority(std::string op)
   return 0;
 }
 
-int performOp(int n1, int n2, std::string op)
+size_t performOp(size_t n1, size_t n2, std::string op)
 {
   if (op == "+")
   {
@@ -47,11 +47,11 @@ bool isOp(std::string op)
 
 int main()
 {
-  vishnevskiy::Queue<std::pair<int, std::string>>* q = new vishnevskiy::Queue<std::pair<int, std::string>>();
-  vishnevskiy::Stack<std::pair<int, std::string>>* s = nullptr;
+  vishnevskiy::Queue<std::pair<size_t, std::string>>* q = new vishnevskiy::Queue<std::pair<int, std::string>>();
+  vishnevskiy::Stack<std::pair<size_t, std::string>>* s = nullptr;
   try
   {
-    s = new vishnevskiy::Stack<std::pair<int, std::string>>();
+    s = new vishnevskiy::Stack<std::pair<size_t, std::string>>();
   }
   catch (const std::bad_alloc& e)
   {
@@ -60,11 +60,11 @@ int main()
     return 1;
   }
   std::string op;
-  int num = 0;
+  size_t num = 0;
   while (std::cin)
   {
     std::cin >> std::ws;
-    int c = std::cin.peek();
+    size_t c = std::cin.peek();
     if (c != EOF)
     {
       if (std::isdigit(c))
@@ -117,7 +117,7 @@ int main()
           }
           else
           {
-            int pr = getPriority(op);
+            size_t pr = getPriority(op);
             while (!s -> isEmpty() && pr <= getPriority(s -> seeTop().second) && s -> seeTop().second != "(")
             {
               try
@@ -202,8 +202,8 @@ int main()
     else
     {
       std::string op = q -> drop().second;
-      int num2 = s -> drop().first;
-      int num1 = s -> drop().first;
+      size_t num2 = s -> drop().first;
+      size_t num1 = s -> drop().first;
       try
       {
         s -> push({performOp(num1, num2, op), ""});
