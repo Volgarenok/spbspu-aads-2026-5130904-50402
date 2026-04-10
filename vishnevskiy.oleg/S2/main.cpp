@@ -65,7 +65,6 @@ int main()
   {
     std::cin >> std::ws;
     int c = std::cin.peek();
-    hasInput = true;
     if (c != EOF)
     {
       if (std::isdigit(c))
