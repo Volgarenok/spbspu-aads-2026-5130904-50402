@@ -61,7 +61,6 @@ int main()
   }
   std::string op;
   int num = 0;
-  bool hasInput = false;
   while (std::cin)
   {
     std::cin >> std::ws;
