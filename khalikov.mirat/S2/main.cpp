@@ -164,10 +164,8 @@ void readExp(std::istream &in)
       ++it;
     }
     std::cout << *it << '\n';
-  }
-  else
-  {
-		std::cout << '\n';
+  } else {
+    std::cout << '\n';
   }
 }
 
