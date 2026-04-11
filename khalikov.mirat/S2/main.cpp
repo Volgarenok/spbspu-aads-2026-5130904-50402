@@ -165,6 +165,10 @@ void readExp(std::istream &in)
     }
     std::cout << *it << '\n';
   }
+  else
+  {
+		std::cout << '\n';
+  }
 }
 
 int main(int argc, char **argv)
