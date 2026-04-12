@@ -32,7 +32,11 @@ long long performOp(long long n1, long long n2, std::string op)
   }
   if (op == "%")
   {
-    return n1 % n2;
+    if ((n1 % n2) > 0)
+    {
+      return n1 % n2;
+    }
+    return n2 + (n1 % n2);
   }
   return n1 / n2;
 }
@@ -253,7 +257,21 @@ int main()
     else
     {
       std::string op = q -> drop().second;
+      if (s -> isEmpty())
+      {
+        std::cerr << "Invalid expression!" << "\n";
+        delete q;
+        delete s;
+        return 2;
+      }
       long long num2 = s -> drop().first;
+      if (s -> isEmpty())
+      {
+        std::cerr << "Invalid expression!" << "\n";
+        delete q;
+        delete s;
+        return 2;
+      }
       long long num1 = s -> drop().first;
       if (!hasOverflow(num1, num2, op))
       {
