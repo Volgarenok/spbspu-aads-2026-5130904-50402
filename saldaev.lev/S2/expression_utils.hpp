@@ -18,7 +18,7 @@ namespace saldaev
     return true;
   }
 
-  inline bool getOperatorArity(std::string token)
+  inline size_t getOperatorArity(std::string token)
   {
     if (token == "+" || token == "-" || token == "*" || token == "/" || token == "%") {
       return 2;
