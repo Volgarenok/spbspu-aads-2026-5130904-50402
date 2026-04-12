@@ -18,7 +18,7 @@ namespace saldaev
       if (isNumber(token)) {
         tmp = parseNumber(token);
         stack.push(tmp);
-      } else if (isOperator(token)) {
+      } else if (getOperatorArity(token)) {
         if (stack.size() < 2) {
           throw std::logic_error("Not enough operands");
         }

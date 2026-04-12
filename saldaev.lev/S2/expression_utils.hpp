@@ -18,12 +18,15 @@ namespace saldaev
     return true;
   }
 
-  inline bool isOperator(std::string token)
+  inline bool getOperatorArity(std::string token)
   {
-    if (token == "+" || token == "-" || token == "*" || token == "/" || token == "%" || token == "!") {
-      return true;
+    if (token == "+" || token == "-" || token == "*" || token == "/" || token == "%") {
+      return 2;
     }
-    return false;
+    if (token == "!") {
+      return 1;
+    }
+    return 0;
   }
 
   inline int getPriority(const std::string &op)
@@ -33,6 +36,9 @@ namespace saldaev
     }
     if (op == "*" || op == "/" || op == "%") {
       return 2;
+    }
+    if (op == "!") {
+      return 3;
     }
     return 0;
   }

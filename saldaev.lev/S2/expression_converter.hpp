@@ -35,7 +35,7 @@ namespace saldaev
       token = parsedLine.front();
       parsedLine.pop();
 
-      if (isOperator(token)) {
+      if (getOperatorArity(token)) {
         while (!stack.empty() && getPriority(stack.top()) >= getPriority(token)) {
           newLine.push(stack.top());
           stack.pop();
