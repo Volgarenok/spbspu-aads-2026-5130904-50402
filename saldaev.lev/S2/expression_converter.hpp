@@ -35,13 +35,14 @@ namespace saldaev
       token = parsedLine.front();
       parsedLine.pop();
 
-      if (getOperatorArity(token)) {
+      size_t arity = getOperatorArity(token);
+      if (arity == 2) {
         while (!stack.empty() && getPriority(stack.top()) >= getPriority(token)) {
           newLine.push(stack.top());
           stack.pop();
         }
         stack.push(token);
-      } else if (token == "(") {
+      } else if (arity == 1 || token == "(") {
         stack.push(token);
       } else if (token == ")") {
         while (!stack.empty() && stack.top() != "(") {
