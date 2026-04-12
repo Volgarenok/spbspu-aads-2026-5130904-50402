@@ -72,7 +72,11 @@ bool hasOverflow(long long n1, long long n2, std::string op)
     {
       return false;
     }
-    if ((n1 > 0 && n2 > 0 && n1 > mx / n2) || (n1 > 0 && n2 < 0 && n2 < mn / n1) || (n1 < 0 && n2 > 0 && n1 < mn / n2) || (n1 < 0 && n2 < 0 && -n1 > mx / -n2))
+    if ((n1 > 0 && n2 > 0 && n1 > mx / n2) || (n1 > 0 && n2 < 0 && n2 < mn / n1))
+    {
+      return true;
+    }
+    if ((n1 < 0 && n2 > 0 && n1 < mn / n2) || (n1 < 0 && n2 < 0 && -n1 > mx / -n2))
     {
       return true;
     }
