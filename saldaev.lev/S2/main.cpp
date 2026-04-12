@@ -10,15 +10,16 @@ namespace saldaev
 {
   long long evaluate(saldaev::Queue< std::string > postfixedLines)
   {
-    long long tmp = 0;
     saldaev::Stack< long long > stack;
     while (!postfixedLines.empty()) {
       std::string token = postfixedLines.front();
       postfixedLines.pop();
       if (isNumber(token)) {
-        tmp = parseNumber(token);
-        stack.push(tmp);
-      } else if (getOperatorArity(token)) {
+        stack.push(parseNumber(token));
+        continue;
+      }
+      size_t arity = getOperatorArity(token);
+      if (arity == 2) {
         if (stack.size() < 2) {
           throw std::logic_error("Not enough operands");
         }
@@ -27,9 +28,18 @@ namespace saldaev
         long long op2 = stack.top();
         stack.pop();
         stack.push(apply(token, op2, op1));
-      } else {
-        throw std::logic_error("Ivalid token");
+        continue;
       }
+      if (arity == 1) {
+        if (stack.size() < 1) {
+          throw std::logic_error("Not enough operands");
+        }
+        long long op = stack.top();
+        stack.pop();
+        stack.push(apply(token, op));
+        continue;
+      }
+      throw std::logic_error("Ivalid token");
     }
     if (stack.size() > 1) {
       throw std::logic_error("Redundant operands");
