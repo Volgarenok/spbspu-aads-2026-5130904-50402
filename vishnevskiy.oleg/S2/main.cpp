@@ -312,11 +312,11 @@ int process(std::istream& in, long long& out)
   return 0;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
   int r = 0;
   long long val = 0;
-  vishnevskiy::Queue<long long>* res = new vishnevskiy::Queue<long long>();
+  vishnevskiy::Stack<long long>* res = new vishnevskiy::Stack<long long>();
   while (std::cin.peek() != EOF && r == 0)
   {
     try
@@ -344,5 +344,9 @@ int main()
   }
   std::cout << "\n";
   delete res;
-  return 0;
+  if (r == 3)
+  {
+    r = 0;
+  }
+  return r;
 }
