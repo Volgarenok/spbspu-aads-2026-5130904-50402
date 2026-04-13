@@ -25,4 +25,5 @@ namespace muhamadiarov
   int mult(int a, int b);
   int mod(int a, int b);
   int xcor(int a, int b);
+  Stack< short > toBit(int num);
 }

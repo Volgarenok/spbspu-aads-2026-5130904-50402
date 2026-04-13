@@ -187,3 +187,32 @@ int muh::calc(int a, int b, const std::string op)
   throw std::logic_error("Not correct operation");
 }
 
+int muh::sum(int a, int b)
+{
+  return a + b;
+}
+
+int muh::div(int a, int b)
+{
+  return a / b;
+}
+
+int muh::sub(int a, int b)
+{
+  return a - b;
+}
+
+int muh::mult(int a, int b)
+{
+  return a * b;
+}
+
+int muh::mod(int a, int b)
+{
+  return a % b;
+}
+
+int muh::xсor(int a, int b)
+{
+  return (a | b) & ~(a & b);
+}
