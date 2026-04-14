@@ -6,13 +6,17 @@
 
 long long getPriority(std::string op)
 {
-  if (op == "+" || op == "-")
+  if (op == "|")
   {
     return 1;
   }
-  else if (op == "/" || op == "*" || op == "%")
+  else if (op == "+" || op == "-")
   {
     return 2;
+  }
+  else if (op == "/" || op == "*" || op == "%")
+  {
+    return 3;
   }
   return 0;
 }
@@ -39,12 +43,16 @@ long long performOp(long long n1, long long n2, std::string op)
     }
     return n2 + (n1 % n2);
   }
+  if (op == "|")
+  {
+    return n1 | n2;
+  }
   return n1 / n2;
 }
 
 bool isOp(std::string op)
 {
-  if (op == "+" || op == "-" || op == "/" || op == "*" || op == "%")
+  if (op == "+" || op == "-" || op == "/" || op == "*" || op == "%" || op == "|")
   {
     return true;
   }
