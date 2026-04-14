@@ -2,6 +2,7 @@
 #include "QueueImpl.hpp"
 #include "StackImpl.hpp"
 #include <limits>
+#include <fstream>
 
 long long getPriority(std::string op)
 {
@@ -312,11 +313,23 @@ int process(std::istream& in, long long& out)
   return 0;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
   int r = 0;
   long long val = 0;
   vishnevskiy::Stack<long long>* res = new vishnevskiy::Stack<long long>();
+  std::ifstream f;
+  std::istream* in = &std::cin;
+  if (argc > 1)
+  {
+    f.open(argv[1]);
+    if (!f)
+    {
+      std::cerr << "File not found" << "\n";
+      return 2;
+    }
+    in = &f;
+  }
   while (std::cin.peek() != EOF && r == 0)
   {
     try
