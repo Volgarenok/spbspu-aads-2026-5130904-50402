@@ -6,7 +6,7 @@
 
 namespace muh = muhamadiarov;
 
-std::istrem& muh::getLine(std::istream& in, std::string& str)
+std::istream& muh::getLine(std::istream& in, std::string& str)
 {
   str.clear();
   char c;
@@ -21,17 +21,17 @@ std::istrem& muh::getLine(std::istream& in, std::string& str)
   return in;
 }
 
-QueQue< std::string > muh::divideString(const std::string str)
+Queque< std::string > muh::divideString(const std::string str)
 {
   Queque< std::string > result;
   std::string obj = '';
   for (char c : str)
   {
-    if (c == ' ')
+    if (c == ' ' && obj != '')
     {
-      result.push(str);
+      result.push(obj);
     }
-    else
+    else if (c != ' ')
     {
       obj.append(c);
     }
@@ -39,9 +39,9 @@ QueQue< std::string > muh::divideString(const std::string str)
   return result;
 }
 
-Queque< *Queque< std::string > > muh::input(std::iostream& in)
+Queque< Queque< std::string >* > muh::input(std::iostream& in)
 {
-  Queque < *Queque <std::string>> result;
+  Queque < *Queque<std::string> > result;
   std::string str;
   while (getLine(in, str))
   {
@@ -61,7 +61,7 @@ int muh::calcExpr(Queque< std::string >& expr)
   for (size_t i = 0; i < expr.size(); ++i)
   {
     std::string str = expr.top();
-    if (str == '(')
+    if (str == "(")
     {
       stack.push(str);
     }
@@ -69,13 +69,13 @@ int muh::calcExpr(Queque< std::string >& expr)
     {
       postFix.push(str);
     }
-    else if (isTrueOprt(str) && (stack.top() == '(' || stack.empty()))
+    else if (isTrueOprt(str) && (stack.top() == "(" || stack.empty()))
     {
       stack.push(str);
     }
-    else if (std == ')')
+    else if (std == ")")
     {
-      while (stack.top() != '(')
+      while (stack.top() != "(")
       {
         postFix.push(stack.top());
         stack.pop();
@@ -90,7 +90,7 @@ int muh::calcExpr(Queque< std::string >& expr)
     }
     else if (isTrueOprt(str) && isPriority(str, stack.top()))
     {
-      stack.push(str)
+      stack.push(str);
     }
     else
     {
@@ -101,7 +101,7 @@ int muh::calcExpr(Queque< std::string >& expr)
   while (!stack.empty())
   {
     std::string op = stack.top();
-    if (op == '(' || op == ')')
+    if (op == "(" || op == ")")
     {
       throw std::logic_error("Wrong expression");
     }
@@ -135,12 +135,18 @@ int muh::calcExpr(Queque< std::string >& expr)
 
 bool muh::isDigit(const std::string& str)
 {
+  size_t i = 0;
   for (char c: str)
   {
+    if (i == 0 && c == '0')
+    {
+      return false;
+    }
     if ('0' < c || c > '9')
     {
       return false;
     }
+    ++i;
   }
   return true;
 }
@@ -214,5 +220,16 @@ int muh::mod(int a, int b)
 
 int muh::xсor(int a, int b)
 {
-  return (a | b) & ~(a & b);
+  int result = 0;
+  int multiplier = 1;
+  while (a > 0 || b > 0){
+    int bitA = a % 2;
+    int bitB = b % 2;
+    int xorBit = (bitA != bitB) ? 1 : 0;
+    result += xorBit * multiplier;
+    a /= 2;
+    b /= 2;
+    multiplier *= 2;
+  }
+  return result;
 }

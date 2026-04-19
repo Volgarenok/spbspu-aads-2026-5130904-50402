@@ -6,7 +6,7 @@
 BOOST_AUTO_TEST_SUITE(xorTest)
 BOOST_AUTO_TEST_CASE(xcor)
 {
-  int result = muhamadiarov::calc(1, 2, '^');
+  int result = muhamadiarov::calc(1, 2, "^");
   BOOST_CHECK_EQUAL(result, 3);
 }
 

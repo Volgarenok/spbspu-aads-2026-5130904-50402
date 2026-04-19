@@ -17,13 +17,13 @@ BOOST_AUTO_TEST_CASE(push)
   stack.push(5);
   stack.push(6);
   BOOST_CHECK(stack.size() == 2);
-  BOOST_CHECK(stack.top() == 6)
+  BOOST_CHECK(stack.top() == 6);
 }
 BOOST_AUTO_TEST_CASE(pop)
 {
   Stack< int > stack;
   stack.push(8);
-  stack.push(7)
+  stack.push(7);
   stack.pop();
   BOOST_CHECK(stack.top() == 8);
 }
@@ -41,4 +41,4 @@ BOOST_AUTO_TEST_CASE(empty)
   stack.push(10);
   BOOST_CHECK(stack.empty() == false);
 }
-BOOST_AUTO_TEST_SUITE_END
+BOOST_AUTO_TEST_SUITE_END()

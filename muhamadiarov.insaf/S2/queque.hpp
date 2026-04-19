@@ -5,6 +5,7 @@
 
 namespace muhamadiarov
 {
+  template < class T >
   class Queque
   {
   public:
