@@ -16,7 +16,7 @@ namespace muhamadiarov
   int mod(int a, int b);
   int xcor(int a, int b);
   const std::pair< std::string, int (*)(int, int)> oprts[] { {"^", xcor}, {"+", sum}, {"-", sub}, {"*", mult}, {"/", div}, {"%", mod} };
-  Queque< Queque< std::string* > > input(std::iostream& in);
+  Queque< Queque < std::string > > input(std::istream& in);
   Queque< std::string > divideString(const std::string str);
   std::istream& getLine(std::istream& in, std::string& str);
   std::ostream& output(std::ostream& out, const Stack< int >& result);

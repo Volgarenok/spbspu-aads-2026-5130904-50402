@@ -26,12 +26,11 @@ int main(int argc, char* argv[])
   muh::Queque< int > result;
   try
   {
-    Queque< *Queque< std::string > > data = input(is);
+    muh::Queque< muh::Queque< std::string > > data = muh::input(is);
     for (size_t i = 0; i < data.size(); ++i)
     {
-      Queque< std::string > expr = *input.top();
-      result.push(calcExpr(expr));
-      input.pop();
+      result.push(muh::calcExpr(data.top()));
+      data.pop();
     }
   }
   catch(const std::exception& e)

@@ -16,32 +16,32 @@ std::istream& muh::getLine(std::istream& in, std::string& str)
     {
       break;
     }
-    str.append(c);
+    str += c;
   }
   return in;
 }
 
-Queque< std::string > muh::divideString(const std::string str)
+muh::Queque<std::string> muh::divideString(const std::string str)
 {
-  Queque< std::string > result;
-  std::string obj = '';
+  Queque<std::string> result;
+  std::string obj = "";
   for (char c : str)
   {
-    if (c == ' ' && obj != '')
+    if (c == ' ' && obj != "")
     {
       result.push(obj);
     }
     else if (c != ' ')
     {
-      obj.append(c);
+      obj += c;
     }
   }
   return result;
 }
 
-Queque< Queque< std::string >* > muh::input(std::iostream& in)
+muh::Queque< muh::Queque< std::string > > muh::input(std::istream& in)
 {
-  Queque < *Queque<std::string> > result;
+  Queque< Queque < std::string > > result;
   std::string str;
   while (getLine(in, str))
   {
@@ -49,7 +49,7 @@ Queque< Queque< std::string >* > muh::input(std::iostream& in)
     {
       continue;
     }
-    result.push(&(divideString(str)));
+    result.push(divideString(str));
   }
   return result;
 }
@@ -69,26 +69,26 @@ int muh::calcExpr(Queque< std::string >& expr)
     {
       postFix.push(str);
     }
-    else if (isTrueOprt(str) && (stack.top() == "(" || stack.empty()))
+    else if (isTrueOprt(str) && ((!stack.empty() && stack.top() == "(") || stack.empty()))
     {
       stack.push(str);
     }
-    else if (std == ")")
+    else if (str == ")")
     {
-      while (stack.top() != "(")
+      while (!stack.empty() && stack.top() != "(")
       {
         postFix.push(stack.top());
         stack.pop();
       }
       stack.pop();
     }
-    else if (isTrueOprt(str) && !isPriority(str, stack.top()))
+    else if (!stack.empty() && isTrueOprt(str) && !isPriority(str, stack.top()))
     {
       postFix.push(stack.top());
       stack.pop();
       stack.push(str);
     }
-    else if (isTrueOprt(str) && isPriority(str, stack.top()))
+    else if (!stack.empty() && isTrueOprt(str) && isPriority(str, stack.top()))
     {
       stack.push(str);
     }
@@ -105,7 +105,7 @@ int muh::calcExpr(Queque< std::string >& expr)
     {
       throw std::logic_error("Wrong expression");
     }
-    postFix.push(stack.top());
+    postFix.push(op);
     stack.pop();
   }
   Stack< int > numbers;
@@ -133,16 +133,16 @@ int muh::calcExpr(Queque< std::string >& expr)
   return numbers.top();
 }
 
-bool muh::isDigit(const std::string& str)
+bool muh::isDigit(const std::string str)
 {
   size_t i = 0;
   for (char c: str)
   {
-    if (i == 0 && c == '0')
+    if (str.size() > 1 && i == 0 && c == '0')
     {
       return false;
     }
-    if ('0' < c || c > '9')
+    if (c < '0' || c > '9')
     {
       return false;
     }
@@ -155,7 +155,7 @@ bool muh::isTrueOprt(const std::string op)
 {
   for (size_t i = 0; i < 6; ++i)
   {
-    if (oprts[i].fisrt == op)
+    if (oprts[i].first == op)
     {
       return true;
     }
@@ -218,7 +218,7 @@ int muh::mod(int a, int b)
   return a % b;
 }
 
-int muh::xсor(int a, int b)
+int muh::xcor(int a, int b)
 {
   int result = 0;
   int multiplier = 1;
