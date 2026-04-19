@@ -1,6 +1,6 @@
-#include <boost/test/unit_test.hpp>
 #include <iterators.hpp>
 #include <list.hpp>
+#include <boost/test/unit_test.hpp>
 
 using namespace karpovich;
 
