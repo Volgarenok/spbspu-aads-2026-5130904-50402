@@ -198,32 +198,65 @@ long long muh::calc(long long a, long long b, const std::string op)
 
 long long muh::sum(long long a, long long b)
 {
+  if (std::numeric_limits< long long >::max() - a < b)
+  {
+    throw std::overflow_error("Overflow");
+  }
   return a + b;
 }
 
 long long muh::div(long long a, long long b)
 {
+  if (b == 0)
+  {
+    throw std::logic_error("Zero dividion");
+  }
   return a / b;
 }
 
 long long muh::sub(long long a, long long b)
 {
+  if (std::numeric_limits< long long >::min() + a > b)
+  {
+    throw std::underflow_error("Underflow");
+  }
   return a - b;
 }
 
 long long muh::mult(long long a, long long b)
 {
+  if (a > 0)
+  {
+    if (b > 0 && a > std::numeric_limits< long long >::max() / b)
+    {
+      throw std::overflow_error("Overflow");
+    }
+    if (b < 0 && b < std::numeric_limits< long long >::min() / a)
+    {
+      throw std::overflow_error("Overflow");
+    }
+  }
+  else
+  {
+    if (b > 0 && a < std::numeric_limits< long long >::min() / b)
+    {
+      throw std::overflow_error("Overflow");
+    }
+    if (b < 0 && a < std::numeric_limits< long long >::max() / b)
+    {
+      throw std::overflow_error("Overflow");
+    }
+  }
   return a * b;
 }
 
 long long muh::mod(long long a, long long b)
 {
-  long long result = a % b;
-  if (result < 0)
+  if (b == 0)
   {
-    result += b;
+    throw std::logic_error("Zero dividion");
   }
-  return a % b;
+  return (a % b + b) % b;
 }
 
 long long muh::xcor(long long a, long long b)
