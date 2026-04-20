@@ -117,7 +117,7 @@ long long muh::calcExpr(Queque< std::string >& expr)
     std::string op = postFix.top();
     if (isDigit(op))
     {
-      numbers.push(std::stoi(op));
+      numbers.push(std::stoll(op));
     }
     else
     {
@@ -218,6 +218,11 @@ long long muh::mult(long long a, long long b)
 
 long long muh::mod(long long a, long long b)
 {
+  long long result = a % b;
+  if (result < 0)
+  {
+    result += b;
+  }
   return a % b;
 }
 
