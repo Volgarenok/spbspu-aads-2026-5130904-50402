@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
     }
   }
   std::istream& is = (argc == 2)? file : std::cin;
-  muh::Queque< int > result;
+  muh::Stack< long long > result;
   try
   {
     muh::Queque< muh::Queque< std::string > > data = muh::input(is);

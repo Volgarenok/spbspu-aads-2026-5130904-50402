@@ -56,7 +56,7 @@ muh::Queque< muh::Queque< std::string > > muh::input(std::istream& in)
   return result;
 }
 
-int muh::calcExpr(Queque< std::string >& expr)
+long long muh::calcExpr(Queque< std::string >& expr)
 {
   Queque< std::string > postFix;
   Stack< std::string > stack;
@@ -111,7 +111,7 @@ int muh::calcExpr(Queque< std::string >& expr)
     postFix.push(op);
     stack.pop();
   }
-  Stack< int > numbers;
+  Stack< long long > numbers;
   while (!postFix.empty())
   {
     std::string op = postFix.top();
@@ -125,9 +125,9 @@ int muh::calcExpr(Queque< std::string >& expr)
       {
         throw std::logic_error("Wrong expression: order of numbers is incorrect");
       }
-      int a = numbers.top();
+      long long a = numbers.top();
       numbers.pop();
-      int b = numbers.top();
+      long long b = numbers.top();
       numbers.pop();
       numbers.push(calc(b, a, postFix.top()));
     }
@@ -184,7 +184,7 @@ bool muh::isPriority(const std::string op1, const std::string op2)
   return ind1 > ind2;
 }
 
-int muh::calc(int a, int b, const std::string op)
+long long muh::calc(long long a, long long b, const std::string op)
 {
   for (size_t i = 0; i < 6; ++i)
   {
@@ -196,39 +196,39 @@ int muh::calc(int a, int b, const std::string op)
   throw std::logic_error("Not correct operation");
 }
 
-int muh::sum(int a, int b)
+long long muh::sum(long long a, long long b)
 {
   return a + b;
 }
 
-int muh::div(int a, int b)
+long long muh::div(long long a, long long b)
 {
   return a / b;
 }
 
-int muh::sub(int a, int b)
+long long muh::sub(long long a, long long b)
 {
   return a - b;
 }
 
-int muh::mult(int a, int b)
+long long muh::mult(long long a, long long b)
 {
   return a * b;
 }
 
-int muh::mod(int a, int b)
+long long muh::mod(long long a, long long b)
 {
   return a % b;
 }
 
-int muh::xcor(int a, int b)
+long long muh::xcor(long long a, long long b)
 {
-  int result = 0;
-  int multiplier = 1;
+  long long result = 0;
+  long long multiplier = 1;
   while (a > 0 || b > 0){
-    int bitA = a % 2;
-    int bitB = b % 2;
-    int xorBit = (bitA != bitB) ? 1 : 0;
+    long long bitA = a % 2;
+    long long bitB = b % 2;
+    long long xorBit = (bitA != bitB) ? 1 : 0;
     result += xorBit * multiplier;
     a /= 2;
     b /= 2;
