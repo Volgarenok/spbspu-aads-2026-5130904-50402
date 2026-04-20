@@ -30,12 +30,14 @@ muh::Queque<std::string> muh::divideString(const std::string str)
     if (c == ' ' && obj != "")
     {
       result.push(obj);
+      obj = "";
     }
     else if (c != ' ')
     {
       obj += c;
     }
   }
+  result.push(obj);
   return result;
 }
 
@@ -58,7 +60,8 @@ int muh::calcExpr(Queque< std::string >& expr)
 {
   Queque< std::string > postFix;
   Stack< std::string > stack;
-  for (size_t i = 0; i < expr.size(); ++i)
+  size_t sizeExpr = expr.size();
+  for (size_t i = 0; i < sizeExpr; ++i)
   {
     std::string str = expr.top();
     if (str == "(")
@@ -103,7 +106,7 @@ int muh::calcExpr(Queque< std::string >& expr)
     std::string op = stack.top();
     if (op == "(" || op == ")")
     {
-      throw std::logic_error("Wrong expression");
+      throw std::logic_error("Wrong expression: '(' or ')' are placed incorrectly");
     }
     postFix.push(op);
     stack.pop();
@@ -120,13 +123,13 @@ int muh::calcExpr(Queque< std::string >& expr)
     {
       if (numbers.size() < 2)
       {
-        throw std::logic_error("Wrong expression");
+        throw std::logic_error("Wrong expression: order of numbers is incorrect");
       }
       int a = numbers.top();
       numbers.pop();
       int b = numbers.top();
       numbers.pop();
-      numbers.push(calc(a, b, postFix.top()));
+      numbers.push(calc(b, a, postFix.top()));
     }
     postFix.pop();
   }
@@ -165,8 +168,8 @@ bool muh::isTrueOprt(const std::string op)
 
 bool muh::isPriority(const std::string op1, const std::string op2)
 {
-  size_t ind1 = 0; 
-  size_t ind2 = 0;
+  size_t ind1 = -1; 
+  size_t ind2 = -1;
   for (size_t i  = 0; i < 6; ++i)
   {
     if (oprts[i].first == op1)

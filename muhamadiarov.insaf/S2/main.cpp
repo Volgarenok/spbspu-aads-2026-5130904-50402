@@ -27,7 +27,8 @@ int main(int argc, char* argv[])
   try
   {
     muh::Queque< muh::Queque< std::string > > data = muh::input(is);
-    for (size_t i = 0; i < data.size(); ++i)
+    size_t sizeData = data.size();
+    for (size_t i = 0; i < sizeData; ++i)
     {
       result.push(muh::calcExpr(data.top()));
       data.pop();
