@@ -168,7 +168,7 @@ bool muh::isTrueOprt(const std::string op)
 
 bool muh::isPriority(const std::string op1, const std::string op2)
 {
-  size_t ind1 = -1; 
+  size_t ind1 = -1;
   size_t ind2 = -1;
   for (size_t i  = 0; i < 6; ++i)
   {

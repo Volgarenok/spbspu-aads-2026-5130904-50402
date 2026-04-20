@@ -18,6 +18,6 @@ BOOST_AUTO_TEST_CASE(priorityXor)
   expr.push("6");
   expr.push("^");
   expr.push("2");
-  BOOST_CHECK_EQUAL(calcExpr(expr), 0); 
+  BOOST_CHECK_EQUAL(calcExpr(expr), 0);
 }
 BOOST_AUTO_TEST_SUITE_END()
