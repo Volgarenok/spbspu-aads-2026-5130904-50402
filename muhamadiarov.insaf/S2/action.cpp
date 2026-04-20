@@ -1,4 +1,5 @@
 #include "action.hpp"
+#include <limits>
 #include <iostream>
 #include <string>
 #include "queque.hpp"
