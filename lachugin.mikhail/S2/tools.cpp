@@ -90,7 +90,7 @@ namespace lachugin
       q.pop();
       if (!isOperator(token))
       {
-        long long value = std::stoi(token);
+        long long value = std::stoll(token);
         values.push(value);
       }
       else
