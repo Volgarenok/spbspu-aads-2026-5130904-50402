@@ -4,6 +4,7 @@
 
 #include "queue.hpp"
 #include "tools.hpp"
+#include <sstream>
 
 int main(int argc, char** argv)
 {
@@ -26,12 +27,31 @@ int main(int argc, char** argv)
   }
   try
   {
-    lachugin::Queue< std::string > q;
-    lachugin::reedInput(*input, q);
+    std::string line;
+    bool first = true;
 
-    lachugin::Queue< std::string > postfix = lachugin::infixToPostfix(q);
+    while (std::getline(*input, line))
+    {
+      if (line.empty())
+      {
+        continue;
+      }
 
-    lachugin::counting(postfix, std::cout);
+      std::istringstream iss(line);
+
+      lachugin::Queue<std::string> q;
+      lachugin::reedInput(iss, q);
+
+      lachugin::Queue<std::string> postfix = lachugin::infixToPostfix(q);
+
+      if (!first)
+      {
+        std::cout << " ";
+      }
+
+      lachugin::counting(postfix, std::cout);
+      first = false;
+    }
     std::cout << "\n";
   }
   catch (const std::invalid_argument& e)

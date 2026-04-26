@@ -4,6 +4,7 @@
 #include "operations.hpp"
 #include <iostream>
 
+
 namespace lachugin
 {
   void reedInput(std::istream& in, Queue< std::string >& q)
@@ -82,19 +83,19 @@ namespace lachugin
 
   void counting(Queue< std::string >& q, std::ostream& out)
   {
-    Stack< int > values;
+    Stack< long long > values;
     while (!q.empty())
     {
       std::string token = q.front();
       q.pop();
       if (!isOperator(token))
       {
-        int value = std::stoi(token);
+        long long value = std::stoi(token);
         values.push(value);
       }
       else
       {
-        int a, b, res;
+        long long a, b, res;
         b = values.top();
         values.pop();
         a = values.top();
@@ -104,7 +105,10 @@ namespace lachugin
         values.push(res);
       }
     }
-    out << values.top();
+    if (!values.empty())
+    {
+      out << values.top();
+    }
   }
 
 }

@@ -3,13 +3,13 @@
 #include <iostream>
 namespace lachugin
 {
-  int sum(int& a, int& b);
-  int subtraction(int& a, int& b);
-  int multiply(int& a, int& b);
-  int divide(int& a, int& b);
-  int mod(int& a, int& b);
+  long long sum(long long& a, long long& b);
+  long long subtraction(long long& a, long long& b);
+  long long multiply(long long& a, long long& b);
+  long long divide(long long& a, long long& b);
+  long long mod(long long& a, long long& b);
   bool isPriority(const std::string& o1, const std::string& o2);
-  int operations(const std::string& o, int a, int b);
+  long long operations(const std::string& o, long long a, long long b);
 
 }
 #endif

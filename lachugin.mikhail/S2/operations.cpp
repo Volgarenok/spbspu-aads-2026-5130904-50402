@@ -4,39 +4,39 @@
 
 namespace lachugin
 {
-  int sum(int& a, int& b)
+  long long sum(long long& a, long long& b)
   {
-    if ((a > INT_MAX - b) || (a < INT_MIN + b))
+    if ((a > LONG_LONG_MAX - b) || (a < LONG_LONG_MIN + b))
     {
       throw std::invalid_argument ("Bad numbers for sum");
     }
     return a + b;
   }
 
-  int subtraction(int &a, int &b)
+  long long subtraction(long long &a, long long &b)
   {
-    if (a < b + INT_MIN)
+    if (a < b + LONG_LONG_MIN)
     {
       throw std::invalid_argument ("Bad numbers for subtraction");
     }
     return a - b;
   }
 
-  int multiply(int& a, int& b)
+  long long multiply(long long& a, long long& b)
   {
-    if (a > 0 && b > 0 && a > INT_MAX / b)
+    if (a > 0 && b > 0 && a > LONG_LONG_MAX / b)
     {
       throw std::invalid_argument("overflow");
     }
-    if (a > 0 && b < 0 && b < INT_MIN / a)
+    if (a > 0 && b < 0 && b < LONG_LONG_MIN / a)
     {
       throw std::invalid_argument("overflow");
     }
-    if (a < 0 && b > 0 && a < INT_MIN / b)
+    if (a < 0 && b > 0 && a < LONG_LONG_MIN / b)
     {
       throw std::invalid_argument("overflow");
     }
-    if (a < 0 && b < 0 && a < INT_MAX / b)
+    if (a < 0 && b < 0 && a < LONG_LONG_MAX / b)
     {
       throw std::invalid_argument("overflow");
     }
@@ -44,7 +44,7 @@ namespace lachugin
     return a * b;
   }
 
-  int divide(int &a, int &b)
+  long long divide(long long &a, long long &b)
   {
     if (b == 0)
     {
@@ -53,7 +53,7 @@ namespace lachugin
     return a / b;
   }
 
-  int mod(int &a, int &b)
+  long long mod(long long &a, long long &b)
   {
     if (b == 0)
     {
@@ -87,9 +87,9 @@ namespace lachugin
     return a >= b;
   }
 
-  int operations(const std::string& op, int a, int b)
+  long long operations(const std::string& op, long long a, long long b)
   {
-    int res = 0;
+    long long res = 0;
 
     if (op == "+")
     {
