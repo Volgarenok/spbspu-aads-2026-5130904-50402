@@ -33,6 +33,7 @@ namespace lachugin
     void clear();
     void popFront();
     void popEnd();
+    Node<T>* getTail();
   };
 
   template < class T >
@@ -228,6 +229,22 @@ namespace lachugin
     delete curr;
     size_--;
     n->next = fake;
+  }
+
+  template < class T >
+  Node< T >* List<T>::getTail()
+  {
+    if (empty())
+    {
+      return fake;
+    }
+
+    Node< T >* it = fake->next;
+    while (it->next != fake)
+    {
+      it = it->next;
+    }
+    return it;
   }
 
 }
