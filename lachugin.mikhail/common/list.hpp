@@ -207,11 +207,25 @@ namespace lachugin
     {
       throw std::out_of_range("Queue is empty");
     }
+
     Node< T >* curr = fake->next;
-    Node< T >* n = curr->next;
-    delete curr;
-    size_ --;
-    fake->next = n;
+
+    if (curr->next == fake)
+    {
+      delete curr;
+      fake->next = fake;
+    }
+    else
+    {
+      Node<T>* next = curr->next;
+      Node<T>* tail = getTail();
+
+      delete curr;
+      fake->next = next;
+      tail->next = fake;
+    }
+
+    size_--;
   }
 
   template< class T >
