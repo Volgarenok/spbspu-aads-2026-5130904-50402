@@ -19,14 +19,7 @@ namespace lachugin
   template< typename T >
   void Stack< T >::push(const T& rhs)
   {
-    if (l.empty())
-    {
-      curr = l.add(rhs);
-    }
-    else
-    {
-      curr = l.addNext(rhs, curr);
-    }
+    l.pushBack(rhs);
   }
 
   template< typename T >
@@ -54,3 +47,4 @@ namespace lachugin
   }
 }
 #endif
+

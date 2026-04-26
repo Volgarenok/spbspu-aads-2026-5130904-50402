@@ -6,7 +6,7 @@
 
 namespace lachugin
 {
-  void input(std::istream& in, Queue<std::string>& q)
+  void reedInput(std::istream& in, Queue< std::string >& q)
   {
     std::string token;
 
@@ -20,7 +20,6 @@ namespace lachugin
   {
     return val == "+" || val == "-" || val == "*" || val == "/" || val == "%";
   }
-
 
   Queue< std::string > infixToPostfix(Queue< std::string >& q)
   {
@@ -52,7 +51,7 @@ namespace lachugin
       {
         while (!operators.empty())
         {
-          if (isOperator(operators.top()) && isPriority(token, operators.top()))
+          if (isOperator(operators.top()) && isPriority(operators.top(), token))
           {
             postfix.push(operators.top());
             operators.pop();
@@ -81,5 +80,32 @@ namespace lachugin
     return postfix;
   }
 
+  void counting(Queue< std::string >& q, std::ostream& out)
+  {
+    Stack< int > values;
+    while (!q.empty())
+    {
+      std::string token = q.front();
+      q.pop();
+      if (!isOperator(token))
+      {
+        int value = std::stoi(token);
+        values.push(value);
+      }
+      else
+      {
+        int a, b, res;
+        b = values.top();
+        values.pop();
+        a = values.top();
+        values.pop();
+
+        res = operations(token, a, b);
+        values.push(res);
+      }
+    }
+    out << values.top();
+  }
 
 }
+

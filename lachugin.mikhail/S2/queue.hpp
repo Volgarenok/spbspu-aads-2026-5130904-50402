@@ -1,6 +1,7 @@
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
 #include "../common/list.hpp"
+#include "../common/itters.hpp"
 #include <iostream>
 namespace lachugin
 {
@@ -20,19 +21,16 @@ namespace lachugin
   void Queue< T >::pop()
   {
     l.popFront();
+    if (l.empty())
+    {
+      curr = nullptr;
+    }
   }
 
   template< typename T >
   void Queue< T >::push(const T& rhs)
   {
-    if (l.empty())
-    {
-      curr = l.add(rhs);
-    }
-    else
-    {
-     curr = l.addNext(rhs, curr);
-    }
+    l.pushBack(rhs);
   }
 
   template< typename T >
@@ -54,3 +52,4 @@ namespace lachugin
   }
 }
 #endif
+

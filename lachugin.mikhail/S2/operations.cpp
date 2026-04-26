@@ -22,12 +22,25 @@ namespace lachugin
     return a - b;
   }
 
-  int multiply(int &a, int &b)
+  int multiply(int& a, int& b)
   {
-    if ((a > INT_MAX / b) || (a < INT_MIN / b))
+    if (a > 0 && b > 0 && a > INT_MAX / b)
     {
-      throw std::invalid_argument ("Bad numbers for multiply");
+      throw std::invalid_argument("overflow");
     }
+    if (a > 0 && b < 0 && b < INT_MIN / a)
+    {
+      throw std::invalid_argument("overflow");
+    }
+    if (a < 0 && b > 0 && a < INT_MIN / b)
+    {
+      throw std::invalid_argument("overflow");
+    }
+    if (a < 0 && b < 0 && a < INT_MAX / b)
+    {
+      throw std::invalid_argument("overflow");
+    }
+
     return a * b;
   }
 
@@ -74,5 +87,32 @@ namespace lachugin
     return a >= b;
   }
 
+  int operations(const std::string& op, int a, int b)
+  {
+    int res = 0;
+
+    if (op == "+")
+    {
+      res = sum(a, b);
+    }
+    else if (op == "-")
+    {
+      res = subtraction(a, b);
+    }
+    else if (op == "*")
+    {
+      res = multiply(a, b);
+    }
+    else if (op == "/")
+    {
+      res = divide(a, b);
+    }
+    else if (op == "%")
+    {
+      res = mod(a, b);
+    }
+    return res;
+  }
 
 }
+
