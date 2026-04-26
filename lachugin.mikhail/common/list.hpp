@@ -217,12 +217,8 @@ namespace lachugin
     }
     else
     {
-      Node<T>* next = curr->next;
-      Node<T>* tail = getTail();
-
+      fake->next = curr->next;
       delete curr;
-      fake->next = next;
-      tail->next = fake;
     }
 
     size_--;
