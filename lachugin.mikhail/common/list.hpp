@@ -18,6 +18,7 @@ namespace lachugin
 
     Node< T >* addNext(const T& val, Node< T >* h);
     Node< T >* add(const T& val);
+    void pushBack(const T& val);
 
     LIter< T > begin();
     LCIter< T > begin() const;
@@ -34,6 +35,7 @@ namespace lachugin
     void popFront();
     void popEnd();
     Node<T>* getTail();
+
   };
 
   template < class T >
@@ -247,5 +249,19 @@ namespace lachugin
     return it;
   }
 
+  template < class T >
+  void List< T >::pushBack(const T& val)
+  {
+    Node< T >* it = fake;
+
+    while (it->next != fake)
+    {
+      it = it->next;
+    }
+
+    Node< T >* n = new Node< T >{val, fake};
+    it->next = n;
+    size_++;
+  }
 }
 #endif
