@@ -179,7 +179,7 @@ namespace lachugin
   template < class T >
   bool List< T >::empty() const
   {
-    return this->begin() == this->end();
+    return size_ == 0;
   }
 
   template < class T >
