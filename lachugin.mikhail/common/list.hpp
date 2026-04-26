@@ -18,6 +18,7 @@ namespace lachugin
 
     Node< T >* addNext(const T& val, Node< T >* h);
     Node< T >* add(const T& val);
+    void pushBack(const T& val);
 
     LIter< T > begin();
     LCIter< T > begin() const;
@@ -33,6 +34,8 @@ namespace lachugin
     void clear();
     void popFront();
     void popEnd();
+    Node<T>* getTail();
+
   };
 
   template < class T >
@@ -179,7 +182,7 @@ namespace lachugin
   template < class T >
   bool List< T >::empty() const
   {
-    return this->begin() == this->end();
+    return size_ == 0;
   }
 
   template < class T >
@@ -204,11 +207,21 @@ namespace lachugin
     {
       throw std::out_of_range("Queue is empty");
     }
+
     Node< T >* curr = fake->next;
-    Node< T >* n = curr->next;
-    delete curr;
-    size_ --;
-    fake->next = n;
+
+    if (curr->next == fake)
+    {
+      delete curr;
+      fake->next = fake;
+    }
+    else
+    {
+      fake->next = curr->next;
+      delete curr;
+    }
+
+    size_--;
   }
 
   template< class T >
@@ -230,5 +243,35 @@ namespace lachugin
     n->next = fake;
   }
 
+  template < class T >
+  Node< T >* List<T>::getTail()
+  {
+    if (empty())
+    {
+      return fake;
+    }
+
+    Node< T >* it = fake->next;
+    while (it->next != fake)
+    {
+      it = it->next;
+    }
+    return it;
+  }
+
+  template < class T >
+  void List< T >::pushBack(const T& val)
+  {
+    Node< T >* it = fake;
+
+    while (it->next != fake)
+    {
+      it = it->next;
+    }
+
+    Node< T >* n = new Node< T >{val, fake};
+    it->next = n;
+    size_++;
+  }
 }
 #endif
