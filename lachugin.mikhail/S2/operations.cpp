@@ -59,7 +59,12 @@ namespace lachugin
     {
       throw std::invalid_argument ("Bad numbers for mod");
     }
-    return a % b;
+    long long res = a % b;
+    if (res < 0)
+    {
+      res += std::abs(b);
+    }
+    return res;
   }
 
   bool isPriority(const std::string& o1, const std::string& o2)
