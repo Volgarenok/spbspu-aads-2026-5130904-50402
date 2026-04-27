@@ -81,9 +81,8 @@ namespace lachugin
     return postfix;
   }
 
-  void counting(Queue< std::string >& q, std::ostream& out)
+  void counting(Queue< std::string >& q, Stack< long long >& values)
   {
-    Stack< long long > values;
     while (!q.empty())
     {
       std::string token = q.front();
@@ -104,10 +103,6 @@ namespace lachugin
         res = operations(token, a, b);
         values.push(res);
       }
-    }
-    if (!values.empty())
-    {
-      out << values.top();
     }
   }
 

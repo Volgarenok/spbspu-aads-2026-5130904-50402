@@ -29,6 +29,7 @@ int main(int argc, char** argv)
   {
     std::string line;
     bool first = true;
+    lachugin::Stack< long long > values;
 
     while (std::getline(*input, line))
     {
@@ -44,12 +45,15 @@ int main(int argc, char** argv)
 
       lachugin::Queue<std::string> postfix = lachugin::infixToPostfix(q);
 
+      lachugin::counting(postfix, values);
+    }
+    while (!values.empty())
+    {
       if (!first)
       {
         std::cout << " ";
       }
-
-      lachugin::counting(postfix, std::cout);
+      std::cout << values.top();
       first = false;
     }
     std::cout << "\n";
