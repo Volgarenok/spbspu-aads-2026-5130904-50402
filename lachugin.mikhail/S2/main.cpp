@@ -55,6 +55,7 @@ int main(int argc, char** argv)
       }
       std::cout << values.top();
       first = false;
+      values.pop();
     }
     std::cout << "\n";
   }
