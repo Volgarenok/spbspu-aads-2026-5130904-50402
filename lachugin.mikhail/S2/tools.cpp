@@ -19,7 +19,7 @@ namespace lachugin
 
   bool isOperator(const std::string& val)
   {
-    return val == "+" || val == "-" || val == "*" || val == "/" || val == "%";
+    return val == "+" || val == "-" || val == "*" || val == "/" || val == "%" || val == "#";
   }
 
   Queue< std::string > infixToPostfix(Queue< std::string >& q)
@@ -50,6 +50,11 @@ namespace lachugin
       }
       else if (isOperator(token))
       {
+        if (token == "#")
+        {
+          operators.push(token);
+          continue;
+        }
         while (!operators.empty())
         {
           if (isOperator(operators.top()) && isPriority(operators.top(), token))
@@ -66,6 +71,11 @@ namespace lachugin
       }
       else
       {
+        if (!operators.empty() && operators.top() == "#")
+        {
+          reversal(token);
+          operators.pop();
+        }
         postfix.push(token);
       }
     }

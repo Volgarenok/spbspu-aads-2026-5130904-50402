@@ -1,12 +1,14 @@
 #include "operations.hpp"
 #include <iostream>
 #include <climits>
+#include <string>
+#include "stack.hpp"
 
 namespace lachugin
 {
   long long sum(long long& a, long long& b)
   {
-    if ((a > LONG_LONG_MAX - b) || (a < LONG_LONG_MIN + b))
+    if ((a > LLONG_MAX - b) || (a < LLONG_MIN + b))
     {
       throw std::invalid_argument ("Bad numbers for sum");
     }
@@ -15,7 +17,7 @@ namespace lachugin
 
   long long subtraction(long long &a, long long &b)
   {
-    if (a < b + LONG_LONG_MIN)
+    if (a < b + LLONG_MIN)
     {
       throw std::invalid_argument ("Bad numbers for subtraction");
     }
@@ -24,19 +26,19 @@ namespace lachugin
 
   long long multiply(long long& a, long long& b)
   {
-    if (a > 0 && b > 0 && a > LONG_LONG_MAX / b)
+    if (a > 0 && b > 0 && a > LLONG_MAX / b)
     {
       throw std::invalid_argument("overflow");
     }
-    if (a > 0 && b < 0 && b < LONG_LONG_MIN / a)
+    if (a > 0 && b < 0 && b < LLONG_MIN / a)
     {
       throw std::invalid_argument("overflow");
     }
-    if (a < 0 && b > 0 && a < LONG_LONG_MIN / b)
+    if (a < 0 && b > 0 && a < LLONG_MIN / b)
     {
       throw std::invalid_argument("overflow");
     }
-    if (a < 0 && b < 0 && a < LONG_LONG_MAX / b)
+    if (a < 0 && b < 0 && a < LLONG_MAX / b)
     {
       throw std::invalid_argument("overflow");
     }
@@ -65,6 +67,30 @@ namespace lachugin
       res += std::abs(b);
     }
     return res;
+  }
+
+  void reversal(std::string &a)
+  {
+    long long r = std::stoll(a);
+    Stack< long long > s;
+
+    while (r > 0)
+    {
+      s.push(r % 10);
+      r /= 10;
+    }
+
+    long long result = 0;
+    long long place = 1;
+
+    while (!s.empty())
+    {
+      result += s.top() * place;
+      place *= 10;
+      s.pop();
+    }
+
+    a = std::to_string(result);
   }
 
   bool isPriority(const std::string& o1, const std::string& o2)

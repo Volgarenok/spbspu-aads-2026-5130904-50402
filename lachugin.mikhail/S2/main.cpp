@@ -40,10 +40,10 @@ int main(int argc, char** argv)
 
       std::istringstream iss(line);
 
-      lachugin::Queue<std::string> q;
+      lachugin::Queue< std::string > q;
       lachugin::reedInput(iss, q);
 
-      lachugin::Queue<std::string> postfix = lachugin::infixToPostfix(q);
+      lachugin::Queue< std::string > postfix = lachugin::infixToPostfix(q);
 
       lachugin::counting(postfix, values);
     }
