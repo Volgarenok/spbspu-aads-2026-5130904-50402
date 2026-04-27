@@ -1,32 +1,49 @@
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include "queue.hpp"
 
-BOOST_AUTO_TEST_SUITE(LachuginQueueTests)
+using namespace lachugin;
 
-BOOST_AUTO_TEST_CASE(test_queue_basic)
+BOOST_AUTO_TEST_SUITE(QueueTests)
+
+BOOST_AUTO_TEST_CASE(test_default_constructor)
 {
-  lachugin::Queue< int > q;
+  Queue< long long > queue;
+  BOOST_CHECK(queue.empty());
+  BOOST_CHECK_EQUAL(queue.size(), 0);
+}
 
-  BOOST_CHECK(q.empty());
-  BOOST_CHECK_EQUAL(q.size(), 0);
+BOOST_AUTO_TEST_CASE(test_push_and_size)
+{
+  Queue< long long > queue;
+  queue.push(1);
+  BOOST_CHECK_EQUAL(queue.size(), 1);
+  BOOST_CHECK(!queue.empty());
 
-  q.push(1);
-  q.push(2);
-  q.push(3);
+  queue.push(2);
+  BOOST_CHECK_EQUAL(queue.size(), 2);
+}
 
-  BOOST_CHECK(!q.empty());
-  BOOST_CHECK_EQUAL(q.size(), 3);
+BOOST_AUTO_TEST_CASE(test_front)
+{
+  Queue< long long > queue;
+  queue.push(1);
+  BOOST_CHECK_EQUAL(queue.front(), 1);
 
-  BOOST_CHECK_EQUAL(q.front(), 1);
-  q.pop();
+  queue.push(2);
+  BOOST_CHECK_EQUAL(queue.front(), 1);
 
-  BOOST_CHECK_EQUAL(q.front(), 2);
-  q.pop();
+  queue.front() = 3;
+  BOOST_CHECK_EQUAL(queue.front(), 3);
+}
 
-  BOOST_CHECK_EQUAL(q.front(), 3);
-  q.pop();
+BOOST_AUTO_TEST_CASE(test_pop)
+{
+  Queue< long long > queue;
+  queue.push(1);
+  queue.push(2);
 
-  BOOST_CHECK(q.empty());
+  queue.pop();
+  BOOST_CHECK_EQUAL(queue.size(), 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

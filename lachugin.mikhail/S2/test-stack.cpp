@@ -1,32 +1,49 @@
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include "stack.hpp"
 
-BOOST_AUTO_TEST_SUITE(LachuginStackTests)
+using namespace lachugin;
 
-BOOST_AUTO_TEST_CASE(test_stack_basic)
+BOOST_AUTO_TEST_SUITE(StackTests)
+
+BOOST_AUTO_TEST_CASE(test_default_constructor)
 {
-  lachugin::Stack< int > s;
+  Stack< long long > stack;
+  BOOST_CHECK(stack.empty());
+  BOOST_CHECK_EQUAL(stack.size(), 0);
+}
 
-  BOOST_CHECK(s.empty());
-  BOOST_CHECK_EQUAL(s.size(), 0);
+BOOST_AUTO_TEST_CASE(test_push_and_size)
+{
+  Stack< long long > stack;
+  stack.push(1);
+  BOOST_CHECK_EQUAL(stack.size(), 1);
+  BOOST_CHECK(!stack.empty());
 
-  s.push(1);
-  s.push(2);
-  s.push(3);
+  stack.push(2);
+  BOOST_CHECK_EQUAL(stack.size(), 2);
+}
 
-  BOOST_CHECK(!s.empty());
-  BOOST_CHECK_EQUAL(s.size(), 3);
+BOOST_AUTO_TEST_CASE(test_top)
+{
+  Stack< long long > stack;
+  stack.push(1);
+  BOOST_CHECK_EQUAL(stack.top(), 1);
 
-  BOOST_CHECK_EQUAL(s.top(), 3);
-  s.pop();
+  stack.push(2);
+  BOOST_CHECK_EQUAL(stack.top(), 2);
 
-  BOOST_CHECK_EQUAL(s.top(), 2);
-  s.pop();
+  stack.top() = 3;
+  BOOST_CHECK_EQUAL(stack.top(), 3);
+}
 
-  BOOST_CHECK_EQUAL(s.top(), 1);
-  s.pop();
+BOOST_AUTO_TEST_CASE(test_pop)
+{
+  Stack< long long > stack;
+  stack.push(1);
+  stack.push(2);
 
-  BOOST_CHECK(s.empty());
+  stack.pop();
+  BOOST_CHECK_EQUAL(stack.size(), 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
