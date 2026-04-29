@@ -27,8 +27,13 @@ int main(int argc, char *argv[])
       expressions.pop();
 
       strelnikov::Queue< std::string > postfix = strelnikov::convertToPostfix(expr);
-
-      long long result = strelnikov::calc(postfix);
+      long long result;
+      try {
+        result = strelnikov::calc(postfix);
+      } catch (...) {
+        std::cerr << "something happend while calc-ing";
+        return 2;
+      }
       results.push(result);
     }
 

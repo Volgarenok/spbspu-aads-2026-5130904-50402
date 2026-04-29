@@ -6,6 +6,9 @@
 #include "funcs.hpp"
 #include "datastructs.hpp"
 
+long long strelnikov::maxll = std::numeric_limits<long long >::max();
+long long strelnikov::minll = std::numeric_limits<long long >::min();
+
 int strelnikov::getPriority(const std::string &a)
 {
   if (a == "+" || a == "-") {
@@ -55,19 +58,45 @@ bool strelnikov::isNumber(const std::string &token)
 long long strelnikov::calcOps(const std::string &op, long long a, long long b)
 {
   if (op == "+") {
+    if ((b > 0) && a > maxll - b) {
+      throw std::overflow_error("overflow");
+    } else if ((b < 0) && a < minll - b) {
+      throw std::underflow_error("underflow");
+    }
     return a + b;
   }
   if (op == "-") {
+    if ((b > 0) && a < minll + b) {
+      throw std::overflow_error("overflow");
+    } else if ((b < 0) && a > maxll + b) {
+      throw std::underflow_error("underflow");
+    }
     return a - b;
   }
   if (op == "*") {
+    if (a > 0 && b > 0 && a > maxll / b) {
+      throw std::overflow_error("overflow");
+    } else if (a < 0 && b < 0 && a < maxll / b) {
+      throw std::overflow_error("overflow");
+    } else if (a > 0 && b < 0 && b < minll / a) {
+      throw std::underflow_error("underflow");
+    } else if (a < 0 && b > 0 && a < minll / a) {
+      throw std::underflow_error("underflow");
+    }
     return a * b;
   }
   if (op == "/") {
+    if (a == minll && b == -1) {
+      throw std::overflow_error("overflow");
+    }
     return a / b;
   }
   if (op == "%") {
-    return a % b;
+    long long res = a % b;
+    if (res < 0) {
+      res += b;
+    }
+    return res;
   }
   return 0;
 }
@@ -140,8 +169,13 @@ long long strelnikov::calc(Queue< std::string > expr)
         if ((token == "/" || token == "%") && b == 0) {
           throw std::runtime_error("Division by zero");
         }
-
-        result = calcOps(token, a, b);
+        try {
+          result = calcOps(token, a, b);
+        } catch (const std::underflow_error &) {
+          throw std::runtime_error("err");
+        } catch (const std::overflow_error &) {
+          throw std::runtime_error("err");
+        }
       }
 
       stack.push(result);
