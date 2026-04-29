@@ -3,8 +3,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
-#include "datastructs.hpp"
 #include "funcs.hpp"
+#include "datastructs.hpp"
 
 int strelnikov::getPriority(const std::string &a)
 {
