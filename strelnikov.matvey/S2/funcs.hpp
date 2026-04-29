@@ -1,12 +1,12 @@
 #include <iostream>
-#include <string>
 #include <limits>
+#include <string>
 #include "datastructs.hpp"
 
 namespace strelnikov
 {
-	extern long long maxll;
-	extern long long minll;
+  extern long long maxll;
+  extern long long minll;
   int getPriority(const std::string &);
   bool checkPriority(const std::string &, const std::string &);
   Queue< std::string > convertToPostfix(Queue< std::string >);
