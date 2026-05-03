@@ -160,9 +160,35 @@ Value karpovich::HashTable< Key, Value, Hash, Equal >::get(Key k) const
 }
 
 template < class Key, class Value, class Hash, class Equal >
-karpovich::HashTable< Key, Value, Hash, Equal >::~HashTable()
+bool karpovich::HashTable< Key, Value, Hash, Equal >::has(Key k) const noexcept
 {
-  clear();
+  size_t idx = hasher_(k) % capacity_;
+  for (VIter< value_type > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
+    if (comparator_(it->first, k)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+template < class Key, class Value, class Hash, class Equal >
+void karpovich::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
+{
+  if (slots <= capacity_) {
+    return;
+  }
+  Vector< List< value_type > > new_data;
+  for (size_t i = 0; i < slots; ++i) {
+    new_data.push_back(List< value_type >());
+  }
+  for (size_t i = 0; i < capacity_; ++i) {
+    for (VIter< value_type > it = data_[i].begin(); it != data_[i].end(); ++it) {
+      size_t idx = hasher_(it->first) % slots;
+      new_data[idx].push_back(*it);
+    }
+  }
+  data_ = std::move(new_data);
+  capacity_ = slots;
 }
 
 template < class Key, class Value, class Hash, class Equal >
@@ -194,6 +220,12 @@ void karpovich::HashTable< Key, Value, Hash, Equal >::swap(HashTable &other) noe
   comparator_.swap(other.comparator_);
   std::swap(capacity_, other.capacity_);
   std::swap(size_, other.size_);
+}
+
+template < class Key, class Value, class Hash, class Equal >
+karpovich::HashTable< Key, Value, Hash, Equal >::~HashTable()
+{
+  clear();
 }
 
 #endif
