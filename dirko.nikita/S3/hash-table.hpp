@@ -1,6 +1,7 @@
 #ifndef HASH_TABLE_HPP
 #define HASH_TABLE_HPP
 #include <cstddef>
+#include <initializer_list>
 #include <utility>
 #include "../common/list.hpp"
 #include "../common/vector.hpp"
@@ -12,6 +13,7 @@ namespace dirko
   {
   public:
     HashTable(size_t slots);
+    HashTable(std::initializer_list< std::pair< Key, Value > > il);
 
     void add(Key k, Value v);
     void drop(Key k);
@@ -40,12 +42,30 @@ dirko::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
   comparator_(Equal{}),
   slots_(slots),
   elements_(0)
-{}
+{
+  data_.reserve(slots);
+}
+
+template < class Key, class Value, class Hash, class Equal >
+dirko::HashTable< Key, Value, Hash, Equal >::HashTable(std::initializer_list< std::pair< Key, Value > > il):
+  data_(),
+  hasher_(Hash{}),
+  comparator_(Equal{}),
+  slots_(il.size()),
+  elements_(0)
+{
+  data_.reserve(il.size());
+  for (const std::pair< Key, Value > &v : il) {
+    size_t id = hasher_(v.first) % slots_;
+    data_[id] = v.second;
+  }
+}
 
 template < class Key, class Value, class Hash, class Equal >
 void dirko::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
 {
   size_t id = hasher_(k) % slots_;
   data_[id].push_back(v);
+  ++elements_;
 }
 #endif
