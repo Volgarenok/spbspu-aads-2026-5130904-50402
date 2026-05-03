@@ -33,8 +33,8 @@ namespace karpovich
     Vector< List< valType > > *data_;
     size_t capacity_;
     size_t idx_;
-    LIter< Value > list_it_;
-    LIter< Value > list_end_;
+    LIter< Value > listIt_;
+    LIter< Value > listEnd_;
 
     void findValid();
   };
@@ -59,8 +59,8 @@ namespace karpovich
     Vector< List< valType > > *data_;
     size_t capacity_;
     size_t idx_;
-    LIter< Value > list_it_;
-    LIter< Value > list_end_;
+    LIter< Value > listIt_;
+    LIter< Value > listEnd_;
 
     void findValid();
   };
@@ -71,8 +71,8 @@ karpovich::HashIter< Key, Value, Hash, Equal >::HashIter():
   data_(nullptr),
   capacity_(0),
   idx_(0),
-  list_it_(),
-  list_end_()
+  listIt_(),
+  listEnd_()
 {}
 
 template < class Key, class Value, class Hash, class Equal >
@@ -81,8 +81,8 @@ karpovich::HashIter< Key, Value, Hash, Equal >::HashIter(Vector< List< valType >
   data_(data),
   capacity_(capacity),
   idx_(start_idx),
-  list_it_(),
-  list_end_()
+  listIt_(),
+  listEnd_()
 {
   findValid();
 }
@@ -91,9 +91,9 @@ template < class Key, class Value, class Hash, class Equal >
 void karpovich::HashIter< Key, Value, Hash, Equal >::findValid()
 {
   while (idx_ < capacity_) {
-    list_it_ = (*data_)[idx_].begin();
-    list_end_ = (*data_)[idx_].end();
-    if (list_it_ != list_end_) {
+    listIt_ = (*data_)[idx_].begin();
+    listEnd_ = (*data_)[idx_].end();
+    if (listIt_ != listEnd_) {
       return;
     }
     ++idx_;
@@ -103,7 +103,7 @@ void karpovich::HashIter< Key, Value, Hash, Equal >::findValid()
 template < class Key, class Value, class Hash, class Equal >
 karpovich::HashIter< Key, Value, Hash, Equal > &karpovich::HashIter< Key, Value, Hash, Equal >::operator++()
 {
-  ++list_it_;
+  ++listIt_;
   findValid();
   return *this;
 }
@@ -120,7 +120,7 @@ bool karpovich::HashIter< Key, Value, Hash, Equal >::operator==(const HashIter &
   if (idx_ >= capacity_ && other.idx_ >= other.capacity_) {
     return true;
   }
-  return idx_ == other.idx_ && list_it_ == other.list_it_;
+  return idx_ == other.idx_ && listIt_ == other.listIt_;
 }
 
 template < class Key, class Value, class Hash, class Equal >
@@ -133,7 +133,7 @@ template < class Key, class Value, class Hash, class Equal >
 typename karpovich::HashIter< Key, Value, Hash, Equal >::valType &
 karpovich::HashIter< Key, Value, Hash, Equal >::operator*() const
 {
-  return *list_it_;
+  return *listIt_;
 }
 
 template < class Key, class Value, class Hash, class Equal >
@@ -141,8 +141,8 @@ karpovich::HashConstIter< Key, Value, Hash, Equal >::HashConstIter():
   data_(nullptr),
   capacity_(0),
   idx_(0),
-  list_it_(),
-  list_end_()
+  listIt_(),
+  listEnd_()
 {}
 
 template < class Key, class Value, class Hash, class Equal >
@@ -151,8 +151,8 @@ karpovich::HashConstIter< Key, Value, Hash, Equal >::HashConstIter(Vector< List<
   data_(data),
   capacity_(capacity),
   idx_(start_idx),
-  list_it_(),
-  list_end_()
+  listIt_(),
+  listEnd_()
 {
   findValid();
 }
@@ -161,9 +161,9 @@ template < class Key, class Value, class Hash, class Equal >
 void karpovich::HashConstIter< Key, Value, Hash, Equal >::findValid()
 {
   while (idx_ < capacity_) {
-    list_it_ = (*data_)[idx_].begin();
-    list_end_ = (*data_)[idx_].end();
-    if (list_it_ != list_end_) {
+    listIt_ = (*data_)[idx_].begin();
+    listEnd_ = (*data_)[idx_].end();
+    if (listIt_ != listEnd_) {
       return;
     }
     ++idx_;
@@ -173,7 +173,7 @@ void karpovich::HashConstIter< Key, Value, Hash, Equal >::findValid()
 template < class Key, class Value, class Hash, class Equal >
 karpovich::HashConstIter< Key, Value, Hash, Equal > &karpovich::HashConstIter< Key, Value, Hash, Equal >::operator++()
 {
-  ++list_it_;
+  ++listIt_;
   findValid();
   return *this;
 }
@@ -190,7 +190,7 @@ bool karpovich::HashConstIter< Key, Value, Hash, Equal >::operator==(const HashC
   if (idx_ >= capacity_ && other.idx_ >= other.capacity_) {
     return true;
   }
-  return idx_ == other.idx_ && list_it_ == other.list_it_;
+  return idx_ == other.idx_ && listIt_ == other.listIt_;
 }
 
 template < class Key, class Value, class Hash, class Equal >
@@ -203,7 +203,7 @@ template < class Key, class Value, class Hash, class Equal >
 typename karpovich::HashConstIter< Key, Value, Hash, Equal >::valType &
 karpovich::HashConstIter< Key, Value, Hash, Equal >::operator*() const
 {
-  return *list_it_;
+  return *listIt_;
 }
 
 #endif
