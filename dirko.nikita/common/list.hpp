@@ -21,18 +21,23 @@ namespace dirko
     List &operator=(const List< T > &);
     List &operator=(List< T > &&) noexcept;
     ~List();
+
     Iter< T > begin();
     Iter< T > end();
     CIter< T > cbegin() const;
     CIter< T > cend() const;
+
     T &head() noexcept;
     T &tail() noexcept;
     const T &chead() const noexcept;
     const T &ctail() const noexcept;
+
     void push_front(const T &);
     void push_back(const T &);
     void pop_front();
     void pop_back();
+    void erase(Iter< T > pos);
+
     void clear();
     size_t size() const noexcept;
     void swap(List< T > &) noexcept;
@@ -183,6 +188,27 @@ namespace dirko
     }
     --size_;
   }
+  template < class T >
+  void List< T >::erase(Iter< T > pos)
+  {
+    if (size_ == 0) {
+      throw std::logic_error("Empty list");
+    }
+    Node< T > *next = pos.curr_->next;
+    Node< T > *prev = pos.curr_->prev;
+    delete pos.curr_;
+    if (next) {
+      next->prev = prev;
+    }
+    if (prev) {
+      prev->next = next;
+    }
+    --size_;
+    if (!size_) {
+      tail_ = fake_;
+    }
+  }
+
   template < class T >
   Iter< T > List< T >::begin()
   {
