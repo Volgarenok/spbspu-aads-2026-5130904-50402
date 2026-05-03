@@ -40,8 +40,8 @@ namespace karpovich
 
     HIter begin();
     HIter end();
-    HCIter begin() const;
-    HCIter end() const;
+    HCIter сbegin() const;
+    HCIter сend() const;
 
   private:
     Vector< List< value_type > > data_;
@@ -216,10 +216,36 @@ template < class Key, class Value, class Hash, class Equal >
 void karpovich::HashTable< Key, Value, Hash, Equal >::swap(HashTable &other) noexcept
 {
   data_.swap(other.data_);
-  hasher_.swap(other.hasher_);
-  comparator_.swap(other.comparator_);
+  std::swap(hasher_, other.hasher_);
+  std::swap(comparator_, other.comparator_);
   std::swap(capacity_, other.capacity_);
   std::swap(size_, other.size_);
+}
+
+template < class Key, class Value, class Hash, class Equal >
+typename karpovich::HashTable< Key, Value, Hash, Equal >::HIter karpovich::HashTable< Key, Value, Hash, Equal >::begin()
+{
+  return HIter(this);
+}
+
+template < class Key, class Value, class Hash, class Equal >
+typename karpovich::HashTable< Key, Value, Hash, Equal >::HIter karpovich::HashTable< Key, Value, Hash, Equal >::end()
+{
+  return HIter();
+}
+
+template < class Key, class Value, class Hash, class Equal >
+typename karpovich::HashTable< Key, Value, Hash, Equal >::HCIter
+karpovich::HashTable< Key, Value, Hash, Equal >::сbegin() const
+{
+  return HCIter(this);
+}
+
+template < class Key, class Value, class Hash, class Equal >
+typename karpovich::HashTable< Key, Value, Hash, Equal >::HCIter
+karpovich::HashTable< Key, Value, Hash, Equal >::сend() const
+{
+  return HCIter();
 }
 
 template < class Key, class Value, class Hash, class Equal >
