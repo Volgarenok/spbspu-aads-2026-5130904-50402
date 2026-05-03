@@ -97,7 +97,7 @@ karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable &othe
 
 template < class Key, class Value, class Hash, class Equal >
 karpovich::HashTable< Key, Value, Hash, Equal > &
-karpovich::HashTable< Key, Value, Hash, Equal >::operator=(HashTable &&other) noexcept
+karpovich::HashTable< Key, Value, Hash, Equal >::operator=(const HashTable &other)
 {
   if (this == std::addressof(other)) {
     return *this;
@@ -108,11 +108,55 @@ karpovich::HashTable< Key, Value, Hash, Equal >::operator=(HashTable &&other) no
 }
 
 template < class Key, class Value, class Hash, class Equal >
+karpovich::HashTable< Key, Value, Hash, Equal > &
+karpovich::HashTable< Key, Value, Hash, Equal >::operator=(HashTable &&other) noexcept
+{
+  if (this == std::addressof(other)) {
+    return *this;
+  }
+  swap(other);
+  return *this;
+}
+
+template < class Key, class Value, class Hash, class Equal >
 void karpovich::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
 {
-  size_t id = hasher_(k) % capacity_;
-  data_[id].push_back(v);
+  size_t idx = hasher_(k) % capacity_;
+  for (VIter< value_type > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
+    if (comparator_(it->first, k)) {
+      it->second = v;
+      return;
+    }
+  }
+  data_[idx].push_back(value_type(k, v));
   ++size_;
+}
+
+template < class Key, class Value, class Hash, class Equal >
+Value karpovich::HashTable< Key, Value, Hash, Equal >::drop(Key k)
+{
+  size_t idx = hasher_(k) % capacity_;
+  for (VIter< value_type > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
+    if (comparator_(it->first, k)) {
+      Value val = it->second;
+      data_[idx].erase(it);
+      --size_;
+      return val;
+    }
+  }
+  throw std::out_of_range("Key not found");
+}
+
+template < class Key, class Value, class Hash, class Equal >
+Value karpovich::HashTable< Key, Value, Hash, Equal >::get(Key k) const
+{
+  size_t idx = hasher_(k) % capacity_;
+  for (VIter< value_type > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
+    if (comparator_(it->first, k)) {
+      return it->second;
+    }
+  }
+  throw std::out_of_range("Key not found");
 }
 
 template < class Key, class Value, class Hash, class Equal >

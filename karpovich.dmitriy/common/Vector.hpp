@@ -160,8 +160,7 @@ karpovich::Vector< T > &karpovich::Vector< T >::operator=(Vector< T > &&rhs) noe
   if (this == std::addressof(rhs)) {
     return *this;
   }
-  Vector< T > cpy(std::move(rhs));
-  swap(cpy);
+  swap(rhs);
   return *this;
 }
 
@@ -217,30 +216,8 @@ karpovich::Vector< T > &karpovich::Vector< T >::operator=(const Vector< T > &rhs
   if (this == std::addressof(rhs)) {
     return *this;
   }
-  for (size_t i = 0; i < size_; ++i) {
-    data_[i].~T();
-  }
-  ::operator delete(data_);
-
-  size_ = rhs.size_;
-  capacity_ = rhs.capacity_;
-  data_ = static_cast< T * >(::operator new(sizeof(T) * capacity_));
-  size_t constructed = 0;
-  try {
-    for (size_t i = 0; i < size_; ++i) {
-      new (data_ + i) T(rhs.data_[i]);
-      constructed++;
-    }
-  } catch (...) {
-    for (size_t i = 0; i < constructed; ++i) {
-      data_[i].~T();
-    }
-    ::operator delete(data_);
-    data_ = nullptr;
-    size_ = 0;
-    capacity_ = 0;
-    throw;
-  }
+  Vector< T > cpy(rhs);
+  swap(cpy);
   return *this;
 }
 
