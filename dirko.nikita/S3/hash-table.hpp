@@ -41,4 +41,11 @@ dirko::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
   slots_(slots),
   elements_(0)
 {}
+
+template < class Key, class Value, class Hash, class Equal >
+void dirko::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
+{
+  size_t id = hasher_(k) % slots_;
+  data_[id].push_back(v);
+}
 #endif
