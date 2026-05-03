@@ -11,7 +11,6 @@
 
 namespace karpovich
 {
-
   using GraphSet = HashTable < std::string, Graph, Hasher< std::string, boost::hash2::siphash_64 >,
         std::equal_to< std::string >;
 
@@ -24,7 +23,6 @@ namespace karpovich
   void cmdCreate(std::istream &in, std::ostream &out, GraphSet &graphs);
   void cmdMerge(std::istream &in, std::ostream &out, GraphSet &graphs);
   void cmdExtract(std::istream &in, std::ostream &out, GraphSet &graphs);
-
 }
 
 #endif
