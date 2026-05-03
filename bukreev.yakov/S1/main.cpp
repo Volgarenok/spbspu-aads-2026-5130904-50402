@@ -5,29 +5,47 @@ namespace bukreev
 {
   using Sequence = std::pair< std::string, List< int > >;
 
-  void input(std::istream& in, List< Sequence >& seqs);
-  void output(std::ostream& out, const List< Sequence >& seqs);
+  bool input(std::istream& in, List< Sequence >& seqs);
+  void output(std::ostream& out, const List< Sequence >& seqs, bool overflow);
 }
 
 int main()
 {
   bukreev::List< bukreev::Sequence > sequences;
 
-  bukreev::input(std::cin, sequences);
-  bukreev::output(std::cout, sequences);
+  bool overflow = bukreev::input(std::cin, sequences);
+  bukreev::output(std::cout, sequences, overflow);
+
+  return overflow ? 1 : 0;
 }
 
-void bukreev::input(std::istream& in, List< Sequence >& seqs)
+bool bukreev::input(std::istream& in, List< Sequence >& seqs)
 {
   std::string name;
+  bool overflow = false;
 
   while (in >> name)
   {
     List< int > list;
 
     int num;
-    while (in >> num)
+    std::string strnum;
+    while (in >> strnum)
     {
+      try
+      {
+        num = std::stoi(strnum);
+      }
+      catch(const std::invalid_argument& e)
+      {
+        break;
+      }
+      catch(const std::out_of_range& e)
+      {
+        overflow = true;
+        break;
+      }
+
       list.pushBack(num);
     }
 
@@ -35,9 +53,11 @@ void bukreev::input(std::istream& in, List< Sequence >& seqs)
 
     in.clear();
   }
+
+  return overflow;
 }
 
-void bukreev::output(std::ostream& out, const List< Sequence >& seqs)
+void bukreev::output(std::ostream& out, const List< Sequence >& seqs, bool overflow)
 {
   LCIter< Sequence > it = seqs.cbegin();
   if (it == seqs.cend())
@@ -95,16 +115,23 @@ void bukreev::output(std::ostream& out, const List< Sequence >& seqs)
 
   delete[] numIts;
 
-  LCIter< int > sumit = sums.cbegin();
-  if (sumit != sums.cend())
+  if (!overflow)
   {
-    out << *sumit;
-    sumit = sumit.next();
-  }
-  for (; sumit != sums.cend(); sumit = sumit.next())
-  {
-    out << ' ' << *sumit;
-  }
+    LCIter< int > sumit = sums.cbegin();
+    if (sumit != sums.cend())
+    {
+      out << *sumit;
+      sumit = sumit.next();
+    }
+    for (; sumit != sums.cend(); sumit = sumit.next())
+    {
+      out << ' ' << *sumit;
+    }
 
-  out << '\n';
+    out << '\n';
+  }
+  else
+  {
+    std::cerr << "Integer overflow\n";
+  }
 }
