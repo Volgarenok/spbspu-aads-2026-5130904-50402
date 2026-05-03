@@ -2,6 +2,7 @@
 #define HASH_TABLE_HPP
 #include <cstddef>
 #include <initializer_list>
+#include <stdexcept>
 #include <utility>
 #include "../common/list.hpp"
 #include "../common/vector.hpp"
@@ -57,7 +58,7 @@ dirko::HashTable< Key, Value, Hash, Equal >::HashTable(std::initializer_list< st
   data_.reserve(il.size());
   for (const std::pair< Key, Value > &v : il) {
     size_t id = hasher_(v.first) % slots_;
-    data_[id] = v.second;
+    data_[id].push_back(v.second);
   }
 }
 
@@ -70,6 +71,17 @@ void dirko::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
 }
 
 template < class Key, class Value, class Hash, class Equal >
+void dirko::HashTable< Key, Value, Hash, Equal >::drop(Key k)
+{
+  size_t id = hasher_(k) % slots_;
+  List< std::pair< Key, Value > > *head = data_[id];
+  for (LIter< std::pair< Key, Value > > v = head->begin(); v != head->end(); ++v) {
+    if (comparator_(*v.first, k)) {
+      head->erase(v++);
+      --v;
+    }
+  }
+}
 void dirko::HashTable< Key, Value, Hash, Equal >::clear() noexcept
 {
   for (size_t i = 0; i < slots_; ++i) {
