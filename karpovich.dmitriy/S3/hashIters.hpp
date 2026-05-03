@@ -145,4 +145,37 @@ karpovich::HashConstIter< Key, Value, Hash, Equal >::HashConstIter():
   list_end_()
 {}
 
+template < class Key, class Value, class Hash, class Equal >
+karpovich::HashConstIter< Key, Value, Hash, Equal >::HashConstIter(Vector< List< valType > > *data, size_t capacity,
+                                                                   size_t start_idx):
+  data_(data),
+  capacity_(capacity),
+  idx_(start_idx),
+  list_it_(),
+  list_end_()
+{
+  findValid();
+}
+
+template < class Key, class Value, class Hash, class Equal >
+void karpovich::HashConstIter< Key, Value, Hash, Equal >::findValid()
+{
+  while (idx_ < capacity_) {
+    list_it_ = (*data_)[idx_].begin();
+    list_end_ = (*data_)[idx_].end();
+    if (list_it_ != list_end_) {
+      return;
+    }
+    ++idx_;
+  }
+}
+
+template < class Key, class Value, class Hash, class Equal >
+karpovich::HashConstIter< Key, Value, Hash, Equal > &karpovich::HashConstIter< Key, Value, Hash, Equal >::operator++()
+{
+  ++list_it_;
+  findValid();
+  return *this;
+}
+
 #endif
