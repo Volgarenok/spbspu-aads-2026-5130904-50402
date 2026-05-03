@@ -39,7 +39,7 @@ namespace dirko
   {
   public:
     HTIter(HashTable< Key, Value, Hash, Equal >);
-    Value &operator*() const;
+    std::pair< Key, Value > &operator*() const;
     HTIter &operator++();
     HTIter &operator--();
     HTIter operator++(int);
@@ -49,7 +49,7 @@ namespace dirko
 
   private:
     LIter< std::pair< Key, Value > > curr_;
-    size_t curr_id_;
+    size_t slot_, id_;
     friend HashTable< Key, Value, Hash, Equal >;
   };
 }
@@ -125,10 +125,15 @@ bool dirko::HashTable< Key, Value, Hash, Equal >::has(Key k) const noexcept
   }
   return false;
 }
-// template < class Key, class Value, class Hash, class Equal >
-// void dirko::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots){
-//
-// }
+template < class Key, class Value, class Hash, class Equal >
+void dirko::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
+{
+  HashTable< Key, Value, Hash, Equal > cpy(slots);
+  for (const std::pair< Key, Value > &v : *this) {
+    cpy.add(v.first, v.second);
+  }
+  swap(cpy);
+}
 template < class Key, class Value, class Hash, class Equal >
 
 void dirko::HashTable< Key, Value, Hash, Equal >::clear() noexcept
