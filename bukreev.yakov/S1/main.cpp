@@ -25,7 +25,7 @@ bool bukreev::input(std::istream& in, List< Sequence >& seqs)
   bool overflow = false;
   in >> name;
 
-  while (1)
+  while (in)
   {
     List< int > list;
 
