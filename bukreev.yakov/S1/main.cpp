@@ -117,6 +117,12 @@ void bukreev::output(std::ostream& out, const List< Sequence >& seqs, bool overf
 
   if (!overflow)
   {
+    if (sums.size() == 0)
+    {
+      std::cout <<"0\n";
+      return;
+    }
+
     LCIter< int > sumit = sums.cbegin();
     if (sumit != sums.cend())
     {
