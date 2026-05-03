@@ -11,13 +11,7 @@ namespace dirko
   class HashTable
   {
   public:
-    HashTable();
-    HashTable(size_t slots, Hash hasher, Equal comparator);
-    HashTable(const HashTable &other);
-    HashTable(HashTable &&other) noexcept;
-    HashTable &operator=(const HashTable &other);
-    HashTable &operator=(HashTable &&other) noexcept;
-    ~HashTable();
+    HashTable(size_t slots);
 
     void add(Key k, Value v);
     void drop(Key k);
@@ -31,12 +25,20 @@ namespace dirko
     void swap(HashTable &other) noexcept;
 
   private:
-    Vector< List< std::pair< Key, Value > > * > data;
-    Hash hasher;
-    Equal comparator;
-    size_t slots;
-    size_t elements;
+    Vector< List< std::pair< Key, Value > > * > data_;
+    Hash hasher_;
+    Equal comparator_;
+    size_t slots_;
+    size_t elements_;
   };
 }
 
+template < class Key, class Value, class Hash, class Equal >
+dirko::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
+  data_(),
+  hasher_(Hash{}),
+  comparator_(Equal{}),
+  slots_(slots),
+  elements_(0)
+{}
 #endif
