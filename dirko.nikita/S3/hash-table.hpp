@@ -68,4 +68,32 @@ void dirko::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
   data_[id].push_back(v);
   ++elements_;
 }
+
+template < class Key, class Value, class Hash, class Equal >
+void dirko::HashTable< Key, Value, Hash, Equal >::clear() noexcept
+{
+  for (size_t i = 0; i < slots_; ++i) {
+    data_[i].clear();
+  }
+  elements_ = 0;
+}
+template < class Key, class Value, class Hash, class Equal >
+size_t dirko::HashTable< Key, Value, Hash, Equal >::size() const noexcept
+{
+  return elements_;
+}
+template < class Key, class Value, class Hash, class Equal >
+bool dirko::HashTable< Key, Value, Hash, Equal >::empty() const noexcept
+{
+  return !elements_;
+}
+template < class Key, class Value, class Hash, class Equal >
+void dirko::HashTable< Key, Value, Hash, Equal >::swap(HashTable &other) noexcept
+{
+  data_.swap(other.data_);
+  hasher_.swap(other.hasher_);
+  comparator_.swap(other.comparator_);
+  std::swap(slots_, other.slots_);
+  std::swap(elements_, other.elements_);
+}
 #endif
