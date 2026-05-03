@@ -2,17 +2,14 @@
 #define COMMANDS_HPP
 
 #include <iostream>
-#include <stdexcept>
 #include <string>
-#include <utility>
 #include "graph.hpp"
 #include "hashFunctions.hpp"
 #include "hashTable.hpp"
 
 namespace karpovich
 {
-  using GraphSet = HashTable < std::string, Graph, Hasher< std::string, boost::hash2::siphash_64 >,
-        std::equal_to< std::string >;
+  using GraphSet = HashTable< std::string, Graph, Hasher< std::string >, std::equal_to< std::string > >;
 
   void cmdGraphs(std::istream &in, std::ostream &out, GraphSet &graphs);
   void cmdVertexes(std::istream &in, std::ostream &out, GraphSet &graphs);

@@ -18,18 +18,18 @@ namespace karpovich
     size_t size_, capacity_;
     friend class VIter< T >;
     friend class VCIter< T >;
-    explicit Vector< T >(size_t k);
+    explicit Vector(size_t k);
     void pushBackImpl(const T &);
     void reserve(size_t pos, size_t count);
 
   public:
-    Vector< T >();
-    Vector< T >(Vector< T > &&) noexcept;
-    Vector< T >(const Vector< T > &);
-    Vector< T >(std::initializer_list< T >);
-    Vector< T > &operator=(const Vector< T > &rhs);
-    Vector< T > &operator=(Vector< T > &&) noexcept;
-    ~Vector< T >();
+    Vector();
+    Vector(Vector< T > &&) noexcept;
+    Vector(const Vector< T > &);
+    Vector(std::initializer_list< T >);
+    Vector &operator=(const Vector< T > &rhs);
+    Vector &operator=(Vector< T > &&) noexcept;
+    ~Vector();
 
     T &operator[](size_t id) noexcept;
     const T &operator[](size_t id) const noexcept;
@@ -320,7 +320,7 @@ karpovich::Vector< T >::Vector():
 {}
 
 template < class T >
-karpovich::Vector< T >::~Vector< T >()
+karpovich::Vector< T >::~Vector()
 {
   for (size_t i = 0; i < size_; ++i) {
     data_[i].~T();
