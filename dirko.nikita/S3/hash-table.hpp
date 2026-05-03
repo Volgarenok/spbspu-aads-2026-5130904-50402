@@ -94,6 +94,21 @@ Value dirko::HashTable< Key, Value, Hash, Equal >::get(Key k) const
   }
   throw std::out_of_range("No such element");
 }
+template < class Key, class Value, class Hash, class Equal >
+bool dirko::HashTable< Key, Value, Hash, Equal >::has(Key k) const noexcept
+{
+
+  size_t id = hasher_(k) % slots_;
+  List< std::pair< Key, Value > > *head = data_[id];
+  for (LIter< std::pair< Key, Value > > v = head->begin(); v != head->end(); ++v) {
+    if (comparator_(*v.first, k)) {
+      return true;
+    }
+  }
+  return false;
+}
+template < class Key, class Value, class Hash, class Equal >
+
 void dirko::HashTable< Key, Value, Hash, Equal >::clear() noexcept
 {
   for (size_t i = 0; i < slots_; ++i) {
