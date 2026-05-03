@@ -13,7 +13,7 @@ namespace karpovich
   {
     friend class HashIter< Key, Value, Hash, Equal >;
     friend class HashConstIter< Key, Value, Hash, Equal >;
-    using value_type = std::pair< Key, Value >;
+    using valType = std::pair< Key, Value >;
 
   public:
     using HIter = HashIter< Key, Value, Hash, Equal >;
@@ -44,7 +44,7 @@ namespace karpovich
     HCIter сend() const;
 
   private:
-    Vector< List< value_type > > data_;
+    Vector< List< valType > > data_;
     size_t capacity_;
     size_t size_;
     Hash hasher_;
@@ -61,7 +61,7 @@ karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
   size_(0)
 {
   for (size_t i = 0; i < slots; ++i) {
-    data_.push_back(List< value_type >());
+    data_.push_back(List< valType >());
   }
 }
 
@@ -85,10 +85,10 @@ karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable &othe
   size_(0)
 {
   for (size_t i = 0; i < capacity_; ++i) {
-    data_.push_back(List< value_type >());
+    data_.push_back(List< valType >());
   }
   for (size_t i = 0; i < other.capacity_; ++i) {
-    for (VIter< value_type > it = other.data_[i].begin(); it != other.data_[i].end(); ++it) {
+    for (VIter< valType > it = other.data_[i].begin(); it != other.data_[i].end(); ++it) {
       data_[i].push_back(*it);
       ++size_;
     }
@@ -122,13 +122,13 @@ template < class Key, class Value, class Hash, class Equal >
 void karpovich::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
 {
   size_t idx = hasher_(k) % capacity_;
-  for (VIter< value_type > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
+  for (VIter< valType > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
     if (comparator_(it->first, k)) {
       it->second = v;
       return;
     }
   }
-  data_[idx].push_back(value_type(k, v));
+  data_[idx].push_back(valType(k, v));
   ++size_;
 }
 
@@ -136,7 +136,7 @@ template < class Key, class Value, class Hash, class Equal >
 Value karpovich::HashTable< Key, Value, Hash, Equal >::drop(Key k)
 {
   size_t idx = hasher_(k) % capacity_;
-  for (VIter< value_type > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
+  for (VIter< valType > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
     if (comparator_(it->first, k)) {
       Value val = it->second;
       data_[idx].erase(it);
@@ -151,7 +151,7 @@ template < class Key, class Value, class Hash, class Equal >
 Value karpovich::HashTable< Key, Value, Hash, Equal >::get(Key k) const
 {
   size_t idx = hasher_(k) % capacity_;
-  for (VIter< value_type > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
+  for (VIter< valType > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
     if (comparator_(it->first, k)) {
       return it->second;
     }
@@ -163,7 +163,7 @@ template < class Key, class Value, class Hash, class Equal >
 bool karpovich::HashTable< Key, Value, Hash, Equal >::has(Key k) const noexcept
 {
   size_t idx = hasher_(k) % capacity_;
-  for (VIter< value_type > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
+  for (VIter< valType > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
     if (comparator_(it->first, k)) {
       return true;
     }
@@ -177,12 +177,12 @@ void karpovich::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
   if (slots <= capacity_) {
     return;
   }
-  Vector< List< value_type > > new_data;
+  Vector< List< valType > > new_data;
   for (size_t i = 0; i < slots; ++i) {
-    new_data.push_back(List< value_type >());
+    new_data.push_back(List< valType >());
   }
   for (size_t i = 0; i < capacity_; ++i) {
-    for (VIter< value_type > it = data_[i].begin(); it != data_[i].end(); ++it) {
+    for (VIter< valType > it = data_[i].begin(); it != data_[i].end(); ++it) {
       size_t idx = hasher_(it->first) % slots;
       new_data[idx].push_back(*it);
     }
