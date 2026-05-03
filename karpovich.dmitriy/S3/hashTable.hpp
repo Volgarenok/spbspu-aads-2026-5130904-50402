@@ -29,7 +29,8 @@ namespace karpovich
 
     void add(Key k, Value v);
     Value drop(Key k);
-    Value get(Key k) const;
+    Value &get(Key k);
+    const Value &get(Key k) const;
     bool has(Key k) const noexcept;
     void rehash(size_t slots);
 
@@ -148,7 +149,19 @@ Value karpovich::HashTable< Key, Value, Hash, Equal >::drop(Key k)
 }
 
 template < class Key, class Value, class Hash, class Equal >
-Value karpovich::HashTable< Key, Value, Hash, Equal >::get(Key k) const
+Value &karpovich::HashTable< Key, Value, Hash, Equal >::get(Key k)
+{
+  size_t idx = hasher_(k) % capacity_;
+  for (VIter< valType > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
+    if (comparator_(it->first, k)) {
+      return it->second;
+    }
+  }
+  throw std::out_of_range("Key not found");
+}
+
+template < class Key, class Value, class Hash, class Equal >
+const Value &karpovich::HashTable< Key, Value, Hash, Equal >::get(Key k) const
 {
   size_t idx = hasher_(k) % capacity_;
   for (VIter< valType > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
