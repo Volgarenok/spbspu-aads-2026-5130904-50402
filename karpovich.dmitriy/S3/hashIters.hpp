@@ -178,4 +178,32 @@ karpovich::HashConstIter< Key, Value, Hash, Equal > &karpovich::HashConstIter< K
   return *this;
 }
 
+template < class Key, class Value, class Hash, class Equal >
+bool karpovich::HashConstIter< Key, Value, Hash, Equal >::operator==(const HashConstIter &other) const
+{
+  if (data_ == nullptr && other.data_ == nullptr) {
+    return true;
+  }
+  if (data_ == nullptr || other.data_ == nullptr) {
+    return false;
+  }
+  if (idx_ >= capacity_ && other.idx_ >= other.capacity_) {
+    return true;
+  }
+  return idx_ == other.idx_ && list_it_ == other.list_it_;
+}
+
+template < class Key, class Value, class Hash, class Equal >
+bool karpovich::HashConstIter< Key, Value, Hash, Equal >::operator!=(const HashConstIter &other) const
+{
+  return !(*this == other);
+}
+
+template < class Key, class Value, class Hash, class Equal >
+typename karpovich::HashConstIter< Key, Value, Hash, Equal >::valType &
+karpovich::HashConstIter< Key, Value, Hash, Equal >::operator*() const
+{
+  return *list_it_;
+}
+
 #endif
