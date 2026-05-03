@@ -58,3 +58,38 @@ void karpovich::cmdVertexes(std::istream &in, std::ostream &out, karpovich::Grap
     out << verts[i] << "\n";
   }
 }
+
+void karpovich::cmdBind(std::istream &in, std::ostream &, karpovich::GraphSet &graphs)
+{
+  std::string g_name, v1, v2;
+  size_t w = 0;
+  in >> g_name >> v1 >> v2 >> w;
+  karpovich::Graph &g = graphs.get(g_name);
+  g.addEdge(v1, v2, w);
+}
+
+void karpovich::cmdCut(std::istream &in, std::ostream &, karpovich::GraphSet &graphs)
+{
+  std::string g_name, v1, v2;
+  size_t w = 0;
+  in >> g_name >> v1 >> v2 >> w;
+  karpovich::Graph &g = graphs.get(g_name);
+  g.removeEdge(v1, v2, w);
+}
+
+void karpovich::cmdCreate(std::istream &in, std::ostream &, karpovich::GraphSet &graphs)
+{
+  std::string g_name;
+  size_t k = 0;
+  in >> g_name >> k;
+  if (graphs.has(g_name)) {
+    throw std::runtime_error("Exists");
+  }
+  karpovich::Graph g(16);
+  for (size_t i = 0; i < k; ++i) {
+    std::string v;
+    in >> v;
+    g.addVertex(v);
+  }
+  graphs.add(g_name, std::move(g));
+}
