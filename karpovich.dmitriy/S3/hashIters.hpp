@@ -100,4 +100,27 @@ void karpovich::HashIter< Key, Value, Hash, Equal >::findValid()
   }
 }
 
+template < class Key, class Value, class Hash, class Equal >
+karpovich::HashIter< Key, Value, Hash, Equal > &karpovich::HashIter< Key, Value, Hash, Equal >::operator++()
+{
+  ++list_it_;
+  findValid();
+  return *this;
+}
+
+template < class Key, class Value, class Hash, class Equal >
+bool karpovich::HashIter< Key, Value, Hash, Equal >::operator==(const HashIter &other) const
+{
+  if (data_ == nullptr && other.data_ == nullptr) {
+    return true;
+  }
+  if (data_ == nullptr || other.data_ == nullptr) {
+    return false;
+  }
+  if (idx_ >= capacity_ && other.idx_ >= other.capacity_) {
+    return true;
+  }
+  return idx_ == other.idx_ && list_it_ == other.list_it_;
+}
+
 #endif
