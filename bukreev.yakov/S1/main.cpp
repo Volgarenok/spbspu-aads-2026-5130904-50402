@@ -23,8 +23,9 @@ bool bukreev::input(std::istream& in, List< Sequence >& seqs)
 {
   std::string name;
   bool overflow = false;
+  in >> name;
 
-  while (in >> name)
+  while (1)
   {
     List< int > list;
 
@@ -43,13 +44,18 @@ bool bukreev::input(std::istream& in, List< Sequence >& seqs)
       catch(const std::out_of_range& e)
       {
         overflow = true;
-        break;
       }
 
       list.pushBack(num);
     }
 
     seqs.pushBack({name, list});
+    name = strnum;
+
+    if (in.eof())
+    {
+      break;
+    }
 
     in.clear();
   }
