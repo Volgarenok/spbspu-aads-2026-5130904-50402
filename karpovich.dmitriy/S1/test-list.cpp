@@ -1,6 +1,6 @@
-#include <boost/test/unit_test.hpp>
 #include <iterators.hpp>
 #include <list.hpp>
+#include <boost/test/unit_test.hpp>
 
 using namespace karpovich;
 
@@ -90,13 +90,13 @@ BOOST_AUTO_TEST_CASE(test_end)
 BOOST_AUTO_TEST_CASE(test_begin_const)
 {
   const List< int > list;
-  BOOST_CHECK(list.begin() == list.end());
+  BOOST_CHECK(list.cbegin() == list.cend());
 }
 
 BOOST_AUTO_TEST_CASE(test_end_const)
 {
   const List< int > list;
-  BOOST_CHECK(list.begin() == list.end());
+  BOOST_CHECK(list.cbegin() == list.cend());
 }
 
 BOOST_AUTO_TEST_CASE(test_push_front)
