@@ -20,7 +20,6 @@ namespace karpovich
     using HCIter = HashConstIter< Key, Value, Hash, Equal >;
 
     HashTable(size_t slots);
-    HashTable(std::initializer_list< std::pair< Key, Value > > il);
     ~HashTable();
 
     HashTable(const HashTable &other);
@@ -61,22 +60,48 @@ karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
   capacity_(slots),
   size_(0)
 {
-  data_.reserve(slots);
+  for (size_t i = 0; i < slots; ++i) {
+    data_.push_back(List< value_type >());
+  }
 }
 
 template < class Key, class Value, class Hash, class Equal >
-karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(std::initializer_list< std::pair< Key, Value > > il):
-  data_(),
-  hasher_(Hash{}),
-  comparator_(Equal{}),
-  capacity_(il.size()),
-  size_(0)
+void karpovich::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
 {
-  data_.reserve(il.size());
-  for (const std::pair< Key, Value > &v : il) {
-    size_t id = hasher_(v.first) % size_;
-    data_[id] = v.second;
+  size_t id = hasher_(k) % capacity_;
+  data_[id].push_back(v);
+  ++size_;
+}
+template <class Key, class Value, class Hash, class Equal>
+karpovich::HashTable<Key, Value, Hash, Equal>::~HashTable() {
+  clear();
+}
+template < class Key, class Value, class Hash, class Equal >
+void karpovich::HashTable< Key, Value, Hash, Equal >::clear() noexcept
+{
+  for (size_t i = 0; i < capacity_; ++i) {
+    data_[i].clear();
   }
+  size_ = 0;
+}
+template < class Key, class Value, class Hash, class Equal >
+size_t karpovich::HashTable< Key, Value, Hash, Equal >::size() const noexcept
+{
+  return size_;
+}
+template < class Key, class Value, class Hash, class Equal >
+bool karpovich::HashTable< Key, Value, Hash, Equal >::empty() const noexcept
+{
+  return !size_;
+}
+template < class Key, class Value, class Hash, class Equal >
+void karpovich::HashTable< Key, Value, Hash, Equal >::swap(HashTable &other) noexcept
+{
+  data_.swap(other.data_);
+  hasher_.swap(other.hasher_);
+  comparator_.swap(other.comparator_);
+  std::swap(capacity_, other.capacity_);
+  std::swap(size_, other.size_);
 }
 
 #endif
