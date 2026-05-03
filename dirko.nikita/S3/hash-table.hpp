@@ -82,6 +82,18 @@ void dirko::HashTable< Key, Value, Hash, Equal >::drop(Key k)
     }
   }
 }
+template < class Key, class Value, class Hash, class Equal >
+Value dirko::HashTable< Key, Value, Hash, Equal >::get(Key k) const
+{
+  size_t id = hasher_(k) % slots_;
+  List< std::pair< Key, Value > > *head = data_[id];
+  for (LIter< std::pair< Key, Value > > v = head->begin(); v != head->end(); ++v) {
+    if (comparator_(*v.first, k)) {
+      return *v.second;
+    }
+  }
+  throw std::out_of_range("No such element");
+}
 void dirko::HashTable< Key, Value, Hash, Equal >::clear() noexcept
 {
   for (size_t i = 0; i < slots_; ++i) {
