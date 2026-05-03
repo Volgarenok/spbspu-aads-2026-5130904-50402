@@ -12,7 +12,6 @@
 
 namespace karpovich
 {
-
   struct Graph
   {
     List< std::string > vertices;
@@ -27,6 +26,20 @@ namespace karpovich
     void addEdge(const std::string &from, const std::string &to, size_t weight);
     void removeEdge(const std::string &from, const std::string &to, size_t weight);
   };
+}
+
+void karpovich::Graph::addVertex(const std::string &v)
+{
+  bool exists = false;
+  for (LIter< std::string > it = vertices.begin(); it != vertices.end(); ++it) {
+    if (*it == v) {
+      exists = true;
+      break;
+    }
+  }
+  if (!exists) {
+    vertices.push_back(v);
+  }
 }
 
 #endif
