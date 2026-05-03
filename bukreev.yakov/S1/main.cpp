@@ -1,29 +1,25 @@
 #include <iostream>
-#include <limits>
 #include "list.hpp"
 
 namespace bukreev
 {
   using Sequence = std::pair< std::string, List< int > >;
 
-  bool input(std::istream& in, List< Sequence >& seqs);
-  void output(std::ostream& out, const List< Sequence >& seqs, bool overflow);
+  void input(std::istream& in, List< Sequence >& seqs);
+  void output(std::ostream& out, const List< Sequence >& seqs);
 }
 
 int main()
 {
   bukreev::List< bukreev::Sequence > sequences;
 
-  bool overflow = bukreev::input(std::cin, sequences);
-  bukreev::output(std::cout, sequences, overflow);
-
-  return overflow ? 1 : 0;
+  bukreev::input(std::cin, sequences);
+  bukreev::output(std::cout, sequences);
 }
 
-bool bukreev::input(std::istream& in, List< Sequence >& seqs)
+void bukreev::input(std::istream& in, List< Sequence >& seqs)
 {
   std::string name;
-  bool overflow = false;;
 
   while (in >> name)
   {
@@ -35,20 +31,13 @@ bool bukreev::input(std::istream& in, List< Sequence >& seqs)
       list.pushBack(num);
     }
 
-    if (num == std::numeric_limits<int>::max())
-    {
-      overflow = true;
-    }
-
     seqs.pushBack({name, list});
 
     in.clear();
   }
-
-  return overflow;
 }
 
-void bukreev::output(std::ostream& out, const List< Sequence >& seqs, bool overflow)
+void bukreev::output(std::ostream& out, const List< Sequence >& seqs)
 {
   LCIter< Sequence > it = seqs.cbegin();
   if (it == seqs.cend())
@@ -106,23 +95,16 @@ void bukreev::output(std::ostream& out, const List< Sequence >& seqs, bool overf
 
   delete[] numIts;
 
-  if (!overflow)
+  LCIter< int > sumit = sums.cbegin();
+  if (sumit != sums.cend())
   {
-    LCIter< int > sumit = sums.cbegin();
-    if (sumit != sums.cend())
-    {
-      out << *sumit;
-      sumit = sumit.next();
-    }
-    for (; sumit != sums.cend(); sumit = sumit.next())
-    {
-      out << ' ' << *sumit;
-    }
+    out << *sumit;
+    sumit = sumit.next();
+  }
+  for (; sumit != sums.cend(); sumit = sumit.next())
+  {
+    out << ' ' << *sumit;
+  }
 
-    out << '\n';
-  }
-  else
-  {
-    std::cerr << "Integer overflow\n";
-  }
+  out << '\n';
 }
