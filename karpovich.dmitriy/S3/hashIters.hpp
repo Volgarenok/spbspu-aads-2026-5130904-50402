@@ -123,4 +123,26 @@ bool karpovich::HashIter< Key, Value, Hash, Equal >::operator==(const HashIter &
   return idx_ == other.idx_ && list_it_ == other.list_it_;
 }
 
+template < class Key, class Value, class Hash, class Equal >
+bool karpovich::HashIter< Key, Value, Hash, Equal >::operator!=(const HashIter &other) const
+{
+  return !(*this == other);
+}
+
+template < class Key, class Value, class Hash, class Equal >
+typename karpovich::HashIter< Key, Value, Hash, Equal >::valType &
+karpovich::HashIter< Key, Value, Hash, Equal >::operator*() const
+{
+  return *list_it_;
+}
+
+template < class Key, class Value, class Hash, class Equal >
+karpovich::HashConstIter< Key, Value, Hash, Equal >::HashConstIter():
+  data_(nullptr),
+  capacity_(0),
+  idx_(0),
+  list_it_(),
+  list_end_()
+{}
+
 #endif
