@@ -98,12 +98,17 @@ void karpovich::HashIter< Key, Value, Hash, Equal >::findValid()
     }
     ++idx_;
   }
+  data_ = nullptr;
 }
 
 template < class Key, class Value, class Hash, class Equal >
 karpovich::HashIter< Key, Value, Hash, Equal > &karpovich::HashIter< Key, Value, Hash, Equal >::operator++()
 {
   ++listIt_;
+  if (listIt_ != listEnd_) {
+    return *this;
+  }
+  ++idx_;
   findValid();
   return *this;
 }
