@@ -1,5 +1,5 @@
-#ifndef TOP_IT_VECTOR_HPP
-#define TOP_IT_VECTOR_HPP
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
 #include <cassert>
 #include <cstddef>
 #include <initializer_list>

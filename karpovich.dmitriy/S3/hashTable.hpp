@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <utility>
 #include "../common/list.hpp"
+#include "../common/Vector.hpp"
 #include "hashIters.hpp"
 namespace karpovich
 {
@@ -43,7 +44,7 @@ namespace karpovich
     HCIter end() const;
 
   private:
-    List< value_type > *buckets_;
+    Vector< List< value_type > > *data_;
     size_t capacity_;
     size_t size_;
     Hash hasher_;
