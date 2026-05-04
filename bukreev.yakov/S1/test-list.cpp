@@ -1,5 +1,5 @@
 #include <boost/test/unit_test.hpp>
-#include <list.hpp>
+#include "list.hpp"
 
 using namespace bukreev;
 
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(test_push_back)
   LCIter< int > it = list.cbegin();
 
   BOOST_CHECK_EQUAL(*it, 1);
-  it++;
+  it = it.next();
   BOOST_CHECK_EQUAL(*it, 2);
 }
 
