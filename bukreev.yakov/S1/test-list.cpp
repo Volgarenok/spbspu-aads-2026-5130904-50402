@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(test_push_back)
   LCIter< int > it = list.cbegin();
 
   BOOST_CHECK_EQUAL(*it, 1);
-  it = it.next();
+  it++;
   BOOST_CHECK_EQUAL(*it, 2);
 }
 
