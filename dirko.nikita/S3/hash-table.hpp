@@ -1,11 +1,11 @@
 #ifndef HASH_TABLE_HPP
 #define HASH_TABLE_HPP
+#include <Vector.hpp>
 #include <cstddef>
 #include <initializer_list>
+#include <list.hpp>
 #include <stdexcept>
 #include <utility>
-#include "../common/list.hpp"
-#include "../common/vector.hpp"
 
 namespace dirko
 {
