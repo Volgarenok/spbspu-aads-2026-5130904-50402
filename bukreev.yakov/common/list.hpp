@@ -69,6 +69,7 @@ namespace bukreev
     LCIter< T > cbegin() const noexcept;
     LCIter< T > cend() const noexcept;
     void pushBack(const T& value);
+    T popBack() noexcept;
 
   private:
     Node< T > m_fake;
@@ -180,6 +181,29 @@ namespace bukreev
       m_fake.next = node;
     }
     m_tail = node;
+  }
+
+  template< class T >
+  T List< T >::popBack() noexcept
+  {
+    Node< T >* lastNode;
+    Node< T >* prevNode = std::addressof(m_fake);
+    for (Node< T >* node = m_fake.next; node!= nullptr; node = node->next)
+    {
+      lastNode = node;
+      if (node->next)
+      {
+        prevNode = prevNode->next;
+      }
+    }
+
+    prevNode->next = nullptr;
+    m_tail = prevNode;
+
+    T retval = lastNode->val;
+    delete lastNode;
+
+    return retval;
   }
 
   template< class T >
