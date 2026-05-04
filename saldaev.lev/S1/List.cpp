@@ -1,4 +1,5 @@
 #include "List.hpp"
+#include <stdexcept>
 #include <string>
 #include <utility>
 
@@ -42,7 +43,7 @@ saldaev::List< T >::List(const List &other):
 {
   try {
     for (auto it = other.begin(); it != other.end(); ++it) {
-      newTail(it.getData());
+      pushBack(*it);
     }
   } catch (...) {
     clear();
@@ -77,7 +78,7 @@ saldaev::List< T > &saldaev::List< T >::operator=(List< T > &&other)
 }
 
 template < class T >
-void saldaev::List< T >::newHead(const T &d)
+void saldaev::List< T >::pushFront(const T &d)
 {
   Node *n = new Node(d, head->next, head);
   head->next->prev = n;
@@ -86,7 +87,7 @@ void saldaev::List< T >::newHead(const T &d)
 }
 
 template < class T >
-void saldaev::List< T >::newTail(const T &d)
+void saldaev::List< T >::pushBack(const T &d)
 {
   Node *n = new Node(d, tail, tail->prev);
   tail->prev->next = n;
@@ -95,34 +96,41 @@ void saldaev::List< T >::newTail(const T &d)
 }
 
 template < class T >
-void saldaev::List< T >::cutHead() noexcept
+T saldaev::List< T >::popFront()
 {
   if (length != 0) {
+    T ret = head->next->data;
     Node *tmp = head->next->next;
     delete head->next;
     head->next = tmp;
     tmp->prev = head;
     --length;
+    return ret;
   }
+  throw std::out_of_range("pop from empty list");
 }
 
 template < class T >
-void saldaev::List< T >::cutTail() noexcept
+T saldaev::List< T >::popBack()
 {
   if (length != 0) {
+    T ret = tail->prev->data;
     Node *tmp = tail->prev->prev;
     delete tail->prev;
     tail->prev = tmp;
     tmp->next = tail;
     --length;
+    return ret;
   }
+  throw std::out_of_range("pop from empty list");
 }
 
 template < class T >
 void saldaev::List< T >::clear() noexcept
 {
-  while (length > 0) {
-    cutHead();
+  LIter it = begin();
+  while (it != end()) {
+    it = erase(it);
   }
 }
 
@@ -135,302 +143,214 @@ void saldaev::List< T >::swap(List &other) noexcept
 }
 
 template < class T >
-void saldaev::List< T >::setData(LIter< T > it, const T &d)
+void saldaev::List< T >::insertBefore(LIter it, const T &d)
 {
-  if (it.isValid()) {
-    it.curr->data = d;
+  typename List< T >::Node *n = new typename List< T >::Node(d, it.curr, it.curr->prev);
+  it.curr->prev->next = n;
+  it.curr->prev = n;
+  ++length;
+}
+
+template < class T >
+void saldaev::List< T >::insertAfter(LIter it, const T &d)
+{
+  if (it == end()) {
+    throw std::out_of_range("cannot insert after end()");
   }
+  typename List< T >::Node *n = new typename List< T >::Node(d, it.curr->next, it.curr);
+  it.curr->next->prev = n;
+  it.curr->next = n;
+  ++length;
 }
 
 template < class T >
-void saldaev::List< T >::addBefore(LIter< T > it, const T &d)
+typename saldaev::List< T >::LIter saldaev::List< T >::erase(LIter it)
 {
-  if (it.isValid()) {
-    typename List< T >::Node *n = new typename List< T >::Node(d, it.curr, it.curr->prev);
-    it.curr->prev->next = n;
-    it.curr->prev = n;
-    ++length;
+  if (it == end()) {
+    throw std::out_of_range("cannot erase end() iterator");
   }
+  typename List< T >::Node *curr = it.curr;
+  typename List< T >::Node *next = curr->next;
+  curr->next->prev = curr->prev;
+  curr->prev->next = curr->next;
+  delete curr;
+  --length;
+  return LIter(next);
 }
 
 template < class T >
-void saldaev::List< T >::addAfter(LIter< T > it, const T &d)
+typename saldaev::List< T >::LIter saldaev::List< T >::begin()
 {
-  if (it.isValid()) {
-    typename List< T >::Node *n = new typename List< T >::Node(d, it.curr->next, it.curr);
-    it.curr->next->prev = n;
-    it.curr->next = n;
-    ++length;
-  }
+  return LIter(head->next);
 }
 
 template < class T >
-saldaev::LIter< T > saldaev::List< T >::cutCurrent(LIter< T > it) noexcept
+typename saldaev::List< T >::LIter saldaev::List< T >::end()
 {
-  if (it.isValid()) {
-    typename List< T >::Node *curr = it.curr;
-    typename List< T >::Node *next = curr->next;
-    curr->next->prev = curr->prev;
-    curr->prev->next = curr->next;
-    delete curr;
-    --length;
-    return LIter< T >(next);
-  }
-  return end();
+  return LIter(tail);
 }
 
 template < class T >
-saldaev::LIter< T > saldaev::List< T >::begin()
+typename saldaev::List< T >::LCIter saldaev::List< T >::begin() const
 {
-  return LIter< T >(head->next);
+  return LCIter(head->next);
 }
 
 template < class T >
-saldaev::LIter< T > saldaev::List< T >::end()
+typename saldaev::List< T >::LCIter saldaev::List< T >::end() const
 {
-  return LIter< T >(tail);
+  return LCIter(tail);
 }
 
 template < class T >
-saldaev::LCIter< T > saldaev::List< T >::begin() const
-{
-  return LCIter< T >(head->next);
-}
-
-template < class T >
-saldaev::LCIter< T > saldaev::List< T >::end() const
-{
-  return LCIter< T >(tail);
-}
-
-template < class T >
-size_t saldaev::List< T >::getLength() const noexcept
+size_t saldaev::List< T >::size() const noexcept
 {
   return length;
 }
 
-template < class T >
-saldaev::LCIter< T >::LCIter(typename List< T >::Node *node):
-  curr(node),
-  valid(true)
-{
-  if (!node) {
-    valid = false;
-  } else if (!(node->next) || !(node->prev)) {
-    valid = false;
-  }
-}
+// ___ LCIter ___
 
 template < class T >
-bool saldaev::LCIter< T >::isValid() const noexcept
-{
-  return valid;
-}
+saldaev::List< T >::LCIter::LCIter(typename List< T >::Node *node):
+  curr(node)
+{}
 
 template < class T >
-bool saldaev::LCIter< T >::hasNext() const noexcept
+typename saldaev::List< T >::LCIter &saldaev::List< T >::LCIter::operator++() noexcept
 {
-  return isValid() && (curr->next->next != nullptr);
-}
-
-template < class T >
-bool saldaev::LCIter< T >::hasPrev() const noexcept
-{
-  return isValid() && (curr->prev->prev != nullptr);
-}
-
-template < class T >
-saldaev::LCIter< T > &saldaev::LCIter< T >::operator++() noexcept
-{
-  if (isValid()) {
+  if (curr->next) {
     curr = curr->next;
-    valid = curr->next;
   }
   return *this;
 }
 
 template < class T >
-saldaev::LCIter< T > saldaev::LCIter< T >::operator++(int) noexcept
+typename saldaev::List< T >::LCIter saldaev::List< T >::LCIter::operator++(int) noexcept
 {
-  LCIter< T > ret = *this;
-  if (isValid()) {
+  LCIter ret = *this;
+  if (curr->next) {
     curr = curr->next;
-    valid = curr->next;
   }
   return ret;
 }
 
 template < class T >
-saldaev::LCIter< T > &saldaev::LCIter< T >::operator--() noexcept
+typename saldaev::List< T >::LCIter &saldaev::List< T >::LCIter::operator--() noexcept
 {
-  if (isValid()) {
-    curr = curr->prev;
-    valid = curr->prev;
-  }
+  curr = curr->prev;
   return *this;
 }
 
 template < class T >
-saldaev::LCIter< T > saldaev::LCIter< T >::operator--(int) noexcept
+typename saldaev::List< T >::LCIter saldaev::List< T >::LCIter::operator--(int) noexcept
 {
-  LCIter< T > ret = *this;
-  if (isValid()) {
-    curr = curr->prev;
-    valid = curr->prev;
-  }
+  LCIter ret = *this;
+  curr = curr->prev;
   return ret;
 }
 
 template < class T >
-bool saldaev::LCIter< T >::operator==(const LCIter &other) const noexcept
+bool saldaev::List< T >::LCIter::operator==(const LCIter &other) const noexcept
 {
   return curr == other.curr;
 }
 
 template < class T >
-bool saldaev::LCIter< T >::operator==(const LIter< T > &other) const noexcept
-{
-  return curr == other.curr;
-}
-
-template < class T >
-bool saldaev::LCIter< T >::operator!=(const LCIter &other) const noexcept
+bool saldaev::List< T >::LCIter::operator!=(const LCIter &other) const noexcept
 {
   return !(*this == other);
 }
 
 template < class T >
-bool saldaev::LCIter< T >::operator!=(const LIter< T > &other) const noexcept
-{
-  return !(*this == other);
-}
-
-template < class T >
-const T &saldaev::LCIter< T >::getData() const noexcept
+const T &saldaev::List< T >::LCIter::operator*() const
 {
   return curr->data;
 }
 
 template < class T >
-saldaev::LIter< T >::LIter(typename List< T >::Node *node):
-  curr(node),
-  valid(true)
+const T *saldaev::List< T >::LCIter::operator->() const
 {
-  if (!node) {
-    valid = false;
-  } else if (!(node->next) || !(node->prev)) {
-    valid = false;
-  }
+  return &(curr->data);
 }
 
-template < class T >
-bool saldaev::LIter< T >::isValid() const noexcept
-{
-  return valid;
-}
+// ___ LIter ___
 
 template < class T >
-bool saldaev::LIter< T >::hasNext() const noexcept
-{
-  return isValid() && (curr->next->next != nullptr);
-}
+saldaev::List< T >::LIter::LIter(typename List::Node *node):
+  curr(node)
+{}
 
 template < class T >
-bool saldaev::LIter< T >::hasPrev() const noexcept
+typename saldaev::List< T >::LIter &saldaev::List< T >::LIter::operator++() noexcept
 {
-  return isValid() && (curr->prev->prev != nullptr);
-}
-
-template < class T >
-saldaev::LIter< T > &saldaev::LIter< T >::operator++() noexcept
-{
-  if (isValid()) {
+  if (curr->next) {
     curr = curr->next;
-    valid = curr->next;
   }
   return *this;
 }
 
 template < class T >
-saldaev::LIter< T > saldaev::LIter< T >::operator++(int) noexcept
+typename saldaev::List< T >::LIter saldaev::List< T >::LIter::operator++(int) noexcept
 {
-  LIter< T > ret = *this;
-  if (isValid()) {
+  LIter ret = *this;
+  if (curr->next) {
     curr = curr->next;
-    valid = curr->next;
-  }
-  return ret;
-}
-
-template < class T >
-saldaev::LIter< T > &saldaev::LIter< T >::operator--() noexcept
-{
-  if (isValid()) {
-    curr = curr->prev;
-    valid = curr->prev;
   }
   return *this;
 }
 
 template < class T >
-saldaev::LIter< T > saldaev::LIter< T >::operator--(int) noexcept
+typename saldaev::List< T >::LIter &saldaev::List< T >::LIter::operator--() noexcept
 {
-  LIter< T > ret = *this;
-  if (isValid()) {
-    curr = curr->prev;
-    valid = curr->prev;
-  }
-  return ret;
+  curr = curr->prev;
+  return *this;
 }
 
 template < class T >
-bool saldaev::LIter< T >::operator==(const LIter &other) const noexcept
+typename saldaev::List< T >::LIter saldaev::List< T >::LIter::operator--(int) noexcept
+{
+  LIter ret = *this;
+  curr = curr->prev;
+  return *this;
+}
+
+template < class T >
+bool saldaev::List< T >::LIter::operator==(const LIter &other) const noexcept
 {
   return curr == other.curr;
 }
 
 template < class T >
-bool saldaev::LIter< T >::operator==(const LCIter< T > &other) const noexcept
-{
-  return curr == other.curr;
-}
-
-template < class T >
-bool saldaev::LIter< T >::operator!=(const LIter &other) const noexcept
+bool saldaev::List< T >::LIter::operator!=(const LIter &other) const noexcept
 {
   return !(*this == other);
 }
 
 template < class T >
-bool saldaev::LIter< T >::operator!=(const LCIter< T > &other) const noexcept
-{
-  return !(*this == other);
-}
-
-template < class T >
-const T &saldaev::LIter< T >::getData() const noexcept
+T &saldaev::List< T >::LIter::operator*()
 {
   return curr->data;
 }
 
 template < class T >
-T &saldaev::LIter< T >::getData() noexcept
+T *saldaev::List< T >::LIter::operator->()
+{
+  return &(curr->data);
+}
+
+template < class T >
+const T &saldaev::List< T >::LIter::operator*() const
 {
   return curr->data;
+}
+
+template < class T >
+const T *saldaev::List< T >::LIter::operator->() const
+{
+  return &(curr->data);
 }
 
 template struct saldaev::List< size_t >;
-template struct saldaev::LIter< size_t >;
-template struct saldaev::LCIter< size_t >;
-
 template struct saldaev::List< std::pair< std::string, saldaev::List< size_t > > >;
-template struct saldaev::LIter< std::pair< std::string, saldaev::List< size_t > > >;
-template struct saldaev::LCIter< std::pair< std::string, saldaev::List< size_t > > >;
-
-template class saldaev::List< saldaev::LIter< size_t > >;
-template struct saldaev::LIter< saldaev::LIter< size_t > >;
-template struct saldaev::LCIter< saldaev::LIter< size_t > >;
-
+template class saldaev::List< saldaev::List< size_t >::LIter >;
 template struct saldaev::List< int >;
-template struct saldaev::LIter< int >;
-template struct saldaev::LCIter< int >;

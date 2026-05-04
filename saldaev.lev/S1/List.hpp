@@ -11,10 +11,10 @@ namespace saldaev
     {
       friend class List;
 
-      LCIter< T > &operator++() noexcept;
-      LCIter< T > operator++(int) noexcept;
-      LCIter< T > &operator--() noexcept;
-      LCIter< T > operator--(int) noexcept;
+      LCIter &operator++() noexcept;
+      LCIter operator++(int) noexcept;
+      LCIter &operator--() noexcept;
+      LCIter operator--(int) noexcept;
       bool operator==(const LCIter &other) const noexcept;
       bool operator!=(const LCIter &other) const noexcept;
 
@@ -22,19 +22,19 @@ namespace saldaev
       const T *operator->() const;
 
     private:
-      typename List< T >::Node *curr;
+      typename List::Node *curr;
 
-      explicit LCIter(typename List< T >::Node *node);
+      explicit LCIter(typename List::Node *node);
     };
 
     struct LIter
     {
       friend class List;
 
-      LIter< T > &operator++() noexcept;
-      LIter< T > operator++(int) noexcept;
-      LIter< T > &operator--() noexcept;
-      LIter< T > operator--(int) noexcept;
+      LIter &operator++() noexcept;
+      LIter operator++(int) noexcept;
+      LIter &operator--() noexcept;
+      LIter operator--(int) noexcept;
 
       bool operator==(const LIter &other) const noexcept;
       bool operator!=(const LIter &other) const noexcept;
@@ -45,9 +45,9 @@ namespace saldaev
       const T *operator->() const;
 
     private:
-      typename List< T >::Node *curr;
+      typename List::Node *curr;
 
-      explicit LIter(typename List< T >::Node *node);
+      explicit LIter(typename List::Node *node);
     };
 
     List();
@@ -64,14 +64,14 @@ namespace saldaev
     void clear() noexcept;
     void swap(List &other) noexcept;
 
-    void insertBefore(LIter< T > it, const T &d);
-    void insertAfter(LIter< T > it, const T &d);
-    LIter< T > erase(LIter< T > it) noexcept;
+    void insertBefore(LIter it, const T &d);
+    void insertAfter(LIter it, const T &d);
+    LIter erase(LIter it);
 
-    LIter< T > begin();
-    LIter< T > end();
-    LCIter< T > begin() const;
-    LCIter< T > end() const;
+    LIter begin();
+    LIter end();
+    LCIter begin() const;
+    LCIter end() const;
 
     size_t size() const noexcept;
 
