@@ -29,11 +29,11 @@ namespace karpovich
   }
   template < class T > void Stack< T >::push(const T &rhs)
   {
-    data_.push_back(rhs);
+    data_.pushBack(rhs);
   }
   template < class T > void Stack< T >::pop() noexcept
   {
-    data_.pop_back();
+    data_.popBack();
   }
 }
 #endif
