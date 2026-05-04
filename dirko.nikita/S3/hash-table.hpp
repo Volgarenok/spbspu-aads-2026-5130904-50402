@@ -10,6 +10,8 @@
 namespace dirko
 {
   template < class Key, class Value, class Hash, class Equal >
+  class HTIter;
+  template < class Key, class Value, class Hash, class Equal >
   class HashTable
   {
   public:
@@ -21,6 +23,10 @@ namespace dirko
     Value get(Key k) const;
     bool has(Key k) const noexcept;
     void rehash(size_t slots);
+
+    using HTIt = HTIter< Key, Value, Hash, Equal >;
+    HTIt begin() noexcept;
+    HTIt end() noexcept;
 
     void clear() noexcept;
     size_t size() const noexcept;
@@ -38,7 +44,7 @@ namespace dirko
   class HTIter
   {
   public:
-    HTIter(HashTable< Key, Value, Hash, Equal >);
+    HTIter(LIter< std::pair< Key, Value > >, size_t, size_t);
     std::pair< Key, Value > &operator*() const;
     HTIter &operator++();
     HTIter &operator--();
@@ -161,5 +167,16 @@ void dirko::HashTable< Key, Value, Hash, Equal >::swap(HashTable &other) noexcep
   comparator_.swap(other.comparator_);
   std::swap(slots_, other.slots_);
   std::swap(elements_, other.elements_);
+}
+
+template < class Key, class Value, class Hash, class Equal >
+dirko::HTIter< Key, Value, Hash, Equal > dirko::HashTable< Key, Value, Hash, Equal >::begin() noexcept
+{
+  return HTIter< Key, Value, Hash, Equal >(data_[0], 0, 0);
+}
+template < class Key, class Value, class Hash, class Equal >
+dirko::HTIter< Key, Value, Hash, Equal > dirko::HashTable< Key, Value, Hash, Equal >::end() noexcept
+{
+  return HTIter< Key, Value, Hash, Equal >(data_[slots_ - 1].end(), slots_, data_[slots_ - 1].size());
 }
 #endif
