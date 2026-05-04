@@ -22,10 +22,13 @@ namespace bukreev
   public:
     LIter() = default;
     LIter(Node< T >* node) noexcept;
-    LIter< T > next() const noexcept;
     T& operator*() const;
+    LIter& operator++(int) noexcept;
     bool operator==(const LIter< T >& other);
     bool operator!=(const LIter< T >& other);
+
+  private:
+    LIter next() const noexcept;
 
   private:
     Node< T >* m_cur;
@@ -39,10 +42,13 @@ namespace bukreev
   public:
     LCIter() = default;
     LCIter(Node< T >* node) noexcept;
-    LCIter< T > next() const noexcept;
     T& operator*() const;
+    LCIter& operator++(int) noexcept;
     bool operator==(const LCIter< T >& other);
     bool operator!=(const LCIter< T >& other);
+
+  private:
+    LCIter next() const noexcept;
 
   private:
     Node< T >* m_cur;
@@ -82,7 +88,7 @@ namespace bukreev
     m_fake.next = nullptr;
     m_tail = nullptr;
 
-    for (LIter< T > it = other.begin(); it != other.end(); it = it.next())
+    for (LIter< T > it = other.begin(); it != other.end(); it++)
     {
       pushBack(*it);
     }
@@ -99,7 +105,7 @@ namespace bukreev
   {
     clear();
 
-    for (LIter< T > it = other.begin(); it != other.end(); it = it.next())
+    for (LIter< T > it = other.begin(); it != other.end(); it++)
     {
       pushBack(*it);
     }
@@ -126,7 +132,7 @@ namespace bukreev
   size_t List< T >::size() const noexcept
   {
     size_t res = 0;
-    for (LCIter< T > it = cbegin(); it != cend(); it = it.next())
+    for (LCIter< T > it = cbegin(); it != cend(); it++)
     {
       res++;
     }
@@ -189,6 +195,13 @@ namespace bukreev
   }
 
   template< class T >
+  LIter< T >& LIter< T >::operator++(int) noexcept
+  {
+    *this = next();
+    return *this;
+  }
+
+  template< class T >
   bool LIter< T >::operator==(const LIter< T >& other)
   {
     return m_cur == other.m_cur;
@@ -216,6 +229,13 @@ namespace bukreev
   T& LCIter< T >::operator*() const
   {
     return m_cur->val;
+  }
+
+  template< class T >
+  LCIter< T >& LCIter< T >::operator++(int) noexcept
+  {
+    *this = next();
+    return *this;
   }
 
   template< class T >

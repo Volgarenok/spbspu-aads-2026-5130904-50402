@@ -72,9 +72,9 @@ void bukreev::output(std::ostream& out, const List< Sequence >& seqs, bool overf
     return;
   }
   out << (*it).first;
-  it = it.next();
+  it++;
 
-  for (; it != seqs.cend(); it = it.next())
+  for (; it != seqs.cend(); it++)
   {
     out << ' ' << (*it).first;
   }
@@ -86,7 +86,7 @@ void bukreev::output(std::ostream& out, const List< Sequence >& seqs, bool overf
   ItPair* numIts = new ItPair[size];
 
   size_t i = 0;
-  for (it = seqs.cbegin(); it != seqs.cend(); it = it.next(), i++)
+  for (it = seqs.cbegin(); it != seqs.cend(); it++, i++)
   {
     numIts[i] = {(*it).second.cbegin(), (*it).second.cend()};
   }
@@ -108,7 +108,7 @@ void bukreev::output(std::ostream& out, const List< Sequence >& seqs, bool overf
         out << n << ' ';
         s += n;
 
-        numIts[i].first = numIts[i].first.next();
+        numIts[i].first++;
       }
     }
 
@@ -133,9 +133,9 @@ void bukreev::output(std::ostream& out, const List< Sequence >& seqs, bool overf
     if (sumit != sums.cend())
     {
       out << *sumit;
-      sumit = sumit.next();
+      sumit++;
     }
-    for (; sumit != sums.cend(); sumit = sumit.next())
+    for (; sumit != sums.cend(); sumit++)
     {
       out << ' ' << *sumit;
     }
