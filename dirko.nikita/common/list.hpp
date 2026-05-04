@@ -21,12 +21,10 @@ namespace dirko
     List &operator=(const List< T > &);
     List &operator=(List< T > &&) noexcept;
     ~List();
-
-    LIter< T > begin();
-    LIter< T > end();
-    LCIter< T > cbegin() const;
-    LCIter< T > cend() const;
-
+    Iter< T > begin() noexcept;
+    Iter< T > end() noexcept;
+    CIter< T > cbegin() const noexcept;
+    CIter< T > cend() const noexcept;
     T &head() noexcept;
     T &tail() noexcept;
     const T &chead() const noexcept;
@@ -189,7 +187,7 @@ namespace dirko
     --size_;
   }
   template < class T >
-  void List< T >::erase(LIter< T > pos)
+  Iter< T > List< T >::begin() noexcept
   {
     if (size_ == 0) {
       throw std::logic_error("Empty list");
@@ -210,19 +208,19 @@ namespace dirko
   }
 
   template < class T >
-  LIter< T > List< T >::begin()
+  Iter< T > List< T >::end() noexcept
   {
     return LIter< T >{fake_->next};
   }
 
   template < class T >
-  LIter< T > List< T >::end()
+  CIter< T > List< T >::cbegin() const noexcept
   {
     return LIter< T >{tail_->next};
   }
 
   template < class T >
-  LCIter< T > List< T >::cbegin() const
+  CIter< T > List< T >::cend() const noexcept
   {
     return LCIter< T >{fake_->next};
   }
