@@ -139,7 +139,7 @@ BOOST_AUTO_TEST_CASE(LCIter_test)
   const saldaev::List< int > &listc = list1;
 
   saldaev::List< int >::LCIter it1 = listc.begin();
-  BOOST_CHECK(it1 == list1.end());
+  BOOST_CHECK(it1 == listc.end());
 
   saldaev::List< int >::LCIter itc = it1;
   BOOST_CHECK(it1 == itc);
