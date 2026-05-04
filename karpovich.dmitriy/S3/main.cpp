@@ -3,9 +3,10 @@
 #include <limits>
 #include <stdexcept>
 #include <string>
-#include <unordered_map>
 #include "commands.hpp"
 #include "graph.hpp"
+#include "hashFunctions.hpp"
+#include "hashTable.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -19,6 +20,7 @@ int main(int argc, char *argv[])
     std::cerr << "Cannot open file" << '\n';
     return 1;
   }
+
   std::string graph_name;
   size_t edge_count = 0;
   while (file >> graph_name >> edge_count) {
@@ -32,23 +34,26 @@ int main(int argc, char *argv[])
     graphs.add(graph_name, std::move(g));
   }
   file.close();
+
   using cmd_t = void (*)(std::istream &, std::ostream &, karpovich::GraphSet &);
-  std::unordered_map< std::string, cmd_t > cmds;
-  cmds["graphs"] = karpovich::cmdGraphs;
-  cmds["vertexes"] = karpovich::cmdVertexes;
-  cmds["outbound"] = karpovich::cmdOutbound;
-  cmds["inbound"] = karpovich::cmdInbound;
-  cmds["bind"] = karpovich::cmdBind;
-  cmds["cut"] = karpovich::cmdCut;
-  cmds["create"] = karpovich::cmdCreate;
-  cmds["merge"] = karpovich::cmdMerge;
-  cmds["extract"] = karpovich::cmdExtract;
+  using hash_t = karpovich::Hasher< std::string >;
+  karpovich::HashTable< std::string, cmd_t, hash_t, std::equal_to< std::string > > commands(16);
+
+  commands.add("graphs", karpovich::cmdGraphs);
+  commands.add("vertexes", karpovich::cmdVertexes);
+  commands.add("outbound", karpovich::cmdOutbound);
+  commands.add("inbound", karpovich::cmdInbound);
+  commands.add("bind", karpovich::cmdBind);
+  commands.add("cut", karpovich::cmdCut);
+  commands.add("create", karpovich::cmdCreate);
+  commands.add("merge", karpovich::cmdMerge);
+  commands.add("extract", karpovich::cmdExtract);
+
   std::string cmd;
   while (std::cin >> cmd) {
     try {
-      auto it = cmds.find(cmd);
-      if (it != cmds.end()) {
-        it->second(std::cin, std::cout, graphs);
+      if (commands.has(cmd)) {
+        commands.get(cmd)(std::cin, std::cout, graphs);
       } else {
         throw std::runtime_error("Unknown");
       }
@@ -58,4 +63,6 @@ int main(int argc, char *argv[])
       std::cin.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
     }
   }
+
+  return 0;
 }

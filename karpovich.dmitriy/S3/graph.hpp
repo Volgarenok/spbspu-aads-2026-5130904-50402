@@ -1,12 +1,12 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
 
+#include <Vector.hpp>
 #include <cstddef>
+#include <list.hpp>
 #include <stdexcept>
 #include <string>
 #include <utility>
-#include "../common/Vector.hpp"
-#include "../common/list.hpp"
 #include "hashFunctions.hpp"
 #include "hashIters.hpp"
 #include "hashTable.hpp"

@@ -1,11 +1,11 @@
 #ifndef HASH_TABLE_HPP
 #define HASH_TABLE_HPP
+#include <Vector.hpp>
 #include <cstddef>
 #include <functional>
+#include <list.hpp>
 #include <stdexcept>
 #include <utility>
-#include "../common/Vector.hpp"
-#include "../common/list.hpp"
 #include "hashIters.hpp"
 
 namespace karpovich
@@ -77,18 +77,6 @@ karpovich::HashTable< Key, Value, Hash, Equal >::~HashTable()
 }
 
 template < class Key, class Value, class Hash, class Equal >
-karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(HashTable &&other) noexcept:
-  data_(std::move(other.data_)),
-  capacity_(other.capacity_),
-  size_(other.size_),
-  hasher_(std::move(other.hasher_)),
-  comparator_(std::move(other.comparator_))
-{
-  other.capacity_ = 0;
-  other.size_ = 0;
-}
-
-template < class Key, class Value, class Hash, class Equal >
 karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable &other):
   data_(),
   capacity_(other.capacity_),
@@ -100,12 +88,24 @@ karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable &othe
     data_.pushBack(List< valType >());
   }
   for (size_t i = 0; i < other.capacity_; ++i) {
-    auto &src = const_cast< List< valType > & >(other.data_[i]);
-    for (auto it = src.begin(); it != src.end(); ++it) {
+    const List< valType > &src = other.data_[i];
+    for (LCIter< valType > it = src.cbegin(); it != src.cend(); ++it) {
       data_[i].pushBack(*it);
       ++size_;
     }
   }
+}
+
+template < class Key, class Value, class Hash, class Equal >
+karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(HashTable &&other) noexcept:
+  data_(std::move(other.data_)),
+  capacity_(other.capacity_),
+  size_(other.size_),
+  hasher_(std::move(other.hasher_)),
+  comparator_(std::move(other.comparator_))
+{
+  other.capacity_ = 0;
+  other.size_ = 0;
 }
 
 template < class Key, class Value, class Hash, class Equal >
@@ -135,7 +135,7 @@ template < class Key, class Value, class Hash, class Equal >
 void karpovich::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
 {
   size_t idx = hasher_(k) % capacity_;
-  for (auto it = data_[idx].begin(); it != data_[idx].end(); ++it) {
+  for (LIter< valType > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
     if (comparator_((*it).first, k)) {
       (*it).second = v;
       return;
@@ -149,7 +149,7 @@ template < class Key, class Value, class Hash, class Equal >
 Value karpovich::HashTable< Key, Value, Hash, Equal >::drop(Key k)
 {
   size_t idx = hasher_(k) % capacity_;
-  for (auto it = data_[idx].begin(); it != data_[idx].end(); ++it) {
+  for (LIter< valType > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
     if (comparator_((*it).first, k)) {
       Value val = (*it).second;
       data_[idx].erase(it);
@@ -164,7 +164,7 @@ template < class Key, class Value, class Hash, class Equal >
 Value &karpovich::HashTable< Key, Value, Hash, Equal >::get(Key k)
 {
   size_t idx = hasher_(k) % capacity_;
-  for (auto it = data_[idx].begin(); it != data_[idx].end(); ++it) {
+  for (LIter< valType > it = data_[idx].begin(); it != data_[idx].end(); ++it) {
     if (comparator_((*it).first, k)) {
       return (*it).second;
     }
@@ -176,8 +176,8 @@ template < class Key, class Value, class Hash, class Equal >
 const Value &karpovich::HashTable< Key, Value, Hash, Equal >::get(Key k) const
 {
   size_t idx = hasher_(k) % capacity_;
-  auto &bucket = const_cast< List< valType > & >(data_[idx]);
-  for (auto it = bucket.begin(); it != bucket.end(); ++it) {
+  const List< valType > &bucket = data_[idx];
+  for (LCIter< valType > it = bucket.cbegin(); it != bucket.cend(); ++it) {
     if (comparator_((*it).first, k)) {
       return (*it).second;
     }
@@ -189,8 +189,8 @@ template < class Key, class Value, class Hash, class Equal >
 bool karpovich::HashTable< Key, Value, Hash, Equal >::has(Key k) const noexcept
 {
   size_t idx = hasher_(k) % capacity_;
-  auto &bucket = const_cast< List< valType > & >(data_[idx]);
-  for (auto it = bucket.begin(); it != bucket.end(); ++it) {
+  const List< valType > &bucket = data_[idx];
+  for (LCIter< valType > it = bucket.cbegin(); it != bucket.cend(); ++it) {
     if (comparator_((*it).first, k)) {
       return true;
     }
@@ -209,7 +209,7 @@ void karpovich::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
     new_data.pushBack(List< valType >());
   }
   for (size_t i = 0; i < capacity_; ++i) {
-    for (auto it = data_[i].begin(); it != data_[i].end(); ++it) {
+    for (LIter< valType > it = data_[i].begin(); it != data_[i].end(); ++it) {
       size_t idx = hasher_((*it).first) % slots;
       new_data[idx].pushBack(*it);
     }

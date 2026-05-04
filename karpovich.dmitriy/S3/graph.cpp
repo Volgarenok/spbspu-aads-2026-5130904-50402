@@ -37,10 +37,12 @@ void karpovich::Graph::removeVertex(const std::string &v)
   if (!found) {
     throw std::out_of_range("Vertex not found");
   }
-  Vector< str_t > to_remove;
-  for (HashIter< str_t, List< size_t >, PairHasher< std::string >, std::equal_to< str_t > > it = edges.begin();
+  Vector< std::pair< std::string, std::string > > to_remove;
+  for (HashIter< std::pair< std::string, std::string >, List< size_t >, PairHasher< std::string >,
+                 std::equal_to< std::pair< std::string, std::string > > >
+           it = edges.begin();
        it != edges.end(); ++it) {
-    if ((*it).first.first == v || (*it).first.second == v) {
+    if (((*it).first.first == v) || ((*it).first.second == v)) {
       to_remove.pushBack((*it).first);
     }
   }
@@ -53,7 +55,7 @@ void karpovich::Graph::addEdge(const std::string &from, const std::string &to, s
 {
   addVertex(from);
   addVertex(to);
-  str_t key(from, to);
+  std::pair< std::string, std::string > key(from, to);
   if (edges.has(key)) {
     edges.get(key).pushBack(weight);
   } else {
@@ -71,7 +73,7 @@ void karpovich::Graph::removeEdge(const std::string &from, const std::string &to
   }
   List< size_t > &weights = edges.get(key);
   bool found = false;
-  auto it = weights.begin();
+  LIter< size_t > it = weights.begin();
   while (it != weights.end()) {
     if (*it == weight) {
       it = weights.erase(it);
