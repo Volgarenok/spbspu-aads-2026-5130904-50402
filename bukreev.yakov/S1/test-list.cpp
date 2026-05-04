@@ -57,4 +57,18 @@ BOOST_AUTO_TEST_CASE(test_push_back)
   BOOST_CHECK_EQUAL(*it, 2);
 }
 
+BOOST_AUTO_TEST_CASE(test_pop_back)
+{
+  List< int > list;
+  list.pushBack(1);
+  list.pushBack(2);
+  int popped = list.popBack();
+
+  LCIter< int > it = list.cbegin();
+
+  BOOST_CHECK_EQUAL(list.size(), 1);
+  BOOST_CHECK_EQUAL(*it, 1);
+  BOOST_CHECK_EQUAL(popped, 2);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
