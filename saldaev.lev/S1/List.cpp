@@ -296,7 +296,7 @@ typename saldaev::List< T >::LIter saldaev::List< T >::LIter::operator++(int) no
   if (curr->next) {
     curr = curr->next;
   }
-  return *this;
+  return ret;
 }
 
 template < class T >
@@ -311,7 +311,7 @@ typename saldaev::List< T >::LIter saldaev::List< T >::LIter::operator--(int) no
 {
   LIter ret = *this;
   curr = curr->prev;
-  return *this;
+  return ret;
 }
 
 template < class T >
