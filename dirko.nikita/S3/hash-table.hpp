@@ -1,11 +1,13 @@
 #ifndef HASH_TABLE_HPP
 #define HASH_TABLE_HPP
-#include <Vector.hpp>
 #include <cstddef>
+#include <functional>
 #include <initializer_list>
-#include <list.hpp>
 #include <stdexcept>
 #include <utility>
+#include "../common/Vector.hpp"
+#include "../common/list.hpp"
+#include "hasher.hpp"
 
 namespace dirko
 {
@@ -13,7 +15,7 @@ namespace dirko
   class HTIter;
   template < class Key, class Value, class Hash, class Equal >
   class HTCIter;
-  template < class Key, class Value, class Hash, class Equal >
+  template < class Key, class Value, class Hash = dirko::SipHasher< Key >, class Equal = std::equal_to< Key > >
   class HashTable
   {
   public:
@@ -24,12 +26,16 @@ namespace dirko
     void drop(Key k);
     Value get(Key k);
     const Value get(Key k) const;
+    void rewrite(Key k, Value vl);
     bool has(Key k) const noexcept;
     void rehash(size_t slots);
 
     using HTIt = HTIter< Key, Value, Hash, Equal >;
+    using HTCIt = HTCIter< Key, Value, Hash, Equal >;
     HTIt begin() noexcept;
     HTIt end() noexcept;
+    HTCIt cbegin() const noexcept;
+    HTCIt cend() const noexcept;
 
     void clear() noexcept;
     size_t size() const noexcept;
@@ -104,7 +110,7 @@ dirko::HashTable< Key, Value, Hash, Equal >::HashTable(std::initializer_list< st
   data_.reserve(il.size());
   for (const std::pair< Key, Value > &v : il) {
     size_t id = hasher_(v.first) % slots_;
-    data_[id].push_back(v.second);
+    data_[id]->push_back(v);
   }
 }
 
@@ -112,7 +118,7 @@ template < class Key, class Value, class Hash, class Equal >
 void dirko::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
 {
   size_t id = hasher_(k) % slots_;
-  data_[id].push_back(v);
+  data_[id]->push_back({k, v});
   ++elements_;
 }
 
@@ -122,7 +128,7 @@ void dirko::HashTable< Key, Value, Hash, Equal >::drop(Key k)
   size_t id = hasher_(k) % slots_;
   List< std::pair< Key, Value > > *head = data_[id];
   for (LIter< std::pair< Key, Value > > v = head->begin(); v != head->end(); ++v) {
-    if (comparator_(*v.first, k)) {
+    if (comparator_((*v).first, k)) {
       head->erase(v++);
       --v;
     }
@@ -134,8 +140,8 @@ Value dirko::HashTable< Key, Value, Hash, Equal >::get(Key k)
   size_t id = hasher_(k) % slots_;
   List< std::pair< Key, Value > > *head = data_[id];
   for (LIter< std::pair< Key, Value > > v = head->begin(); v != head->end(); ++v) {
-    if (comparator_(*v.first, k)) {
-      return *v.second;
+    if (comparator_((*v).first, k)) {
+      return (*v).second;
     }
   }
   throw std::out_of_range("No such element");
@@ -152,7 +158,7 @@ bool dirko::HashTable< Key, Value, Hash, Equal >::has(Key k) const noexcept
   size_t id = hasher_(k) % slots_;
   List< std::pair< Key, Value > > *head = data_[id];
   for (LIter< std::pair< Key, Value > > v = head->begin(); v != head->end(); ++v) {
-    if (comparator_(*v.first, k)) {
+    if (comparator_((*v).first, k)) {
       return true;
     }
   }
@@ -172,7 +178,7 @@ template < class Key, class Value, class Hash, class Equal >
 void dirko::HashTable< Key, Value, Hash, Equal >::clear() noexcept
 {
   for (size_t i = 0; i < slots_; ++i) {
-    data_[i].clear();
+    data_[i]->clear();
   }
   elements_ = 0;
 }
@@ -190,8 +196,8 @@ template < class Key, class Value, class Hash, class Equal >
 void dirko::HashTable< Key, Value, Hash, Equal >::swap(HashTable &other) noexcept
 {
   data_.swap(other.data_);
-  hasher_.swap(other.hasher_);
-  comparator_.swap(other.comparator_);
+  std::swap(hasher_, other.hasher_);
+  std::swap(comparator_, other.comparator_);
   std::swap(slots_, other.slots_);
   std::swap(elements_, other.elements_);
 }
@@ -199,14 +205,23 @@ void dirko::HashTable< Key, Value, Hash, Equal >::swap(HashTable &other) noexcep
 template < class Key, class Value, class Hash, class Equal >
 dirko::HTIter< Key, Value, Hash, Equal > dirko::HashTable< Key, Value, Hash, Equal >::begin() noexcept
 {
-  return {data_[0].begin(), 0, this};
+  return {this, data_[0]->begin(), 0};
 }
 template < class Key, class Value, class Hash, class Equal >
 dirko::HTIter< Key, Value, Hash, Equal > dirko::HashTable< Key, Value, Hash, Equal >::end() noexcept
 {
-  return {data_[slots_ - 1].end(), slots_ - 1, this};
+  return {this, data_[slots_ - 1]->end(), slots_ - 1};
 }
-
+template < class Key, class Value, class Hash, class Equal >
+dirko::HTCIter< Key, Value, Hash, Equal > dirko::HashTable< Key, Value, Hash, Equal >::cbegin() const noexcept
+{
+  return {this, data_[0]->begin(), 0};
+}
+template < class Key, class Value, class Hash, class Equal >
+dirko::HTCIter< Key, Value, Hash, Equal > dirko::HashTable< Key, Value, Hash, Equal >::cend() const noexcept
+{
+  return {this, data_[slots_ - 1]->end(), slots_ - 1};
+}
 template < class Key, class Value, class Hash, class Equal >
 dirko::HTIter< Key, Value, Hash, Equal >::HTIter(HashTable< Key, Value, Hash, Equal > *table,
                                                  LIter< std::pair< Key, Value > > curr, size_t slot):
@@ -227,7 +242,7 @@ dirko::HTIter< Key, Value, Hash, Equal > &dirko::HTIter< Key, Value, Hash, Equal
       throw std::out_of_range("out of bounds");
     }
     ++slot_;
-    curr_ = table_->data_[slot_].begin();
+    curr_ = table_->data_[slot_]->begin;
   } else {
     ++curr_;
   }
@@ -241,7 +256,7 @@ dirko::HTIter< Key, Value, Hash, Equal > &dirko::HTIter< Key, Value, Hash, Equal
       throw std::out_of_range("out of bounds");
     }
     --slot_;
-    curr_ = table_->data_[slot_].end();
+    curr_ = table_->data_[slot_]->end();
   }
   --curr_;
   return curr_;
@@ -255,7 +270,7 @@ dirko::HTIter< Key, Value, Hash, Equal > dirko::HTIter< Key, Value, Hash, Equal 
       throw std::out_of_range("out of bounds");
     }
     ++slot_;
-    curr_ = table_->data_[slot_].begin();
+    curr_ = table_->data_[slot_]->begin();
   } else {
     ++curr_;
   }
@@ -270,7 +285,7 @@ dirko::HTIter< Key, Value, Hash, Equal > dirko::HTIter< Key, Value, Hash, Equal 
       throw std::out_of_range("out of bounds");
     }
     --slot_;
-    curr_ = table_->data_[slot_].end();
+    curr_ = table_->data_[slot_]->end();
   }
   --curr_;
   return past;
@@ -278,7 +293,7 @@ dirko::HTIter< Key, Value, Hash, Equal > dirko::HTIter< Key, Value, Hash, Equal 
 template < class Key, class Value, class Hash, class Equal >
 bool dirko::HTIter< Key, Value, Hash, Equal >::operator==(const HTIter< Key, Value, Hash, Equal > &other) const
 {
-  return (*curr_.first == (*other.curr_).first) & (*curr_.second == (*other.curr_).second);
+  return ((*curr_).first == (*other.curr_).first) & ((*curr_).second == (*other.curr_).second);
 }
 template < class Key, class Value, class Hash, class Equal >
 bool dirko::HTIter< Key, Value, Hash, Equal >::operator!=(const HTIter< Key, Value, Hash, Equal > &other) const
@@ -306,7 +321,7 @@ dirko::HTCIter< Key, Value, Hash, Equal > &dirko::HTCIter< Key, Value, Hash, Equ
       throw std::out_of_range("out of bounds");
     }
     ++slot_;
-    curr_ = table_->data_[slot_].begin();
+    curr_ = table_->data_[slot_]->begin();
   } else {
     ++curr_;
   }
@@ -320,7 +335,7 @@ dirko::HTCIter< Key, Value, Hash, Equal > &dirko::HTCIter< Key, Value, Hash, Equ
       throw std::out_of_range("out of bounds");
     }
     --slot_;
-    curr_ = table_->data_[slot_].end();
+    curr_ = table_->data_[slot_]->end();
   }
   --curr_;
   return curr_;
@@ -334,7 +349,7 @@ dirko::HTCIter< Key, Value, Hash, Equal > dirko::HTCIter< Key, Value, Hash, Equa
       throw std::out_of_range("out of bounds");
     }
     ++slot_;
-    curr_ = table_->data_[slot_].begin();
+    curr_ = table_->data_[slot_]->begin();
   } else {
     ++curr_;
   }
@@ -349,7 +364,7 @@ dirko::HTCIter< Key, Value, Hash, Equal > dirko::HTCIter< Key, Value, Hash, Equa
       throw std::out_of_range("out of bounds");
     }
     --slot_;
-    curr_ = table_->data_[slot_].end();
+    curr_ = table_->data_[slot_]->end();
   }
   --curr_;
   return past;
@@ -357,11 +372,24 @@ dirko::HTCIter< Key, Value, Hash, Equal > dirko::HTCIter< Key, Value, Hash, Equa
 template < class Key, class Value, class Hash, class Equal >
 bool dirko::HTCIter< Key, Value, Hash, Equal >::operator==(const HTCIter< Key, Value, Hash, Equal > &other) const
 {
-  return (*curr_.first == (*other.curr_).first) & (*curr_.second == (*other.curr_).second);
+  return ((*curr_).first == (*other.curr_).first) & ((*curr_).second == (*other.curr_).second);
 }
 template < class Key, class Value, class Hash, class Equal >
 bool dirko::HTCIter< Key, Value, Hash, Equal >::operator!=(const HTCIter< Key, Value, Hash, Equal > &other) const
 {
   return !(*this == other);
+}
+
+template < class Key, class Value, class Hash, class Equal >
+void dirko::HashTable< Key, Value, Hash, Equal >::rewrite(Key k, Value vl)
+{
+  size_t id = hasher_(k) % slots_;
+  List< std::pair< Key, Value > > *head = data_[id];
+  for (LIter< std::pair< Key, Value > > v = head->begin(); v != head->end(); ++v) {
+    if (comparator_((*v).first, k)) {
+      (*v).second = vl;
+    }
+  }
+  throw std::out_of_range("No such element");
 }
 #endif
