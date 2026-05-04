@@ -7,6 +7,10 @@ namespace saldaev
   template < class T >
   struct List
   {
+  private:
+    struct Node;
+
+  public:
     struct LCIter
     {
       friend class List;
