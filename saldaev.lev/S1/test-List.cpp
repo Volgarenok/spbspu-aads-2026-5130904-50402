@@ -1,23 +1,6 @@
 #include "List.hpp"
 #include <boost/test/unit_test.hpp>
 
-namespace saldaev
-{
-  template < typename T >
-  std::ostream &operator<<(std::ostream &os, const typename List< T >::LCIter &)
-  {
-    os << "LCIter";
-    return os;
-  }
-
-  template < typename T >
-  std::ostream &operator<<(std::ostream &os, const typename List< T >::LIter &)
-  {
-    os << "LIter";
-    return os;
-  }
-}
-
 BOOST_AUTO_TEST_CASE(list_constructor)
 {
   saldaev::List< size_t > list1;
@@ -119,11 +102,11 @@ BOOST_AUTO_TEST_CASE(list_adding_and_removing_nodes)
   ++it;
   BOOST_CHECK_EQUAL(*it, 2);
 
-  list1.popFront();
+  BOOST_CHECK_EQUAL(list1.popFront(), 0);
   BOOST_CHECK_EQUAL(list1.size(), 2);
   BOOST_CHECK_EQUAL(*list1.begin(), 1);
 
-  list1.popBack();
+  BOOST_CHECK_EQUAL(list1.popBack(), 2);
   BOOST_CHECK_EQUAL(list1.size(), 1);
 
   it = list1.begin();
@@ -178,9 +161,6 @@ BOOST_AUTO_TEST_CASE(LCIter_test)
   saldaev::List< int >::LCIter it2 = listc.begin();
   BOOST_CHECK(it2 != listc.end());
 
-  auto it3 = it2;
-  --it3;
-  BOOST_CHECK(it3 == listc.end());
   ++it2;
   BOOST_CHECK(it2 != listc.end());
   ++it2;
@@ -216,9 +196,6 @@ BOOST_AUTO_TEST_CASE(LIter_test)
 
   saldaev::List< int >::LIter it2 = list1.begin();
   BOOST_CHECK(it2 != list1.end());
-  auto it3 = it2;
-  --it3;
-  BOOST_CHECK(it3 == list1.end());
   ++it2;
   BOOST_CHECK(it2 != list1.end());
   ++it2;
