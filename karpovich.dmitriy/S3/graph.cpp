@@ -20,7 +20,7 @@ void karpovich::Graph::addVertex(const std::string &v)
     }
   }
   if (!exists) {
-    vertices.push_back(v);
+    vertices.pushBack(v);
   }
 }
 
@@ -55,10 +55,10 @@ void karpovich::Graph::addEdge(const std::string &from, const std::string &to, s
   addVertex(to);
   str_t key(from, to);
   if (edges.has(key)) {
-    edges.get(key).push_back(weight);
+    edges.get(key).pushBack(weight);
   } else {
     List< size_t > weights;
-    weights.push_back(weight);
+    weights.pushBack(weight);
     edges.add(key, weights);
   }
 }

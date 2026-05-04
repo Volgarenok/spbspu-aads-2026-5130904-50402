@@ -103,15 +103,25 @@ void karpovich::cmdCut(std::istream &in, std::ostream &, GraphSet &graphs)
 void karpovich::cmdCreate(std::istream &in, std::ostream &, GraphSet &graphs)
 {
   std::string g_name;
-  size_t k = 0;
-  in >> g_name >> k;
+  in >> g_name;
+  if (!in) {
+    throw std::runtime_error("Invalid input");
+  }
   if (graphs.has(g_name)) {
-    throw std::runtime_error("Exists");
+    throw std::runtime_error("Graph already exists");
+  }
+  size_t k = 0;
+  in >> k;
+  if (!in) {
+    throw std::runtime_error("Invalid vertex count");
   }
   Graph g;
   for (size_t i = 0; i < k; ++i) {
     std::string v;
     in >> v;
+    if (!in) {
+      throw std::runtime_error("Invalid vertex name");
+    }
     g.addVertex(v);
   }
   graphs.add(g_name, std::move(g));
@@ -280,7 +290,7 @@ void karpovich::cmdExtract(std::istream &in, std::ostream &, GraphSet &graphs)
   for (size_t i = 0; i < k; ++i) {
     std::string v;
     in >> v;
-    required.push_back(v);
+    required.pushBack(v);
   }
   for (auto it = required.begin(); it != required.end(); ++it) {
     bool found = false;

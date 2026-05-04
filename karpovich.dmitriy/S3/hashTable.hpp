@@ -102,7 +102,7 @@ karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable &othe
   for (size_t i = 0; i < other.capacity_; ++i) {
     auto &src = const_cast< List< valType > & >(other.data_[i]);
     for (auto it = src.begin(); it != src.end(); ++it) {
-      data_[i].push_back(*it);
+      data_[i].pushBack(*it);
       ++size_;
     }
   }
@@ -141,7 +141,7 @@ void karpovich::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
       return;
     }
   }
-  data_[idx].push_back(valType(k, v));
+  data_[idx].pushBack(valType(k, v));
   ++size_;
 }
 
@@ -211,7 +211,7 @@ void karpovich::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
   for (size_t i = 0; i < capacity_; ++i) {
     for (auto it = data_[i].begin(); it != data_[i].end(); ++it) {
       size_t idx = hasher_((*it).first) % slots;
-      new_data[idx].push_back(*it);
+      new_data[idx].pushBack(*it);
     }
   }
   data_ = std::move(new_data);
