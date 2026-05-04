@@ -11,7 +11,7 @@
 namespace karpovich
 {
 
-  template < class Key, class Value, class Hash = std::hash< Value >, class Equal = std::equal_to< Key > >
+  template < class Key, class Value, class Hash = std::hash< Key >, class Equal = std::equal_to< Key > >
   class HashTable
   {
     friend class HashIter< Key, Value, Hash, Equal >;
@@ -211,7 +211,7 @@ void karpovich::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
   for (size_t i = 0; i < capacity_; ++i) {
     for (auto it = data_[i].begin(); it != data_[i].end(); ++it) {
       size_t idx = hasher_((*it).first) % slots;
-      new_data[idx].pushBack(*it);
+      new_data[idx].push_back(*it);
     }
   }
   data_ = std::move(new_data);
