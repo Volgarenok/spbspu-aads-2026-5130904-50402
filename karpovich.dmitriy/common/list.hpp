@@ -30,10 +30,10 @@ namespace karpovich
     LCIter< T > cend() const;
     LIter< T > insert(LIter< T > pos, const T &value);
     LIter< T > erase(LIter< T > pos) noexcept;
-    void push_front(const T &val);
-    void push_back(const T &val);
-    void pop_front();
-    void pop_back();
+    void pushFront(const T &val);
+    void pushBack(const T &val);
+    void popFront();
+    void popBack();
     void clear();
     void swap(List< T > &other) noexcept;
     size_t size() const noexcept;
@@ -58,7 +58,7 @@ namespace karpovich
     fake_->prev = fake_;
     Node< T > *cur = other.fake_->next;
     while (cur != other.fake_) {
-      push_back(cur->val);
+      pushBack(cur->val);
       cur = cur->next;
     }
   }
@@ -128,7 +128,7 @@ namespace karpovich
   }
 
   template < class T >
-  void List< T >::push_back(const T &val)
+  void List< T >::pushBack(const T &val)
   {
     Node< T > *node = new Node< T >{val, fake_, fake_->prev};
     fake_->prev->next = node;
@@ -137,7 +137,7 @@ namespace karpovich
   }
 
   template < class T >
-  void List< T >::push_front(const T &val)
+  void List< T >::pushFront(const T &val)
   {
     Node< T > *node = new Node< T >{val, fake_->next, fake_};
     fake_->next->prev = node;
@@ -146,7 +146,7 @@ namespace karpovich
   }
 
   template < class T >
-  void List< T >::pop_back()
+  void List< T >::popBack()
   {
     if (size_ == 0) {
       return;
@@ -159,7 +159,7 @@ namespace karpovich
   }
 
   template < class T >
-  void List< T >::pop_front()
+  void List< T >::popFront()
   {
     if (size_ == 0) {
       return;
@@ -211,14 +211,14 @@ namespace karpovich
   template < class T >
   LIter< T > List< T >::insert(LIter< T > pos, const T &value)
   {
-    Node< T > *pos_node = pos.ptr_;
-    Node< T > *new_node = new Node< T >{value, pos_node, pos_node->prev};
+    Node< T > *posNode = pos.ptr_;
+    Node< T > *newNode = new Node< T >{value, posNode, posNode->prev};
 
-    pos_node->prev->next = new_node;
-    pos_node->prev = new_node;
+    posNode->prev->next = newNode;
+    posNode->prev = newNode;
     size_++;
 
-    return LIter< T >{new_node};
+    return LIter< T >{newNode};
   }
 
   template < class T >

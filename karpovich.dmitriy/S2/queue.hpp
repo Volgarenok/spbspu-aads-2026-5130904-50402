@@ -31,11 +31,11 @@ namespace karpovich
   }
   template < class T > void Queue< T >::push(const T &rhs)
   {
-    data_.push_back(rhs);
+    data_.pushBack(rhs);
   }
   template < class T > void Queue< T >::pop() noexcept
   {
-    data_.pop_front();
+    data_.popFront();
   }
 }
 #endif
