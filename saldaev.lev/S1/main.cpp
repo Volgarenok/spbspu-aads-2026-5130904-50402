@@ -12,9 +12,9 @@ int main()
   while (std::cin >> name) {
     saldaev::List< size_t > numList;
     while (std::cin >> num) {
-      numList.newTail(num);
+      numList.pushBack(num);
     }
-    outer.newTail({name, std::move(numList)});
+    outer.pushBack({name, std::move(numList)});
 
     if (!std::cin.eof()) {
       std::cin.clear();
@@ -26,10 +26,10 @@ int main()
     return 0;
   }
 
-  saldaev::LIter< std::pair< std::string, saldaev::List< size_t > > > outerIt = outer.begin();
-  saldaev::List< saldaev::LIter< size_t > > iters;
+  typename saldaev::List< std::pair< std::string, saldaev::List< size_t > > >::LIter outerIt = outer.begin();
+  saldaev::List< typename saldaev::List< size_t >::LIter > iters;
   while (outerIt != outer.end()) {
-    iters.newTail(outerIt.getData().second.begin());
+    iters.pushBack(outerIt->second.begin());
     ++outerIt;
   }
 
@@ -39,7 +39,7 @@ int main()
     if (!first) {
       std::cout << ' ';
     }
-    std::cout << outerIt.getData().first;
+    std::cout << outerIt->first;
     first = false;
     ++outerIt;
   }
@@ -48,16 +48,16 @@ int main()
   while (any_left) {
     std::cout << '\n';
     any_left = false;
-    saldaev::LIter< saldaev::LIter< size_t > > iterIt = iters.begin();
+    typename saldaev::List< typename saldaev::List< size_t >::LIter >::LIter iterIt = iters.begin();
 
     first = true;
     while (iterIt != iters.end()) {
-      saldaev::LIter< size_t > &innerIt = iterIt.getData();
-      if (innerIt.isValid()) {
+      typename saldaev::List< size_t >::LIter &innerIt = *iterIt;
+      if (innerIt != outer.begin()->second.end()) {
         if (!first) {
           std::cout << ' ';
         }
-        std::cout << innerIt.getData();
+        std::cout << *innerIt;
         ++innerIt;
         any_left = true;
         first = false;
@@ -67,32 +67,32 @@ int main()
   }
 
   outerIt = outer.begin();
-  saldaev::LIter< saldaev::LIter< size_t > > iterIt = iters.begin();
+  typename saldaev::List< typename saldaev::List< size_t >::LIter >::LIter iterIt = iters.begin();
   while (outerIt != outer.end()) {
-    iters.setData(iterIt, outerIt.getData().second.begin());
+    *iterIt = outerIt->second.begin();
     ++outerIt;
     ++iterIt;
   }
 
   saldaev::List< size_t > sums;
   try {
-    for (size_t i = 0; i < iters.getLength(); ++i) {
-      sums.newHead(0);
+    for (size_t i = 0; i < iters.size(); ++i) {
+      sums.pushFront(0);
     }
-    saldaev::LIter< size_t > sumsIt = sums.begin();
+    typename saldaev::List< size_t >::LIter sumsIt = sums.begin();
     any_left = true;
     while (any_left) {
       any_left = false;
-      saldaev::LIter< saldaev::LIter< size_t > > iterIt = iters.begin();
+      typename saldaev::List< typename saldaev::List< size_t >::LIter >::LIter iterIt = iters.begin();
 
       while (iterIt != iters.end()) {
-        saldaev::LIter< size_t > &innerIt = iterIt.getData();
-        if (innerIt.isValid()) {
-          size_t num = innerIt.getData();
-          if (std::numeric_limits< size_t >::max() - num < sumsIt.getData()) {
+        typename saldaev::List< size_t >::LIter &innerIt = *iterIt;
+        if (innerIt != outer.begin()->second.end()) {
+          size_t num = *innerIt;
+          if (std::numeric_limits< size_t >::max() - num < *sumsIt) {
             throw std::overflow_error("overflow_error");
           }
-          sumsIt.getData() += innerIt.getData();
+          *sumsIt += *innerIt;
           ++innerIt;
           any_left = true;
           first = false;
@@ -105,13 +105,13 @@ int main()
     return 1;
   }
 
-  saldaev::LIter< size_t > sumsIt = sums.begin();
+  typename saldaev::List< size_t >::LIter sumsIt = sums.begin();
   first = true;
   while (sumsIt != sums.end()) {
     if (!first) {
       std::cout << ' ';
     }
-    std::cout << sumsIt.getData();
+    std::cout << *sumsIt;
     first = false;
     ++sumsIt;
   }
