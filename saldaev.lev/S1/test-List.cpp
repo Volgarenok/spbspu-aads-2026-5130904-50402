@@ -4,14 +4,14 @@
 namespace saldaev
 {
   template < typename T >
-  std::ostream &operator<<(std::ostream &os, const LCIter< T > &)
+  std::ostream &operator<<(std::ostream &os, const typename List< T >::LCIter &)
   {
     os << "LCIter";
     return os;
   }
 
   template < typename T >
-  std::ostream &operator<<(std::ostream &os, const LIter< T > &)
+  std::ostream &operator<<(std::ostream &os, const typename List< T >::LIter &)
   {
     os << "LIter";
     return os;
@@ -23,46 +23,46 @@ BOOST_AUTO_TEST_CASE(list_constructor)
   saldaev::List< size_t > list1;
 
   BOOST_CHECK(list1.begin() == list1.end());
-  BOOST_CHECK_EQUAL(list1.getLength(), 0);
+  BOOST_CHECK_EQUAL(list1.size(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(list_rule_of_five_copy_semantics)
 {
   saldaev::List< int > list1;
 
-  list1.newHead(1);
-  list1.newTail(2);
-  list1.newHead(0);
+  list1.pushFront(1);
+  list1.pushBack(2);
+  list1.pushFront(0);
 
   saldaev::List< int > list2 = list1;
 
   auto it = list2.begin();
-  BOOST_CHECK_EQUAL(it.getData(), 0);
+  BOOST_CHECK_EQUAL(*it, 0);
   ++it;
-  BOOST_CHECK_EQUAL(it.getData(), 1);
+  BOOST_CHECK_EQUAL(*it, 1);
   ++it;
-  BOOST_CHECK_EQUAL(it.getData(), 2);
+  BOOST_CHECK_EQUAL(*it, 2);
 
   saldaev::List< int > list3;
   list3 = list2;
 
   it = list3.begin();
-  BOOST_CHECK_EQUAL(it.getData(), 0);
+  BOOST_CHECK_EQUAL(*it, 0);
   ++it;
-  BOOST_CHECK_EQUAL(it.getData(), 1);
+  BOOST_CHECK_EQUAL(*it, 1);
   ++it;
-  BOOST_CHECK_EQUAL(it.getData(), 2);
+  BOOST_CHECK_EQUAL(*it, 2);
 
-  list2.newHead(-1);
-  BOOST_CHECK_NE(list1.begin().getData(), -1);
-  list3.cutHead();
-  BOOST_CHECK_EQUAL(list2.begin().getData(), -1);
+  list2.pushFront(-1);
+  BOOST_CHECK_NE(*list1.begin(), -1);
+  list3.popFront();
+  BOOST_CHECK_EQUAL(*list2.begin(), -1);
 
   list3 = list3;
   it = list3.begin();
-  BOOST_CHECK_EQUAL(it.getData(), 1);
+  BOOST_CHECK_EQUAL(*it, 1);
   ++it;
-  BOOST_CHECK_EQUAL(it.getData(), 2);
+  BOOST_CHECK_EQUAL(*it, 2);
 }
 
 BOOST_AUTO_TEST_CASE(list_rule_of_five_move_semantics)
@@ -70,84 +70,84 @@ BOOST_AUTO_TEST_CASE(list_rule_of_five_move_semantics)
   saldaev::List< int > list1;
 
   BOOST_CHECK(list1.begin() == list1.end());
-  BOOST_CHECK_EQUAL(list1.getLength(), 0);
+  BOOST_CHECK_EQUAL(list1.size(), 0);
 
-  list1.newHead(1);
-  list1.newTail(2);
-  list1.newHead(0);
+  list1.pushFront(1);
+  list1.pushBack(2);
+  list1.pushFront(0);
 
   saldaev::List< int > list2 = std::move(list1);
 
   auto it = list2.begin();
-  BOOST_CHECK_EQUAL(it.getData(), 0);
+  BOOST_CHECK_EQUAL(*it, 0);
   ++it;
-  BOOST_CHECK_EQUAL(it.getData(), 1);
+  BOOST_CHECK_EQUAL(*it, 1);
   ++it;
-  BOOST_CHECK_EQUAL(it.getData(), 2);
+  BOOST_CHECK_EQUAL(*it, 2);
 
-  BOOST_CHECK_EQUAL(list1.getLength(), 0);
-  list1.newHead(1);
-  BOOST_CHECK_EQUAL(list1.getLength(), 1);
+  BOOST_CHECK_EQUAL(list1.size(), 0);
+  list1.pushFront(1);
+  BOOST_CHECK_EQUAL(list1.size(), 1);
 
   saldaev::List< int > list3;
   list3 = std::move(list2);
 
   it = list3.begin();
-  BOOST_CHECK_EQUAL(it.getData(), 0);
+  BOOST_CHECK_EQUAL(*it, 0);
   ++it;
-  BOOST_CHECK_EQUAL(it.getData(), 1);
+  BOOST_CHECK_EQUAL(*it, 1);
   ++it;
-  BOOST_CHECK_EQUAL(it.getData(), 2);
+  BOOST_CHECK_EQUAL(*it, 2);
 
-  BOOST_CHECK_EQUAL(list2.getLength(), 0);
-  list2.newHead(1);
-  BOOST_CHECK_EQUAL(list2.getLength(), 1);
+  BOOST_CHECK_EQUAL(list2.size(), 0);
+  list2.pushFront(1);
+  BOOST_CHECK_EQUAL(list2.size(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(list_adding_and_removing_nodes)
 {
   saldaev::List< int > list1;
 
-  list1.newHead(1);
-  list1.newTail(2);
-  list1.newHead(0);
+  list1.pushFront(1);
+  list1.pushBack(2);
+  list1.pushFront(0);
 
   auto it = list1.begin();
-  BOOST_CHECK_EQUAL(it.getData(), 0);
+  BOOST_CHECK_EQUAL(*it, 0);
   ++it;
-  BOOST_CHECK_EQUAL(it.getData(), 1);
+  BOOST_CHECK_EQUAL(*it, 1);
   ++it;
-  BOOST_CHECK_EQUAL(it.getData(), 2);
+  BOOST_CHECK_EQUAL(*it, 2);
 
-  list1.cutHead();
-  BOOST_CHECK_EQUAL(list1.getLength(), 2);
-  BOOST_CHECK_EQUAL(list1.begin().getData(), 1);
+  list1.popFront();
+  BOOST_CHECK_EQUAL(list1.size(), 2);
+  BOOST_CHECK_EQUAL(*list1.begin(), 1);
 
-  list1.cutTail();
-  BOOST_CHECK_EQUAL(list1.getLength(), 1);
+  list1.popBack();
+  BOOST_CHECK_EQUAL(list1.size(), 1);
 
   it = list1.begin();
-  BOOST_CHECK_EQUAL(it.getData(), 1);
+  BOOST_CHECK_EQUAL(*it, 1);
 
-  list1.addAfter(it, 2);
-  BOOST_CHECK_EQUAL(list1.getLength(), 2);
+  list1.insertAfter(it, 2);
+  BOOST_CHECK_EQUAL(list1.size(), 2);
   ++it;
-  BOOST_CHECK_EQUAL(it.getData(), 2);
+  BOOST_CHECK_EQUAL(*it, 2);
 
-  list1.addBefore(it, 3);
-  BOOST_CHECK_EQUAL(list1.getLength(), 3);
+  list1.insertBefore(it, 3);
+  BOOST_CHECK_EQUAL(list1.size(), 3);
   --it;
-  BOOST_CHECK_EQUAL(it.getData(), 3);
+  BOOST_CHECK_EQUAL(*it, 3);
 
-  auto itN = list1.cutCurrent(it);
-  BOOST_CHECK_EQUAL(list1.getLength(), 2);
-  BOOST_CHECK_EQUAL(itN.getData(), 2);
+  auto itN = list1.erase(it);
+  BOOST_CHECK_EQUAL(list1.size(), 2);
+  BOOST_CHECK_EQUAL(*itN, 2);
   --itN;
-  BOOST_CHECK_EQUAL(itN.getData(), 1);
+  BOOST_CHECK_EQUAL(*itN, 1);
 
   list1.clear();
   BOOST_CHECK(list1.begin() == list1.end());
-  BOOST_CHECK_EQUAL(list1.getLength(), 0);
+  BOOST_CHECK_EQUAL(list1.size(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(LCIter_test)
@@ -155,11 +155,10 @@ BOOST_AUTO_TEST_CASE(LCIter_test)
   saldaev::List< int > list1;
   const saldaev::List< int > &listc = list1;
 
-  saldaev::LCIter< int > it1 = listc.begin();
+  saldaev::List< int >::LCIter it1 = listc.begin();
   BOOST_CHECK(it1 == list1.end());
-  BOOST_CHECK_EQUAL(it1.isValid(), false);
 
-  saldaev::LCIter< int > itc = it1;
+  saldaev::List< int >::LCIter itc = it1;
   BOOST_CHECK(it1 == itc);
   BOOST_CHECK(!(it1 != itc));
 
@@ -172,37 +171,33 @@ BOOST_AUTO_TEST_CASE(LCIter_test)
   --itc;
   BOOST_CHECK(it1 == itc);
 
-  list1.newTail(1);
-  list1.newTail(2);
-  list1.newTail(3);
+  list1.pushBack(1);
+  list1.pushBack(2);
+  list1.pushBack(3);
 
-  saldaev::LCIter< int > it2 = listc.begin();
-  BOOST_CHECK_EQUAL(it2.isValid(), true);
-  BOOST_CHECK_EQUAL(it2.hasPrev(), false);
-  BOOST_CHECK_EQUAL(it2.hasNext(), true);
-  it2++;
-  BOOST_CHECK_EQUAL(it2.isValid(), true);
-  BOOST_CHECK_EQUAL(it2.hasPrev(), true);
-  BOOST_CHECK_EQUAL(it2.hasNext(), true);
-  it2++;
-  BOOST_CHECK_EQUAL(it2.isValid(), true);
-  BOOST_CHECK_EQUAL(it2.hasPrev(), true);
-  BOOST_CHECK_EQUAL(it2.hasNext(), false);
-  it2++;
-  BOOST_CHECK_EQUAL(it2.isValid(), false);
-  BOOST_CHECK_EQUAL(it2.hasPrev(), false);
-  BOOST_CHECK_EQUAL(it2.hasNext(), false);
+  saldaev::List< int >::LCIter it2 = listc.begin();
+  BOOST_CHECK(it2 != listc.end());
+
+  auto it3 = it2;
+  --it3;
+  BOOST_CHECK(it3 == listc.end());
+  ++it2;
+  BOOST_CHECK(it2 != listc.end());
+  ++it2;
+  BOOST_CHECK(it2 != listc.end());
+  auto it4 = it2;
+  ++it4;
+  BOOST_CHECK(it4 == listc.end());
 }
 
 BOOST_AUTO_TEST_CASE(LIter_test)
 {
   saldaev::List< int > list1;
 
-  saldaev::LIter< int > it1 = list1.begin();
+  saldaev::List< int >::LIter it1 = list1.begin();
   BOOST_CHECK(it1 == list1.end());
-  BOOST_CHECK_EQUAL(it1.isValid(), false);
 
-  saldaev::LIter< int > itc = it1;
+  saldaev::List< int >::LIter itc = it1;
   BOOST_CHECK(it1 == itc);
   BOOST_CHECK(!(it1 != itc));
 
@@ -215,24 +210,20 @@ BOOST_AUTO_TEST_CASE(LIter_test)
   --itc;
   BOOST_CHECK(it1 == itc);
 
-  list1.newTail(1);
-  list1.newTail(2);
-  list1.newTail(3);
+  list1.pushBack(1);
+  list1.pushBack(2);
+  list1.pushBack(3);
 
-  saldaev::LIter< int > it2 = list1.begin();
-  BOOST_CHECK_EQUAL(it2.isValid(), true);
-  BOOST_CHECK_EQUAL(it2.hasPrev(), false);
-  BOOST_CHECK_EQUAL(it2.hasNext(), true);
-  it2++;
-  BOOST_CHECK_EQUAL(it2.isValid(), true);
-  BOOST_CHECK_EQUAL(it2.hasPrev(), true);
-  BOOST_CHECK_EQUAL(it2.hasNext(), true);
-  it2++;
-  BOOST_CHECK_EQUAL(it2.isValid(), true);
-  BOOST_CHECK_EQUAL(it2.hasPrev(), true);
-  BOOST_CHECK_EQUAL(it2.hasNext(), false);
-  it2++;
-  BOOST_CHECK_EQUAL(it2.isValid(), false);
-  BOOST_CHECK_EQUAL(it2.hasPrev(), false);
-  BOOST_CHECK_EQUAL(it2.hasNext(), false);
+  saldaev::List< int >::LIter it2 = list1.begin();
+  BOOST_CHECK(it2 != list1.end());
+  auto it3 = it2;
+  --it3;
+  BOOST_CHECK(it3 == list1.end());
+  ++it2;
+  BOOST_CHECK(it2 != list1.end());
+  ++it2;
+  BOOST_CHECK(it2 != list1.end());
+  auto it4 = it2;
+  ++it4;
+  BOOST_CHECK(it4 == list1.end());
 }
