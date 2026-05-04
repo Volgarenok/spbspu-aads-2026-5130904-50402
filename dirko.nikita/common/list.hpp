@@ -21,10 +21,10 @@ namespace dirko
     List &operator=(const List< T > &);
     List &operator=(List< T > &&) noexcept;
     ~List();
-    Iter< T > begin();
-    Iter< T > end();
-    CIter< T > cbegin() const;
-    CIter< T > cend() const;
+    Iter< T > begin() noexcept;
+    Iter< T > end() noexcept;
+    CIter< T > cbegin() const noexcept;
+    CIter< T > cend() const noexcept;
     T &head() noexcept;
     T &tail() noexcept;
     const T &chead() const noexcept;
@@ -184,25 +184,25 @@ namespace dirko
     --size_;
   }
   template < class T >
-  Iter< T > List< T >::begin()
+  Iter< T > List< T >::begin() noexcept
   {
     return Iter< T >{fake_->next};
   }
 
   template < class T >
-  Iter< T > List< T >::end()
+  Iter< T > List< T >::end() noexcept
   {
     return Iter< T >{tail_->next};
   }
 
   template < class T >
-  CIter< T > List< T >::cbegin() const
+  CIter< T > List< T >::cbegin() const noexcept
   {
     return CIter< T >{fake_->next};
   }
 
   template < class T >
-  CIter< T > List< T >::cend() const
+  CIter< T > List< T >::cend() const noexcept
   {
     return CIter< T >{tail_->next};
   }
