@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
   std::string graph_name;
   size_t edge_count = 0;
   while (file >> graph_name >> edge_count) {
-    karpovich::Graph g(16);
+    karpovich::Graph g;
     for (size_t i = 0; i < edge_count; ++i) {
       std::string v1, v2;
       size_t w = 0;
@@ -54,6 +54,7 @@ int main(int argc, char *argv[])
       }
     } catch (const std::exception &) {
       std::cout << "<INVALID COMMAND>" << '\n';
+      std::cin.clear();
       std::cin.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
     }
   }

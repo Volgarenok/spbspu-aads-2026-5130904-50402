@@ -1,10 +1,12 @@
 #include "graph.hpp"
 
 karpovich::Graph::Graph() noexcept:
+  vertices(),
   edges(16)
 {}
 
 karpovich::Graph::Graph(size_t edgeSlots):
+  vertices(),
   edges(edgeSlots)
 {}
 
@@ -69,11 +71,14 @@ void karpovich::Graph::removeEdge(const std::string &from, const std::string &to
   }
   List< size_t > &weights = edges.get(key);
   bool found = false;
-  for (LIter< size_t > it = weights.begin(); it != weights.end(); ++it) {
+  auto it = weights.begin();
+  while (it != weights.end()) {
     if (*it == weight) {
-      weights.erase(it);
+      it = weights.erase(it);
       found = true;
       break;
+    } else {
+      ++it;
     }
   }
   if (!found) {

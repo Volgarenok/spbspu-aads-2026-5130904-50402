@@ -1,6 +1,7 @@
 #ifndef HASH_TABLE_HPP
 #define HASH_TABLE_HPP
 #include <cstddef>
+#include <functional>
 #include <stdexcept>
 #include <utility>
 #include "../common/Vector.hpp"
@@ -10,7 +11,7 @@
 namespace karpovich
 {
 
-  template < class Key, class Value, class Hash, class Equal >
+  template < class Key, class Value, class Hash = std::hash< Value >, class Equal = std::equal_to< Key > >
   class HashTable
   {
     friend class HashIter< Key, Value, Hash, Equal >;
@@ -205,12 +206,12 @@ void karpovich::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
   }
   Vector< List< valType > > new_data;
   for (size_t i = 0; i < slots; ++i) {
-    new_data.push_back(List< valType >());
+    new_data.pushBack(List< valType >());
   }
   for (size_t i = 0; i < capacity_; ++i) {
     for (auto it = data_[i].begin(); it != data_[i].end(); ++it) {
       size_t idx = hasher_((*it).first) % slots;
-      new_data[idx].push_back(*it);
+      new_data[idx].pushBack(*it);
     }
   }
   data_ = std::move(new_data);

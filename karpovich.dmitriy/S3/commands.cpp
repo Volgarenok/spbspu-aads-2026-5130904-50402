@@ -39,8 +39,12 @@ void karpovich::cmdGraphs(std::istream &, std::ostream &out, GraphSet &graphs)
     names.pushBack((*it).first);
   }
   details::sort_strings(names);
-  for (size_t i = 0; i < names.getSize(); ++i) {
-    out << names[i] << "\n";
+  if (names.getSize() == 0) {
+    out << "\n";
+  } else {
+    for (size_t i = 0; i < names.getSize(); ++i) {
+      out << names[i] << "\n";
+    }
   }
 }
 
@@ -48,14 +52,21 @@ void karpovich::cmdVertexes(std::istream &in, std::ostream &out, GraphSet &graph
 {
   std::string g_name;
   in >> g_name;
+  if (!graphs.has(g_name)) {
+    throw std::runtime_error("No graph");
+  }
   auto &g = graphs.get(g_name);
   karpovich::Vector< std::string > verts;
   for (auto it = g.vertices.begin(); it != g.vertices.end(); ++it) {
     verts.pushBack(*it);
   }
   details::sort_strings(verts);
-  for (size_t i = 0; i < verts.getSize(); ++i) {
-    out << verts[i] << "\n";
+  if (verts.getSize() == 0) {
+    out << "\n";
+  } else {
+    for (size_t i = 0; i < verts.getSize(); ++i) {
+      out << verts[i] << "\n";
+    }
   }
 }
 
@@ -74,6 +85,18 @@ void karpovich::cmdCut(std::istream &in, std::ostream &, GraphSet &graphs)
   size_t w = 0;
   in >> g_name >> v1 >> v2 >> w;
   auto &g = graphs.get(g_name);
+  bool v1_exists = false, v2_exists = false;
+  for (auto it = g.vertices.begin(); it != g.vertices.end(); ++it) {
+    if (*it == v1) {
+      v1_exists = true;
+    }
+    if (*it == v2) {
+      v2_exists = true;
+    }
+  }
+  if (!v1_exists || !v2_exists) {
+    throw std::runtime_error("Vertex missing");
+  }
   g.removeEdge(v1, v2, w);
 }
 
@@ -85,7 +108,7 @@ void karpovich::cmdCreate(std::istream &in, std::ostream &, GraphSet &graphs)
   if (graphs.has(g_name)) {
     throw std::runtime_error("Exists");
   }
-  Graph g(16);
+  Graph g;
   for (size_t i = 0; i < k; ++i) {
     std::string v;
     in >> v;
@@ -136,17 +159,24 @@ void karpovich::cmdOutbound(std::istream &in, std::ostream &out, GraphSet &graph
     dests.pushBack(e.first);
   }
   details::sort_strings(dests);
-  for (size_t i = 0; i < dests.getSize(); ++i) {
-    out << dests[i];
-    for (auto &e : edges_out) {
-      if (e.first == dests[i]) {
-        details::sort_weights(e.second);
-        for (size_t j = 0; j < e.second.getSize(); ++j) {
-          out << " " << e.second[j];
+  if (dests.getSize() > 0) {
+    for (size_t i = 0; i < dests.getSize(); ++i) {
+      out << dests[i];
+      for (auto &e : edges_out) {
+        if (e.first == dests[i]) {
+          details::sort_weights(e.second);
+          for (size_t j = 0; j < e.second.getSize(); ++j) {
+            out << " " << e.second[j];
+          }
+          break;
         }
-        break;
+      }
+      if (i < dests.getSize() - 1) {
+        out << "\n";
       }
     }
+    out << "\n";
+  } else {
     out << "\n";
   }
 }
