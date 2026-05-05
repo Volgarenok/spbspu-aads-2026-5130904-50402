@@ -1,5 +1,5 @@
-#include <boost/test/unit_test.hpp>
 #include <string>
+#include <boost/test/unit_test.hpp>
 #include "hash-table.hpp"
 
 using namespace dirko;
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(test_get)
 
   BOOST_CHECK_EQUAL(ht.get("one"), 1);
   BOOST_CHECK_EQUAL(ht.get("two"), 2);
-  ht.add("one", 10);
+  ht.get("one") = 10;
   BOOST_CHECK_EQUAL(ht.get("one"), 10);
 }
 
@@ -107,35 +107,35 @@ BOOST_AUTO_TEST_CASE(test_init_list)
   BOOST_CHECK_EQUAL(ht.get("three"), 3);
 }
 
-// BOOST_AUTO_TEST_CASE(test_move_constructor)
-// {
-//   HashTable< std::string, int > ht1(16);
-//   ht1.add("one", 1);
-//   ht1.add("two", 2);
-//
-//   HashTable< std::string, int > ht2 = std::move(ht1);
-//
-//   BOOST_CHECK_EQUAL(ht2.size(), 2);
-//   BOOST_CHECK(ht2.has("one"));
-//   BOOST_CHECK(ht2.has("two"));
-// }
-//
-// BOOST_AUTO_TEST_CASE(test_rehash)
-// {
-//   HashTable< std::string, int > ht(4);
-//   ht.add("one", 1);
-//   ht.add("two", 2);
-//   ht.add("three", 3);
-//   ht.add("four", 4);
-//   ht.add("five", 5);
-//
-//   ht.rehash(16);
-//   BOOST_CHECK_EQUAL(ht.size(), 5);
-//   BOOST_CHECK(ht.has("one"));
-//   BOOST_CHECK(ht.has("two"));
-//   BOOST_CHECK(ht.has("three"));
-//   BOOST_CHECK(ht.has("four"));
-//   BOOST_CHECK(ht.has("five"));
-// }
+BOOST_AUTO_TEST_CASE(test_move_constructor)
+{
+  HashTable< std::string, int > ht1(16);
+  ht1.add("one", 1);
+  ht1.add("two", 2);
+
+  HashTable< std::string, int > ht2 = std::move(ht1);
+
+  BOOST_CHECK_EQUAL(ht2.size(), 2);
+  BOOST_CHECK(ht2.has("one"));
+  BOOST_CHECK(ht2.has("two"));
+}
+
+BOOST_AUTO_TEST_CASE(test_rehash)
+{
+  HashTable< std::string, int > ht(4);
+  ht.add("one", 1);
+  ht.add("two", 2);
+  ht.add("three", 3);
+  ht.add("four", 4);
+  ht.add("five", 5);
+
+  ht.rehash(16);
+  BOOST_CHECK_EQUAL(ht.size(), 5);
+  BOOST_CHECK(ht.has("one"));
+  BOOST_CHECK(ht.has("two"));
+  BOOST_CHECK(ht.has("three"));
+  BOOST_CHECK(ht.has("four"));
+  BOOST_CHECK(ht.has("five"));
+}
 
 BOOST_AUTO_TEST_SUITE_END()

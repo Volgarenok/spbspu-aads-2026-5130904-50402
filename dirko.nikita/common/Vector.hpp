@@ -130,6 +130,8 @@ dirko::Vector< T >::Vector(Vector< T > &&rhs) noexcept:
   capasity_(rhs.capasity_)
 {
   rhs.data_ = nullptr;
+  rhs.size_ = 0;
+  rhs.capasity_ = 0;
 }
 
 template < class T >
@@ -473,7 +475,6 @@ void dirko::Vector< T >::reserve(size_t cap)
   for (; i < getSize(); ++i) {
     new (d + i) T(std::move(data_[i]));
   }
-  clear(data_, size_);
   data_ = d;
   capasity_ = cap;
 }
