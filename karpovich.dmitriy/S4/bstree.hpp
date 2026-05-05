@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <functional>
+#include <memory>
 #include "bstiterators.hpp"
 #include "treenode.hpp"
 
@@ -85,6 +86,47 @@ karpovich::BSTree< Key, Value, Compare >::BSTree(BSTree &&other) noexcept:
 {
   other.root_ = nullptr;
   other.size_ = 0;
+}
+
+template < class Key, class Value, class Compare >
+karpovich::BSTree< Key, Value, Compare >::~BSTree()
+{
+  clear();
+}
+template < class Key, class Value, class Compare >
+karpovich::BSTree< Key, Value, Compare > &karpovich::BSTree< Key, Value, Compare >::operator=(const BSTree &other)
+{
+  if (this != std::addressof(other)) {
+    BSTree temp(other);
+    swap(temp);
+  }
+  return *this;
+}
+
+template < class Key, class Value, class Compare >
+karpovich::BSTree< Key, Value, Compare > &karpovich::BSTree< Key, Value, Compare >::operator=(BSTree &&other) noexcept
+{
+  if (this != std::addressof(other)) {
+    clear();
+    root_ = other.root_;
+    size_ = other.size_;
+    comp_ = std::move(other.comp_);
+    other.root_ = nullptr;
+    other.size_ = 0;
+  }
+  return *this;
+}
+
+template < class Key, class Value, class Compare >
+bool karpovich::BSTree< Key, Value, Compare >::empty() const
+{
+  return !size_;
+}
+
+template < class Key, class Value, class Compare >
+size_t karpovich::BSTree< Key, Value, Compare >::size() const
+{
+  return size_;
 }
 
 #endif
