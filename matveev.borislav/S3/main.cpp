@@ -1,42 +1,19 @@
 #include "hash-table.hpp"
+#include "hashFunctions.hpp"
 
-#include <cstddef>
 #include <iostream>
 #include <string>
 
-namespace
-{
-struct SameHash
-{
-  size_t operator()(int) const
-  {
-    return 0;
-  }
-};
-
-struct IntEqual
-{
-  bool operator()(int lhs, int rhs) const
-  {
-    return lhs == rhs;
-  }
-};
-}
-
 int main()
 {
-  matveev::HashTable< int, std::string, SameHash, IntEqual > table(1, 2);
+  matveev::HashTable< std::string, int, matveev::StringHash, matveev::StringEqual > table(5, 2);
 
-  table.add(1, "one");
-  table.add(2, "two");
-  table.add(3, "three");
+  table.add("first", 10);
+  table.add("second", 20);
 
-  const matveev::HashTable< int, std::string, SameHash, IntEqual >& ref = table;
-
-  for (auto it = ref.cbegin(); it != ref.cend(); ++it)
-  {
-    std::cout << it->key << ' ' << it->value << '\n';
-  }
+  std::cout << table.at("first") << '\n';
+  std::cout << table.at("second") << '\n';
+  std::cout << table.has("third") << '\n';
 
   return 0;
 }
