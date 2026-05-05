@@ -24,3 +24,30 @@ void karpovich::cmdPrint(std::istream &in, std::ostream &out, karpovich::Dataset
     throw std::runtime_error("Dataset not found");
   }
 }
+
+
+void karpovich::cmdComplement(std::istream &in, std::ostream &out, karpovich::Datasets &datasets)
+{
+  std::string new_name, name1, name2;
+  if (!(in >> new_name >> name1 >> name2)) {
+    throw std::runtime_error("Invalid input");
+  }
+  try {
+    datasets.at(new_name);
+    throw std::runtime_error("Dataset exists");
+  } catch (const std::out_of_range &) {
+  }
+  const karpovich::Dataset &ds1 = datasets.at(name1);
+  const karpovich::Dataset &ds2 = datasets.at(name2);
+  karpovich::Dataset new_ds;
+  for (auto it = ds1.cbegin(); it != ds1.cend(); ++it) {
+    auto pair = *it;
+    try {
+      ds2.at(pair.first);
+    } catch (const std::out_of_range &) {
+      new_ds.push(pair.first, pair.second);
+    }
+  }
+  datasets.push(new_name, std::move(new_ds));
+}
+
