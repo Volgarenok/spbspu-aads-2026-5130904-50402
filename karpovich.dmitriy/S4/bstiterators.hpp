@@ -81,4 +81,34 @@ karpovich::BSTConstIterator< Key, Value > karpovich::BSTConstIterator< Key, Valu
   return tmp;
 }
 
+template < class Key, class Value >
+karpovich::BSTConstIterator< Key, Value > &karpovich::BSTConstIterator< Key, Value >::operator--()
+{
+  if (node_ == nullptr) {
+    return *this;
+  }
+  if (node_->left_ != nullptr) {
+    node_ = node_->left_;
+    while (node_->right_ != nullptr) {
+      node_ = node_->right_;
+    }
+  } else {
+    TreeNode< Key, Value > *parent = node_->parent_;
+    while (parent != nullptr && node_ == parent->left_) {
+      node_ = parent;
+      parent = node_->parent_;
+    }
+    node_ = parent;
+  }
+  return *this;
+}
+
+template < class Key, class Value >
+karpovich::BSTConstIterator< Key, Value > karpovich::BSTConstIterator< Key, Value >::operator--(int)
+{
+  BSTConstIterator tmp = *this;
+  --(*this);
+  return tmp;
+}
+
 #endif
