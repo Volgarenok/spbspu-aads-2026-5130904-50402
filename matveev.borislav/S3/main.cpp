@@ -31,7 +31,9 @@ int main()
   table.add(2, "two");
   table.add(3, "three");
 
-  for (auto it = table.begin(); it != table.end(); ++it)
+  const matveev::HashTable< int, std::string, SameHash, IntEqual >& ref = table;
+
+  for (auto it = ref.cbegin(); it != ref.cend(); ++it)
   {
     std::cout << it->key << ' ' << it->value << '\n';
   }

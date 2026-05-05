@@ -157,6 +157,101 @@ void HashTable< Key, Value, Hash, Equal >::Iterator::skipEmpty() noexcept
   }
 }
 
+template< class Key, class Value, class Hash, class Equal >
+class HashTable< Key, Value, Hash, Equal >::ConstIterator
+{
+  friend class HashTable< Key, Value, Hash, Equal >;
+
+public:
+  ConstIterator();
+
+  const HashTableItem< Key, Value >& operator*() const;
+  const HashTableItem< Key, Value >* operator->() const;
+
+  ConstIterator& operator++();
+  ConstIterator operator++(int);
+
+  bool operator==(const ConstIterator& other) const;
+  bool operator!=(const ConstIterator& other) const;
+
+private:
+  ConstIterator(const HashTable< Key, Value, Hash, Equal >* table, size_t pos);
+  void skipEmpty() noexcept;
+
+  const HashTable< Key, Value, Hash, Equal >* table_;
+  size_t pos_;
+};
+
+template< class Key, class Value, class Hash, class Equal >
+HashTable< Key, Value, Hash, Equal >::ConstIterator::ConstIterator():
+  table_(nullptr),
+  pos_(0)
+{}
+
+template< class Key, class Value, class Hash, class Equal >
+HashTable< Key, Value, Hash, Equal >::ConstIterator::ConstIterator(
+  const HashTable< Key, Value, Hash, Equal >* table,
+  size_t pos
+):
+  table_(table),
+  pos_(pos)
+{
+  skipEmpty();
+}
+
+template< class Key, class Value, class Hash, class Equal >
+const HashTableItem< Key, Value >& HashTable< Key, Value, Hash, Equal >::ConstIterator::operator*() const
+{
+  return table_->data_[pos_];
+}
+
+template< class Key, class Value, class Hash, class Equal >
+const HashTableItem< Key, Value >* HashTable< Key, Value, Hash, Equal >::ConstIterator::operator->() const
+{
+  return std::addressof(table_->data_[pos_]);
+}
+
+template< class Key, class Value, class Hash, class Equal >
+typename HashTable< Key, Value, Hash, Equal >::ConstIterator& HashTable< Key, Value, Hash, Equal >::ConstIterator::operator++()
+{
+  if (table_ != nullptr && pos_ < table_->capacity())
+  {
+    ++pos_;
+    skipEmpty();
+  }
+
+  return *this;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+typename HashTable< Key, Value, Hash, Equal >::ConstIterator HashTable< Key, Value, Hash, Equal >::ConstIterator::operator++(int)
+{
+  ConstIterator result(*this);
+  ++(*this);
+  return result;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+bool HashTable< Key, Value, Hash, Equal >::ConstIterator::operator==(const ConstIterator& other) const
+{
+  return table_ == other.table_ && pos_ == other.pos_;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+bool HashTable< Key, Value, Hash, Equal >::ConstIterator::operator!=(const ConstIterator& other) const
+{
+  return !(*this == other);
+}
+
+template< class Key, class Value, class Hash, class Equal >
+void HashTable< Key, Value, Hash, Equal >::ConstIterator::skipEmpty() noexcept
+{
+  while (table_ != nullptr && pos_ < table_->capacity() && !table_->data_[pos_].occupied)
+  {
+    ++pos_;
+  }
+}
+
 template< class Key, class Value >
 HashTableItem< Key, Value >::HashTableItem():
   key(),
@@ -474,6 +569,30 @@ template< class Key, class Value, class Hash, class Equal >
 typename HashTable< Key, Value, Hash, Equal >::Iterator HashTable< Key, Value, Hash, Equal >::end() noexcept
 {
   return Iterator(this, capacity());
+}
+
+template< class Key, class Value, class Hash, class Equal >
+typename HashTable< Key, Value, Hash, Equal >::ConstIterator HashTable< Key, Value, Hash, Equal >::begin() const noexcept
+{
+  return ConstIterator(this, 0);
+}
+
+template< class Key, class Value, class Hash, class Equal >
+typename HashTable< Key, Value, Hash, Equal >::ConstIterator HashTable< Key, Value, Hash, Equal >::end() const noexcept
+{
+  return ConstIterator(this, capacity());
+}
+
+template< class Key, class Value, class Hash, class Equal >
+typename HashTable< Key, Value, Hash, Equal >::ConstIterator HashTable< Key, Value, Hash, Equal >::cbegin() const noexcept
+{
+  return ConstIterator(this, 0);
+}
+
+template< class Key, class Value, class Hash, class Equal >
+typename HashTable< Key, Value, Hash, Equal >::ConstIterator HashTable< Key, Value, Hash, Equal >::cend() const noexcept
+{
+  return ConstIterator(this, capacity());
 }
 
 template< class Key, class Value, class Hash, class Equal >
