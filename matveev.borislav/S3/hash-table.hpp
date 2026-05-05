@@ -289,6 +289,19 @@ void HashTable< Key, Value, Hash, Equal >::clear() noexcept
 }
 
 template< class Key, class Value, class Hash, class Equal >
+void HashTable< Key, Value, Hash, Equal >::swap(HashTable& other) noexcept
+{
+  using std::swap;
+
+  swap(data_, other.data_);
+  swap(bucket_count_, other.bucket_count_);
+  swap(bucket_capacity_, other.bucket_capacity_);
+  swap(size_, other.size_);
+  swap(hash_, other.hash_);
+  swap(equal_, other.equal_);
+}
+
+template< class Key, class Value, class Hash, class Equal >
 size_t HashTable< Key, Value, Hash, Equal >::size() const noexcept
 {
   return size_;
