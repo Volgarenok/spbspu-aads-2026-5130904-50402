@@ -111,4 +111,16 @@ karpovich::BSTConstIterator< Key, Value > karpovich::BSTConstIterator< Key, Valu
   return tmp;
 }
 
+template < class Key, class Value >
+bool karpovich::BSTConstIterator< Key, Value >::operator==(const BSTConstIterator &other) const
+{
+  return node_ == other.node_;
+}
+
+template < class Key, class Value >
+bool karpovich::BSTConstIterator< Key, Value >::operator!=(const BSTConstIterator &other) const
+{
+  return node_ != other.node_;
+}
+
 #endif
