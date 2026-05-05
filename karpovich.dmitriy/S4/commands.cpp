@@ -14,8 +14,8 @@ void karpovich::cmdPrint(std::istream &in, std::ostream &out, karpovich::Dataset
       out << "<EMPTY>" << '\n';
     } else {
       out << name;
-      for (auto it = ds.cbegin(); it != ds.cend(); ++it) {
-        auto pair = *it;
+      for (karpovich::Dataset::const_iterator it = ds.cbegin(); it != ds.cend(); ++it) {
+        std::pair< const int, std::string > pair = *it;
         out << ' ' << pair.first << ' ' << pair.second;
       }
       out << '\n';
@@ -31,16 +31,11 @@ void karpovich::cmdComplement(std::istream &in, std::ostream &, karpovich::Datas
   if (!(in >> new_name >> name1 >> name2)) {
     throw std::runtime_error("Invalid input");
   }
-  try {
-    datasets.at(new_name);
-    throw std::runtime_error("Dataset exists");
-  } catch (const std::out_of_range &) {
-  }
   const karpovich::Dataset &ds1 = datasets.at(name1);
   const karpovich::Dataset &ds2 = datasets.at(name2);
   karpovich::Dataset new_ds;
-  for (auto it = ds1.cbegin(); it != ds1.cend(); ++it) {
-    auto pair = *it;
+  for (karpovich::Dataset::const_iterator it = ds1.cbegin(); it != ds1.cend(); ++it) {
+    std::pair< const int, std::string > pair = *it;
     try {
       ds2.at(pair.first);
     } catch (const std::out_of_range &) {
@@ -56,16 +51,11 @@ void karpovich::cmdIntersect(std::istream &in, std::ostream &, karpovich::Datase
   if (!(in >> new_name >> name1 >> name2)) {
     throw std::runtime_error("Invalid input");
   }
-  try {
-    datasets.at(new_name);
-    throw std::runtime_error("Dataset exists");
-  } catch (const std::out_of_range &) {
-  }
   const karpovich::Dataset &ds1 = datasets.at(name1);
   const karpovich::Dataset &ds2 = datasets.at(name2);
   karpovich::Dataset new_ds;
-  for (auto it = ds1.cbegin(); it != ds1.cend(); ++it) {
-    auto pair = *it;
+  for (karpovich::Dataset::const_iterator it = ds1.cbegin(); it != ds1.cend(); ++it) {
+    std::pair< const int, std::string > pair = *it;
     try {
       ds2.at(pair.first);
       new_ds.push(pair.first, pair.second);
@@ -81,20 +71,15 @@ void karpovich::cmdUnion(std::istream &in, std::ostream &, karpovich::Datasets &
   if (!(in >> new_name >> name1 >> name2)) {
     throw std::runtime_error("Invalid input");
   }
-  try {
-    datasets.at(new_name);
-    throw std::runtime_error("Dataset exists");
-  } catch (const std::out_of_range &) {
-  }
   const karpovich::Dataset &ds1 = datasets.at(name1);
   const karpovich::Dataset &ds2 = datasets.at(name2);
   karpovich::Dataset new_ds;
-  for (auto it = ds1.cbegin(); it != ds1.cend(); ++it) {
-    auto pair = *it;
+  for (karpovich::Dataset::const_iterator it = ds1.cbegin(); it != ds1.cend(); ++it) {
+    std::pair< const int, std::string > pair = *it;
     new_ds.push(pair.first, pair.second);
   }
-  for (auto it = ds2.cbegin(); it != ds2.cend(); ++it) {
-    auto pair = *it;
+  for (karpovich::Dataset::const_iterator it = ds2.cbegin(); it != ds2.cend(); ++it) {
+    std::pair< const int, std::string > pair = *it;
     try {
       new_ds.at(pair.first);
     } catch (const std::out_of_range &) {
