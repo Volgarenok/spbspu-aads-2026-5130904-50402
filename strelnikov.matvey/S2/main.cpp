@@ -1,7 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
-#include "datastructs.hpp"
+#include "../common/stackAndQueue.hpp"
 #include "funcs.hpp"
 
 int main(int argc, char *argv[])

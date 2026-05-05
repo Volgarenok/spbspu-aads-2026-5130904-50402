@@ -1,5 +1,5 @@
 #include "boost/test/unit_test.hpp"
-#include "datastructs.hpp"
+#include "../common/stackAndQueue.hpp"
 
 using namespace strelnikov;
 

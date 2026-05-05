@@ -1,8 +1,8 @@
 #ifndef DATASTRUCTS_HPP
 #define DATASTRUCTS_HPP
-#include "../common/iters.hpp"
-#include "../common/list.hpp"
-#include "../common/node.hpp"
+#include "iters.hpp"
+#include "list.hpp"
+#include "node.hpp"
 
 namespace strelnikov
 {

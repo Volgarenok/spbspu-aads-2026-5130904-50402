@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <string>
 #include "funcs.hpp"
-#include "datastructs.hpp"
+#include "../common/stackAndQueue.hpp"
 
 long long strelnikov::maxll = std::numeric_limits<long long >::max();
 long long strelnikov::minll = std::numeric_limits<long long >::min();

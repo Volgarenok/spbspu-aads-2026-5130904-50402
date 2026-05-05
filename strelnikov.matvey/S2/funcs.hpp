@@ -1,7 +1,7 @@
 #include <iostream>
 #include <limits>
 #include <string>
-#include "datastructs.hpp"
+#include "../common/stackAndQueue.hpp"
 
 namespace strelnikov
 {
