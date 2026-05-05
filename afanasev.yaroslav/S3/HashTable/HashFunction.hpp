@@ -1,5 +1,5 @@
-#ifndef HASHFUNCTION_HPP
-#define HASHFUNCTION_HPP
+#ifndef HASH_FUNCTION_HPP
+#define HASH_FUNCTION_HPP
 
 #include <cstddef>
 #include <boost/container_hash/hash.hpp>
