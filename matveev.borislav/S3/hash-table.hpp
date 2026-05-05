@@ -345,6 +345,22 @@ void HashTable< Key, Value, Hash, Equal >::swap(HashTable& other) noexcept
 }
 
 template< class Key, class Value, class Hash, class Equal >
+void HashTable< Key, Value, Hash, Equal >::rehash(size_t buckets, size_t bucket_capacity)
+{
+  HashTable< Key, Value, Hash, Equal > temp(buckets, bucket_capacity);
+
+  for (size_t i = 0; i < capacity(); ++i)
+  {
+    if (data_[i].occupied)
+    {
+      temp.add(data_[i].key, data_[i].value);
+    }
+  }
+
+  swap(temp);
+}
+
+template< class Key, class Value, class Hash, class Equal >
 size_t HashTable< Key, Value, Hash, Equal >::size() const noexcept
 {
   return size_;
