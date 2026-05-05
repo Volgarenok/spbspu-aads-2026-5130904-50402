@@ -211,4 +211,36 @@ void karpovich::BSTree< Key, Value, Compare >::push(const Key &k, const Value &v
   }
 }
 
+template < class Key, class Value, class Compare >
+Value karpovich::BSTree< Key, Value, Compare >::drop(const Key &k)
+{
+  TreeNode< Key, Value > *node = findNode(k);
+  if (node == nullptr) {
+    throw std::out_of_range("Key not found");
+  }
+  Value res = std::move(node->value_);
+  if (node->left_ && node->right_) {
+    TreeNode< Key, Value > *succ = fallLeft(node->right_);
+    node->key_ = std::move(succ->key_);
+    node->value_ = std::move(succ->value_);
+    node = succ;
+  }
+  TreeNode< Key, Value > *child = (node->left_) ? node->left_ : node->right_;
+  if (child) {
+    child->parent_ = node->parent_;
+  }
+  if (!node->parent_) {
+    root_ = child;
+  } else if (node->parent_->left_ == node) {
+    node->parent_->left_ = child;
+  } else {
+    node->parent_->right_ = child;
+  }
+  delete node;
+  --size_;
+  return res;
+}
+
+
+
 #endif
