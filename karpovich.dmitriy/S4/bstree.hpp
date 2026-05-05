@@ -305,6 +305,56 @@ typename karpovich::BSTree< Key, Value, Compare >::iterator karpovich::BSTree< K
   return iterator(nullptr);
 }
 
+template < class Key, class Value, class Compare >
+typename karpovich::BSTree< Key, Value, Compare >::const_iterator
+karpovich::BSTree< Key, Value, Compare >::rotateLeft(const_iterator it)
+{
+  TreeNode< Key, Value > *x = static_cast< TreeNode< Key, Value > * >(it.node_);
+  if (x == nullptr || x->right_ == nullptr) {
+    return it;
+  }
+  TreeNode< Key, Value > *y = x->right_;
+  x->right_ = y->left_;
+  if (y->left_ != nullptr) {
+    y->left_->parent_ = x;
+  }
+  y->parent_ = x->parent_;
+  if (x->parent_ == nullptr) {
+    root_ = y;
+  } else if (x == x->parent_->left_) {
+    x->parent_->left_ = y;
+  } else {
+    x->parent_->right_ = y;
+  }
+  y->left_ = x;
+  x->parent_ = y;
+  return const_iterator(y);
+}
 
+template < class Key, class Value, class Compare >
+typename karpovich::BSTree< Key, Value, Compare >::const_iterator
+karpovich::BSTree< Key, Value, Compare >::rotateRight(const_iterator it)
+{
+  TreeNode< Key, Value > *y = static_cast< TreeNode< Key, Value > * >(it.node_);
+  if (y == nullptr || y->left_ == nullptr) {
+    return it;
+  }
+  TreeNode< Key, Value > *x = y->left_;
+  y->left_ = x->right_;
+  if (x->right_ != nullptr) {
+    x->right_->parent_ = y;
+  }
+  x->parent_ = y->parent_;
+  if (y->parent_ == nullptr) {
+    root_ = x;
+  } else if (y == y->parent_->left_) {
+    y->parent_->left_ = x;
+  } else {
+    y->parent_->right_ = x;
+  }
+  x->right_ = y;
+  y->parent_ = x;
+  return const_iterator(x);
+}
 
 #endif
