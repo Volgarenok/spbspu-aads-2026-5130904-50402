@@ -1,4 +1,5 @@
 #include <boost/test/unit_test.hpp>
+#include <string>
 #include "hash-table.hpp"
 
 using namespace dirko;
@@ -95,6 +96,15 @@ BOOST_AUTO_TEST_CASE(test_copy_constructor)
   BOOST_CHECK(ht2.has("one"));
   BOOST_CHECK(ht2.has("two"));
   BOOST_CHECK_EQUAL(ht2.get("one"), 1);
+}
+
+BOOST_AUTO_TEST_CASE(test_init_list)
+{
+  HashTable< std::string, int > ht = {{"one", 1}, {"two", 2}, {"three", 3}};
+  BOOST_CHECK_EQUAL(ht.size(), 3);
+  BOOST_CHECK_EQUAL(ht.get("one"), 1);
+  BOOST_CHECK_EQUAL(ht.get("two"), 2);
+  BOOST_CHECK_EQUAL(ht.get("three"), 3);
 }
 
 BOOST_AUTO_TEST_CASE(test_move_constructor)

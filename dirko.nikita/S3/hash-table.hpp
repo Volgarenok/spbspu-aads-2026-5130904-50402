@@ -103,16 +103,10 @@ dirko::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
 
 template < class Key, class Value, class Hash, class Equal >
 dirko::HashTable< Key, Value, Hash, Equal >::HashTable(std::initializer_list< std::pair< Key, Value > > il):
-  data_(),
-  hasher_(Hash{}),
-  comparator_(Equal{}),
-  slots_(il.size()),
-  elements_(0)
+  HashTable(il.size())
 {
-  data_.reserve(il.size());
   for (const std::pair< Key, Value > &v : il) {
-    size_t id = hasher_(v.first) % slots_;
-    data_[id].push_back(v);
+    add(v.first, v.second);
   }
 }
 
