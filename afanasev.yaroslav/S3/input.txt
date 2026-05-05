@@ -1,0 +1,9 @@
+gr1 4
+a b 40
+b c 50
+c a 30
+c b 20
+gr2 3
+a b 1
+b b 2
+a c 3
