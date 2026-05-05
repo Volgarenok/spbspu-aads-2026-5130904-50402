@@ -48,7 +48,8 @@ namespace dirko
     Equal comparator_;
     size_t slots_;
     size_t elements_;
-    friend HTIter< Key, Value, Hash, Equal >;
+    friend class HTIter< Key, Value, Hash, Equal >;
+    friend class HTCIter< Key, Value, Hash, Equal >;
   };
   template < class Key, class Value, class Hash, class Equal >
   class HTIter
@@ -237,16 +238,16 @@ std::pair< Key, Value > &dirko::HTIter< Key, Value, Hash, Equal >::operator*()
 template < class Key, class Value, class Hash, class Equal >
 dirko::HTIter< Key, Value, Hash, Equal > &dirko::HTIter< Key, Value, Hash, Equal >::operator++()
 {
-  if (curr_.curr_->next == nullptr) {
+  if (curr_ == table_->data_[slot_]->end()) {
     if (!(slot_ < table_->size())) {
       throw std::out_of_range("out of bounds");
     }
     ++slot_;
-    curr_ = table_->data_[slot_]->begin;
+    curr_ = table_->data_[slot_]->begin();
   } else {
     ++curr_;
   }
-  return curr_;
+  return *this;
 }
 template < class Key, class Value, class Hash, class Equal >
 dirko::HTIter< Key, Value, Hash, Equal > &dirko::HTIter< Key, Value, Hash, Equal >::operator--()
@@ -259,13 +260,13 @@ dirko::HTIter< Key, Value, Hash, Equal > &dirko::HTIter< Key, Value, Hash, Equal
     curr_ = table_->data_[slot_]->end();
   }
   --curr_;
-  return curr_;
+  return *this;
 }
 template < class Key, class Value, class Hash, class Equal >
 dirko::HTIter< Key, Value, Hash, Equal > dirko::HTIter< Key, Value, Hash, Equal >::operator++(int)
 {
   HTIter< Key, Value, Hash, Equal > past = curr_;
-  if (curr_.curr_->next == nullptr) {
+  if (curr_ == table_->data_[slot_]->end()) {
     if (!(slot_ < table_->size())) {
       throw std::out_of_range("out of bounds");
     }
