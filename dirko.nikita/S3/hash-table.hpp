@@ -21,6 +21,12 @@ namespace dirko
   public:
     explicit HashTable(size_t slots);
     HashTable(std::initializer_list< std::pair< Key, Value > > il);
+    HashTable(const HashTable &other);
+    HashTable(HashTable &&other) noexcept;
+    HashTable &operator=(const HashTable &other);
+    HashTable &operator=(HashTable &&other) noexcept;
+
+    ~HashTable();
 
     void add(Key k, Value v);
     void drop(Key k);
@@ -380,4 +386,53 @@ bool dirko::HTCIter< Key, Value, Hash, Equal >::operator!=(const HTCIter< Key, V
   return !(*this == other);
 }
 
+template < class Key, class Value, class Hash, class Equal >
+dirko::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable &other):
+  HashTable(other.slots_)
+{
+  for (size_t i = 0; i < slots_; ++i) {
+    for (LCIter< std::pair< Key, Value > > it = other.data_[i].cbegin(); it != other.data_[i].cend(); ++it) {
+      data_[i].push_back(*it);
+      ++elements_;
+    }
+  }
+}
+template < class Key, class Value, class Hash, class Equal >
+dirko::HashTable< Key, Value, Hash, Equal >::HashTable(HashTable &&other) noexcept:
+  data_(std::move(other.data_)),
+  hasher_(std::move(other.hasher_)),
+  comparator_(std::move(other.comparator_)),
+  slots_(other.slots_),
+  elements_(other.elements_)
+{
+  other.slots_ = 0;
+  other.elements_ = 0;
+}
+template < class Key, class Value, class Hash, class Equal >
+dirko::HashTable< Key, Value, Hash, Equal > &
+dirko::HashTable< Key, Value, Hash, Equal >::operator=(const HashTable &other)
+{
+  if (this == std::addressof(other)) {
+    return *this;
+  }
+  HashTable< Key, Value, Hash, Equal > cpy(other);
+  swap(cpy);
+  return *this;
+}
+template < class Key, class Value, class Hash, class Equal >
+dirko::HashTable< Key, Value, Hash, Equal > &
+dirko::HashTable< Key, Value, Hash, Equal >::operator=(HashTable &&other) noexcept
+{
+  if (this == std::addressof(other)) {
+    return *this;
+  }
+  swap(other);
+  return *this;
+}
+
+template < class Key, class Value, class Hash, class Equal >
+dirko::HashTable< Key, Value, Hash, Equal >::~HashTable()
+{
+  clear();
+}
 #endif
