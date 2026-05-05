@@ -242,6 +242,53 @@ const Value& HashTable< Key, Value, Hash, Equal >::at(const Key& key) const
 }
 
 template< class Key, class Value, class Hash, class Equal >
+Value HashTable< Key, Value, Hash, Equal >::drop(const Key& key)
+{
+  size_t bucket = indexOf(key);
+  size_t first = bucketFirst(bucket);
+  size_t overflow = overflowFirst();
+
+  for (size_t i = 0; i < bucket_capacity_; ++i)
+  {
+    HashTableItem< Key, Value >& item = data_[first + i];
+
+    if (item.occupied && equal_(item.key, key))
+    {
+      Value value = item.value;
+      item.occupied = false;
+      --size_;
+      return value;
+    }
+  }
+
+  for (size_t i = 0; i < bucket_capacity_; ++i)
+  {
+    HashTableItem< Key, Value >& item = data_[overflow + i];
+
+    if (item.occupied && equal_(item.key, key))
+    {
+      Value value = item.value;
+      item.occupied = false;
+      --size_;
+      return value;
+    }
+  }
+
+  throw std::out_of_range("key not found");
+}
+
+template< class Key, class Value, class Hash, class Equal >
+void HashTable< Key, Value, Hash, Equal >::clear() noexcept
+{
+  for (size_t i = 0; i < capacity(); ++i)
+  {
+    data_[i].occupied = false;
+  }
+
+  size_ = 0;
+}
+
+template< class Key, class Value, class Hash, class Equal >
 size_t HashTable< Key, Value, Hash, Equal >::size() const noexcept
 {
   return size_;
