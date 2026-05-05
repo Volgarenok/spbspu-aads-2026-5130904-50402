@@ -35,13 +35,11 @@ namespace karpovich
     void push(const Key &k, const Value &v);
     Value drop(const Key &k);
 
-    void clear();
-    void swap(BSTree &other);
+    void clear() noexcept;
+    void swap(BSTree &other) noexcept;
 
     iterator begin();
     iterator end();
-    const_iterator begin() const;
-    const_iterator end() const;
     const_iterator cbegin() const;
     const_iterator cend() const;
 
@@ -63,6 +61,9 @@ namespace karpovich
 
     TreeNode< Key, Value > *clone(TreeNode< Key, Value > *src, TreeNode< Key, Value > *parent);
     TreeNode< Key, Value > *findNode(const Key &k) const;
+    TreeNode< Key, Value > *fallLeft(TreeNode< Key, Value > *node) const;
+    void clearImpl(TreeNode< Key, Value > *node) noexcept;
+    size_t calcHeight(TreeNode< Key, Value > *node) const;
   };
 }
 
@@ -239,6 +240,43 @@ Value karpovich::BSTree< Key, Value, Compare >::drop(const Key &k)
   delete node;
   --size_;
   return res;
+}
+
+template < class Key, class Value, class Compare >
+void karpovich::BSTree< Key, Value, Compare >::clearImpl(TreeNode< Key, Value > *node) noexcept
+{
+  if (node == nullptr) {
+    return;
+  }
+  clearImpl(node->left_);
+  clearImpl(node->right_);
+  delete node;
+}
+
+template < class Key, class Value, class Compare >
+void karpovich::BSTree< Key, Value, Compare >::clear() noexcept
+{
+  clearImpl(root_);
+  root_ = nullptr;
+  size_ = 0;
+}
+
+template < class Key, class Value, class Compare >
+void karpovich::BSTree< Key, Value, Compare >::swap(BSTree &other) noexcept
+{
+  std::swap(root_, other.root_);
+  std::swap(size_, other.size_);
+  std::swap(comp_, other.comp_);
+}
+
+template < class Key, class Value, class Compare >
+karpovich::TreeNode< Key, Value > *
+karpovich::BSTree< Key, Value, Compare >::fallLeft(TreeNode< Key, Value > *node) const
+{
+  while (node != nullptr && node->left_ != nullptr) {
+    node = node->left_;
+  }
+  return node;
 }
 
 
