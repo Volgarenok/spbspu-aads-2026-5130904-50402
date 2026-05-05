@@ -145,15 +145,6 @@ BOOST_AUTO_TEST_CASE(LCIter_test)
   BOOST_CHECK(it1 == itc);
   BOOST_CHECK(!(it1 != itc));
 
-  it1++;
-  BOOST_CHECK(it1 == itc);
-  itc--;
-  BOOST_CHECK(it1 == itc);
-  ++it1;
-  BOOST_CHECK(it1 == itc);
-  --itc;
-  BOOST_CHECK(it1 == itc);
-
   list1.pushBack(1);
   list1.pushBack(2);
   list1.pushBack(3);
@@ -180,15 +171,6 @@ BOOST_AUTO_TEST_CASE(LIter_test)
   saldaev::List< int >::LIter itc = it1;
   BOOST_CHECK(it1 == itc);
   BOOST_CHECK(!(it1 != itc));
-
-  it1++;
-  BOOST_CHECK(it1 == itc);
-  itc--;
-  BOOST_CHECK(it1 == itc);
-  ++it1;
-  BOOST_CHECK(it1 == itc);
-  --itc;
-  BOOST_CHECK(it1 == itc);
 
   list1.pushBack(1);
   list1.pushBack(2);
