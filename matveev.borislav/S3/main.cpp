@@ -6,11 +6,11 @@
 
 namespace
 {
-struct IntHash
+struct SameHash
 {
-  size_t operator()(int value) const
+  size_t operator()(int) const
   {
-    return static_cast< size_t >(value);
+    return 0;
   }
 };
 
@@ -25,11 +25,17 @@ struct IntEqual
 
 int main()
 {
-  matveev::HashTable< int, std::string, IntHash, IntEqual > table(3, 2);
+  matveev::HashTable< int, std::string, SameHash, IntEqual > table(1, 2);
 
+  table.add(1, "one");
+  table.add(2, "two");
+  table.add(3, "three");
+
+  std::cout << table.at(1) << '\n';
+  std::cout << table.at(2) << '\n';
+  std::cout << table.at(3) << '\n';
+  std::cout << table.has(3) << '\n';
   std::cout << table.size() << '\n';
-  std::cout << table.bucketCount() << '\n';
-  std::cout << table.bucketCapacity() << '\n';
 
   return 0;
 }

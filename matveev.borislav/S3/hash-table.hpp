@@ -98,9 +98,21 @@ void HashTable< Key, Value, Hash, Equal >::add(const Key& key, const Value& valu
 {
   size_t bucket = indexOf(key);
   size_t first = bucketFirst(bucket);
+  size_t overflow = overflowFirst();
+
   for (size_t i = 0; i < bucket_capacity_; ++i)
   {
     HashTableItem< Key, Value >& item = data_[first + i];
+
+    if (item.occupied && equal_(item.key, key))
+    {
+      throw std::logic_error("key already exists");
+    }
+  }
+
+  for (size_t i = 0; i < bucket_capacity_; ++i)
+  {
+    HashTableItem< Key, Value >& item = data_[overflow + i];
 
     if (item.occupied && equal_(item.key, key))
     {
@@ -122,7 +134,21 @@ void HashTable< Key, Value, Hash, Equal >::add(const Key& key, const Value& valu
     }
   }
 
-  throw std::overflow_error("hash table bucket overflow");
+  for (size_t i = 0; i < bucket_capacity_; ++i)
+  {
+    HashTableItem< Key, Value >& item = data_[overflow + i];
+
+    if (!item.occupied)
+    {
+      item.key = key;
+      item.value = value;
+      item.occupied = true;
+      ++size_;
+      return;
+    }
+  }
+
+  throw std::overflow_error("hash table overflow bucket overflow");
 }
 
 template< class Key, class Value, class Hash, class Equal >
@@ -130,10 +156,21 @@ bool HashTable< Key, Value, Hash, Equal >::has(const Key& key) const
 {
   size_t bucket = indexOf(key);
   size_t first = bucketFirst(bucket);
+  size_t overflow = overflowFirst();
 
   for (size_t i = 0; i < bucket_capacity_; ++i)
   {
     const HashTableItem< Key, Value >& item = data_[first + i];
+
+    if (item.occupied && equal_(item.key, key))
+    {
+      return true;
+    }
+  }
+
+  for (size_t i = 0; i < bucket_capacity_; ++i)
+  {
+    const HashTableItem< Key, Value >& item = data_[overflow + i];
 
     if (item.occupied && equal_(item.key, key))
     {
@@ -149,10 +186,21 @@ Value& HashTable< Key, Value, Hash, Equal >::at(const Key& key)
 {
   size_t bucket = indexOf(key);
   size_t first = bucketFirst(bucket);
+  size_t overflow = overflowFirst();
 
   for (size_t i = 0; i < bucket_capacity_; ++i)
   {
     HashTableItem< Key, Value >& item = data_[first + i];
+
+    if (item.occupied && equal_(item.key, key))
+    {
+      return item.value;
+    }
+  }
+
+  for (size_t i = 0; i < bucket_capacity_; ++i)
+  {
+    HashTableItem< Key, Value >& item = data_[overflow + i];
 
     if (item.occupied && equal_(item.key, key))
     {
@@ -168,10 +216,21 @@ const Value& HashTable< Key, Value, Hash, Equal >::at(const Key& key) const
 {
   size_t bucket = indexOf(key);
   size_t first = bucketFirst(bucket);
+  size_t overflow = overflowFirst();
 
   for (size_t i = 0; i < bucket_capacity_; ++i)
   {
     const HashTableItem< Key, Value >& item = data_[first + i];
+
+    if (item.occupied && equal_(item.key, key))
+    {
+      return item.value;
+    }
+  }
+
+  for (size_t i = 0; i < bucket_capacity_; ++i)
+  {
+    const HashTableItem< Key, Value >& item = data_[overflow + i];
 
     if (item.occupied && equal_(item.key, key))
     {
