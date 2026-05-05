@@ -1,5 +1,5 @@
 #include <iostream>
-#include "HashTable.hpp"
+#include "HashTable/HashTable.hpp"
 
 int main(int argc, char* argv[])
 {
