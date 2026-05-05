@@ -138,7 +138,7 @@ karpovich::TreeNode< Key, Value > *karpovich::BSTree< Key, Value, Compare >::clo
   if (src == nullptr) {
     return nullptr;
   }
-  TreeNode< Key, Value > *n = new TreeNode< Key, Value >(src->data_.first, src->data_.second, parent);
+  TreeNode< Key, Value > *n = new TreeNode< Key, Value >(src->key_, src->value_, parent);
   n->left_ = clone(src->left_, n);
   n->right_ = clone(src->right_, n);
   return n;
@@ -149,9 +149,9 @@ karpovich::TreeNode< Key, Value > *karpovich::BSTree< Key, Value, Compare >::fin
 {
   TreeNode< Key, Value > *cur = root_;
   while (cur != nullptr) {
-    if (comp_(k, cur->data_.first)) {
+    if (comp_(k, cur->key_)) {
       cur = cur->left_;
-    } else if (comp_(cur->data_.first, k)) {
+    } else if (comp_(cur->key_, k)) {
       cur = cur->right_;
     } else {
       return cur;
