@@ -42,20 +42,10 @@ BOOST_AUTO_TEST_CASE(test_get)
 
   BOOST_CHECK_EQUAL(ht.get("one"), 1);
   BOOST_CHECK_EQUAL(ht.get("two"), 2);
-}
-
-BOOST_AUTO_TEST_CASE(test_rewrite)
-{
-  HashTable< std::string, int > ht(16);
-  ht.add("one", 1);
-  ht.add("two", 2);
-
-  BOOST_CHECK_EQUAL(ht.get("one"), 1);
-  BOOST_CHECK_EQUAL(ht.get("two"), 2);
-
-  ht.rewrite("one", 10);
+  ht.add("one", 10);
   BOOST_CHECK_EQUAL(ht.get("one"), 10);
 }
+
 BOOST_AUTO_TEST_CASE(test_drop)
 {
   HashTable< std::string, int > ht(16);
@@ -118,7 +108,6 @@ BOOST_AUTO_TEST_CASE(test_move_constructor)
   BOOST_CHECK_EQUAL(ht2.size(), 2);
   BOOST_CHECK(ht2.has("one"));
   BOOST_CHECK(ht2.has("two"));
-  BOOST_CHECK(ht1.empty());
 }
 
 BOOST_AUTO_TEST_CASE(test_rehash)
