@@ -17,11 +17,11 @@ namespace karpovich
 
     BSTree();
     BSTree(const BSTree &other);
-    BSTree(BSTree &&other);
+    BSTree(BSTree &&other) noexcept;
     ~BSTree();
 
     BSTree &operator=(const BSTree &other);
-    BSTree &operator=(BSTree &&other);
+    BSTree &operator=(BSTree &&other) noexcept;
 
     bool empty() const;
     size_t size() const;
@@ -58,7 +58,33 @@ namespace karpovich
     TreeNode< Key, Value > *root_;
     size_t size_;
     Compare comp_;
+
+    TreeNode< Key, Value > *clone(TreeNode< Key, Value > *src, TreeNode< Key, Value > *parent);
   };
+}
+
+template < class Key, class Value, class Compare >
+karpovich::BSTree< Key, Value, Compare >::BSTree():
+  root_(nullptr),
+  size_(0),
+  comp_()
+{}
+
+template < class Key, class Value, class Compare >
+karpovich::BSTree< Key, Value, Compare >::BSTree(const BSTree &other):
+  root_(clone(other.root_, nullptr)),
+  size_(other.size_),
+  comp_(other.comp_)
+{}
+
+template < class Key, class Value, class Compare >
+karpovich::BSTree< Key, Value, Compare >::BSTree(BSTree &&other) noexcept:
+  root_(other.root_),
+  size_(other.size_),
+  comp_(std::move(other.comp_))
+{
+  other.root_ = nullptr;
+  other.size_ = 0;
 }
 
 #endif
