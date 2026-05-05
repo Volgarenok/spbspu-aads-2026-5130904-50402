@@ -381,4 +381,27 @@ karpovich::BSTree< Key, Value, Compare >::rotateLargeRight(const_iterator it)
   return rotateRight(it);
 }
 
+template < class Key, class Value, class Compare >
+size_t karpovich::BSTree< Key, Value, Compare >::calcHeight(TreeNode< Key, Value > *node) const
+{
+  if (node == nullptr) {
+    return 0;
+  }
+  size_t l = calcHeight(node->left_);
+  size_t r = calcHeight(node->right_);
+  return 1 + ((l > r) ? l : r);
+}
+
+template < class Key, class Value, class Compare >
+size_t karpovich::BSTree< Key, Value, Compare >::height() const
+{
+  return calcHeight(root_);
+}
+
+template < class Key, class Value, class Compare >
+size_t karpovich::BSTree< Key, Value, Compare >::height(const_iterator it) const
+{
+  return calcHeight(static_cast< TreeNode< Key, Value > * >(it.node_));
+}
+
 #endif
