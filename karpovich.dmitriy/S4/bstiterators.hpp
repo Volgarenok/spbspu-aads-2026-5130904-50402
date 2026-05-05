@@ -14,7 +14,7 @@ namespace karpovich
   class BSTConstIterator
   {
   public:
-    const std::pair< const Key, Value > &operator*() const;
+    const std::pair< const Key, Value > operator*() const;
     BSTConstIterator &operator++();
     BSTConstIterator operator++(int);
     BSTConstIterator &operator--();
@@ -31,7 +31,7 @@ namespace karpovich
   class BSTIterator
   {
   public:
-    std::pair< const Key, Value > &operator*() const;
+    std::pair< const Key, Value > operator*() const;
     BSTIterator &operator++();
     BSTIterator operator++(int);
     BSTIterator &operator--();
@@ -43,6 +43,42 @@ namespace karpovich
   private:
     TreeNode< Key, Value > *node_;
   };
+}
+
+template < class Key, class Value >
+const std::pair< const Key, Value > karpovich::BSTConstIterator< Key, Value >::operator*() const
+{
+  return std::pair< const Key, Value >(node_->key_, node_->value_);
+}
+
+template < class Key, class Value >
+karpovich::BSTConstIterator< Key, Value > &karpovich::BSTConstIterator< Key, Value >::operator++()
+{
+  if (node_ == nullptr) {
+    return *this;
+  }
+  if (node_->right_ != nullptr) {
+    node_ = node_->right_;
+    while (node_->left_ != nullptr) {
+      node_ = node_->left_;
+    }
+  } else {
+    TreeNode< Key, Value > *parent = node_->parent_;
+    while (parent != nullptr && node_ == parent->right_) {
+      node_ = parent;
+      parent = node_->parent_;
+    }
+    node_ = parent;
+  }
+  return *this;
+}
+
+template < class Key, class Value >
+karpovich::BSTConstIterator< Key, Value > karpovich::BSTConstIterator< Key, Value >::operator++(int)
+{
+  BSTConstIterator tmp = *this;
+  ++(*this);
+  return tmp;
 }
 
 #endif
