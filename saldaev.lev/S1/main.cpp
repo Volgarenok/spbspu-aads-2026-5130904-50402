@@ -49,11 +49,12 @@ int main()
     std::cout << '\n';
     any_left = false;
     typename saldaev::List< typename saldaev::List< size_t >::LIter >::LIter iterIt = iters.begin();
+    outerIt = outer.begin();
 
     first = true;
     while (iterIt != iters.end()) {
       typename saldaev::List< size_t >::LIter &innerIt = *iterIt;
-      if (innerIt != outer.begin()->second.end()) {
+      if (innerIt != outerIt->second.end()) {
         if (!first) {
           std::cout << ' ';
         }
@@ -63,6 +64,7 @@ int main()
         first = false;
       }
       ++iterIt;
+      ++outerIt;
     }
   }
 
@@ -84,10 +86,11 @@ int main()
     while (any_left) {
       any_left = false;
       typename saldaev::List< typename saldaev::List< size_t >::LIter >::LIter iterIt = iters.begin();
+      outerIt = outer.begin();
 
       while (iterIt != iters.end()) {
         typename saldaev::List< size_t >::LIter &innerIt = *iterIt;
-        if (innerIt != outer.begin()->second.end()) {
+        if (innerIt != outerIt->second.end()) {
           size_t num = *innerIt;
           if (std::numeric_limits< size_t >::max() - num < *sumsIt) {
             throw std::overflow_error("overflow_error");
@@ -98,6 +101,7 @@ int main()
           first = false;
         }
         ++iterIt;
+        ++outerIt;
       }
       ++sumsIt;
     }
