@@ -31,14 +31,10 @@ int main()
   table.add(2, "two");
   table.add(3, "three");
 
-  table.rehash(2, 3);
-
-  std::cout << table.at(1) << '\n';
-  std::cout << table.at(2) << '\n';
-  std::cout << table.at(3) << '\n';
-  std::cout << table.bucketCount() << '\n';
-  std::cout << table.bucketCapacity() << '\n';
-  std::cout << table.size() << '\n';
+  for (auto it = table.begin(); it != table.end(); ++it)
+  {
+    std::cout << it->key << ' ' << it->value << '\n';
+  }
 
   return 0;
 }

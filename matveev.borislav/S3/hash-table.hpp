@@ -21,6 +21,11 @@ template< class Key, class Value, class Hash, class Equal >
 class HashTable
 {
 public:
+  class Iterator;
+  class ConstIterator;
+
+  using iterator = Iterator;
+  using const_iterator = ConstIterator;
   HashTable(size_t buckets, size_t bucket_capacity);
   HashTable(const HashTable& other);
   HashTable& operator=(const HashTable& other);
@@ -34,6 +39,13 @@ public:
   void clear() noexcept;
   void swap(HashTable& other) noexcept;
   void rehash(size_t buckets, size_t bucket_capacity);
+
+  Iterator begin() noexcept;
+  Iterator end() noexcept;
+  ConstIterator begin() const noexcept;
+  ConstIterator end() const noexcept;
+  ConstIterator cbegin() const noexcept;
+  ConstIterator cend() const noexcept;
 
   size_t size() const noexcept;
   size_t bucketCount() const noexcept;
@@ -52,6 +64,98 @@ private:
   size_t bucketFirst(size_t bucket) const noexcept;
   size_t overflowFirst() const noexcept;
 };
+
+template< class Key, class Value, class Hash, class Equal >
+class HashTable< Key, Value, Hash, Equal >::Iterator
+{
+  friend class HashTable< Key, Value, Hash, Equal >;
+
+public:
+  Iterator();
+
+  HashTableItem< Key, Value >& operator*() const;
+  HashTableItem< Key, Value >* operator->() const;
+
+  Iterator& operator++();
+  Iterator operator++(int);
+
+  bool operator==(const Iterator& other) const;
+  bool operator!=(const Iterator& other) const;
+
+private:
+  Iterator(HashTable< Key, Value, Hash, Equal >* table, size_t pos);
+  void skipEmpty() noexcept;
+
+  HashTable< Key, Value, Hash, Equal >* table_;
+  size_t pos_;
+};
+
+template< class Key, class Value, class Hash, class Equal >
+HashTable< Key, Value, Hash, Equal >::Iterator::Iterator():
+  table_(nullptr),
+  pos_(0)
+{}
+
+template< class Key, class Value, class Hash, class Equal >
+HashTable< Key, Value, Hash, Equal >::Iterator::Iterator(HashTable< Key, Value, Hash, Equal >* table, size_t pos):
+  table_(table),
+  pos_(pos)
+{
+  skipEmpty();
+}
+
+template< class Key, class Value, class Hash, class Equal >
+HashTableItem< Key, Value >& HashTable< Key, Value, Hash, Equal >::Iterator::operator*() const
+{
+  return table_->data_[pos_];
+}
+
+template< class Key, class Value, class Hash, class Equal >
+HashTableItem< Key, Value >* HashTable< Key, Value, Hash, Equal >::Iterator::operator->() const
+{
+  return std::addressof(table_->data_[pos_]);
+}
+
+template< class Key, class Value, class Hash, class Equal >
+typename HashTable< Key, Value, Hash, Equal >::Iterator& HashTable< Key, Value, Hash, Equal >::Iterator::operator++()
+{
+  if (table_ != nullptr && pos_ < table_->capacity())
+  {
+    ++pos_;
+    skipEmpty();
+  }
+
+  return *this;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+typename HashTable< Key, Value, Hash, Equal >::Iterator HashTable< Key, Value, Hash, Equal >::Iterator::operator++(int)
+{
+  Iterator result(*this);
+  ++(*this);
+  return result;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+bool HashTable< Key, Value, Hash, Equal >::Iterator::operator==(const Iterator& other) const
+{
+  return table_ == other.table_ && pos_ == other.pos_;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+bool HashTable< Key, Value, Hash, Equal >::Iterator::operator!=(const Iterator& other) const
+{
+  return !(*this == other);
+}
+
+template< class Key, class Value, class Hash, class Equal >
+void HashTable< Key, Value, Hash, Equal >::Iterator::skipEmpty() noexcept
+{
+  while (table_ != nullptr && pos_ < table_->capacity() && !table_->data_[pos_].occupied)
+  {
+    ++pos_;
+  }
+}
 
 template< class Key, class Value >
 HashTableItem< Key, Value >::HashTableItem():
@@ -358,6 +462,18 @@ void HashTable< Key, Value, Hash, Equal >::rehash(size_t buckets, size_t bucket_
   }
 
   swap(temp);
+}
+
+template< class Key, class Value, class Hash, class Equal >
+typename HashTable< Key, Value, Hash, Equal >::Iterator HashTable< Key, Value, Hash, Equal >::begin() noexcept
+{
+  return Iterator(this, 0);
+}
+
+template< class Key, class Value, class Hash, class Equal >
+typename HashTable< Key, Value, Hash, Equal >::Iterator HashTable< Key, Value, Hash, Equal >::end() noexcept
+{
+  return Iterator(this, capacity());
 }
 
 template< class Key, class Value, class Hash, class Equal >
