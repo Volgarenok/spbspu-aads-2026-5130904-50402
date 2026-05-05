@@ -33,7 +33,6 @@ namespace karpovich
     Value &at(const Key &k);
 
     void push(const Key &k, const Value &v);
-    void push(Key &&k, Value &&v);
     Value drop(const Key &k);
 
     void clear();
@@ -169,6 +168,47 @@ const Value &karpovich::BSTree< Key, Value, Compare >::at(const Key &k) const
     throw std::out_of_range("Key not found");
   }
   return n->data_.second;
+}
+
+template < class Key, class Value, class Compare >
+Value &karpovich::BSTree< Key, Value, Compare >::at(const Key &k)
+{
+  TreeNode< Key, Value > *n = findNode(k);
+  if (n == nullptr) {
+    throw std::out_of_range("Key not found");
+  }
+  return n->data_.second;
+}
+
+template < class Key, class Value, class Compare >
+void karpovich::BSTree< Key, Value, Compare >::push(const Key &k, const Value &v)
+{
+  if (root_ == nullptr) {
+    root_ = new TreeNode< Key, Value >(k, v, nullptr);
+    ++size_;
+    return;
+  }
+  TreeNode< Key, Value > *cur = root_;
+  while (true) {
+    if (comp_(k, cur->data_.first)) {
+      if (cur->left_ == nullptr) {
+        cur->left_ = new TreeNode< Key, Value >(k, v, cur);
+        ++size_;
+        return;
+      }
+      cur = cur->left_;
+    } else if (comp_(cur->data_.first, k)) {
+      if (cur->right_ == nullptr) {
+        cur->right_ = new TreeNode< Key, Value >(k, v, cur);
+        ++size_;
+        return;
+      }
+      cur = cur->right_;
+    } else {
+      cur->data_.second = v;
+      return;
+    }
+  }
 }
 
 #endif
