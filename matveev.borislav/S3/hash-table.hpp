@@ -94,6 +94,49 @@ HashTable< Key, Value, Hash, Equal >::~HashTable()
 }
 
 template< class Key, class Value, class Hash, class Equal >
+HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable& other):
+  data_(nullptr),
+  bucket_count_(other.bucket_count_),
+  bucket_capacity_(other.bucket_capacity_),
+  size_(0),
+  hash_(other.hash_),
+  equal_(other.equal_)
+{
+  data_ = new HashTableItem< Key, Value >[capacity()];
+
+  try
+  {
+    for (size_t i = 0; i < other.capacity(); ++i)
+    {
+      if (other.data_[i].occupied)
+      {
+        add(other.data_[i].key, other.data_[i].value);
+      }
+    }
+  }
+  catch (...)
+  {
+    delete[] data_;
+    data_ = nullptr;
+    throw;
+  }
+}
+
+template< class Key, class Value, class Hash, class Equal >
+HashTable< Key, Value, Hash, Equal >& HashTable< Key, Value, Hash, Equal >::operator=(const HashTable& other)
+{
+  if (this == &other)
+  {
+    return *this;
+  }
+
+  HashTable< Key, Value, Hash, Equal > temp(other);
+  swap(temp);
+
+  return *this;
+}
+
+template< class Key, class Value, class Hash, class Equal >
 void HashTable< Key, Value, Hash, Equal >::add(const Key& key, const Value& value)
 {
   size_t bucket = indexOf(key);
