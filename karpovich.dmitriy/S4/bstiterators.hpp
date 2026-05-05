@@ -6,7 +6,6 @@
 
 namespace karpovich
 {
-
   template < class Key, class Value, class Compare >
   class BSTree;
 
@@ -14,14 +13,17 @@ namespace karpovich
   class BSTConstIterator
   {
   public:
-    const std::pair< const Key, Value > operator*() const;
+    explicit BSTConstIterator(TreeNode< Key, Value > *node = nullptr);
+    std::pair< const Key, Value > operator*() const;
     BSTConstIterator &operator++();
     BSTConstIterator operator++(int);
     BSTConstIterator &operator--();
     BSTConstIterator operator--(int);
     bool operator==(const BSTConstIterator &other) const;
     bool operator!=(const BSTConstIterator &other) const;
-    friend class BSTree< Key, Value, class Compare >;
+
+    template < class K, class V, class C >
+    friend class BSTree;
 
   private:
     TreeNode< Key, Value > *node_;
@@ -31,6 +33,7 @@ namespace karpovich
   class BSTIterator
   {
   public:
+    explicit BSTIterator(TreeNode< Key, Value > *node = nullptr);
     std::pair< const Key, Value > operator*() const;
     BSTIterator &operator++();
     BSTIterator operator++(int);
@@ -38,7 +41,9 @@ namespace karpovich
     BSTIterator operator--(int);
     bool operator==(const BSTIterator &other) const;
     bool operator!=(const BSTIterator &other) const;
-    friend class BSTree< Key, Value, class Compare >;
+
+    template < class K, class V, class C >
+    friend class BSTree;
 
   private:
     TreeNode< Key, Value > *node_;
@@ -46,7 +51,12 @@ namespace karpovich
 }
 
 template < class Key, class Value >
-const std::pair< const Key, Value > karpovich::BSTConstIterator< Key, Value >::operator*() const
+karpovich::BSTConstIterator< Key, Value >::BSTConstIterator(TreeNode< Key, Value > *node):
+  node_(node)
+{}
+
+template < class Key, class Value >
+std::pair< const Key, Value > karpovich::BSTConstIterator< Key, Value >::operator*() const
 {
   return std::pair< const Key, Value >(node_->key_, node_->value_);
 }
@@ -122,6 +132,11 @@ bool karpovich::BSTConstIterator< Key, Value >::operator!=(const BSTConstIterato
 {
   return node_ != other.node_;
 }
+
+template < class Key, class Value >
+karpovich::BSTIterator< Key, Value >::BSTIterator(TreeNode< Key, Value > *node):
+  node_(node)
+{}
 
 template < class Key, class Value >
 std::pair< const Key, Value > karpovich::BSTIterator< Key, Value >::operator*() const

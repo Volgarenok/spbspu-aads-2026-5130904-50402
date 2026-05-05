@@ -5,6 +5,7 @@
 #include <functional>
 #include <memory>
 #include <stdexcept>
+#include <utility>
 #include "bstiterators.hpp"
 #include "treenode.hpp"
 
@@ -16,7 +17,6 @@ namespace karpovich
   public:
     using const_iterator = BSTConstIterator< Key, Value >;
     using iterator = BSTIterator< Key, Value >;
-    using TNode = TreeNode< Key, Value >;
 
     BSTree();
     BSTree(const BSTree &other);
@@ -33,6 +33,7 @@ namespace karpovich
     Value &at(const Key &k);
 
     void push(const Key &k, const Value &v);
+    void push(Key &&k, Value &&v);
     Value drop(const Key &k);
 
     void clear() noexcept;
@@ -40,7 +41,9 @@ namespace karpovich
 
     iterator begin();
     iterator end() noexcept;
-    const_iterator cbegin() const;
+    const_iterator begin() const;
+    const_iterator end() const noexcept;
+    const_iterator cbegin() const noexcept;
     const_iterator cend() const noexcept;
 
     const_iterator rotateLeft(const_iterator it);
@@ -76,10 +79,13 @@ karpovich::BSTree< Key, Value, Compare >::BSTree():
 
 template < class Key, class Value, class Compare >
 karpovich::BSTree< Key, Value, Compare >::BSTree(const BSTree &other):
-  root_(clone(other.root_, nullptr)),
-  size_(other.size_),
+  root_(nullptr),
+  size_(0),
   comp_(other.comp_)
-{}
+{
+  root_ = clone(other.root_, nullptr);
+  size_ = other.size_;
+}
 
 template < class Key, class Value, class Compare >
 karpovich::BSTree< Key, Value, Compare >::BSTree(BSTree &&other) noexcept:
@@ -96,6 +102,7 @@ karpovich::BSTree< Key, Value, Compare >::~BSTree()
 {
   clear();
 }
+
 template < class Key, class Value, class Compare >
 karpovich::BSTree< Key, Value, Compare > &karpovich::BSTree< Key, Value, Compare >::operator=(const BSTree &other)
 {
@@ -168,7 +175,7 @@ const Value &karpovich::BSTree< Key, Value, Compare >::at(const Key &k) const
   if (n == nullptr) {
     throw std::out_of_range("Key not found");
   }
-  return n->data_.second;
+  return n->value_;
 }
 
 template < class Key, class Value, class Compare >
@@ -178,7 +185,7 @@ Value &karpovich::BSTree< Key, Value, Compare >::at(const Key &k)
   if (n == nullptr) {
     throw std::out_of_range("Key not found");
   }
-  return n->data_.second;
+  return n->value_;
 }
 
 template < class Key, class Value, class Compare >
@@ -191,14 +198,14 @@ void karpovich::BSTree< Key, Value, Compare >::push(const Key &k, const Value &v
   }
   TreeNode< Key, Value > *cur = root_;
   while (true) {
-    if (comp_(k, cur->data_.first)) {
+    if (comp_(k, cur->key_)) {
       if (cur->left_ == nullptr) {
         cur->left_ = new TreeNode< Key, Value >(k, v, cur);
         ++size_;
         return;
       }
       cur = cur->left_;
-    } else if (comp_(cur->data_.first, k)) {
+    } else if (comp_(cur->key_, k)) {
       if (cur->right_ == nullptr) {
         cur->right_ = new TreeNode< Key, Value >(k, v, cur);
         ++size_;
@@ -206,7 +213,38 @@ void karpovich::BSTree< Key, Value, Compare >::push(const Key &k, const Value &v
       }
       cur = cur->right_;
     } else {
-      cur->data_.second = v;
+      cur->value_ = v;
+      return;
+    }
+  }
+}
+
+template < class Key, class Value, class Compare >
+void karpovich::BSTree< Key, Value, Compare >::push(Key &&k, Value &&v)
+{
+  if (root_ == nullptr) {
+    root_ = new TreeNode< Key, Value >(std::move(k), std::move(v), nullptr);
+    ++size_;
+    return;
+  }
+  TreeNode< Key, Value > *cur = root_;
+  while (true) {
+    if (comp_(k, cur->key_)) {
+      if (cur->left_ == nullptr) {
+        cur->left_ = new TreeNode< Key, Value >(std::move(k), std::move(v), cur);
+        ++size_;
+        return;
+      }
+      cur = cur->left_;
+    } else if (comp_(cur->key_, k)) {
+      if (cur->right_ == nullptr) {
+        cur->right_ = new TreeNode< Key, Value >(std::move(k), std::move(v), cur);
+        ++size_;
+        return;
+      }
+      cur = cur->right_;
+    } else {
+      cur->value_ = std::move(v);
       return;
     }
   }
@@ -280,20 +318,6 @@ karpovich::BSTree< Key, Value, Compare >::fallLeft(TreeNode< Key, Value > *node)
 }
 
 template < class Key, class Value, class Compare >
-typename karpovich::BSTree< Key, Value, Compare >::const_iterator
-karpovich::BSTree< Key, Value, Compare >::cbegin() const
-{
-  return const_iterator(fallLeft(root_));
-}
-
-template < class Key, class Value, class Compare >
-typename karpovich::BSTree< Key, Value, Compare >::const_iterator
-karpovich::BSTree< Key, Value, Compare >::cend() const noexcept
-{
-  return const_iterator(nullptr);
-}
-
-template < class Key, class Value, class Compare >
 typename karpovich::BSTree< Key, Value, Compare >::iterator karpovich::BSTree< Key, Value, Compare >::begin()
 {
   return iterator(fallLeft(root_));
@@ -303,6 +327,34 @@ template < class Key, class Value, class Compare >
 typename karpovich::BSTree< Key, Value, Compare >::iterator karpovich::BSTree< Key, Value, Compare >::end() noexcept
 {
   return iterator(nullptr);
+}
+
+template < class Key, class Value, class Compare >
+typename karpovich::BSTree< Key, Value, Compare >::const_iterator
+karpovich::BSTree< Key, Value, Compare >::begin() const
+{
+  return const_iterator(fallLeft(root_));
+}
+
+template < class Key, class Value, class Compare >
+typename karpovich::BSTree< Key, Value, Compare >::const_iterator
+karpovich::BSTree< Key, Value, Compare >::end() const noexcept
+{
+  return const_iterator(nullptr);
+}
+
+template < class Key, class Value, class Compare >
+typename karpovich::BSTree< Key, Value, Compare >::const_iterator
+karpovich::BSTree< Key, Value, Compare >::cbegin() const noexcept
+{
+  return const_iterator(fallLeft(root_));
+}
+
+template < class Key, class Value, class Compare >
+typename karpovich::BSTree< Key, Value, Compare >::const_iterator
+karpovich::BSTree< Key, Value, Compare >::cend() const noexcept
+{
+  return const_iterator(nullptr);
 }
 
 template < class Key, class Value, class Compare >

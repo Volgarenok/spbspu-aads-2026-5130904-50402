@@ -10,7 +10,7 @@ BOOST_AUTO_TEST_CASE(test_default_constructor)
   BSTree< int, std::string > tree;
   BOOST_CHECK(tree.empty());
   BOOST_CHECK_EQUAL(tree.size(), 0);
-  BOOST_CHECK_EQUAL(tree.begin(), tree.end());
+  BOOST_CHECK(tree.begin() == tree.end());
 }
 
 BOOST_AUTO_TEST_CASE(test_push_and_size)

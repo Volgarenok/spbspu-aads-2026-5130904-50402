@@ -25,7 +25,7 @@ void karpovich::cmdPrint(std::istream &in, std::ostream &out, karpovich::Dataset
   }
 }
 
-void karpovich::cmdComplement(std::istream &in, std::ostream &out, karpovich::Datasets &datasets)
+void karpovich::cmdComplement(std::istream &in, std::ostream &, karpovich::Datasets &datasets)
 {
   std::string new_name, name1, name2;
   if (!(in >> new_name >> name1 >> name2)) {
@@ -50,7 +50,7 @@ void karpovich::cmdComplement(std::istream &in, std::ostream &out, karpovich::Da
   datasets.push(new_name, std::move(new_ds));
 }
 
-void karpovich::cmdIntersect(std::istream &in, std::ostream &out, karpovich::Datasets &datasets)
+void karpovich::cmdIntersect(std::istream &in, std::ostream &, karpovich::Datasets &datasets)
 {
   std::string new_name, name1, name2;
   if (!(in >> new_name >> name1 >> name2)) {
@@ -75,7 +75,7 @@ void karpovich::cmdIntersect(std::istream &in, std::ostream &out, karpovich::Dat
   datasets.push(new_name, std::move(new_ds));
 }
 
-void karpovich::cmdUnion(std::istream &in, std::ostream &out, karpovich::Datasets &datasets)
+void karpovich::cmdUnion(std::istream &in, std::ostream &, karpovich::Datasets &datasets)
 {
   std::string new_name, name1, name2;
   if (!(in >> new_name >> name1 >> name2)) {
