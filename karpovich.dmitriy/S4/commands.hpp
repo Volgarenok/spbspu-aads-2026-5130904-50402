@@ -1,8 +1,6 @@
 #ifndef COMMANDS_HPP
 #define COMMANDS_HPP
 
-#include <hashFunctions.hpp>
-#include <hashTable.hpp>
 #include <iostream>
 #include <string>
 #include "bstree.hpp"
@@ -10,7 +8,7 @@
 namespace karpovich
 {
   using Dataset = BSTree< int, std::string >;
-  using Datasets = HashTable< std::string, Dataset, Hasher< std::string >, std::equal_to< std::string > >;
+  using Datasets = BSTree< std::string, Dataset >;
 
   void cmdPrint(std::istream &in, std::ostream &out, Datasets &datasets);
   void cmdComplement(std::istream &in, std::ostream &out, Datasets &datasets);
