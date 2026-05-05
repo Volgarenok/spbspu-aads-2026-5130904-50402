@@ -15,6 +15,7 @@ namespace karpovich
   public:
     using const_iterator = BSTConstIterator< Key, Value >;
     using iterator = BSTIterator< Key, Value >;
+    using TNode = TreeNode< Key, Value >;
 
     BSTree();
     BSTree(const BSTree &other);
@@ -127,6 +128,19 @@ template < class Key, class Value, class Compare >
 size_t karpovich::BSTree< Key, Value, Compare >::size() const
 {
   return size_;
+}
+
+template < class Key, class Value, class Compare >
+karpovich::TreeNode< Key, Value > *karpovich::BSTree< Key, Value, Compare >::clone(TreeNode< Key, Value > *src,
+                                                                                   TreeNode< Key, Value > *parent)
+{
+  if (src == nullptr) {
+    return nullptr;
+  }
+  TreeNode< Key, Value > *n = new TreeNode< Key, Value >(src->data_.first, src->data_.second, parent);
+  n->left_ = clone(src->left_, n);
+  n->right_ = clone(src->right_, n);
+  return n;
 }
 
 #endif
