@@ -49,6 +49,8 @@ private:
 
   size_t indexOf(const Key& key) const;
   size_t capacity() const noexcept;
+  size_t bucketFirst(size_t bucket) const noexcept;
+  size_t overflowFirst() const noexcept;
 };
 
 template< class Key, class Value >
@@ -72,7 +74,12 @@ HashTable< Key, Value, Hash, Equal >::HashTable(size_t buckets, size_t bucket_ca
     throw std::invalid_argument("invalid hash table capacity");
   }
 
-  if (bucket_count_ > std::numeric_limits< size_t >::max() / bucket_capacity_)
+  if (bucket_count_ == std::numeric_limits< size_t >::max())
+  {
+    throw std::overflow_error("hash table capacity overflow");
+  }
+
+  if (bucket_count_ + 1 > std::numeric_limits< size_t >::max() / bucket_capacity_)
   {
     throw std::overflow_error("hash table capacity overflow");
   }
@@ -90,8 +97,7 @@ template< class Key, class Value, class Hash, class Equal >
 void HashTable< Key, Value, Hash, Equal >::add(const Key& key, const Value& value)
 {
   size_t bucket = indexOf(key);
-  size_t first = bucket * bucket_capacity_;
-
+  size_t first = bucketFirst(bucket);
   for (size_t i = 0; i < bucket_capacity_; ++i)
   {
     HashTableItem< Key, Value >& item = data_[first + i];
@@ -123,7 +129,7 @@ template< class Key, class Value, class Hash, class Equal >
 bool HashTable< Key, Value, Hash, Equal >::has(const Key& key) const
 {
   size_t bucket = indexOf(key);
-  size_t first = bucket * bucket_capacity_;
+  size_t first = bucketFirst(bucket);
 
   for (size_t i = 0; i < bucket_capacity_; ++i)
   {
@@ -142,7 +148,7 @@ template< class Key, class Value, class Hash, class Equal >
 Value& HashTable< Key, Value, Hash, Equal >::at(const Key& key)
 {
   size_t bucket = indexOf(key);
-  size_t first = bucket * bucket_capacity_;
+  size_t first = bucketFirst(bucket);
 
   for (size_t i = 0; i < bucket_capacity_; ++i)
   {
@@ -161,7 +167,7 @@ template< class Key, class Value, class Hash, class Equal >
 const Value& HashTable< Key, Value, Hash, Equal >::at(const Key& key) const
 {
   size_t bucket = indexOf(key);
-  size_t first = bucket * bucket_capacity_;
+  size_t first = bucketFirst(bucket);
 
   for (size_t i = 0; i < bucket_capacity_; ++i)
   {
@@ -175,7 +181,6 @@ const Value& HashTable< Key, Value, Hash, Equal >::at(const Key& key) const
 
   throw std::out_of_range("key not found");
 }
-
 
 template< class Key, class Value, class Hash, class Equal >
 size_t HashTable< Key, Value, Hash, Equal >::size() const noexcept
@@ -203,6 +208,18 @@ size_t HashTable< Key, Value, Hash, Equal >::indexOf(const Key& key) const
 
 template< class Key, class Value, class Hash, class Equal >
 size_t HashTable< Key, Value, Hash, Equal >::capacity() const noexcept
+{
+  return (bucket_count_ + 1) * bucket_capacity_;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+size_t HashTable< Key, Value, Hash, Equal >::bucketFirst(size_t bucket) const noexcept
+{
+  return bucket * bucket_capacity_;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+size_t HashTable< Key, Value, Hash, Equal >::overflowFirst() const noexcept
 {
   return bucket_count_ * bucket_capacity_;
 }

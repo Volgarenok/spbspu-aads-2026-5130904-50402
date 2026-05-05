@@ -25,15 +25,11 @@ struct IntEqual
 
 int main()
 {
-  matveev::HashTable< int, std::string, IntHash, IntEqual > table(5, 2);
+  matveev::HashTable< int, std::string, IntHash, IntEqual > table(3, 2);
 
-  table.add(1, "one");
-  table.add(6, "six");
-
-  std::cout << table.has(1) << '\n';
-  std::cout << table.has(2) << '\n';
-  std::cout << table.at(6) << '\n';
   std::cout << table.size() << '\n';
+  std::cout << table.bucketCount() << '\n';
+  std::cout << table.bucketCapacity() << '\n';
 
   return 0;
 }
