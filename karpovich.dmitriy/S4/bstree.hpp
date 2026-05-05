@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <functional>
 #include <memory>
+#include <stdexcept>
 #include "bstiterators.hpp"
 #include "treenode.hpp"
 
@@ -62,6 +63,7 @@ namespace karpovich
     Compare comp_;
 
     TreeNode< Key, Value > *clone(TreeNode< Key, Value > *src, TreeNode< Key, Value > *parent);
+    TreeNode< Key, Value > *findNode(const Key &k) const;
   };
 }
 
@@ -141,6 +143,32 @@ karpovich::TreeNode< Key, Value > *karpovich::BSTree< Key, Value, Compare >::clo
   n->left_ = clone(src->left_, n);
   n->right_ = clone(src->right_, n);
   return n;
+}
+
+template < class Key, class Value, class Compare >
+karpovich::TreeNode< Key, Value > *karpovich::BSTree< Key, Value, Compare >::findNode(const Key &k) const
+{
+  TreeNode< Key, Value > *cur = root_;
+  while (cur != nullptr) {
+    if (comp_(k, cur->data_.first)) {
+      cur = cur->left_;
+    } else if (comp_(cur->data_.first, k)) {
+      cur = cur->right_;
+    } else {
+      return cur;
+    }
+  }
+  return nullptr;
+}
+
+template < class Key, class Value, class Compare >
+const Value &karpovich::BSTree< Key, Value, Compare >::at(const Key &k) const
+{
+  TreeNode< Key, Value > *n = findNode(k);
+  if (n == nullptr) {
+    throw std::out_of_range("Key not found");
+  }
+  return n->data_.second;
 }
 
 #endif
