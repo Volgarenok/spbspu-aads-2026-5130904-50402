@@ -69,6 +69,7 @@ namespace lavrentev
     const T &front() const;
     bool empty() const;
     void pushFront(const T &v);
+    lavrentev::LIter<T> remove(const T &val);
 
   private:
     Node *head;
@@ -76,8 +77,7 @@ namespace lavrentev
 
   lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>>
   getline(std::istream &in);
-  void printTrans(
-      lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>> arr);
+  void printTrans(lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>> arr);
 } // namespace lavrentev
 
 inline lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>>
@@ -136,11 +136,9 @@ lavrentev::getline(std::istream &in)
   return sequences;
 }
 
-inline void lavrentev::printTrans(
-    lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>> arr)
+inline void lavrentev::printTrans(lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>> arr)
 {
-  lavrentev::LIter<std::pair<std::string, lavrentev::List<size_t>>> iterator =
-      arr.begin();
+  lavrentev::LIter<std::pair<std::string, lavrentev::List<size_t>>> iterator = arr.begin();
   lavrentev::List<lavrentev::LIter<size_t>> iters = {};
   while (iterator != arr.end())
   {
@@ -359,8 +357,7 @@ template <class T> void lavrentev::List<T>::clear()
 }
 
 template <class T>
-lavrentev::LIter<T> lavrentev::List<T>::insert(lavrentev::LIter<T> h,
-                                               const T &v)
+lavrentev::LIter<T> lavrentev::List<T>::insert(lavrentev::LIter<T> h, const T &v)
 {
   Node *newNode = new Node;
   newNode->val = v;
@@ -389,8 +386,7 @@ lavrentev::LIter<T> lavrentev::List<T>::insert(lavrentev::LIter<T> h,
 }
 
 template <class T>
-lavrentev::LCIter<T> lavrentev::List<T>::insert(lavrentev::LCIter<T> h,
-                                                const T &v)
+lavrentev::LCIter<T> lavrentev::List<T>::insert(lavrentev::LCIter<T> h, const T &v)
 {
   Node *newNode = new Node;
   newNode->val = v;
@@ -487,6 +483,31 @@ template <class T> void lavrentev::List<T>::pushFront(const T &value)
 {
   Node *newNode = new Node{value, head};
   head = newNode;
+}
+
+template <class T> lavrentev::LIter<T> lavrentev::List<T>::remove(const T &val)
+{
+  if (head == nullptr) {
+    return LIter<T>{};
+  }
+  if (head->val == val) {
+    Node *toDel = head;
+    head = head->next;
+    delete toDel;
+    return begin();
+  }
+  Node *prev = head;
+  while (prev->next != nullptr) {
+    if (prev->next->val == val) {
+      Node* toDel = prev->next;
+      prev->next = toDel->next;
+      LIter<T> nextIter(prev->next);
+      delete toDel;
+      return nextIter;
+    }
+    prev = prev->next;
+  }
+  return LIter<T>{};
 }
 
 #endif
