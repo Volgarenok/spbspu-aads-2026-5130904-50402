@@ -81,6 +81,8 @@ public:
   void bind(const std::string& from, const std::string& to, unsigned long long weight);
   void cut(const std::string& from, const std::string& to, unsigned long long weight);
   const List< unsigned long long >& getWeights(const std::string& from, const std::string& to) const;
+  const HashTable< std::string, bool, StringHash, StringEqual >& vertexes() const noexcept;
+  const HashTable< EdgeKey, List< unsigned long long >, EdgeHash, EdgeEqual >& edges() const noexcept;
 
 private:
   void bindUnsafe(const std::string& from, const std::string& to, unsigned long long weight);
@@ -192,6 +194,16 @@ inline void Graph::cutUnsafe(const std::string& from, const std::string& to, uns
 inline const List< unsigned long long >& Graph::getWeights(const std::string& from, const std::string& to) const
 {
   return edges_.at(EdgeKey(from, to));
+}
+
+inline const HashTable< std::string, bool, StringHash, StringEqual >& Graph::vertexes() const noexcept
+{
+  return vertexes_;
+}
+
+inline const HashTable< EdgeKey, List< unsigned long long >, EdgeHash, EdgeEqual >& Graph::edges() const noexcept
+{
+  return edges_;
 }
 
 }
