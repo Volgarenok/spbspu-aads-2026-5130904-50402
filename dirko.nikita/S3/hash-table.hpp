@@ -54,37 +54,37 @@ namespace dirko
   class HTIter
   {
   public:
-    HTIter(HashTable< Key, Value, Hash, Equal > *, LIter< std::pair< Key, Value > >, size_t);
-    std::pair< Key, Value > &operator*();
+    HTIter(Vector< List< std::pair< Key, Value > > > *, size_t);
+
     HTIter &operator++();
-    HTIter &operator--();
     HTIter operator++(int);
-    HTIter operator--(int);
-    bool operator==(const HTIter< Key, Value, Hash, Equal > &) const;
-    bool operator!=(const HTIter< Key, Value, Hash, Equal > &) const;
+    bool operator==(const HTIter &other) const noexcept;
+    bool operator!=(const HTIter &other) const noexcept;
+    std::pair< Key, Value > &operator*() noexcept;
 
   private:
-    HashTable< Key, Value, Hash, Equal > *table_;
-    LIter< std::pair< Key, Value > > curr_;
+    Vector< List< std::pair< Key, Value > > > *data_;
     size_t slot_;
+    LIter< std::pair< Key, Value > > lit_, lend_;
+    void next();
   };
   template < class Key, class Value, class Hash, class Equal >
   class HTCIter
   {
   public:
-    HTCIter(HashTable< Key, Value, Hash, Equal > *, LCIter< std::pair< Key, Value > >, size_t);
-    const std::pair< Key, Value > &operator*() const;
+    HTCIter(Vector< List< std::pair< Key, Value > > > *, size_t);
+
     HTCIter &operator++();
-    HTCIter &operator--();
     HTCIter operator++(int);
-    HTCIter operator--(int);
-    bool operator==(const HTCIter< Key, Value, Hash, Equal > &) const;
-    bool operator!=(const HTCIter< Key, Value, Hash, Equal > &) const;
+    bool operator==(const HTCIter &other) const noexcept;
+    bool operator!=(const HTCIter &other) const noexcept;
+    std::pair< Key, Value > &operator*() noexcept;
 
   private:
-    HashTable< Key, Value, Hash, Equal > *table_;
-    LCIter< std::pair< Key, Value > > curr_;
+    Vector< List< std::pair< Key, Value > > > *data_;
     size_t slot_;
+    LCIter< std::pair< Key, Value > > lit_, lend_;
+    void next();
   };
 }
 
@@ -96,6 +96,7 @@ dirko::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
   slots_(slots),
   elements_(0)
 {
+  data_.reserve(slots_);
   for (size_t i = 0; i < slots_; ++i) {
     data_.pushBack(List< std::pair< Key, Value > >());
   }
@@ -105,6 +106,7 @@ template < class Key, class Value, class Hash, class Equal >
 dirko::HashTable< Key, Value, Hash, Equal >::HashTable(std::initializer_list< std::pair< Key, Value > > il):
   HashTable(il.size())
 {
+  data_.reserve(il.size());
   for (const std::pair< Key, Value > &v : il) {
     add(v.first, v.second);
   }
@@ -222,162 +224,138 @@ dirko::HTCIter< Key, Value, Hash, Equal > dirko::HashTable< Key, Value, Hash, Eq
 {
   return {this, data_[slots_ - 1].cend(), slots_ - 1};
 }
+
 template < class Key, class Value, class Hash, class Equal >
-dirko::HTIter< Key, Value, Hash, Equal >::HTIter(HashTable< Key, Value, Hash, Equal > *table,
-                                                 LIter< std::pair< Key, Value > > curr, size_t slot):
-  table_(table),
-  curr_(curr),
-  slot_(slot)
-{}
-template < class Key, class Value, class Hash, class Equal >
-std::pair< Key, Value > &dirko::HTIter< Key, Value, Hash, Equal >::operator*()
+void dirko::HTIter< Key, Value, Hash, Equal >::next()
 {
-  return *curr_;
+  while (slot_ < data_->getSize()) {
+    lit_ = (*data_)[slot_].begin();
+    lend_ = (*data_)[slot_].end();
+    if (lit_ == lend_) {
+      return;
+    }
+    ++slot_;
+  }
+}
+
+template < class Key, class Value, class Hash, class Equal >
+dirko::HTIter< Key, Value, Hash, Equal >::HTIter(Vector< List< std::pair< Key, Value > > > *data, size_t slot):
+  data_(data),
+  slot_(slot),
+  lit_(nullptr),
+  lend_(nullptr)
+{
+  next();
 }
 template < class Key, class Value, class Hash, class Equal >
 dirko::HTIter< Key, Value, Hash, Equal > &dirko::HTIter< Key, Value, Hash, Equal >::operator++()
 {
-  if (curr_ == table_->data_[slot_].end()) {
-    if (!(slot_ < table_->slots_)) {
-      throw std::out_of_range("out of bounds");
-    }
-    ++slot_;
-    curr_ = table_->data_[slot_].begin();
-  } else {
-    ++curr_;
+  ++lit_;
+  if (lit_ != lend_) {
+    return *this;
   }
-  return *this;
-}
-template < class Key, class Value, class Hash, class Equal >
-dirko::HTIter< Key, Value, Hash, Equal > &dirko::HTIter< Key, Value, Hash, Equal >::operator--()
-{
-  if (curr_ == table_->data_[slot_].begin()) {
-    if (slot_ < 1) {
-      throw std::out_of_range("out of bounds");
-    }
-    --slot_;
-    curr_ = table_->data_[slot_].end();
-  }
-  --curr_;
+  ++slot_;
+  next();
   return *this;
 }
 template < class Key, class Value, class Hash, class Equal >
 dirko::HTIter< Key, Value, Hash, Equal > dirko::HTIter< Key, Value, Hash, Equal >::operator++(int)
 {
-  HTIter< Key, Value, Hash, Equal > past = curr_;
-  if (curr_ == table_->data_[slot_].end()) {
-    if (!(slot_ < table_->slots_)) {
-      throw std::out_of_range("out of bounds");
-    }
-    ++slot_;
-    curr_ = table_->data_[slot_].begin();
-  } else {
-    ++curr_;
+  HTIter< Key, Value, Hash, Equal > prev = *this;
+  ++lit_;
+  if (lit_ != lend_) {
+    return prev;
   }
-  return past;
+  ++slot_;
+  next();
+  return prev;
 }
 template < class Key, class Value, class Hash, class Equal >
-dirko::HTIter< Key, Value, Hash, Equal > dirko::HTIter< Key, Value, Hash, Equal >::operator--(int)
+bool dirko::HTIter< Key, Value, Hash, Equal >::operator==(const HTIter &other) const noexcept
 {
-  HTIter< Key, Value, Hash, Equal > past = curr_;
-  if (curr_ == table_->data_[slot_].begin()) {
-    if (slot_ < 1) {
-      throw std::out_of_range("out of bounds");
-    }
-    --slot_;
-    curr_ = table_->data_[slot_].end();
+  if (data_ == nullptr && other.data_ == nullptr) {
+    return true;
   }
-  --curr_;
-  return past;
+  if (data_ == nullptr || other.data_ == nullptr) {
+    return false;
+  }
+  return lit_ == other.lit_ && slot_ == other.slot_;
 }
 template < class Key, class Value, class Hash, class Equal >
-bool dirko::HTIter< Key, Value, Hash, Equal >::operator==(const HTIter< Key, Value, Hash, Equal > &other) const
-{
-  return slot_ == other.slot_ && curr_ == other.curr_;
-}
-template < class Key, class Value, class Hash, class Equal >
-bool dirko::HTIter< Key, Value, Hash, Equal >::operator!=(const HTIter< Key, Value, Hash, Equal > &other) const
+bool dirko::HTIter< Key, Value, Hash, Equal >::operator!=(const HTIter &other) const noexcept
 {
   return !(*this == other);
 }
+template < class Key, class Value, class Hash, class Equal >
+std::pair< Key, Value > &dirko::HTIter< Key, Value, Hash, Equal >::operator*() noexcept
+{
+  return *lit_;
+}
 
 template < class Key, class Value, class Hash, class Equal >
-dirko::HTCIter< Key, Value, Hash, Equal >::HTCIter(HashTable< Key, Value, Hash, Equal > *table,
-                                                   LCIter< std::pair< Key, Value > > curr, size_t slot):
-  table_(table),
-  curr_(curr),
-  slot_(slot)
-{}
-template < class Key, class Value, class Hash, class Equal >
-const std::pair< Key, Value > &dirko::HTCIter< Key, Value, Hash, Equal >::operator*() const
+void dirko::HTCIter< Key, Value, Hash, Equal >::next()
 {
-  return *curr_;
+  while (slot_ < data_->getSize()) {
+    lit_ = (*data_)[slot_].cbegin();
+    lend_ = (*data_)[slot_].cend();
+    if (lit_ == lend_) {
+      return;
+    }
+    ++slot_;
+  }
+}
+
+template < class Key, class Value, class Hash, class Equal >
+dirko::HTCIter< Key, Value, Hash, Equal >::HTCIter(Vector< List< std::pair< Key, Value > > > *data, size_t slot):
+  data_(data),
+  slot_(slot),
+  lit_(nullptr),
+  lend_(nullptr)
+{
+  next();
 }
 template < class Key, class Value, class Hash, class Equal >
 dirko::HTCIter< Key, Value, Hash, Equal > &dirko::HTCIter< Key, Value, Hash, Equal >::operator++()
 {
-  if (curr_.curr_->next == nullptr) {
-    if (!(slot_ < table_->size())) {
-      throw std::out_of_range("out of bounds");
-    }
-    ++slot_;
-    curr_ = table_->data_[slot_].begin();
-  } else {
-    ++curr_;
+  ++lit_;
+  if (lit_ != lend_) {
+    return *this;
   }
-  return curr_;
-}
-template < class Key, class Value, class Hash, class Equal >
-dirko::HTCIter< Key, Value, Hash, Equal > &dirko::HTCIter< Key, Value, Hash, Equal >::operator--()
-{
-  if (curr_.curr_->prev == nullptr) {
-    if (slot_ < 1) {
-      throw std::out_of_range("out of bounds");
-    }
-    --slot_;
-    curr_ = table_->data_[slot_].end();
-  }
-  --curr_;
-  return curr_;
+  ++slot_;
+  next();
+  return *this;
 }
 template < class Key, class Value, class Hash, class Equal >
 dirko::HTCIter< Key, Value, Hash, Equal > dirko::HTCIter< Key, Value, Hash, Equal >::operator++(int)
 {
-  HTCIter< Key, Value, Hash, Equal > past = curr_;
-  if (curr_.curr_->next == nullptr) {
-    if (!(slot_ < table_->size())) {
-      throw std::out_of_range("out of bounds");
-    }
-    ++slot_;
-    curr_ = table_->data_[slot_].begin();
-  } else {
-    ++curr_;
+  HTCIter< Key, Value, Hash, Equal > prev = *this;
+  ++lit_;
+  if (lit_ != lend_) {
+    return prev;
   }
-  return past;
+  ++slot_;
+  next();
+  return prev;
 }
 template < class Key, class Value, class Hash, class Equal >
-dirko::HTCIter< Key, Value, Hash, Equal > dirko::HTCIter< Key, Value, Hash, Equal >::operator--(int)
+bool dirko::HTCIter< Key, Value, Hash, Equal >::operator==(const HTCIter &other) const noexcept
 {
-  HTCIter< Key, Value, Hash, Equal > past = curr_;
-  if (curr_.curr_->prev == nullptr) {
-    if (slot_ < 1) {
-      throw std::out_of_range("out of bounds");
-    }
-    --slot_;
-    curr_ = table_->data_[slot_].end();
+  if (data_ == nullptr && other.data_ == nullptr) {
+    return true;
   }
-  --curr_;
-  return past;
+  if (data_ == nullptr || other.data_ == nullptr) {
+    return false;
+  }
+  return lit_ == other.lit_ && slot_ == other.slot_;
 }
 template < class Key, class Value, class Hash, class Equal >
-bool dirko::HTCIter< Key, Value, Hash, Equal >::operator==(const HTCIter< Key, Value, Hash, Equal > &other) const
-{
-  return ((*curr_).first == (*other.curr_).first) & ((*curr_).second == (*other.curr_).second);
-}
-template < class Key, class Value, class Hash, class Equal >
-bool dirko::HTCIter< Key, Value, Hash, Equal >::operator!=(const HTCIter< Key, Value, Hash, Equal > &other) const
+bool dirko::HTCIter< Key, Value, Hash, Equal >::operator!=(const HTCIter &other) const noexcept
 {
   return !(*this == other);
 }
-
+template < class Key, class Value, class Hash, class Equal >
+std::pair< Key, Value > &dirko::HTCIter< Key, Value, Hash, Equal >::operator*() noexcept
+{
+  return *lit_;
+}
 #endif
