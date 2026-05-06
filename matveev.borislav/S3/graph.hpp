@@ -1,6 +1,10 @@
 #ifndef MATVEEV_GRAPH_HPP
 #define MATVEEV_GRAPH_HPP
 
+#include "hash-table.hpp"
+#include "hashFunctions.hpp"
+#include "../common/list.hpp"
+
 #include <boost/hash2/flavor.hpp>
 #include <boost/hash2/hash_append.hpp>
 #include <boost/hash2/xxhash.hpp>
@@ -62,6 +66,37 @@ struct EdgeEqual
     return lhs.from == rhs.from && lhs.to == rhs.to;
   }
 };
+
+class Graph
+{
+public:
+  Graph();
+
+  bool hasVertex(const std::string& vertex) const;
+  void addVertex(const std::string& vertex);
+
+private:
+  HashTable< std::string, bool, StringHash, StringEqual > vertexes_;
+  HashTable< EdgeKey, List< unsigned long long >, EdgeHash, EdgeEqual > edges_;
+};
+
+inline Graph::Graph():
+  vertexes_(101, 4),
+  edges_(101, 4)
+{}
+
+inline bool Graph::hasVertex(const std::string& vertex) const
+{
+  return vertexes_.has(vertex);
+}
+
+inline void Graph::addVertex(const std::string& vertex)
+{
+  if (!vertexes_.has(vertex))
+  {
+    vertexes_.add(vertex, true);
+  }
+}
 }
 
 #endif

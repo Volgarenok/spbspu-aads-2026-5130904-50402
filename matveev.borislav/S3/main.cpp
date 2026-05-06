@@ -1,18 +1,18 @@
 #include "graph.hpp"
-#include "hash-table.hpp"
 
 #include <iostream>
 
 int main()
 {
-  matveev::HashTable< matveev::EdgeKey, int, matveev::EdgeHash, matveev::EdgeEqual > table(5, 2);
+  matveev::Graph graph;
 
-  table.add(matveev::EdgeKey("a", "b"), 10);
-  table.add(matveev::EdgeKey("b", "a"), 20);
+  graph.addVertex("a");
+  graph.addVertex("b");
+  graph.addVertex("a");
 
-  std::cout << table.at(matveev::EdgeKey("a", "b")) << '\n';
-  std::cout << table.at(matveev::EdgeKey("b", "a")) << '\n';
-  std::cout << table.has(matveev::EdgeKey("a", "a")) << '\n';
+  std::cout << graph.hasVertex("a") << '\n';
+  std::cout << graph.hasVertex("b") << '\n';
+  std::cout << graph.hasVertex("c") << '\n';
 
   return 0;
 }
