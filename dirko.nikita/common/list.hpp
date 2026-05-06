@@ -38,6 +38,8 @@ namespace dirko
     void clear();
     size_t size() const noexcept;
     void swap(List< T > &) noexcept;
+    LIter< T > insert(LIter< T > pos, const T &value);
+    LIter< T > erase(LIter< T > pos);
 
   private:
     Node< T > *fake_;
@@ -353,5 +355,39 @@ namespace dirko
     curr_ = curr_->prev;
     return next;
   }
+  template < class T >
+  LIter< T > List< T >::insert(LIter< T > pos, const T &value)
+  {
+    Node< T > *posNode = pos.curr_;
+    Node< T > *newNode = new Node< T >{value, posNode, posNode->prev};
+    if (posNode->prev) {
+      posNode->prev->next = newNode;
+      posNode->prev = newNode;
+    }
+    size_++;
+    return LIter< T >{newNode};
+  }
+  template < class T >
+  LIter< T > List< T >::erase(LIter< T > pos)
+  {
+    if (size_ == 0) {
+      throw std::logic_error("Empty list");
+    }
+    Node< T > *next = pos.curr_->next;
+    Node< T > *prev = pos.curr_->prev;
+    delete pos.curr_;
+    if (next) {
+      next->prev = prev;
+    }
+    if (prev) {
+      prev->next = next;
+    }
+    --size_;
+    if (!size_) {
+      tail_ = fake_;
+    }
+    return {next};
+  }
 }
+
 #endif

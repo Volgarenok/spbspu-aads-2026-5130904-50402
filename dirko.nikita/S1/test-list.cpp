@@ -190,4 +190,30 @@ BOOST_AUTO_TEST_CASE(test_front_back_const)
   BOOST_CHECK_EQUAL(cref.ctail(), 5);
 }
 
+BOOST_AUTO_TEST_CASE(test_insert)
+{
+  List< int > list;
+  list.push_back(1);
+  list.push_back(2);
+  list.push_back(3);
+  LIter< int > it = list.begin();
+  it++;
+  it = list.insert(it, 4);
+  BOOST_CHECK_EQUAL(*it, 4);
+}
+
+BOOST_AUTO_TEST_CASE(test_erase)
+{
+  List< int > list;
+  list.push_back(1);
+  list.push_back(2);
+  list.push_back(3);
+  LIter< int > it = list.begin();
+  ++it;
+  LIter< int > next = list.erase(it);
+  BOOST_CHECK_EQUAL(*next, 3);
+  BOOST_CHECK_EQUAL(list.size(), 2);
+  BOOST_CHECK_EQUAL(list.head(), 1);
+  BOOST_CHECK_EQUAL(list.tail(), 3);
+}
 BOOST_AUTO_TEST_SUITE_END()
