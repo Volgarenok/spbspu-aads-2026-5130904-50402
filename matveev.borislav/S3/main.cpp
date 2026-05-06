@@ -1,19 +1,18 @@
+#include "graph.hpp"
 #include "hash-table.hpp"
-#include "hashFunctions.hpp"
 
 #include <iostream>
-#include <string>
 
 int main()
 {
-  matveev::HashTable< std::string, int, matveev::StringHash, matveev::StringEqual > table(5, 2);
+  matveev::HashTable< matveev::EdgeKey, int, matveev::EdgeHash, matveev::EdgeEqual > table(5, 2);
 
-  table.add("first", 10);
-  table.add("second", 20);
+  table.add(matveev::EdgeKey("a", "b"), 10);
+  table.add(matveev::EdgeKey("b", "a"), 20);
 
-  std::cout << table.at("first") << '\n';
-  std::cout << table.at("second") << '\n';
-  std::cout << table.has("third") << '\n';
+  std::cout << table.at(matveev::EdgeKey("a", "b")) << '\n';
+  std::cout << table.at(matveev::EdgeKey("b", "a")) << '\n';
+  std::cout << table.has(matveev::EdgeKey("a", "a")) << '\n';
 
   return 0;
 }
