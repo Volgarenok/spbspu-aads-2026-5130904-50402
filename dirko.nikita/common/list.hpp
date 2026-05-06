@@ -8,9 +8,9 @@
 namespace dirko
 {
   template < class T >
-  class Iter;
+  class LIter;
   template < class T >
-  class CIter;
+  class LCIter;
   template < class T >
   class List
   {
@@ -21,10 +21,10 @@ namespace dirko
     List &operator=(const List< T > &);
     List &operator=(List< T > &&) noexcept;
     ~List();
-    Iter< T > begin() noexcept;
-    Iter< T > end() noexcept;
-    CIter< T > cbegin() const noexcept;
-    CIter< T > cend() const noexcept;
+    LIter< T > begin() noexcept;
+    LIter< T > end() noexcept;
+    LCIter< T > cbegin() const noexcept;
+    LCIter< T > cend() const noexcept;
     T &head() noexcept;
     T &tail() noexcept;
     const T &chead() const noexcept;
@@ -36,6 +36,8 @@ namespace dirko
     void clear();
     size_t size() const noexcept;
     void swap(List< T > &) noexcept;
+    LIter< T > insert(LIter< T > pos, const T &value);
+    LIter< T > erase(LIter< T > pos);
 
   private:
     Node< T > *fake_;
@@ -184,27 +186,27 @@ namespace dirko
     --size_;
   }
   template < class T >
-  Iter< T > List< T >::begin() noexcept
+  LIter< T > List< T >::begin() noexcept
   {
-    return Iter< T >{fake_->next};
+    return LIter< T >{fake_->next};
   }
 
   template < class T >
-  Iter< T > List< T >::end() noexcept
+  LIter< T > List< T >::end() noexcept
   {
-    return Iter< T >{tail_->next};
+    return LIter< T >{tail_->next};
   }
 
   template < class T >
-  CIter< T > List< T >::cbegin() const noexcept
+  LCIter< T > List< T >::cbegin() const noexcept
   {
-    return CIter< T >{fake_->next};
+    return LCIter< T >{fake_->next};
   }
 
   template < class T >
-  CIter< T > List< T >::cend() const noexcept
+  LCIter< T > List< T >::cend() const noexcept
   {
-    return CIter< T >{tail_->next};
+    return LCIter< T >{tail_->next};
   }
   template < class T >
   T &List< T >::head() noexcept
@@ -227,128 +229,162 @@ namespace dirko
     return tail_->val;
   }
   template < class T >
-  class Iter
+  class LIter
   {
   public:
-    Iter(Node< T > *);
+    LIter(Node< T > *);
     T &operator*() const;
-    Iter &operator++();
-    Iter &operator--();
-    Iter operator++(int);
-    Iter operator--(int);
-    bool operator==(const Iter< T > &) const;
-    bool operator!=(const Iter< T > &) const;
+    LIter &operator++();
+    LIter &operator--();
+    LIter operator++(int);
+    LIter operator--(int);
+    bool operator==(const LIter< T > &) const;
+    bool operator!=(const LIter< T > &) const;
 
   private:
     Node< T > *curr_;
     friend class List< T >;
   };
   template < class T >
-  class CIter
+  class LCIter
   {
   public:
-    CIter(Node< T > *);
+    LCIter(Node< T > *);
     const T &operator*() const;
-    CIter &operator++();
-    CIter &operator--();
-    CIter operator++(int);
-    CIter operator--(int);
-    bool operator==(const CIter< T > &) const;
-    bool operator!=(const CIter< T > &) const;
+    LCIter &operator++();
+    LCIter &operator--();
+    LCIter operator++(int);
+    LCIter operator--(int);
+    bool operator==(const LCIter< T > &) const;
+    bool operator!=(const LCIter< T > &) const;
 
   private:
     const Node< T > *curr_;
     friend class List< T >;
   };
   template < class T >
-  Iter< T >::Iter(Node< T > *node):
+  LIter< T >::LIter(Node< T > *node):
     curr_(node)
   {}
   template < class T >
-  T &Iter< T >::operator*() const
+  T &LIter< T >::operator*() const
   {
     return curr_->val;
   }
   template < class T >
-  bool Iter< T >::operator==(const Iter< T > &rhs) const
+  bool LIter< T >::operator==(const LIter< T > &rhs) const
   {
     return curr_ == rhs.curr_;
   }
   template < class T >
-  bool Iter< T >::operator!=(const Iter< T > &rhs) const
+  bool LIter< T >::operator!=(const LIter< T > &rhs) const
   {
     return !(*this == rhs);
   }
   template < class T >
-  Iter< T > &Iter< T >::operator++()
+  LIter< T > &LIter< T >::operator++()
   {
     curr_ = curr_->next;
     return *this;
   }
   template < class T >
-  Iter< T > Iter< T >::operator++(int)
+  LIter< T > LIter< T >::operator++(int)
   {
-    Iter< T > prev = curr_;
+    LIter< T > prev = curr_;
     curr_ = curr_->next;
     return prev;
   }
   template < class T >
-  Iter< T > &Iter< T >::operator--()
+  LIter< T > &LIter< T >::operator--()
   {
     curr_ = curr_->prev;
     return *this;
   }
   template < class T >
-  Iter< T > Iter< T >::operator--(int)
+  LIter< T > LIter< T >::operator--(int)
   {
-    Iter< T > next = curr_;
+    LIter< T > next = curr_;
     curr_ = curr_->prev;
     return next;
   }
   template < class T >
-  CIter< T >::CIter(Node< T > *node):
+  LCIter< T >::LCIter(Node< T > *node):
     curr_(node)
   {}
   template < class T >
-  const T &CIter< T >::operator*() const
+  const T &LCIter< T >::operator*() const
   {
     return curr_->val;
   }
   template < class T >
-  bool CIter< T >::operator==(const CIter< T > &rhs) const
+  bool LCIter< T >::operator==(const LCIter< T > &rhs) const
   {
     return curr_ == rhs.curr_;
   }
   template < class T >
-  bool CIter< T >::operator!=(const CIter< T > &rhs) const
+  bool LCIter< T >::operator!=(const LCIter< T > &rhs) const
   {
     return !(*this == rhs);
   }
   template < class T >
-  CIter< T > &CIter< T >::operator++()
+  LCIter< T > &LCIter< T >::operator++()
   {
     curr_ = curr_->next;
     return *this;
   }
   template < class T >
-  CIter< T > CIter< T >::operator++(int)
+  LCIter< T > LCIter< T >::operator++(int)
   {
-    CIter< T > prev = curr_;
+    LCIter< T > prev = curr_;
     curr_ = curr_->next;
     return prev;
   }
   template < class T >
-  CIter< T > &CIter< T >::operator--()
+  LCIter< T > &LCIter< T >::operator--()
   {
     curr_ = curr_->prev;
     return *this;
   }
   template < class T >
-  CIter< T > CIter< T >::operator--(int)
+  LCIter< T > LCIter< T >::operator--(int)
   {
-    CIter< T > next = curr_;
+    LCIter< T > next = curr_;
     curr_ = curr_->prev;
     return next;
+  }
+  template < class T >
+  LIter< T > List< T >::insert(LIter< T > pos, const T &value)
+  {
+    Node< T > *posNode = pos.curr_;
+    Node< T > *newNode = new Node< T >{value, posNode, posNode->prev};
+    if (posNode->prev) {
+      posNode->prev->next = newNode;
+      posNode->prev = newNode;
+    }
+    size_++;
+    return LIter< T >{newNode};
+  }
+  template < class T >
+  LIter< T > List< T >::erase(LIter< T > pos)
+  {
+    if (size_ == 0) {
+      throw std::logic_error("Empty list");
+    }
+    Node< T > *next = pos.curr_->next;
+    Node< T > *prev = pos.curr_->prev;
+    delete pos.curr_;
+    if (next) {
+      next->prev = prev;
+    }
+    if (prev) {
+      prev->next = next;
+    }
+    --size_;
+    if (!size_) {
+      tail_ = fake_;
+    }
+    return {next};
   }
 }
+
 #endif
