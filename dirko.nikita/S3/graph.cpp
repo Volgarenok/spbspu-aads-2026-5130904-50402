@@ -35,7 +35,7 @@ void dirko::Graph::removeVertex(const std::string &vl)
     throw std::out_of_range("Vertex not found");
   }
   Vector< std::pair< std::string, std::string > > to_remove;
-  for (const std::pair< std::pair< std::string, std::string >, List< size_t > > v : conections) {
+  for (const std::pair< std::pair< std::string, std::string >, List< size_t > > &v : conections) {
     if ((v.first.first == vl) || (v.first.second == vl)) {
       to_remove.pushBack(v.first);
     }

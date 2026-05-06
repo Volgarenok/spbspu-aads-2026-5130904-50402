@@ -475,6 +475,7 @@ void dirko::Vector< T >::reserve(size_t cap)
   for (; i < getSize(); ++i) {
     new (d + i) T(std::move(data_[i]));
   }
+  clear(data_, size_);
   data_ = d;
   capasity_ = cap;
 }
