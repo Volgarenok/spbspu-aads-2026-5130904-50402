@@ -73,6 +73,8 @@ class Graph
 public:
   Graph();
 
+  void swap(Graph& other) noexcept;
+
   bool hasVertex(const std::string& vertex) const;
   void addVertex(const std::string& vertex);
   bool hasEdge(const std::string& from, const std::string& to) const;
@@ -81,6 +83,9 @@ public:
   const List< unsigned long long >& getWeights(const std::string& from, const std::string& to) const;
 
 private:
+  void bindUnsafe(const std::string& from, const std::string& to, unsigned long long weight);
+  void cutUnsafe(const std::string& from, const std::string& to, unsigned long long weight);
+
   HashTable< std::string, bool, StringHash, StringEqual > vertexes_;
   HashTable< EdgeKey, List< unsigned long long >, EdgeHash, EdgeEqual > edges_;
 };
@@ -90,6 +95,11 @@ inline Graph::Graph():
   edges_(101, 4)
 {}
 
+inline void Graph::swap(Graph& other) noexcept
+{
+  vertexes_.swap(other.vertexes_);
+  edges_.swap(other.edges_);
+}
 inline bool Graph::hasVertex(const std::string& vertex) const
 {
   return vertexes_.has(vertex);
@@ -110,6 +120,13 @@ inline bool Graph::hasEdge(const std::string& from, const std::string& to) const
 
 inline void Graph::bind(const std::string& from, const std::string& to, unsigned long long weight)
 {
+  Graph tmp(*this);
+  tmp.bindUnsafe(from, to, weight);
+  swap(tmp);
+}
+
+inline void Graph::bindUnsafe(const std::string& from, const std::string& to, unsigned long long weight)
+{
   addVertex(from);
   addVertex(to);
 
@@ -128,6 +145,12 @@ inline void Graph::bind(const std::string& from, const std::string& to, unsigned
 }
 
 inline void Graph::cut(const std::string& from, const std::string& to, unsigned long long weight)
+{
+  Graph tmp(*this);
+  tmp.cutUnsafe(from, to, weight);
+  swap(tmp);
+}
+inline void Graph::cutUnsafe(const std::string& from, const std::string& to, unsigned long long weight)
 {
   if (!hasVertex(from) || !hasVertex(to))
   {

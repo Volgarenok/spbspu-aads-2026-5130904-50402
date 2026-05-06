@@ -1,6 +1,7 @@
 #include "graph.hpp"
 
 #include <iostream>
+#include <stdexcept>
 
 int main()
 {
@@ -21,7 +22,15 @@ int main()
     std::cout << *it << '\n';
   }
 
-  graph.cut("a", "b", 10);
+  try
+  {
+    graph.cut("a", "b", 999);
+  }
+  catch (const std::logic_error&)
+  {
+    std::cout << "error\n";
+  }
+
   std::cout << graph.hasEdge("a", "b") << '\n';
 
   return 0;
