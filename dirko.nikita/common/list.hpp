@@ -34,7 +34,6 @@ namespace dirko
     void push_back(const T &);
     void pop_front();
     void pop_back();
-    void erase(LIter< T > pos);
 
     void clear();
     size_t size() const noexcept;
@@ -185,26 +184,6 @@ namespace dirko
       tail_->next = nullptr;
     }
     --size_;
-  }
-  template < class T >
-  void List< T >::erase(LIter< T > pos)
-  {
-    if (size_ == 0) {
-      throw std::logic_error("Empty list");
-    }
-    Node< T > *next = pos.curr_->next;
-    Node< T > *prev = pos.curr_->prev;
-    delete pos.curr_;
-    if (next) {
-      next->prev = prev;
-    }
-    if (prev) {
-      prev->next = next;
-    }
-    --size_;
-    if (!size_) {
-      tail_ = fake_;
-    }
   }
 
   template < class T >
