@@ -54,6 +54,7 @@ namespace dirko
   class HTIter
   {
   public:
+    HTIter();
     HTIter(Vector< List< std::pair< Key, Value > > > *, size_t);
 
     HTIter &operator++();
@@ -72,6 +73,7 @@ namespace dirko
   class HTCIter
   {
   public:
+    HTCIter();
     HTCIter(Vector< List< std::pair< Key, Value > > > *, size_t);
 
     HTCIter &operator++();
@@ -207,22 +209,22 @@ void dirko::HashTable< Key, Value, Hash, Equal >::swap(HashTable &other) noexcep
 template < class Key, class Value, class Hash, class Equal >
 dirko::HTIter< Key, Value, Hash, Equal > dirko::HashTable< Key, Value, Hash, Equal >::begin() noexcept
 {
-  return {this, data_[0].begin(), 0};
+  return {&data_, 0};
 }
 template < class Key, class Value, class Hash, class Equal >
 dirko::HTIter< Key, Value, Hash, Equal > dirko::HashTable< Key, Value, Hash, Equal >::end() noexcept
 {
-  return {this, data_[slots_ - 1].end(), slots_ - 1};
+  return HTIter< Key, Value, Hash, Equal >();
 }
 template < class Key, class Value, class Hash, class Equal >
 dirko::HTCIter< Key, Value, Hash, Equal > dirko::HashTable< Key, Value, Hash, Equal >::cbegin() const noexcept
 {
-  return {this, data_[0].cbegin(), 0};
+  return {&data_, 0};
 }
 template < class Key, class Value, class Hash, class Equal >
 dirko::HTCIter< Key, Value, Hash, Equal > dirko::HashTable< Key, Value, Hash, Equal >::cend() const noexcept
 {
-  return {this, data_[slots_ - 1].cend(), slots_ - 1};
+  return HTCIter< Key, Value, Hash, Equal >();
 }
 
 template < class Key, class Value, class Hash, class Equal >
@@ -231,11 +233,12 @@ void dirko::HTIter< Key, Value, Hash, Equal >::next()
   while (slot_ < data_->getSize()) {
     lit_ = (*data_)[slot_].begin();
     lend_ = (*data_)[slot_].end();
-    if (lit_ == lend_) {
+    if (lit_ != lend_) {
       return;
     }
     ++slot_;
   }
+  data_ = nullptr;
 }
 
 template < class Key, class Value, class Hash, class Equal >
@@ -279,6 +282,9 @@ bool dirko::HTIter< Key, Value, Hash, Equal >::operator==(const HTIter &other) c
   if (data_ == nullptr || other.data_ == nullptr) {
     return false;
   }
+  if (slot_ >= data_->getSize() && other.slot_ >= other.data_->getSize()) {
+    return true;
+  }
   return lit_ == other.lit_ && slot_ == other.slot_;
 }
 template < class Key, class Value, class Hash, class Equal >
@@ -293,16 +299,32 @@ std::pair< Key, Value > &dirko::HTIter< Key, Value, Hash, Equal >::operator*() n
 }
 
 template < class Key, class Value, class Hash, class Equal >
+dirko::HTIter< Key, Value, Hash, Equal >::HTIter():
+  data_(nullptr),
+  slot_(0),
+  lit_(nullptr),
+  lend_(nullptr)
+{}
+
+template < class Key, class Value, class Hash, class Equal >
+dirko::HTCIter< Key, Value, Hash, Equal >::HTCIter():
+  data_(nullptr),
+  slot_(0),
+  lit_(nullptr),
+  lend_(nullptr)
+{}
+template < class Key, class Value, class Hash, class Equal >
 void dirko::HTCIter< Key, Value, Hash, Equal >::next()
 {
   while (slot_ < data_->getSize()) {
     lit_ = (*data_)[slot_].cbegin();
     lend_ = (*data_)[slot_].cend();
-    if (lit_ == lend_) {
+    if (lit_ != lend_) {
       return;
     }
     ++slot_;
   }
+  data_ = nullptr;
 }
 
 template < class Key, class Value, class Hash, class Equal >
@@ -345,6 +367,9 @@ bool dirko::HTCIter< Key, Value, Hash, Equal >::operator==(const HTCIter &other)
   }
   if (data_ == nullptr || other.data_ == nullptr) {
     return false;
+  }
+  if (slot_ >= data_->getSize() && other.slot_ >= other.data_->getSize()) {
+    return true;
   }
   return lit_ == other.lit_ && slot_ == other.slot_;
 }
