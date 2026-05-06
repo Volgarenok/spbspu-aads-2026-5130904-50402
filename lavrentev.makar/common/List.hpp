@@ -69,7 +69,8 @@ namespace lavrentev
     const T &front() const;
     bool empty() const;
     void pushFront(const T &v);
-    lavrentev::LIter<T> remove(const T &val);
+    LIter<T> remove(const T &val);
+    LIter<T> erase(LIter<T> val);
 
   private:
     Node *head;
@@ -499,6 +500,37 @@ template <class T> lavrentev::LIter<T> lavrentev::List<T>::remove(const T &val)
   Node *prev = head;
   while (prev->next != nullptr) {
     if (prev->next->val == val) {
+      Node* toDel = prev->next;
+      prev->next = toDel->next;
+      LIter<T> nextIter(prev->next);
+      delete toDel;
+      return nextIter;
+    }
+    prev = prev->next;
+  }
+  return LIter<T>{};
+}
+
+template <class T>
+lavrentev::LIter<T> lavrentev::List<T>::erase(lavrentev::LIter<T> val)
+{
+  if (val == LIter<T>{})
+  {
+    return val;
+  }
+  if (head == nullptr)
+  {
+    return LIter<T>{};
+  }
+  if (head == val->curr) {
+    Node *toDel = head;
+    head = head->next;
+    delete toDel;
+    return begin();
+  }
+  Node *prev = head;
+  while (prev->next != nullptr) {
+    if (prev->next == val->curr) {
       Node* toDel = prev->next;
       prev->next = toDel->next;
       LIter<T> nextIter(prev->next);
