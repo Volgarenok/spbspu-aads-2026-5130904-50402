@@ -8,11 +8,11 @@ int main()
 
   graph.bind("a", "b", 10);
   graph.bind("a", "b", 20);
+  graph.cut("a", "b", 20);
 
   std::cout << graph.hasVertex("a") << '\n';
   std::cout << graph.hasVertex("b") << '\n';
   std::cout << graph.hasEdge("a", "b") << '\n';
-  std::cout << graph.hasEdge("b", "a") << '\n';
 
   const matveev::List< unsigned long long >& weights = graph.getWeights("a", "b");
 
@@ -20,6 +20,9 @@ int main()
   {
     std::cout << *it << '\n';
   }
+
+  graph.cut("a", "b", 10);
+  std::cout << graph.hasEdge("a", "b") << '\n';
 
   return 0;
 }

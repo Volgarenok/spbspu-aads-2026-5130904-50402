@@ -11,6 +11,7 @@
 
 #include <cstddef>
 #include <string>
+#include <stdexcept>
 
 namespace matveev
 {
@@ -76,6 +77,7 @@ public:
   void addVertex(const std::string& vertex);
   bool hasEdge(const std::string& from, const std::string& to) const;
   void bind(const std::string& from, const std::string& to, unsigned long long weight);
+  void cut(const std::string& from, const std::string& to, unsigned long long weight);
   const List< unsigned long long >& getWeights(const std::string& from, const std::string& to) const;
 
 private:
@@ -123,6 +125,45 @@ inline void Graph::bind(const std::string& from, const std::string& to, unsigned
   List< unsigned long long > weights;
   weights.insertAfter(weights.beforeBegin(), weight);
   edges_.add(key, weights);
+}
+
+inline void Graph::cut(const std::string& from, const std::string& to, unsigned long long weight)
+{
+  if (!hasVertex(from) || !hasVertex(to))
+  {
+    throw std::logic_error("vertex not found");
+  }
+
+  EdgeKey key(from, to);
+
+  if (!edges_.has(key))
+  {
+    throw std::logic_error("edge not found");
+  }
+
+  List< unsigned long long >& weights = edges_.at(key);
+  LIter< unsigned long long > prev = weights.beforeBegin();
+  LIter< unsigned long long > it = weights.begin();
+
+  while (it != weights.end())
+  {
+    if (*it == weight)
+    {
+      weights.eraseAfter(prev);
+
+      if (weights.begin() == weights.end())
+      {
+        edges_.drop(key);
+      }
+
+      return;
+    }
+
+    ++prev;
+    ++it;
+  }
+
+  throw std::logic_error("weight not found");
 }
 
 inline const List< unsigned long long >& Graph::getWeights(const std::string& from, const std::string& to) const
