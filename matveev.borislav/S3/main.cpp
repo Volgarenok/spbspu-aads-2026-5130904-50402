@@ -6,13 +6,20 @@ int main()
 {
   matveev::Graph graph;
 
-  graph.addVertex("a");
-  graph.addVertex("b");
-  graph.addVertex("a");
+  graph.bind("a", "b", 10);
+  graph.bind("a", "b", 20);
 
   std::cout << graph.hasVertex("a") << '\n';
   std::cout << graph.hasVertex("b") << '\n';
-  std::cout << graph.hasVertex("c") << '\n';
+  std::cout << graph.hasEdge("a", "b") << '\n';
+  std::cout << graph.hasEdge("b", "a") << '\n';
+
+  const matveev::List< unsigned long long >& weights = graph.getWeights("a", "b");
+
+  for (matveev::LCIter< unsigned long long > it = weights.begin(); it != weights.end(); ++it)
+  {
+    std::cout << *it << '\n';
+  }
 
   return 0;
 }

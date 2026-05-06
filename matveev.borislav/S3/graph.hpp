@@ -74,6 +74,9 @@ public:
 
   bool hasVertex(const std::string& vertex) const;
   void addVertex(const std::string& vertex);
+  bool hasEdge(const std::string& from, const std::string& to) const;
+  void bind(const std::string& from, const std::string& to, unsigned long long weight);
+  const List< unsigned long long >& getWeights(const std::string& from, const std::string& to) const;
 
 private:
   HashTable< std::string, bool, StringHash, StringEqual > vertexes_;
@@ -97,6 +100,36 @@ inline void Graph::addVertex(const std::string& vertex)
     vertexes_.add(vertex, true);
   }
 }
+
+inline bool Graph::hasEdge(const std::string& from, const std::string& to) const
+{
+  return edges_.has(EdgeKey(from, to));
+}
+
+inline void Graph::bind(const std::string& from, const std::string& to, unsigned long long weight)
+{
+  addVertex(from);
+  addVertex(to);
+
+  EdgeKey key(from, to);
+
+  if (edges_.has(key))
+  {
+    List< unsigned long long >& weights = edges_.at(key);
+    weights.insertAfter(weights.beforeBegin(), weight);
+    return;
+  }
+
+  List< unsigned long long > weights;
+  weights.insertAfter(weights.beforeBegin(), weight);
+  edges_.add(key, weights);
+}
+
+inline const List< unsigned long long >& Graph::getWeights(const std::string& from, const std::string& to) const
+{
+  return edges_.at(EdgeKey(from, to));
+}
+
 }
 
 #endif
