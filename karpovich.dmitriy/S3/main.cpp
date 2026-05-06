@@ -8,7 +8,7 @@
 #include "hashFunctions.hpp"
 #include "hashTable.hpp"
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
   if (argc != 2) {
     std::cerr << "bad num of args" << '\n';
@@ -52,11 +52,7 @@ int main(int argc, char *argv[])
   std::string cmd;
   while (std::cin >> cmd) {
     try {
-      if (commands.has(cmd)) {
-        commands.get(cmd)(std::cin, std::cout, graphs);
-      } else {
-        throw std::runtime_error("Unknown");
-      }
+      commands.get(cmd)(std::cin, std::cout, graphs);
     } catch (const std::exception &) {
       std::cout << "<INVALID COMMAND>" << '\n';
       std::cin.clear();
