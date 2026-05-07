@@ -1,6 +1,9 @@
 #ifndef HASH_TABLE_HPP
 #define HASH_TABLE_HPP
 
+#include "HashFunction.hpp"
+#include <list.hpp>
+
 namespace afanasev
 {
 	template< class Key, class Value, class Hash, class Equal >
