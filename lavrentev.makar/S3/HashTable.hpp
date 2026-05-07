@@ -10,11 +10,11 @@ namespace lavrentev {
   class HashTable {
     public:
       HashTable();
-      //HashTable(const HashTable &);
-      //HashTable(HashTable &&);
+      HashTable(const HashTable &);
+      HashTable(HashTable &&) noexcept;
       ~HashTable() noexcept;
-      //HashTable<Key, Value, Hash, Equal> &operator=(const HashTable<Key, Value, Hash, Equal> &);
-      //HashTable<Key, Value, Hash, Equal> &operator=(HashTable<Key, Value, Hash, Equal> &&);
+      HashTable<Key, Value, Hash, Equal> &operator=(const HashTable<Key, Value, Hash, Equal> &);
+      HashTable<Key, Value, Hash, Equal> &operator=(HashTable<Key, Value, Hash, Equal> &&) noexcept;
 
       Value& operator[](const Key &k);
 
@@ -34,6 +34,82 @@ namespace lavrentev {
       Hash hasher_;
       Equal equal_;
   };
+}
+
+template< class Key, class Value, class Hash, class Equal >
+lavrentev::HashTable<Key, Value, Hash, Equal>::HashTable():
+  ht_(new List<Node>[5]),
+  slots_(5),
+  size_(0)
+{}
+
+template<class Key, class Value, class Hash, class Equal>
+lavrentev::HashTable<Key, Value, Hash, Equal>::~HashTable() noexcept
+{
+  delete[] ht_;
+}
+
+template<class Key, class Value, class Hash, class Equal>
+lavrentev::HashTable<Key, Value, Hash, Equal>::HashTable(const HashTable &other):
+  ht_(new List<Node>[other.slots_]),
+  slots_(other.slots_),
+  size_(other.size_),
+  hasher_(other.hasher_),
+  equal_(other.equal_)
+{
+  for(size_t i = 0; i < slots_; ++i)
+  {
+    ht_[i] = other.ht_[i];
+  }
+}
+
+template<class Key, class Value, class Hash, class Equal>
+lavrentev::HashTable<Key, Value, Hash, Equal>::HashTable(HashTable&& other) noexcept:
+  ht_(other.ht_),
+  slots_(other.slots_),
+  size_(other.size_),
+  hasher_(std::move(other.hasher_)),
+  equal_(std::move(other.equal_))
+{
+  other.ht_ = nullptr;
+  other.slots_ = 0;
+  other.size_ = 0;
+}
+
+template<class Key, class Value, class Hash, class Equal>
+lavrentev::HashTable<Key, Value, Hash, Equal>&
+lavrentev::HashTable<Key, Value, Hash, Equal>::operator=(const HashTable& other) {
+  if (this != &other) {
+      delete[] ht_;
+      slots_ = other.slots_;
+      size_ = other.size_;
+      hasher_ = other.hasher_;
+      equal_ = other.equal_;
+
+      ht_ = new List<Node>[slots_];
+      for (size_t i = 0; i < slots_; ++i) {
+          ht_[i] = other.ht_[i];
+      }
+  }
+  return *this;
+}
+
+template<class Key, class Value, class Hash, class Equal>
+lavrentev::HashTable<Key, Value, Hash, Equal>&
+lavrentev::HashTable<Key, Value, Hash, Equal>::operator=(HashTable&& other) noexcept {
+  if (this != &other) {
+      delete[] ht_;
+      ht_ = other.ht_;
+      slots_ = other.slots_;
+      size_ = other.size_;
+      hasher_ = std::move(other.hasher_);
+      equal_ = std::move(other.equal_);
+
+      other.ht_ = nullptr;
+      other.slots_ = 0;
+      other.size_ = 0;
+  }
+  return *this;
 }
 
 template< class Key, class Value, class Hash, class Equal >
