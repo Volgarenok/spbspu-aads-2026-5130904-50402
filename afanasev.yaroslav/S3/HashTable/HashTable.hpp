@@ -3,6 +3,7 @@
 
 #include "HashFunction.hpp"
 #include <list.hpp>
+#include <top-it-vector.hpp>
 
 namespace afanasev
 {
