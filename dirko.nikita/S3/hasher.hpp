@@ -34,7 +34,7 @@ template < class T >
 size_t dirko::PairSipHasher< T >::operator()(const std::pair< T, T > &s) const
 {
   size_t hash = dirko::SipHasher< T >{}(s.first);
-  boost::hash_combine(hash, s.second);
+  boost::hash_combine(hash, dirko::SipHasher< T >{}(s.second));
   return hash;
 }
 
