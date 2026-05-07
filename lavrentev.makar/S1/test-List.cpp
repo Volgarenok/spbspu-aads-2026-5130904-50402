@@ -93,21 +93,21 @@ BOOST_AUTO_TEST_CASE(empty_test)
 BOOST_AUTO_TEST_CASE(remove_test)
 {
   lavrentev::List<size_t> k{};
-  BOOST_CHECK(k.remove(1) == lavrentev::LIter<size_t>{});
+  BOOST_TEST(k.remove(1) == lavrentev::LIter<size_t>{});
   lavrentev::LIter<size_t> it;
   it = k.insert(it, 1);
   it = k.insert(it, 2);
-  BOOST_CHECK(k.remove(1) == it);
-  BOOST_CHECK(k.remove(2) == lavrentev::LIter<size_t>{});
+  BOOST_TEST(k.remove(1) == it);
+  BOOST_TEST(k.remove(2) == lavrentev::LIter<size_t>{});
 }
 
 BOOST_AUTO_TEST_CASE(erase_test)
 {
   lavrentev::List<size_t> k{};
   lavrentev::LIter<size_t> it;
-  BOOST_CHECK(k.erase(it) == lavrentev::LIter<size_t>{});
+  BOOST_TEST(k.erase(it) == lavrentev::LIter<size_t>{});
   it = k.insert(it, 1);
   k.insert(it, 2);
-  BOOST_CHECK(*k.erase(it) == 2);
-  BOOST_CHECK(k.erase(it) == lavrentev::LIter<size_t>{});
+  BOOST_TEST(*k.erase(it) == 2);
+  BOOST_TEST(k.erase(it) == lavrentev::LIter<size_t>{});
 }

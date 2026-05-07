@@ -522,7 +522,7 @@ lavrentev::LIter<T> lavrentev::List<T>::erase(lavrentev::LIter<T> val)
   {
     return LIter<T>{};
   }
-  if (head == val->curr) {
+  if (head == val.curr) {
     Node *toDel = head;
     head = head->next;
     delete toDel;
@@ -530,7 +530,7 @@ lavrentev::LIter<T> lavrentev::List<T>::erase(lavrentev::LIter<T> val)
   }
   Node *prev = head;
   while (prev->next != nullptr) {
-    if (prev->next == val->curr) {
+    if (prev->next == val.curr) {
       Node* toDel = prev->next;
       prev->next = toDel->next;
       LIter<T> nextIter(prev->next);
