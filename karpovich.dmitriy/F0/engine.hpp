@@ -3,6 +3,7 @@
 
 #include <string>
 #include "../common/Vector.hpp"
+#include "../common/hashTable.hpp"
 
 namespace karpovich
 {
@@ -13,6 +14,10 @@ namespace karpovich
     void processCommand(const std::string &line);
 
   private:
+    using cmd_handler_t = void (Engine::*)(const Vector< std::string > &);
+    HashTable< std::string, cmd_handler_t > command_table_;
+    void initCommandTable();
+
     void cmdCreateItem(const Vector< std::string > &args);
     void cmdRemoveItem(const Vector< std::string > &args);
     void cmdAddAssetDb(const Vector< std::string > &args);
