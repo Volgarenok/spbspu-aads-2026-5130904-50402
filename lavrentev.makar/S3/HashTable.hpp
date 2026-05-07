@@ -22,6 +22,7 @@ namespace lavrentev {
       bool has(Key k);
       void rehash(size_t slots);
       size_t size();
+      size_t bucket_count() const;
     private:
       struct Node {
         Key key;
@@ -178,9 +179,38 @@ bool lavrentev::HashTable<Key, Value, Hash, Equal>::has(Key k)
 }
 
 template< class Key, class Value, class Hash, class Equal >
+void lavrentev::HashTable<Key, Value, Hash, Equal>::rehash(size_t slots)
+{
+  if (slots == 0)
+  {
+    throw std::invalid_argument("Amount of slots must be positive");
+  }
+  List<Node>* new_ht = new List<Node>[slots];
+  size_t new_size = 0;
+  for(size_t i = 0; i < slots_; ++i)
+  {
+    for (LIter<Node> it = ht_[i].begin(); it != ht_[i].end(); ++it)
+    {
+      size_t new_idx = hasher_((*it).key) % slots;
+      new_ht[new_idx].pushFront(Node{(*it).key, (*it).value});
+      ++new_size;
+    }
+  }
+  delete[] ht_;
+  ht_ = new_ht;
+  slots_ = slots;
+}
+
+template< class Key, class Value, class Hash, class Equal >
 size_t lavrentev::HashTable<Key, Value, Hash, Equal>::size()
 {
   return size_;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+size_t lavrentev::HashTable<Key, Value, Hash, Equal>::bucket_count() const
+{
+  return slots_;
 }
 
 #endif
