@@ -1,8 +1,8 @@
 #ifndef SERIALIZATION_HPP
 #define SERIALIZATION_HPP
 
-#include <gameTypes.hpp>
 #include <iosfwd>
+#include "gameTypes.hpp"
 
 namespace karpovich
 {
