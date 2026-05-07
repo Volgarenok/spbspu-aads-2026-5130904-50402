@@ -15,7 +15,6 @@ namespace lavrentev {
       ~HashTable() noexcept;
       HashTable<Key, Value, Hash, Equal> &operator=(const HashTable<Key, Value, Hash, Equal> &);
       HashTable<Key, Value, Hash, Equal> &operator=(HashTable<Key, Value, Hash, Equal> &&) noexcept;
-
       Value& operator[](const Key &k);
 
       void add(Key k, Value v);
@@ -130,7 +129,8 @@ Value& lavrentev::HashTable<Key, Value, Hash, Equal>::operator[](const Key &k)
 }
 
 template< class Key, class Value, class Hash, class Equal >
-void lavrentev::HashTable<Key, Value, Hash, Equal>::add(Key k, Value v) {
+void lavrentev::HashTable<Key, Value, Hash, Equal>::add(Key k, Value v)
+{
   size_t idx = hasher_(k) % slots_;
   List<Node> &bucket = ht_[idx];
   for (LIter<Node> it = bucket.begin(); it != bucket.end(); ++it)
@@ -145,7 +145,8 @@ void lavrentev::HashTable<Key, Value, Hash, Equal>::add(Key k, Value v) {
 }
 
 template< class Key, class Value, class Hash, class Equal >
-Value lavrentev::HashTable<Key, Value, Hash, Equal>::drop(Key k) {
+Value lavrentev::HashTable<Key, Value, Hash, Equal>::drop(Key k)
+{
   size_t idx = hasher_(k) % slots_;
   List<Node> &bucket = ht_[idx];
   for (LIter<Node> it = bucket.begin(); it != bucket.end(); ++it)
@@ -162,7 +163,23 @@ Value lavrentev::HashTable<Key, Value, Hash, Equal>::drop(Key k) {
 }
 
 template< class Key, class Value, class Hash, class Equal >
-size_t lavrentev::HashTable<Key, Value, Hash, Equal>::size() {
+bool lavrentev::HashTable<Key, Value, Hash, Equal>::has(Key k)
+{
+  size_t idx = hasher_(k) % slots_;
+  List<Node> &bucket = ht_[idx];
+  for (LIter<Node> it = bucket.begin(); it != bucket.end(); ++it)
+  {
+    if (equal_((*it).key, k))
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+size_t lavrentev::HashTable<Key, Value, Hash, Equal>::size()
+{
   return size_;
 }
 
