@@ -1,11 +1,11 @@
 #ifndef COMMANDS_HPP
 #define COMMANDS_HPP
 
+#include <hashTable.hpp>
 #include <iostream>
 #include <string>
 #include "graph.hpp"
 #include "hashFunctions.hpp"
-#include "hashTable.hpp"
 
 namespace karpovich
 {

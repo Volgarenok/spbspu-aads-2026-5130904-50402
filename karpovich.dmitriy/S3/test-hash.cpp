@@ -1,5 +1,5 @@
+#include <hashTable.hpp>
 #include <boost/test/unit_test.hpp>
-#include "hashTable.hpp"
 
 using namespace karpovich;
 
