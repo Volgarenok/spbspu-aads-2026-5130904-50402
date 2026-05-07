@@ -1,4 +1,5 @@
 #include <fstream>
+#include <hashTable.hpp>
 #include <iostream>
 #include <limits>
 #include <stdexcept>
@@ -6,7 +7,6 @@
 #include "commands.hpp"
 #include "graph.hpp"
 #include "hashFunctions.hpp"
-#include "hashTable.hpp"
 
 int main(int argc, char **argv)
 {
