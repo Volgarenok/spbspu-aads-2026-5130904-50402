@@ -1,28 +1,28 @@
 #include "graph.hpp"
 
 #include <iostream>
+#include <string>
 
 int main()
 {
-  matveev::Graph first;
-  matveev::Graph second;
+  matveev::Graph graph;
 
-  first.bind("a", "b", 10);
-  second.bind("a", "b", 20);
-  second.bind("b", "c", 30);
+  graph.bind("a", "b", 10);
+  graph.bind("a", "c", 20);
+  graph.bind("c", "a", 30);
 
-  first.append(second);
+  matveev::List< std::string > selected;
+  selected.insertAfter(selected.beforeBegin(), "c");
+  selected.insertAfter(selected.beforeBegin(), "a");
 
-  std::cout << first.hasVertex("c") << '\n';
-  std::cout << first.hasEdge("a", "b") << '\n';
-  std::cout << first.hasEdge("b", "c") << '\n';
+  matveev::Graph result = graph.extract(selected);
 
-  const matveev::List< unsigned long long >& weights = first.getWeights("a", "b");
-
-  for (matveev::LCIter< unsigned long long > it = weights.begin(); it != weights.end(); ++it)
-  {
-    std::cout << *it << '\n';
-  }
+  std::cout << result.hasVertex("a") << '\n';
+  std::cout << result.hasVertex("b") << '\n';
+  std::cout << result.hasVertex("c") << '\n';
+  std::cout << result.hasEdge("a", "c") << '\n';
+  std::cout << result.hasEdge("a", "b") << '\n';
+  std::cout << result.hasEdge("c", "a") << '\n';
 
   return 0;
 }

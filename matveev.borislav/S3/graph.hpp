@@ -81,6 +81,7 @@ public:
   void bind(const std::string& from, const std::string& to, unsigned long long weight);
   void cut(const std::string& from, const std::string& to, unsigned long long weight);
   void append(const Graph& other);
+  Graph extract(const List< std::string >& selected) const;
   const List< unsigned long long >& getWeights(const std::string& from, const std::string& to) const;
   const HashTable< std::string, bool, StringHash, StringEqual >& vertexes() const noexcept;
   const HashTable< EdgeKey, List< unsigned long long >, EdgeHash, EdgeEqual >& edges() const noexcept;
@@ -175,6 +176,38 @@ inline void Graph::append(const Graph& other)
   }
 
   swap(tmp);
+}
+
+inline Graph Graph::extract(const List< std::string >& selected) const
+{
+  Graph result;
+
+  for (LCIter< std::string > it = selected.begin(); it != selected.end(); ++it)
+  {
+    if (!hasVertex(*it))
+    {
+      throw std::logic_error("vertex not found");
+    }
+
+    result.addVertex(*it);
+  }
+
+  for (auto edge_it = edges_.cbegin(); edge_it != edges_.cend(); ++edge_it)
+  {
+    const EdgeKey& key = edge_it->key;
+
+    if (result.hasVertex(key.from) && result.hasVertex(key.to))
+    {
+      const List< unsigned long long >& weights = edge_it->value;
+
+      for (LCIter< unsigned long long > weight_it = weights.begin(); weight_it != weights.end(); ++weight_it)
+      {
+        result.bindUnsafe(key.from, key.to, *weight_it);
+      }
+    }
+  }
+
+  return result;
 }
 
 inline void Graph::cutUnsafe(const std::string& from, const std::string& to, unsigned long long weight)
