@@ -17,4 +17,10 @@ void printVertexes(std::ostream& out, const Graph& graph)
   List< std::string > names = collectVertexNames(graph);
   printStringList(out, names);
 }
+
+void printOutbound(std::ostream& out, const Graph& graph, const std::string& vertex)
+{
+  List< EdgeOutput > rows = collectOutboundEdges(graph, vertex);
+  printEdgeRows(out, rows);
+}
 }

@@ -6,11 +6,11 @@ int main()
 {
   matveev::Graph graph;
 
-  graph.addVertex("ccc");
-  graph.addVertex("aaa");
-  graph.addVertex("bbb");
+  graph.bind("a", "c", 30);
+  graph.bind("a", "b", 20);
+  graph.bind("a", "b", 10);
 
-  matveev::printVertexes(std::cout, graph);
+  matveev::printOutbound(std::cout, graph, "a");
 
   return 0;
 }
