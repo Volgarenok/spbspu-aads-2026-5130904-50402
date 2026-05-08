@@ -1,18 +1,15 @@
 #include "parserUtils.hpp"
 
 #include <iostream>
-#include <string>
 
 int main()
 {
-  matveev::List< std::string > args;
+  unsigned long long weight = 0;
+  size_t count = 0;
 
-  args.insertAfter(args.beforeBegin(), "b");
-  args.insertAfter(args.beforeBegin(), "a");
-
-  std::cout << matveev::countArgs(args) << '\n';
-  std::cout << matveev::hasArgCount(args, 2) << '\n';
-  std::cout << matveev::hasArgCount(args, 3) << '\n';
+  std::cout << matveev::parseUnsignedLongLong("123", weight) << ' ' << weight << '\n';
+  std::cout << matveev::parseUnsignedLongLong("12a", weight) << '\n';
+  std::cout << matveev::parseSize("5", count) << ' ' << count << '\n';
 
   return 0;
 }
