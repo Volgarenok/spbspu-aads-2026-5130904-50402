@@ -1,21 +1,17 @@
-#include "graphOutput.hpp"
+#include "commands.hpp"
 
 #include <iostream>
-#include <string>
 
 int main()
 {
+  matveev::GraphCollection graphs;
   matveev::Graph graph;
 
-  graph.bind("a", "c", 30);
-  graph.bind("a", "b", 20);
-  graph.bind("a", "b", 10);
+  graphs.addGraph("ccc", graph);
+  graphs.addGraph("aaa", graph);
+  graphs.addGraph("bbb", graph);
 
-  matveev::List< std::string > vertexes = matveev::collectVertexNames(graph);
-  matveev::List< matveev::EdgeOutput > rows = matveev::collectOutboundEdges(graph, "a");
-
-  matveev::printStringList(std::cout, vertexes);
-  matveev::printEdgeRows(std::cout, rows);
+  matveev::printGraphs(std::cout, graphs);
 
   return 0;
 }
