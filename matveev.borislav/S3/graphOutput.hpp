@@ -6,6 +6,7 @@
 #include "../common/list.hpp"
 
 #include <string>
+#include <stdexcept>
 
 namespace matveev
 {
@@ -76,6 +77,33 @@ inline void addEdgeOutput(List< EdgeOutput >& list, const std::string& vertex, u
   EdgeOutput output(vertex);
   insertSorted(output.weights, weight);
   list.insertAfter(prev, output);
+}
+
+inline List< EdgeOutput > collectOutboundEdges(const Graph& graph, const std::string& vertex)
+{
+  if (!graph.hasVertex(vertex))
+  {
+    throw std::logic_error("vertex not found");
+  }
+
+  List< EdgeOutput > result;
+
+  for (auto edge_it = graph.edges().cbegin(); edge_it != graph.edges().cend(); ++edge_it)
+  {
+    const EdgeKey& key = edge_it->key;
+
+    if (key.from == vertex)
+    {
+      const List< unsigned long long >& weights = edge_it->value;
+
+      for (LCIter< unsigned long long > weight_it = weights.begin(); weight_it != weights.end(); ++weight_it)
+      {
+        addEdgeOutput(result, key.to, *weight_it);
+      }
+    }
+  }
+
+  return result;
 }
 
 inline List< std::string > collectGraphNames(const GraphCollection& graphs)

@@ -5,11 +5,14 @@
 
 int main()
 {
-  matveev::List< matveev::EdgeOutput > rows;
+  matveev::Graph graph;
 
-  matveev::addEdgeOutput(rows, "b", 20);
-  matveev::addEdgeOutput(rows, "a", 30);
-  matveev::addEdgeOutput(rows, "b", 10);
+  graph.bind("a", "c", 30);
+  graph.bind("a", "b", 20);
+  graph.bind("a", "b", 10);
+  graph.bind("c", "a", 40);
+
+  matveev::List< matveev::EdgeOutput > rows = matveev::collectOutboundEdges(graph, "a");
 
   for (matveev::LIter< matveev::EdgeOutput > it = rows.begin(); it != rows.end(); ++it)
   {
