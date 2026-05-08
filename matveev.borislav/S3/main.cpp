@@ -1,18 +1,22 @@
 #include "graphCollection.hpp"
 
 #include <iostream>
+#include <string>
 
 int main()
 {
   matveev::GraphCollection graphs;
-  matveev::Graph graph;
+  matveev::List< std::string > vertexes;
 
-  graph.bind("a", "b", 10);
-  graphs.addGraph("gr1", graph);
+  vertexes.insertAfter(vertexes.beforeBegin(), "b");
+  vertexes.insertAfter(vertexes.beforeBegin(), "a");
+
+  graphs.createGraph("gr1", vertexes);
 
   std::cout << graphs.hasGraph("gr1") << '\n';
-  std::cout << graphs.hasGraph("gr2") << '\n';
-  std::cout << graphs.at("gr1").hasEdge("a", "b") << '\n';
+  std::cout << graphs.at("gr1").hasVertex("a") << '\n';
+  std::cout << graphs.at("gr1").hasVertex("b") << '\n';
+  std::cout << graphs.at("gr1").hasVertex("c") << '\n';
 
   return 0;
 }

@@ -15,8 +15,10 @@ class GraphCollection
 public:
   GraphCollection();
 
+  void swap(GraphCollection& other) noexcept;
   bool hasGraph(const std::string& name) const;
   void addGraph(const std::string& name, const Graph& graph);
+  void createGraph(const std::string& name, const List< std::string >& vertexes);
   Graph& at(const std::string& name);
   const Graph& at(const std::string& name) const;
 
@@ -27,6 +29,11 @@ private:
 inline GraphCollection::GraphCollection():
   graphs_(101, 4)
 {}
+
+inline void GraphCollection::swap(GraphCollection& other) noexcept
+{
+  graphs_.swap(other.graphs_);
+}
 
 inline bool GraphCollection::hasGraph(const std::string& name) const
 {
@@ -41,6 +48,25 @@ inline void GraphCollection::addGraph(const std::string& name, const Graph& grap
   }
 
   graphs_.add(name, graph);
+}
+
+inline void GraphCollection::createGraph(const std::string& name, const List< std::string >& vertexes)
+{
+  if (graphs_.has(name))
+  {
+    throw std::logic_error("graph already exists");
+  }
+
+  Graph graph;
+
+  for (LCIter< std::string > it = vertexes.begin(); it != vertexes.end(); ++it)
+  {
+    graph.addVertex(*it);
+  }
+
+  GraphCollection tmp(*this);
+  tmp.graphs_.add(name, graph);
+  swap(tmp);
 }
 
 inline Graph& GraphCollection::at(const std::string& name)
