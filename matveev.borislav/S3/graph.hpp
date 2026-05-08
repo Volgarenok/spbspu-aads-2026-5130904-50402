@@ -80,6 +80,7 @@ public:
   bool hasEdge(const std::string& from, const std::string& to) const;
   void bind(const std::string& from, const std::string& to, unsigned long long weight);
   void cut(const std::string& from, const std::string& to, unsigned long long weight);
+  void append(const Graph& other);
   const List< unsigned long long >& getWeights(const std::string& from, const std::string& to) const;
   const HashTable< std::string, bool, StringHash, StringEqual >& vertexes() const noexcept;
   const HashTable< EdgeKey, List< unsigned long long >, EdgeHash, EdgeEqual >& edges() const noexcept;
@@ -152,6 +153,30 @@ inline void Graph::cut(const std::string& from, const std::string& to, unsigned 
   tmp.cutUnsafe(from, to, weight);
   swap(tmp);
 }
+
+inline void Graph::append(const Graph& other)
+{
+  Graph tmp(*this);
+
+  for (auto it = other.vertexes().cbegin(); it != other.vertexes().cend(); ++it)
+  {
+    tmp.addVertex(it->key);
+  }
+
+  for (auto edge_it = other.edges().cbegin(); edge_it != other.edges().cend(); ++edge_it)
+  {
+    const EdgeKey& key = edge_it->key;
+    const List< unsigned long long >& weights = edge_it->value;
+
+    for (LCIter< unsigned long long > weight_it = weights.begin(); weight_it != weights.end(); ++weight_it)
+    {
+      tmp.bindUnsafe(key.from, key.to, *weight_it);
+    }
+  }
+
+  swap(tmp);
+}
+
 inline void Graph::cutUnsafe(const std::string& from, const std::string& to, unsigned long long weight)
 {
   if (!hasVertex(from) || !hasVertex(to))
