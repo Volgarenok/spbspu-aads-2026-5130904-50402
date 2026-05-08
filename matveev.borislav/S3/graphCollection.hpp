@@ -19,6 +19,7 @@ public:
   bool hasGraph(const std::string& name) const;
   void addGraph(const std::string& name, const Graph& graph);
   void createGraph(const std::string& name, const List< std::string >& vertexes);
+  void mergeGraphs(const std::string& name, const std::string& lhs, const std::string& rhs);
   Graph& at(const std::string& name);
   const Graph& at(const std::string& name) const;
 
@@ -66,6 +67,26 @@ inline void GraphCollection::createGraph(const std::string& name, const List< st
 
   GraphCollection tmp(*this);
   tmp.graphs_.add(name, graph);
+  swap(tmp);
+}
+
+inline void GraphCollection::mergeGraphs(const std::string& name, const std::string& lhs, const std::string& rhs)
+{
+  if (graphs_.has(name))
+  {
+    throw std::logic_error("graph already exists");
+  }
+
+  if (!graphs_.has(lhs) || !graphs_.has(rhs))
+  {
+    throw std::logic_error("graph not found");
+  }
+
+  Graph result = graphs_.at(lhs);
+  result.append(graphs_.at(rhs));
+
+  GraphCollection tmp(*this);
+  tmp.graphs_.add(name, result);
   swap(tmp);
 }
 

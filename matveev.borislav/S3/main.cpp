@@ -1,22 +1,33 @@
 #include "graphCollection.hpp"
 
 #include <iostream>
-#include <string>
 
 int main()
 {
   matveev::GraphCollection graphs;
-  matveev::List< std::string > vertexes;
+  matveev::Graph first;
+  matveev::Graph second;
 
-  vertexes.insertAfter(vertexes.beforeBegin(), "b");
-  vertexes.insertAfter(vertexes.beforeBegin(), "a");
+  first.bind("a", "b", 10);
+  second.bind("a", "b", 20);
+  second.bind("b", "c", 30);
 
-  graphs.createGraph("gr1", vertexes);
+  graphs.addGraph("first", first);
+  graphs.addGraph("second", second);
 
-  std::cout << graphs.hasGraph("gr1") << '\n';
-  std::cout << graphs.at("gr1").hasVertex("a") << '\n';
-  std::cout << graphs.at("gr1").hasVertex("b") << '\n';
-  std::cout << graphs.at("gr1").hasVertex("c") << '\n';
+  graphs.mergeGraphs("third", "first", "second");
+
+  std::cout << graphs.hasGraph("third") << '\n';
+  std::cout << graphs.at("third").hasVertex("c") << '\n';
+  std::cout << graphs.at("third").hasEdge("a", "b") << '\n';
+  std::cout << graphs.at("third").hasEdge("b", "c") << '\n';
+
+  const matveev::List< unsigned long long >& weights = graphs.at("third").getWeights("a", "b");
+
+  for (matveev::LCIter< unsigned long long > it = weights.begin(); it != weights.end(); ++it)
+  {
+    std::cout << *it << '\n';
+  }
 
   return 0;
 }
