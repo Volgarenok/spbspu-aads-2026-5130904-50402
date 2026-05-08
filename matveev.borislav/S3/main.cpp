@@ -5,14 +5,13 @@
 
 int main()
 {
-  matveev::GraphCollection graphs;
   matveev::Graph graph;
 
-  graphs.addGraph("ccc", graph);
-  graphs.addGraph("aaa", graph);
-  graphs.addGraph("bbb", graph);
+  graph.addVertex("ccc");
+  graph.addVertex("aaa");
+  graph.addVertex("bbb");
 
-  matveev::List< std::string > names = matveev::collectGraphNames(graphs);
+  matveev::List< std::string > names = matveev::collectVertexNames(graph);
 
   for (matveev::LIter< std::string > it = names.begin(); it != names.end(); ++it)
   {

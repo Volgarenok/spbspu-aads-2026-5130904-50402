@@ -34,6 +34,18 @@ inline List< std::string > collectGraphNames(const GraphCollection& graphs)
 
   return result;
 }
+
+inline List< std::string > collectVertexNames(const Graph& graph)
+{
+  List< std::string > result;
+
+  for (auto it = graph.vertexes().cbegin(); it != graph.vertexes().cend(); ++it)
+  {
+    insertSorted(result, it->key);
+  }
+
+  return result;
+}
 }
 
 #endif
