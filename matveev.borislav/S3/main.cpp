@@ -1,33 +1,32 @@
 #include "graphCollection.hpp"
 
 #include <iostream>
+#include <string>
 
 int main()
 {
   matveev::GraphCollection graphs;
-  matveev::Graph first;
-  matveev::Graph second;
+  matveev::Graph graph;
 
-  first.bind("a", "b", 10);
-  second.bind("a", "b", 20);
-  second.bind("b", "c", 30);
+  graph.bind("a", "b", 10);
+  graph.bind("a", "c", 20);
+  graph.bind("c", "a", 30);
 
-  graphs.addGraph("first", first);
-  graphs.addGraph("second", second);
+  graphs.addGraph("old", graph);
 
-  graphs.mergeGraphs("third", "first", "second");
+  matveev::List< std::string > vertexes;
+  vertexes.insertAfter(vertexes.beforeBegin(), "c");
+  vertexes.insertAfter(vertexes.beforeBegin(), "a");
 
-  std::cout << graphs.hasGraph("third") << '\n';
-  std::cout << graphs.at("third").hasVertex("c") << '\n';
-  std::cout << graphs.at("third").hasEdge("a", "b") << '\n';
-  std::cout << graphs.at("third").hasEdge("b", "c") << '\n';
+  graphs.extractGraph("new", "old", vertexes);
 
-  const matveev::List< unsigned long long >& weights = graphs.at("third").getWeights("a", "b");
-
-  for (matveev::LCIter< unsigned long long > it = weights.begin(); it != weights.end(); ++it)
-  {
-    std::cout << *it << '\n';
-  }
+  std::cout << graphs.hasGraph("new") << '\n';
+  std::cout << graphs.at("new").hasVertex("a") << '\n';
+  std::cout << graphs.at("new").hasVertex("b") << '\n';
+  std::cout << graphs.at("new").hasVertex("c") << '\n';
+  std::cout << graphs.at("new").hasEdge("a", "c") << '\n';
+  std::cout << graphs.at("new").hasEdge("a", "b") << '\n';
+  std::cout << graphs.at("new").hasEdge("c", "a") << '\n';
 
   return 0;
 }
