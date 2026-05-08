@@ -1,28 +1,18 @@
-#include "graph.hpp"
+#include "graphCollection.hpp"
 
 #include <iostream>
-#include <string>
 
 int main()
 {
+  matveev::GraphCollection graphs;
   matveev::Graph graph;
 
   graph.bind("a", "b", 10);
-  graph.bind("a", "c", 20);
-  graph.bind("c", "a", 30);
+  graphs.addGraph("gr1", graph);
 
-  matveev::List< std::string > selected;
-  selected.insertAfter(selected.beforeBegin(), "c");
-  selected.insertAfter(selected.beforeBegin(), "a");
-
-  matveev::Graph result = graph.extract(selected);
-
-  std::cout << result.hasVertex("a") << '\n';
-  std::cout << result.hasVertex("b") << '\n';
-  std::cout << result.hasVertex("c") << '\n';
-  std::cout << result.hasEdge("a", "c") << '\n';
-  std::cout << result.hasEdge("a", "b") << '\n';
-  std::cout << result.hasEdge("c", "a") << '\n';
+  std::cout << graphs.hasGraph("gr1") << '\n';
+  std::cout << graphs.hasGraph("gr2") << '\n';
+  std::cout << graphs.at("gr1").hasEdge("a", "b") << '\n';
 
   return 0;
 }
