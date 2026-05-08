@@ -23,6 +23,7 @@ public:
   void extractGraph(const std::string& name, const std::string& old_name, const List< std::string >& vertexes);
   Graph& at(const std::string& name);
   const Graph& at(const std::string& name) const;
+  const HashTable< std::string, Graph, StringHash, StringEqual >& graphs() const noexcept;
 
 private:
   HashTable< std::string, Graph, StringHash, StringEqual > graphs_;
@@ -122,6 +123,11 @@ inline Graph& GraphCollection::at(const std::string& name)
 inline const Graph& GraphCollection::at(const std::string& name) const
 {
   return graphs_.at(name);
+}
+
+inline const HashTable< std::string, Graph, StringHash, StringEqual >& GraphCollection::graphs() const noexcept
+{
+  return graphs_;
 }
 }
 
