@@ -1,15 +1,22 @@
-#include "parserUtils.hpp"
+#include "commandHandler.hpp"
 
 #include <iostream>
 
 int main()
 {
-  unsigned long long weight = 0;
-  size_t count = 0;
+  matveev::GraphCollection graphs;
+  matveev::Graph graph;
 
-  std::cout << matveev::parseUnsignedLongLong("123", weight) << ' ' << weight << '\n';
-  std::cout << matveev::parseUnsignedLongLong("12a", weight) << '\n';
-  std::cout << matveev::parseSize("5", count) << ' ' << count << '\n';
+  graph.addVertex("bbb");
+  graph.addVertex("aaa");
+
+  graphs.addGraph("gr1", graph);
+
+  matveev::List< std::string > tokens = matveev::splitLine("vertexes gr1");
+  matveev::executeCommand(std::cout, graphs, tokens);
+
+  tokens = matveev::splitLine("vertexes gr2");
+  matveev::executeCommand(std::cout, graphs, tokens);
 
   return 0;
 }
