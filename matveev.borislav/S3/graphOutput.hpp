@@ -23,6 +23,61 @@ inline void insertSorted(List< std::string >& list, const std::string& value)
   list.insertAfter(prev, value);
 }
 
+struct EdgeOutput
+{
+  EdgeOutput();
+  explicit EdgeOutput(const std::string& vertex_value);
+
+  std::string vertex;
+  List< unsigned long long > weights;
+};
+
+inline EdgeOutput::EdgeOutput():
+  vertex(),
+  weights()
+{}
+
+inline EdgeOutput::EdgeOutput(const std::string& vertex_value):
+  vertex(vertex_value),
+  weights()
+{}
+
+inline void insertSorted(List< unsigned long long >& list, unsigned long long value)
+{
+  LIter< unsigned long long > prev = list.beforeBegin();
+  LIter< unsigned long long > it = list.begin();
+
+  while (it != list.end() && *it < value)
+  {
+    ++prev;
+    ++it;
+  }
+
+  list.insertAfter(prev, value);
+}
+
+inline void addEdgeOutput(List< EdgeOutput >& list, const std::string& vertex, unsigned long long weight)
+{
+  LIter< EdgeOutput > prev = list.beforeBegin();
+  LIter< EdgeOutput > it = list.begin();
+
+  while (it != list.end() && it->vertex < vertex)
+  {
+    ++prev;
+    ++it;
+  }
+
+  if (it != list.end() && it->vertex == vertex)
+  {
+    insertSorted(it->weights, weight);
+    return;
+  }
+
+  EdgeOutput output(vertex);
+  insertSorted(output.weights, weight);
+  list.insertAfter(prev, output);
+}
+
 inline List< std::string > collectGraphNames(const GraphCollection& graphs)
 {
   List< std::string > result;
