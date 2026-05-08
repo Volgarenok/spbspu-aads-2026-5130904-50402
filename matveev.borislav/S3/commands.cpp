@@ -23,4 +23,10 @@ void printOutbound(std::ostream& out, const Graph& graph, const std::string& ver
   List< EdgeOutput > rows = collectOutboundEdges(graph, vertex);
   printEdgeRows(out, rows);
 }
+
+void printInbound(std::ostream& out, const Graph& graph, const std::string& vertex)
+{
+  List< EdgeOutput > rows = collectInboundEdges(graph, vertex);
+  printEdgeRows(out, rows);
+}
 }

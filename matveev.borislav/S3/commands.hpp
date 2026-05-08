@@ -23,6 +23,7 @@ constexpr const char* EXTRACT_COMMAND = "extract";
 void printGraphs(std::ostream& out, const GraphCollection& graphs);
 void printVertexes(std::ostream& out, const Graph& graph);
 void printOutbound(std::ostream& out, const Graph& graph, const std::string& vertex);
+void printInbound(std::ostream& out, const Graph& graph, const std::string& vertex);
 }
 
 #endif
