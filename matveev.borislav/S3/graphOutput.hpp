@@ -7,6 +7,7 @@
 
 #include <string>
 #include <stdexcept>
+#include <ostream>
 
 namespace matveev
 {
@@ -128,6 +129,29 @@ inline List< std::string > collectVertexNames(const Graph& graph)
   }
 
   return result;
+}
+
+inline void printStringList(std::ostream& out, const List< std::string >& list)
+{
+  for (LCIter< std::string > it = list.begin(); it != list.end(); ++it)
+  {
+    out << *it << '\n';
+  }
+}
+
+inline void printEdgeRows(std::ostream& out, const List< EdgeOutput >& rows)
+{
+  for (LCIter< EdgeOutput > it = rows.begin(); it != rows.end(); ++it)
+  {
+    out << it->vertex;
+
+    for (LCIter< unsigned long long > weight = it->weights.begin(); weight != it->weights.end(); ++weight)
+    {
+      out << ' ' << *weight;
+    }
+
+    out << '\n';
+  }
 }
 }
 
