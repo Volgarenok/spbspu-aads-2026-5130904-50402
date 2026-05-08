@@ -4,14 +4,13 @@
 
 int main()
 {
-  matveev::GraphCollection graphs;
   matveev::Graph graph;
 
-  graphs.addGraph("ccc", graph);
-  graphs.addGraph("aaa", graph);
-  graphs.addGraph("bbb", graph);
+  graph.addVertex("ccc");
+  graph.addVertex("aaa");
+  graph.addVertex("bbb");
 
-  matveev::printGraphs(std::cout, graphs);
+  matveev::printVertexes(std::cout, graph);
 
   return 0;
 }

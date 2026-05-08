@@ -11,4 +11,10 @@ void printGraphs(std::ostream& out, const GraphCollection& graphs)
   List< std::string > names = collectGraphNames(graphs);
   printStringList(out, names);
 }
+
+void printVertexes(std::ostream& out, const Graph& graph)
+{
+  List< std::string > names = collectVertexNames(graph);
+  printStringList(out, names);
+}
 }

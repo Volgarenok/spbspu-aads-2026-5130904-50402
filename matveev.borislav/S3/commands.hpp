@@ -20,6 +20,7 @@ constexpr const char* MERGE_COMMAND = "merge";
 constexpr const char* EXTRACT_COMMAND = "extract";
 
 void printGraphs(std::ostream& out, const GraphCollection& graphs);
+void printVertexes(std::ostream& out, const Graph& graph);
 }
 
 #endif
