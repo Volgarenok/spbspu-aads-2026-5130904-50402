@@ -1,16 +1,18 @@
-#include "commands.hpp"
+#include "parserUtils.hpp"
 
 #include <iostream>
+#include <string>
 
 int main()
 {
-  matveev::Graph graph;
+  matveev::List< std::string > args;
 
-  graph.bind("c", "a", 30);
-  graph.bind("b", "a", 20);
-  graph.bind("b", "a", 10);
+  args.insertAfter(args.beforeBegin(), "b");
+  args.insertAfter(args.beforeBegin(), "a");
 
-  matveev::printInbound(std::cout, graph, "a");
+  std::cout << matveev::countArgs(args) << '\n';
+  std::cout << matveev::hasArgCount(args, 2) << '\n';
+  std::cout << matveev::hasArgCount(args, 3) << '\n';
 
   return 0;
 }
