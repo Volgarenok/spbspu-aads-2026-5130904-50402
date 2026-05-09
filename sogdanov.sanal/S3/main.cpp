@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <limits>
 #include "Hashtable.hpp"
 #include "commands.hpp"
 
@@ -39,31 +38,34 @@ int main(int argc, char *argv[])
   std::string line;
   while (std::getline(std::cin, line))
   {
-    // Защита от Windows-переносов (\r\n) в WSL
+    if (!line.empty() && line.back() == '\r')
+    {
+      line.pop_back();
+    }
     if (line.empty())
     {
       continue;
     }
+
     std::istringstream iss(line);
     std::string cmd;
+
     if (!(iss >> cmd))
     {
       continue;
     }
-    iss.exceptions(std::ios_base::failbit | std::ios_base::badbit);
+
     try
     {
       if (!cmds.has(cmd))
       {
-        throw std::logic_error("Command not found");
+        throw std::out_of_range("Command not found");
       }
       cmds.get(cmd)(iss, std::cout);
     }
     catch (...)
     {
       std::cout << "<INVALID COMMAND>\n";
-      std::cin.clear();
-      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
   }
 }

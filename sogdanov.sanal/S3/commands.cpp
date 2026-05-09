@@ -10,30 +10,7 @@ namespace sogdanov
 {
 
   HashTable<std::string, Graph> app_graphs(100);
-  template <class Iter>
-  void sort(Iter begin, Iter end)
-  {
-    if (begin == end)
-    {
-      return;
-    }
-    for (Iter i = begin + 1; i < end; ++i)
-    {
-      auto key = *i;
-      Iter j = i - 1;
-      while (j >= begin && key < *j)
-      {
-        *(j + 1) = *j;
-        if (j == begin)
-        {
-          j--;
-          break;
-        }
-        --j;
-      }
-      *(j + 1) = key;
-    }
-  }
+
   void cmd_graphs(std::istream &, std::ostream &out)
   {
     Vector<std::string> names;
@@ -56,7 +33,10 @@ namespace sogdanov
   void cmd_vertexes(std::istream &in, std::ostream &out)
   {
     std::string gname;
-    in >> gname;
+    if (!(in >> gname))
+    {
+      throw std::invalid_argument("Invalid args");
+    }
     if (!app_graphs.has(gname))
     {
       throw std::logic_error("Graph not found");
@@ -78,11 +58,15 @@ namespace sogdanov
   void cmd_outbound(std::istream &in, std::ostream &out)
   {
     std::string gname, vname;
-    in >> gname >> vname;
+    if (!(in >> gname >> vname))
+    {
+      throw std::invalid_argument("Invalid args");
+    }
     if (!app_graphs.has(gname))
     {
       throw std::logic_error("Graph not found");
     }
+
     Graph &g = app_graphs.get(gname);
     if (!g.has_vertex(vname))
     {
@@ -119,11 +103,15 @@ namespace sogdanov
   void cmd_inbound(std::istream &in, std::ostream &out)
   {
     std::string gname, vname;
-    in >> gname >> vname;
+    if (!(in >> gname >> vname))
+    {
+      throw std::invalid_argument("Invalid args");
+    }
     if (!app_graphs.has(gname))
     {
       throw std::logic_error("Graph not found");
     }
+
     Graph &g = app_graphs.get(gname);
     if (!g.has_vertex(vname))
     {
@@ -161,7 +149,10 @@ namespace sogdanov
   {
     std::string gname, u, v;
     size_t w;
-    in >> gname >> u >> v >> w;
+    if (!(in >> gname >> u >> v >> w))
+    {
+      throw std::invalid_argument("Invalid args");
+    }
     if (!app_graphs.has(gname))
     {
       throw std::logic_error("Graph not found");
@@ -173,7 +164,10 @@ namespace sogdanov
   {
     std::string gname, u, v;
     size_t w;
-    in >> gname >> u >> v >> w;
+    if (!(in >> gname >> u >> v >> w))
+    {
+      throw std::invalid_argument("Invalid args");
+    }
     if (!app_graphs.has(gname))
     {
       throw std::logic_error("Graph not found");
@@ -185,7 +179,10 @@ namespace sogdanov
   {
     std::string gname;
     int k;
-    in >> gname >> k;
+    if (!(in >> gname >> k))
+    {
+      throw std::invalid_argument("Invalid args");
+    }
     if (app_graphs.has(gname))
     {
       throw std::logic_error("Graph already exists");
@@ -195,7 +192,10 @@ namespace sogdanov
     for (int i = 0; i < k; ++i)
     {
       std::string v;
-      in >> v;
+      if (!(in >> v))
+      {
+        throw std::invalid_argument("Invalid args");
+      }
       new_g.add_vertex(v);
     }
     app_graphs.add(gname, new_g);
@@ -204,7 +204,10 @@ namespace sogdanov
   void cmd_merge(std::istream &in, std::ostream &)
   {
     std::string gnew, g1, g2;
-    in >> gnew >> g1 >> g2;
+    if (!(in >> gnew >> g1 >> g2))
+    {
+      throw std::invalid_argument("Invalid args");
+    }
     if (app_graphs.has(gnew))
     {
       throw std::logic_error("New graph already exists");
@@ -213,6 +216,7 @@ namespace sogdanov
     {
       throw std::logic_error("Source graph not found");
     }
+
     Graph merged;
     Graph &src1 = app_graphs.get(g1);
     Graph &src2 = app_graphs.get(g2);
@@ -222,6 +226,7 @@ namespace sogdanov
     {
       merged.add_vertex(v1[i]);
     }
+
     auto v2 = src2.get_vertices();
     for (size_t i = 0; i < v2.getSize(); ++i)
     {
@@ -249,7 +254,10 @@ namespace sogdanov
   {
     std::string gnew, gold;
     int k;
-    in >> gnew >> gold >> k;
+    if (!(in >> gnew >> gold >> k))
+    {
+      throw std::invalid_argument("Invalid args");
+    }
     if (app_graphs.has(gnew))
     {
       throw std::logic_error("New graph already exists");
@@ -265,7 +273,10 @@ namespace sogdanov
     for (int i = 0; i < k; ++i)
     {
       std::string v;
-      in >> v;
+      if (!(in >> v))
+      {
+        throw std::invalid_argument("Invalid args");
+      }
       if (!src.has_vertex(v))
       {
         throw std::logic_error("Vertex not in old graph");
@@ -305,6 +316,7 @@ namespace sogdanov
     {
       throw std::runtime_error("Could not open file");
     }
+
     std::string line;
     while (std::getline(file, line))
     {
@@ -312,6 +324,7 @@ namespace sogdanov
       {
         continue;
       }
+
       std::istringstream iss(line);
       std::string gname;
       int edges_count;
@@ -319,6 +332,7 @@ namespace sogdanov
       {
         continue;
       }
+
       Graph g;
       for (int i = 0; i < edges_count; ++i)
       {
@@ -331,6 +345,7 @@ namespace sogdanov
             break;
           }
         }
+
         std::istringstream edge_iss(line);
         if (edge_iss >> u >> v >> w)
         {
