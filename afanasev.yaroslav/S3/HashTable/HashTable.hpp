@@ -45,6 +45,9 @@ namespace afanasev
     void rehash(size_t slots);
     void swap(HashTable & other) noexcept;
 
+    Value & get(Key k);
+    const Value & get(Key k) const;
+
     size_t size() const noexcept;
     bool empty() const noexcept;
 
@@ -55,6 +58,40 @@ namespace afanasev
     Hash hasher_;
     Equal comparator_;
   };
+}
+
+template < class Key, class Value, class Hash, class Equal >
+Value & afanasev::HashTable< Key, Value, Hash, Equal >::get(Key k)
+{
+  size_t idx = hasher_(k) % capacity_;
+  List< type > & bucket = data_[idx];
+  LIter< type > it = bucket.begin();
+  while (it != LIter< type >())
+  {
+    if (comparator_((*it).first, k))
+    {
+      return (*it).second;
+    }
+    ++it;
+  }
+  throw std::out_of_range("Key not found");
+}
+
+template < class Key, class Value, class Hash, class Equal >
+const Value & afanasev::HashTable< Key, Value, Hash, Equal >::get(Key k) const
+{
+  size_t idx = hasher_(k) % capacity_;
+  const List< type > & bucket = data_[idx];
+  LCIter< type > it = bucket.begin();
+  while (it != LCIter< type >())
+  {
+    if (comparator_((*it).first, k))
+    {
+      return (*it).second;
+    }
+    ++it;
+  }
+  throw std::out_of_range("Key not found");
 }
 
 template < class Key, class Value, class Hash, class Equal >
