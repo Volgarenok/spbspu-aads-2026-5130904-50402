@@ -42,7 +42,7 @@ namespace saldaev
     q.pop();
     BOOST_TEST(q.empty());
 
-    BOOST_CHECK_NO_THROW(q.pop());
+    BOOST_CHECK_THROW(q.pop(), std::logic_error);
     BOOST_TEST(q.empty());
   }
 

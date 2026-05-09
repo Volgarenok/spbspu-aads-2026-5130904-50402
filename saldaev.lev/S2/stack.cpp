@@ -11,21 +11,21 @@ namespace saldaev
   template < class T >
   bool Stack< T >::empty() const noexcept
   {
-    return !(data_.getLength());
+    return !(data_.size());
   }
 
   template < class T >
   void Stack< T >::push(const T &value)
   {
-    data_.newHead(value);
+    data_.pushFront(value);
   }
 
   template < class T >
   T &Stack< T >::top()
   {
     if (!empty()) {
-      LIter< T > h = data_.begin();
-      return h.getData();
+      auto h = data_.begin();
+      return *h;
     }
     throw std::logic_error("Cannot read from empty stack");
   }
@@ -34,16 +34,19 @@ namespace saldaev
   const T &Stack< T >::top() const
   {
     if (!empty()) {
-      LCIter< T > h = data_.begin();
-      return h.getData();
+      auto h = data_.begin();
+      return *h;
     }
     throw std::logic_error("Cannot read from empty stack");
   }
 
   template < class T >
-  void Stack< T >::pop() noexcept
+  void Stack< T >::pop()
   {
-    data_.cutHead();
+    if (empty()) {
+      throw std::logic_error("Cannot pop from empty stack");
+    }
+    data_.popFront();
   }
 
   template < class T >
@@ -65,7 +68,7 @@ namespace saldaev
   template < class T >
   size_t Stack< T >::size() const noexcept
   {
-    return data_.getLength();
+    return data_.size();
   }
 
   template struct Stack< int >;

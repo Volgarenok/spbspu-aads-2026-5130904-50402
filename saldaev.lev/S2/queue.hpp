@@ -17,7 +17,7 @@ namespace saldaev
     void push(const T &value);
     T &front();
     const T &front() const;
-    void pop() noexcept;
+    void pop();
     void clear() noexcept;
     bool empty() const noexcept;
     size_t size() const noexcept;

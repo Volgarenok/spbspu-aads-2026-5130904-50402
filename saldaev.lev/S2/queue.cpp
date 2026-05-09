@@ -11,21 +11,21 @@ namespace saldaev
   template < class T >
   bool Queue< T >::empty() const noexcept
   {
-    return !(data_.getLength());
+    return !(data_.size());
   }
 
   template < class T >
   void Queue< T >::push(const T &value)
   {
-    data_.newTail(value);
+    data_.pushBack(value);
   }
 
   template < class T >
   T &Queue< T >::front()
   {
     if (!empty()) {
-      LIter< T > h = data_.begin();
-      return h.getData();
+      auto h = data_.begin();
+      return *h;
     }
     throw std::logic_error("Cannot read from empty queue");
   }
@@ -34,16 +34,19 @@ namespace saldaev
   const T &Queue< T >::front() const
   {
     if (!empty()) {
-      LCIter< T > h = data_.begin();
-      return h.getData();
+      auto h = data_.begin();
+      return *h;
     }
     throw std::logic_error("Cannot read from empty queue");
   }
 
   template < class T >
-  void Queue< T >::pop() noexcept
+  void Queue< T >::pop()
   {
-    data_.cutHead();
+    if (empty()) {
+      throw std::logic_error("Cannot pop from empty queue");
+    }
+    data_.popFront();
   }
 
   template < class T >
@@ -65,7 +68,7 @@ namespace saldaev
   template < class T >
   size_t Queue< T >::size() const noexcept
   {
-    return data_.getLength();
+    return data_.size();
   }
 
   template struct Queue< int >;
