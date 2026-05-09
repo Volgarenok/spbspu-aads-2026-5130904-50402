@@ -104,6 +104,45 @@ bool executeCommand(std::ostream& out, GraphCollection& graphs, const List< std:
 
     return true;
   }
+
+  if (command == BIND_COMMAND)
+  {
+    if (!hasArgCount(tokens, 5))
+    {
+      out << INVALID_COMMAND << '\n';
+      return false;
+    }
+
+    ++it;
+    const std::string& graph_name = *it;
+
+    ++it;
+    const std::string& from = *it;
+
+    ++it;
+    const std::string& to = *it;
+
+    ++it;
+    unsigned long long weight = 0;
+
+    if (!parseUnsignedLongLong(*it, weight))
+    {
+      out << INVALID_COMMAND << '\n';
+      return false;
+    }
+
+    try
+    {
+      graphs.at(graph_name).bind(from, to, weight);
+    }
+    catch (const std::exception&)
+    {
+      out << INVALID_COMMAND << '\n';
+      return false;
+    }
+
+    return true;
+  }
   out << INVALID_COMMAND << '\n';
   return false;
 }
