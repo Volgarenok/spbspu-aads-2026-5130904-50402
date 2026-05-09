@@ -17,8 +17,11 @@ namespace afanasev
     using type = std::pair< Key, Value >;
 
     public:
-
     explicit HashTable(size_t slots);
+    HashTable(const HashTable & other);
+    HashTable(HashTable && other) noexcept;
+    HashTable & operator=(const HashTable & other);
+    HashTable & operator=(HashTable && other) noexcept;
     ~HashTable();
 
     void clear() noexcept;
@@ -28,12 +31,12 @@ namespace afanasev
     Value drop(Key k);
     bool has(Key k) const noexcept;
     void rehash(size_t slots);
+    void swap(HashTable & other) noexcept;
 
     size_t size() const noexcept;
     bool empty() const noexcept;
 
     private:
-
     Vector< List< type > > data_;
     size_t capacity_;
     size_t size_;
@@ -41,6 +44,79 @@ namespace afanasev
     Equal comparator_;
   };
 }
+
+template < class Key, class Value, class Hash, class Equal >
+afanasev::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable & other):
+  data_(),
+  capacity_(other.capacity_),
+  size_(0),
+  hasher_(other.hasher_),
+  comparator_(other.comparator_)
+{
+  for (size_t i = 0; i < capacity_; ++i)
+  {
+    data_.pushBack(List< type >());
+  }
+
+  for (size_t i = 0; i < capacity_; ++i)
+  {
+    const List< type > & srcBucket = other.data_[i];
+    LCIter< type > it = srcBucket.begin();
+    while (it != LCIter< type >())
+    {
+      data_[i].pushFront(*it);
+      ++size_;
+      ++it;
+    }
+  }
+}
+
+template < class Key, class Value, class Hash, class Equal >
+afanasev::HashTable< Key, Value, Hash, Equal >::HashTable(HashTable && other) noexcept:
+  data_(std::move(other.data_)),
+  capacity_(other.capacity_),
+  size_(other.size_),
+  hasher_(std::move(other.hasher_)),
+  comparator_(std::move(other.comparator_))
+{
+  other.capacity_ = 0;
+  other.size_ = 0;
+  other.data_ = Vector< List < type > >();
+}
+
+template <class Key, class Value, class Hash, class Equal>
+afanasev::HashTable<Key, Value, Hash, Equal> &
+afanasev::HashTable<Key, Value, Hash, Equal>::operator=(const HashTable & other)
+{
+  if (this != & other)
+  {
+    HashTable tmp(other);
+    swap(tmp);
+  }
+  return *this;
+}
+
+template < class Key, class Value, class Hash, class Equal >
+afanasev::HashTable< Key, Value, Hash, Equal > &
+afanasev::HashTable< Key, Value, Hash, Equal >::operator=(HashTable && other) noexcept
+{
+  if (this != & other)
+  {
+    swap(other);
+  }
+  return *this;
+}
+
+template < class Key, class Value, class Hash, class Equal >
+void afanasev::HashTable< Key, Value, Hash, Equal >::swap(HashTable & other) noexcept
+{
+  data_.swap(other.data_);
+  std::swap(capacity_, other.capacity_);
+  std::swap(size_, other.size_);
+  std::swap(hasher_, other.hasher_);
+  std::swap(comparator_, other.comparator_);
+}
+
 template < class Key, class Value, class Hash, class Equal >
 size_t afanasev::HashTable< Key, Value, Hash, Equal >::size() const noexcept
 {
