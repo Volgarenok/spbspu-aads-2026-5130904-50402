@@ -10,7 +10,6 @@ namespace sogdanov
 {
 
   HashTable<std::string, Graph> app_graphs(100);
-
   template <class Iter>
   void sort(Iter begin, Iter end)
   {
@@ -35,13 +34,17 @@ namespace sogdanov
       *(j + 1) = key;
     }
   }
-
   void cmd_graphs(std::istream &, std::ostream &out)
   {
     Vector<std::string> names;
     for (auto it = app_graphs.begin(); it != app_graphs.end(); ++it)
     {
       names.pushBack((*it).k);
+    }
+    if (names.isEmpty())
+    {
+      out << "\n";
+      return;
     }
     sort(names.begin(), names.end());
     for (size_t i = 0; i < names.getSize(); ++i)
@@ -58,7 +61,13 @@ namespace sogdanov
     {
       throw std::logic_error("Graph not found");
     }
+
     Vector<std::string> verts = app_graphs.get(gname).get_vertices();
+    if (verts.isEmpty())
+    {
+      out << "\n";
+      return;
+    }
     sort(verts.begin(), verts.end());
     for (size_t i = 0; i < verts.getSize(); ++i)
     {
@@ -79,10 +88,12 @@ namespace sogdanov
     {
       throw std::logic_error("Vertex not found");
     }
+
     Vector<std::string> dests = g.get_vertices();
     sort(dests.begin(), dests.end());
 
     auto &edges = g.get_edges();
+    bool printed = false;
     for (size_t i = 0; i < dests.getSize(); ++i)
     {
       std::pair<std::string, std::string> key{vname, dests[i]};
@@ -96,7 +107,12 @@ namespace sogdanov
           out << " " << w[j];
         }
         out << "\n";
+        printed = true;
       }
+    }
+    if (!printed)
+    {
+      out << "\n";
     }
   }
 
@@ -113,10 +129,12 @@ namespace sogdanov
     {
       throw std::logic_error("Vertex not found");
     }
+
     Vector<std::string> srcs = g.get_vertices();
     sort(srcs.begin(), srcs.end());
 
     auto &edges = g.get_edges();
+    bool printed = false;
     for (size_t i = 0; i < srcs.getSize(); ++i)
     {
       std::pair<std::string, std::string> key{srcs[i], vname};
@@ -130,11 +148,16 @@ namespace sogdanov
           out << " " << w[j];
         }
         out << "\n";
+        printed = true;
       }
+    }
+    if (!printed)
+    {
+      out << "\n";
     }
   }
 
-  void cmd_bind(std::istream &in, std::ostream&)
+  void cmd_bind(std::istream &in, std::ostream &)
   {
     std::string gname, u, v;
     size_t w;
@@ -146,7 +169,7 @@ namespace sogdanov
     app_graphs.get(gname).bind(u, v, w);
   }
 
-  void cmd_cut(std::istream &in, std::ostream&)
+  void cmd_cut(std::istream &in, std::ostream &)
   {
     std::string gname, u, v;
     size_t w;
@@ -158,7 +181,7 @@ namespace sogdanov
     app_graphs.get(gname).cut(u, v, w);
   }
 
-  void cmd_create(std::istream &in, std::ostream&)
+  void cmd_create(std::istream &in, std::ostream &)
   {
     std::string gname;
     int k;
@@ -167,6 +190,7 @@ namespace sogdanov
     {
       throw std::logic_error("Graph already exists");
     }
+
     Graph new_g;
     for (int i = 0; i < k; ++i)
     {
@@ -177,7 +201,7 @@ namespace sogdanov
     app_graphs.add(gname, new_g);
   }
 
-  void cmd_merge(std::istream &in, std::ostream&)
+  void cmd_merge(std::istream &in, std::ostream &)
   {
     std::string gnew, g1, g2;
     in >> gnew >> g1 >> g2;
@@ -203,6 +227,7 @@ namespace sogdanov
     {
       merged.add_vertex(v2[i]);
     }
+
     auto copy_edges = [&](Graph &src)
     {
       auto &edges = src.get_edges();
@@ -220,7 +245,7 @@ namespace sogdanov
     app_graphs.add(gnew, merged);
   }
 
-  void cmd_extract(std::istream &in, std::ostream&)
+  void cmd_extract(std::istream &in, std::ostream &)
   {
     std::string gnew, gold;
     int k;
@@ -233,6 +258,7 @@ namespace sogdanov
     {
       throw std::logic_error("Old graph not found");
     }
+
     Vector<std::string> target_verts;
     Graph &src = app_graphs.get(gold);
 
@@ -293,7 +319,6 @@ namespace sogdanov
       {
         continue;
       }
-
       Graph g;
       for (int i = 0; i < edges_count; ++i)
       {
