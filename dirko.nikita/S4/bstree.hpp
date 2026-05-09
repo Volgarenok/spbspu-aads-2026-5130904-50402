@@ -6,6 +6,18 @@
 namespace dirko
 {
   template < class Key, class Value >
+  struct TreeNode
+  {
+    Key key_;
+    Value value_;
+    TreeNode *left_;
+    TreeNode *right_;
+    TreeNode *parent_;
+
+    TreeNode(const Key &key, const Value &value, TreeNode *parent);
+    TreeNode(Key &&key, Value &&value, TreeNode *parent);
+  };
+  template < class Key, class Value >
   class BSTIterator
   {
   };
@@ -42,13 +54,26 @@ namespace dirko
     const_iterator cend() const noexcept;
 
   private:
+    TreeNode< Key, Value > *root_;
     size_t size_;
     Compare comp_;
-    Key key_;
-    Value value_;
-    BSTree< Key, Value, Compare > *left_;
-    BSTree< Key, Value, Compare > *right_;
-    BSTree< Key, Value, Compare > *parent_;
   };
 }
+
+template < class Key, class Value >
+dirko::TreeNode< Key, Value >::TreeNode(const Key &key, const Value &value, TreeNode *parent):
+  key_(key),
+  value_(value),
+  left_(nullptr),
+  right_(nullptr),
+  parent_(parent)
+{}
+template < class Key, class Value >
+dirko::TreeNode< Key, Value >::TreeNode(Key &&key, Value &&value, TreeNode *parent):
+  key_(std::move(key)),
+  value_(std::move(value)),
+  left_(nullptr),
+  right_(nullptr),
+  parent_(parent)
+{}
 #endif
