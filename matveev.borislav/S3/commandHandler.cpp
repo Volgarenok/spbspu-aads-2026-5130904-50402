@@ -259,6 +259,56 @@ bool executeCommand(std::ostream& out, GraphCollection& graphs, const List< std:
 
     return true;
   }
+
+  if (command == EXTRACT_COMMAND)
+  {
+    if (countArgs(tokens) < 4)
+    {
+      out << INVALID_COMMAND << '\n';
+      return false;
+    }
+
+    ++it;
+    const std::string& new_name = *it;
+
+    ++it;
+    const std::string& old_name = *it;
+
+    ++it;
+    size_t vertex_count = 0;
+
+    if (!parseSize(*it, vertex_count))
+    {
+      out << INVALID_COMMAND << '\n';
+      return false;
+    }
+
+    if (countArgs(tokens) != vertex_count + 4)
+    {
+      out << INVALID_COMMAND << '\n';
+      return false;
+    }
+
+    List< std::string > vertexes;
+
+    for (size_t i = 0; i < vertex_count; ++i)
+    {
+      ++it;
+      vertexes.insertAfter(vertexes.beforeBegin(), *it);
+    }
+
+    try
+    {
+      graphs.extractGraph(new_name, old_name, vertexes);
+    }
+    catch (const std::exception&)
+    {
+      out << INVALID_COMMAND << '\n';
+      return false;
+    }
+
+    return true;
+  }
   out << INVALID_COMMAND << '\n';
   return false;
 }

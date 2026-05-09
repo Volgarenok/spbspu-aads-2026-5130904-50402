@@ -5,22 +5,20 @@
 int main()
 {
   matveev::GraphCollection graphs;
-  matveev::Graph first;
-  matveev::Graph second;
+  matveev::Graph graph;
 
-  first.bind("a", "b", 10);
-  second.bind("a", "b", 20);
-  second.bind("b", "c", 30);
+  graph.bind("a", "b", 10);
+  graph.bind("a", "c", 20);
+  graph.bind("c", "a", 30);
 
-  graphs.addGraph("first", first);
-  graphs.addGraph("second", second);
+  graphs.addGraph("old", graph);
 
   matveev::List< std::string > tokens;
 
-  tokens = matveev::splitLine("merge third first second");
+  tokens = matveev::splitLine("extract new old 2 a c");
   matveev::executeCommand(std::cout, graphs, tokens);
 
-  tokens = matveev::splitLine("outbound third a");
+  tokens = matveev::splitLine("outbound new a");
   matveev::executeCommand(std::cout, graphs, tokens);
 
   return 0;
