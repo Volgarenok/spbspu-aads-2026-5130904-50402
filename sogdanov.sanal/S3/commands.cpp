@@ -158,7 +158,7 @@ namespace sogdanov
     app_graphs.get(gname).cut(u, v, w);
   }
 
-  void cmd_create(std::istream &in, std::ostream &out)
+  void cmd_create(std::istream &in, std::ostream&)
   {
     std::string gname;
     int k;
