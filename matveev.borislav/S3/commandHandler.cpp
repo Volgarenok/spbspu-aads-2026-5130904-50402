@@ -51,6 +51,33 @@ bool executeCommand(std::ostream& out, GraphCollection& graphs, const List< std:
     return true;
   }
 
+  if (command == OUTBOUND_COMMAND)
+  {
+    if (!hasArgCount(tokens, 3))
+    {
+      out << INVALID_COMMAND << '\n';
+      return false;
+    }
+
+    ++it;
+    const std::string& graph_name = *it;
+
+    ++it;
+    const std::string& vertex = *it;
+
+    try
+    {
+      printOutbound(out, graphs.at(graph_name), vertex);
+    }
+    catch (const std::exception&)
+    {
+      out << INVALID_COMMAND << '\n';
+      return false;
+    }
+
+    return true;
+  }
+
   out << INVALID_COMMAND << '\n';
   return false;
 }
