@@ -134,7 +134,7 @@ namespace sogdanov
     }
   }
 
-  void cmd_bind(std::istream &in, std::ostream &out)
+  void cmd_bind(std::istream &in, std::ostream&)
   {
     std::string gname, u, v;
     size_t w;
@@ -146,7 +146,7 @@ namespace sogdanov
     app_graphs.get(gname).bind(u, v, w);
   }
 
-  void cmd_cut(std::istream &in, std::ostream &out)
+  void cmd_cut(std::istream &in, std::ostream&)
   {
     std::string gname, u, v;
     size_t w;

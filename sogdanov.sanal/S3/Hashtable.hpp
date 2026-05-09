@@ -255,7 +255,7 @@ void sogdanov::HashTable<Key, Value, Hash, Equal>::rehash(size_t slots)
       add(old_table[i].k, old_table[i].v);
     }
   }
-  delete
+  delete[] old_table;
 }
 
 template <class Key, class Value, class Hash, class Equal>
