@@ -40,6 +40,36 @@ namespace afanasev
 }
 
 template <class Key, class Value, class Hash, class Equal>
+Value afanasev::HashTable<Key, Value, Hash, Equal>::drop(Key k)
+{
+  size_t idx = hasher_(k) % capacity_;
+  List<type> & bucket = data_[idx];
+  LIter<type> prev = LIter<type>();
+  LIter<type> it = bucket.begin();
+
+  while (it != LIter<type>())
+  {
+    if (comparator_((*it).first, k))
+    {
+      Value val = (*it).second;
+      if (prev == LIter<type>())
+      {
+        bucket.popFront();
+      }
+      else
+      {
+        bucket.deleteNext(prev);
+      }
+      --size_;
+      return val;
+    }
+    prev = it;
+    ++it;
+  }
+  throw std::out_of_range("Key not found");
+}
+
+template <class Key, class Value, class Hash, class Equal>
 void afanasev::HashTable<Key, Value, Hash, Equal>::add(Key k, Value v)
 {
   size_t idx = hasher_(k) % capacity_;
@@ -72,12 +102,6 @@ void afanasev::HashTable< Key, Value, Hash, Equal >::clear() noexcept
 }
 
 template < class Key, class Value, class Hash, class Equal >
-afanasev::HashTable< Key, Value, Hash, Equal >::~HashTable()
-{
-  clear();
-}
-
-template < class Key, class Value, class Hash, class Equal >
 afanasev::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
   data_(),
   capacity_(slots),
@@ -89,6 +113,12 @@ afanasev::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
 	{
     data_.pushBack(List< type >());
   }
+}
+
+template < class Key, class Value, class Hash, class Equal >
+afanasev::HashTable< Key, Value, Hash, Equal >::~HashTable()
+{
+  clear();
 }
 
 #endif
