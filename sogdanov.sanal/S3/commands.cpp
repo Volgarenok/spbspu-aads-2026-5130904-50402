@@ -177,7 +177,7 @@ namespace sogdanov
     app_graphs.add(gname, new_g);
   }
 
-  void cmd_merge(std::istream &in, std::ostream &out)
+  void cmd_merge(std::istream &in, std::ostream&)
   {
     std::string gnew, g1, g2;
     in >> gnew >> g1 >> g2;
@@ -220,7 +220,7 @@ namespace sogdanov
     app_graphs.add(gnew, merged);
   }
 
-  void cmd_extract(std::istream &in, std::ostream &out)
+  void cmd_extract(std::istream &in, std::ostream&)
   {
     std::string gnew, gold;
     int k;
