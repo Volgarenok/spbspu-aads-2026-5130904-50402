@@ -29,6 +29,9 @@ namespace afanasev
 		bool has(Key k) const noexcept;
 		void rehash(size_t slots);
 
+    size_t size() const noexcept;
+    bool empty() const noexcept;
+
 		private:
 
     Vector< List< type > > data_;
@@ -37,6 +40,17 @@ namespace afanasev
     Hash hasher_;
 		Equal comparator_;
 	};
+}
+template < class Key, class Value, class Hash, class Equal >
+size_t afanasev::HashTable< Key, Value, Hash, Equal >::size() const noexcept
+{
+  return size_;
+}
+
+template < class Key, class Value, class Hash, class Equal >
+bool afanasev::HashTable< Key, Value, Hash, Equal >::empty() const noexcept
+{
+  return !size_;
 }
 
 template < class Key, class Value, class Hash, class Equal >
