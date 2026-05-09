@@ -5,21 +5,15 @@
 int main()
 {
   matveev::GraphCollection graphs;
-  matveev::Graph graph;
-
-  graph.bind("a", "b", 10);
-  graph.bind("a", "b", 20);
-  graphs.addGraph("gr1", graph);
-
   matveev::List< std::string > tokens;
 
-  tokens = matveev::splitLine("cut gr1 a b 20");
+  tokens = matveev::splitLine("create gr1 3 c a b");
   matveev::executeCommand(std::cout, graphs, tokens);
 
-  tokens = matveev::splitLine("outbound gr1 a");
+  tokens = matveev::splitLine("vertexes gr1");
   matveev::executeCommand(std::cout, graphs, tokens);
 
-  tokens = matveev::splitLine("cut gr1 a b 30");
+  tokens = matveev::splitLine("create gr1 0");
   matveev::executeCommand(std::cout, graphs, tokens);
 
   return 0;
