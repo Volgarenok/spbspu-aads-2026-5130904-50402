@@ -38,7 +38,7 @@ namespace afanasev
     T getValue(LIter< T > pos) noexcept;
     T getValue(LCIter< T > pos) const noexcept;
     void pushFront(const T & val);
-    T popFront();
+    void popFront();
     void insert(const T & val, LIter< T > pos);
     void deleteNext(LIter< T > pos) noexcept;
     void clear() noexcept;
@@ -97,19 +97,19 @@ namespace afanasev
   }
 
   template < class T >
-  T List< T >::popFront()
+  void List< T >::popFront()
   {
     if (!size_)
     {
-      return nullptr;
+      return;
     }
     Node< T > * first = fake_->next_;
-    T value = first->val_;
     fake_->next_ = first->next_;
     delete first;
     --size_;
-    return value;
   }
+
+  
 
   template < class T >
   void List< T >::insert(const T & val, LIter< T > pos)
@@ -282,6 +282,7 @@ namespace afanasev
     const Node< T > * curr_;
 
   public:
+    LCIter();
     LCIter(const Node< T > * p);
     const T & operator*() const;
     LCIter & operator++();
@@ -289,6 +290,11 @@ namespace afanasev
     bool operator==(const LCIter< T > & other) const;
     bool operator!=(const LCIter< T > & other) const;
   };
+
+  template < class T >
+  LCIter< T >::LCIter():
+    curr_(nullptr)
+  {}
 
   template < class T >
   LCIter< T >::LCIter(const Node< T > * p):

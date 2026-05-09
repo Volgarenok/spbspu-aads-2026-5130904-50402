@@ -44,9 +44,6 @@ namespace afanasev
 
     template < class IT >
     void pushBackRange(IT begin, size_t k);
-    // знаем сколько вставить
-    // выделяем память
-    // вызываем pushBackImpl
 
     void pushBack(const T &);
     void popBack();
@@ -54,14 +51,11 @@ namespace afanasev
     void pushFront(const T &);
     void popFront();
 
-    // Классная работа
-    // с идиомой копи и свап
     void insert(size_t i, const T & val);
     void erase(size_t i);
     void insert(size_t i, const Vector< T > & rhs, size_t beg, size_t end);
     void erase(size_t beg, size_t end);
 
-    // Дз
     template < class FwdIterator >
     void insert(VIter< T > pos, FwdIterator beg, FwdIterator end);
 
@@ -71,15 +65,13 @@ namespace afanasev
     void erase(VIter< T > pos);
     void erase(VIter< T > pos, size_t count);
 
-   private:
+    private:
     T * data_;
     size_t size_, capacity_;
 
     explicit Vector(size_t k);
 
     void pushBackImpl(const T &);
-    // вставка без проверки на ёмкость
-    // классная работа
     void reserve(size_t pos, size_t k);
   };
 
@@ -102,10 +94,6 @@ namespace afanasev
     friend class Vector< T >;
   };
 }
-
-
-
-
 
 template < class T >
 void afanasev::Vector< T >::pushBackImpl(const T & value)
@@ -342,10 +330,6 @@ void afanasev::Vector< T >::erase(VIter< T > pos, size_t count)
   size_ -= count;
 }
 
-
-
-
-
 template < class T >
 template < class IT >
 void afanasev::Vector< T >::pushBackRange(IT begin, size_t k)
@@ -360,10 +344,6 @@ void afanasev::Vector< T >::pushBackRange(IT begin, size_t k)
     pushBackImpl(*(begin + i));
   }
 }
-
-
-
-
 
 template < class T >
 afanasev::VIter< T >::VIter(Vector< T > & v, size_t pos):
@@ -415,12 +395,6 @@ T & afanasev::VIter< T >::operator*()
   return v_[pos_];
 }
 
-
-
-
-
-
-
 template< class T >
 void afanasev::Vector< T >::reserve(size_t k)
 {
@@ -456,7 +430,6 @@ afanasev::Vector< T >::Vector(std::initializer_list< T > il):
   {
     data_[i++] = v;
   }
-  
 }
 
 template< class T >
