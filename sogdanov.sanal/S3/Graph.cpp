@@ -18,7 +18,9 @@ namespace sogdanov
       }
     }
     if (!exists)
+    {
       vertices_.pushBack(v);
+    }
   }
 
   void Graph::swap(Graph &other) noexcept
@@ -54,8 +56,9 @@ namespace sogdanov
     std::pair<std::string, std::string> edge_key{u, v};
 
     if (!tmp.edges_.has(edge_key))
+    {
       throw std::logic_error("Edge not found");
-
+    }
     auto &weights = tmp.edges_.get(edge_key);
     bool found = false;
     for (size_t i = 0; i < weights.getSize(); ++i)
@@ -72,8 +75,9 @@ namespace sogdanov
       }
     }
     if (!found)
+    {
       throw std::logic_error("Weight not found");
-
+    }
     if (weights.isEmpty())
     {
       tmp.edges_.drop(edge_key);
@@ -94,16 +98,20 @@ namespace sogdanov
     for (size_t i = 0; i < vertices_.getSize(); ++i)
     {
       if (vertices_[i] == v)
+      {
         return true;
+      }
     }
     return false;
   }
 
-  Vector<std::string> Graph::get_vertices() const {
+  Vector<std::string> Graph::get_vertices() const
+  {
     return vertices_;
   }
 
-  HashTable<std::pair<std::string, std::string>, Vector<size_t>> &Graph::get_edges() {
+  HashTable<std::pair<std::string, std::string>, Vector<size_t>> &Graph::get_edges()
+  {
     return edges_;
   }
 

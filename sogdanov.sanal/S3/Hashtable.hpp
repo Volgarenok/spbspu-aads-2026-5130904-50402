@@ -142,7 +142,9 @@ void sogdanov::HashTable<Key, Value, Hash, Equal>::add(Key k, Value v)
   size_t target_idx = (first_tombstone != capacity_) ? first_tombstone : (h + i * i) % capacity_;
 
   if (table_[target_idx].state == HashState::TOMBSTONE)
+  {
     tombstones_--;
+  }
   table_[target_idx].k = k;
   table_[target_idx].v = std::move(v);
   table_[target_idx].state = HashState::OCCUPIED;
@@ -153,7 +155,9 @@ template <class Key, class Value, class Hash, class Equal>
 Value sogdanov::HashTable<Key, Value, Hash, Equal>::drop(Key k)
 {
   if (capacity_ == 0)
+  {
     throw std::out_of_range("Key not found");
+  }
   size_t h = hash_fn_(k) % capacity_;
   size_t i = 0;
 
@@ -170,7 +174,9 @@ Value sogdanov::HashTable<Key, Value, Hash, Equal>::drop(Key k)
     }
     ++i;
     if (i > capacity_)
+    {
       break;
+    }
   }
   throw std::out_of_range("Key not found");
 }
@@ -179,7 +185,9 @@ template <class Key, class Value, class Hash, class Equal>
 bool sogdanov::HashTable<Key, Value, Hash, Equal>::has(Key k) const
 {
   if (capacity_ == 0)
+  {
     return false;
+  }
   size_t h = hash_fn_(k) % capacity_;
   size_t i = 0;
 
@@ -192,7 +200,9 @@ bool sogdanov::HashTable<Key, Value, Hash, Equal>::has(Key k) const
     }
     ++i;
     if (i > capacity_)
+    {
       break;
+    }
   }
   return false;
 }
@@ -201,7 +211,9 @@ template <class Key, class Value, class Hash, class Equal>
 Value &sogdanov::HashTable<Key, Value, Hash, Equal>::get(Key k)
 {
   if (capacity_ == 0)
+  {
     throw std::out_of_range("Key not found");
+  }
   size_t h = hash_fn_(k) % capacity_;
   size_t i = 0;
 
@@ -214,7 +226,9 @@ Value &sogdanov::HashTable<Key, Value, Hash, Equal>::get(Key k)
     }
     ++i;
     if (i > capacity_)
+    {
       break;
+    }
   }
   throw std::out_of_range("Key not found");
 }
@@ -223,7 +237,9 @@ template <class Key, class Value, class Hash, class Equal>
 void sogdanov::HashTable<Key, Value, Hash, Equal>::rehash(size_t slots)
 {
   if (slots < size_)
+  {
     throw std::invalid_argument("New capacity too small");
+  }
   HashNode<Key, Value> *old_table = table_;
   size_t old_cap = capacity_;
 
