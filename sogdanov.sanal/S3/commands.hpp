@@ -20,6 +20,6 @@ namespace sogdanov {
 
     template<class Iter>
     void sort(Iter begin, Iter end);
-} 
+}
 
 #endif
