@@ -229,6 +229,36 @@ bool executeCommand(std::ostream& out, GraphCollection& graphs, const List< std:
 
     return true;
   }
+
+  if (command == MERGE_COMMAND)
+  {
+    if (!hasArgCount(tokens, 4))
+    {
+      out << INVALID_COMMAND << '\n';
+      return false;
+    }
+
+    ++it;
+    const std::string& new_name = *it;
+
+    ++it;
+    const std::string& lhs = *it;
+
+    ++it;
+    const std::string& rhs = *it;
+
+    try
+    {
+      graphs.mergeGraphs(new_name, lhs, rhs);
+    }
+    catch (const std::exception&)
+    {
+      out << INVALID_COMMAND << '\n';
+      return false;
+    }
+
+    return true;
+  }
   out << INVALID_COMMAND << '\n';
   return false;
 }
