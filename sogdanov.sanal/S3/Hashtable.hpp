@@ -137,6 +137,14 @@ void sogdanov::HashTable<Key, Value, Hash, Equal>::add(Key k, Value v)
       first_tombstone = idx;
     }
     ++i;
+    if (i > capacity_)
+    {
+      if (first_tombstone != capacity_)
+      {
+        break;
+      }
+      throw std::overflow_error("HashTable probing failed");
+    }
   }
 
   size_t target_idx = (first_tombstone != capacity_) ? first_tombstone : (h + i * i) % capacity_;
