@@ -6,6 +6,8 @@
 
 namespace sogdanov {
 
+    template<class Iter>
+    void sort(Iter begin, Iter end);
     void cmd_graphs(std::istream& in, std::ostream& out);
     void cmd_vertexes(std::istream& in, std::ostream& out);
     void cmd_outbound(std::istream& in, std::ostream& out);
@@ -18,8 +20,6 @@ namespace sogdanov {
 
     void load_file(const std::string& filename);
 
-    template<class Iter>
-    void sort(Iter begin, Iter end);
 }
 
 #endif

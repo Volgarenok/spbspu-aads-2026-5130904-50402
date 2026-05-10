@@ -10,7 +10,30 @@ namespace sogdanov
 {
 
   HashTable<std::string, Graph> app_graphs(100);
-
+  template <class Iter>
+  void sort(Iter begin, Iter end)
+  {
+    if (begin == end)
+    {
+      return;
+    }
+    for (Iter i = begin + 1; i < end; ++i)
+    {
+      auto key = *i;
+      Iter j = i - 1;
+      while (j >= begin && key < *j)
+      {
+        *(j + 1) = *j;
+        if (j == begin)
+        {
+          j--;
+          break;
+        }
+        --j;
+      }
+      *(j + 1) = key;
+    }
+  }
   void cmd_graphs(std::istream &, std::ostream &out)
   {
     Vector<std::string> names;
