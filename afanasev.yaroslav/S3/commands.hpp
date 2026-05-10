@@ -81,6 +81,36 @@ void afanasev::cmdGraphs(std::istream &, std::ostream & out, GraphSet & graphs)
 
 void afanasev::cmdVertexes(std::istream & in, std::ostream & out, GraphSet & graphs)
 {
+  std::string g_name;
+  in >> g_name;
+
+  if (!graphs.has(g_name))
+  {
+    throw std::runtime_error("No graph");
+  }
+
+  const Graph & g = graphs.get(g_name);
+  Vector< std::string > verts;
+  const std::set< std::string > & vertices = g.getVertices();
+
+  for (std::set< std::string >::const_iterator it = vertices.begin(); it != vertices.end(); ++it)
+  {
+    verts.pushBack(*it);
+  }
+
+  detail::sortStrings(verts);
+
+  if (verts.getSize() == 0)
+  {
+    out << "\n";
+  }
+  else
+  {
+    for (size_t i = 0; i < verts.getSize(); ++i)
+    {
+      out << verts[i] << "\n";
+    }
+  }
 }
 void afanasev::cmdOutbound(std::istream & in, std::ostream & out, GraphSet & graphs)
 {
