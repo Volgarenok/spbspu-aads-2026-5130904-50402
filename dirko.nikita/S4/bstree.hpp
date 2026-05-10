@@ -306,4 +306,26 @@ bool dirko::BSTConstIterator< Key, Value >::operator!=(const BSTConstIterator &o
 {
   return !(*this == other);
 }
+template < class Key, class Value, class Compare >
+dirko::BSTIterator< Key, Value > dirko::BSTree< Key, Value, Compare >::begin()
+{
+  return iterator(fallLeft(root_));
+}
+
+template < class Key, class Value, class Compare >
+dirko::BSTIterator< Key, Value > dirko::BSTree< Key, Value, Compare >::end() noexcept
+{
+  return iterator(nullptr);
+}
+template < class Key, class Value, class Compare >
+dirko::BSTConstIterator< Key, Value > dirko::BSTree< Key, Value, Compare >::cbegin() const
+{
+  return const_iterator(fallLeft(root_));
+}
+
+template < class Key, class Value, class Compare >
+dirko::BSTConstIterator< Key, Value > dirko::BSTree< Key, Value, Compare >::cend() const noexcept
+{
+  return const_iterator(nullptr);
+}
 #endif
