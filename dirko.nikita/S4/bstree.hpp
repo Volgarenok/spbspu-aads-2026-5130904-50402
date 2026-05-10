@@ -68,6 +68,10 @@ namespace dirko
     BSTree(const BSTree &other);
     BSTree(BSTree &&other) noexcept;
     BSTree(std::initializer_list< std::pair< Key, Value > > il);
+
+    BSTree &operator=(const BSTree &other);
+    BSTree &operator=(BSTree &&other) noexcept;
+
     ~BSTree();
 
     void push(const Key &k, const Value &v);
@@ -77,6 +81,8 @@ namespace dirko
     size_t size() const noexcept;
 
     void swap(BSTree &other) noexcept;
+
+    void clear();
 
     const_iterator rotateLeft(const_iterator it);
     const_iterator rotateRight(const_iterator it);
@@ -127,7 +133,10 @@ dirko::BSTree< Key, Value, Compare >::BSTree(const BSTree &other):
   root_(static_cast< TreeNode< Key, Value > * >(::operator new(sizeof(TreeNode< Key, Value >)))),
   size_(0),
   comp_(other.comp_)
-{ // TODO:
+{
+  for (const std::pair< Key, Value > &v : other) {
+    push(v.first, v.second);
+  }
 }
 template < class Key, class Value, class Compare >
 dirko::BSTree< Key, Value, Compare >::BSTree(BSTree &&other) noexcept:
@@ -344,5 +353,29 @@ template < class Key, class Value, class Compare >
 dirko::BSTConstIterator< Key, Value > dirko::BSTree< Key, Value, Compare >::cend() const noexcept
 {
   return const_iterator(nullptr);
+}
+
+template < class Key, class Value, class Compare >
+dirko::BSTree< Key, Value, Compare > &dirko::BSTree< Key, Value, Compare >::operator=(const BSTree &other)
+{
+  if (this != std::addressof(other)) {
+    BSTree temp(other);
+    swap(temp);
+  }
+  return *this;
+}
+
+template < class Key, class Value, class Compare >
+dirko::BSTree< Key, Value, Compare > &dirko::BSTree< Key, Value, Compare >::operator=(BSTree &&other) noexcept
+{
+  if (this != std::addressof(other)) {
+    clear();
+    root_ = other.root_;
+    size_ = other.size_;
+    comp_ = std::move(other.comp_);
+    other.root_ = nullptr;
+    other.size_ = 0;
+  }
+  return *this;
 }
 #endif
