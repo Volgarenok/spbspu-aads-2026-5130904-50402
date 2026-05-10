@@ -5,6 +5,7 @@
 #include <functional>
 #include <initializer_list>
 #include <new>
+#include <stdexcept>
 #include <utility>
 namespace dirko
 {
@@ -442,13 +443,48 @@ void dirko::BSTree< Key, Value, Compare >::push(const Key &k, const Value &v)
 }
 template < class Key, class Value, class Compare >
 Value &dirko::BSTree< Key, Value, Compare >::get(Key k)
-{}
+{
+  TreeNode< Key, Value > *cur = root_->right_;
+  while (cur != nullptr) {
+    if (comp_(k, cur->key_)) {
+      cur = cur->left_;
+    } else if (comp_(cur->key_, k)) {
+      cur = cur->right_;
+    } else {
+      return cur;
+    }
+  }
+  throw std::out_of_range("no suck element");
+}
 template < class Key, class Value, class Compare >
 const Value &dirko::BSTree< Key, Value, Compare >::get(Key k) const
-{}
+{
+  return get(k);
+}
 template < class Key, class Value, class Compare >
 void dirko::BSTree< Key, Value, Compare >::drop(Key k)
-{}
+{
+  TreeNode< Key, Value > *node = get(k);
+  if (node->left_ && node->right_) {
+    TreeNode< Key, Value > *succ = fallLeft(node->right_);
+    node->key_ = std::move(succ->key_);
+    node->value_ = std::move(succ->value_);
+    node = succ;
+  }
+  TreeNode< Key, Value > *child = (node->left_) ? node->left_ : node->right_;
+  if (child) {
+    child->parent_ = node->parent_;
+  }
+  if (!node->parent_) {
+    root_->right_ = child;
+  } else if (node->parent_->left_ == node) {
+    node->parent_->left_ = child;
+  } else {
+    node->parent_->right_ = child;
+  }
+  delete node;
+  --size_;
+}
 template < class Key, class Value, class Compare >
 dirko::TreeNode< Key, Value > *dirko::BSTree< Key, Value, Compare >::fallLeft(TreeNode< Key, Value > *node) const
 {
