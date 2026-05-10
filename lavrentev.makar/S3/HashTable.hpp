@@ -29,7 +29,8 @@ namespace lavrentev
   public:
     friend class HashIter<Key, Value, Hash, Equal>;
     friend class HashCIter<Key, Value, Hash, Equal>;
-
+    friend class Graph;
+  
     HashTable();
     HashTable(const HashTable &);
     HashTable(HashTable &&) noexcept;
@@ -78,7 +79,7 @@ namespace lavrentev
     void next();
 
   public:
-    HashCIter(List<Node> *ptr, List<Node> *end, LIter<Node> lit);
+    HashCIter(List<Node> *ptr, List<Node> *end, LCIter<Node> lit);
 
     bool operator==(const HashCIter<Key, Value, Hash, Equal> &other) const;
     bool operator!=(const HashCIter<Key, Value, Hash, Equal> &other) const;
@@ -323,7 +324,7 @@ template <class Key, class Value, class Hash, class Equal>
 lavrentev::HashCIter<Key, Value, Hash, Equal>::HashCIter(
   List<Node> *ptr,
   List<Node> *end,
-  LIter<Node> lit)
+  LCIter<Node> lit)
     : bucket_ptr_(ptr), bucket_end_(end), list_iter_(lit)
 {
   if (bucket_ptr_ != bucket_end_ && list_iter_ == (*bucket_ptr_).end())
