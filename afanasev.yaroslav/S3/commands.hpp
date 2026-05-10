@@ -274,12 +274,105 @@ void afanasev::cmdCreate(std::istream & in, std::ostream &, GraphSet & graphs)
   graphs.add(g_name, std::move(g));
 }
 
-void afanasev::cmdMerge(std::istream & in, std::ostream & out, GraphSet & graphs)
+void afanasev::cmdMerge(std::istream & in, std::ostream &, GraphSet & graphs)
 {
+  std::string new_g, g1, g2;
+  in >> new_g >> g1 >> g2;
+  if (graphs.has(new_g) || !graphs.has(g1) || !graphs.has(g2))
+  {
+    throw std::runtime_error("Invalid");
+  }
+  Graph merged;
+  const Graph & src1 = graphs.get(g1);
+  const Graph & src2 = graphs.get(g2);
+
+  const std::set< std::string > & verts1 = src1.getVertices();
+  for (std::set< std::string >::const_iterator it = verts1.begin(); it != verts1.end(); ++it)
+  {
+    merged.addVertex(*it);
+  }
+  const std::set< std::string > & verts2 = src2.getVertices();
+  for (std::set< std::string >::const_iterator it = verts2.begin(); it != verts2.end(); ++it)
+  {
+    merged.addVertex(*it);
+  }
+
+  for (std::set< std::string >::const_iterator it = verts1.begin(); it != verts1.end(); ++it)
+  {
+    const std::string & v = *it;
+    Vector< std::pair< std::string, int > > edges = src1.getOutEdges(v);
+    for (size_t i = 0; i < edges.getSize(); ++i)
+    {
+      merged.addEdge(v, edges[i].first, edges[i].second);
+    }
+  }
+  for (std::set< std::string >::const_iterator it = verts2.begin(); it != verts2.end(); ++it)
+  {
+    const std::string & v = *it;
+    Vector< std::pair< std::string, int > > edges = src2.getOutEdges(v);
+    for (size_t i = 0; i < edges.getSize(); ++i)
+    {
+      merged.addEdge(v, edges[i].first, edges[i].second);
+    }
+  }
+  graphs.add(new_g, std::move(merged));
 }
 
-void afanasev::cmdExtract(std::istream & in, std::ostream & out, GraphSet & graphs)
+void afanasev::cmdExtract(std::istream & in, std::ostream &, GraphSet & graphs)
 {
+  std::string new_g, old_g;
+  size_t k = 0;
+  in >> new_g >> old_g >> k;
+  if (graphs.has(new_g) || !graphs.has(old_g))
+  {
+    throw std::runtime_error("Invalid");
+  }
+  const Graph & src = graphs.get(old_g);
+  List< std::string > required;
+  for (size_t i = 0; i < k; ++i)
+  {
+    std::string v;
+    in >> v;
+    required.pushFront(v);
+  }
+
+  for (LIter< std::string > it = required.begin(); it != LIter< std::string >(); ++it)
+  {
+    if (!src.hasVertex(*it))
+    {
+      throw std::out_of_range("Vertex missing");
+    }
+  }
+
+  Graph ext;
+  for (LIter< std::string > it = required.begin(); it != LIter< std::string >(); ++it)
+  {
+    ext.addVertex(*it);
+  }
+
+  for (LIter< std::string > it = required.begin(); it != LIter< std::string >(); ++it)
+  {
+    const std::string & from = *it;
+    Vector< std::pair< std::string, int > > edges = src.getOutEdges(from);
+    for (size_t i = 0; i < edges.getSize(); ++i)
+    {
+      const std::string & to = edges[i].first;
+      bool toOk = false;
+      for (LIter< std::string > rit = required.begin(); rit != LIter< std::string >(); ++rit)
+      {
+        if (*rit == to)
+        {
+          toOk = true;
+          break;
+        }
+      }
+      if (toOk)
+      {
+        ext.addEdge(from, to, edges[i].second);
+      }
+    }
+  }
+  graphs.add(new_g, std::move(ext));
 }
 
 #endif
