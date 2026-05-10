@@ -20,6 +20,88 @@ namespace afanasev
   void cmdCreate(std::istream & in, std::ostream & out, GraphSet & graphs);
   void cmdMerge(std::istream & in, std::ostream & out, GraphSet & graphs);
   void cmdExtract(std::istream & in, std::ostream & out, GraphSet & graphs);
+
+  namespace detail
+  {
+    void sortStrings(Vector< std::string > & vec)
+    {
+      for (size_t i = 1; i < vec.getSize(); ++i)
+      {
+        std::string key = vec[i];
+        size_t j = i;
+        while (j > 0 && vec[j - 1] > key)
+        {
+          vec[j] = vec[j - 1];
+          --j;
+        }
+        vec[j] = key;
+      }
+    }
+
+    void sortWeights(Vector< size_t > & vec)
+    {
+      for (size_t i = 1; i < vec.getSize(); ++i)
+      {
+        size_t key = vec[i];
+        size_t j = i;
+        while (j > 0 && vec[j - 1] > key)
+        {
+          vec[j] = vec[j - 1];
+          --j;
+        }
+        vec[j] = key;
+      }
+    }
+  }
+}
+
+void afanasev::cmdGraphs(std::istream &, std::ostream & out, GraphSet & graphs)
+{
+  Vector< std::string > names;
+
+  for (GraphSet::HIter it = graphs.begin(); it != graphs.end(); ++it)
+  {
+    names.pushBack((*it).first);
+  }
+
+  detail::sortStrings(names);
+
+  if (!names.getSize())
+  {
+    out << "\n";
+  }
+  else
+  {
+    for (size_t i = 0; i < names.getSize(); ++i)
+    {
+      out << names[i] << "\n";
+    }
+  }
+}
+
+void afanasev::cmdVertexes(std::istream & in, std::ostream & out, GraphSet & graphs)
+{
+}
+void afanasev::cmdOutbound(std::istream & in, std::ostream & out, GraphSet & graphs)
+{
+}
+void afanasev::cmdInbound(std::istream & in, std::ostream & out, GraphSet & graphs)
+{
+}
+void afanasev::cmdBind(std::istream & in, std::ostream & out, GraphSet & graphs)
+{
+}
+void afanasev::cmdCut(std::istream & in, std::ostream & out, GraphSet & graphs)
+{
+}
+void afanasev::cmdCreate(std::istream & in, std::ostream & out, GraphSet & graphs)
+{
+}
+void afanasev::cmdMerge(std::istream & in, std::ostream & out, GraphSet & graphs)
+{
+}
+void afanasev::cmdExtract(std::istream & in, std::ostream & out, GraphSet & graphs)
+{
 }
 
 #endif
