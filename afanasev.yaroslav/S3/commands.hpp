@@ -215,8 +215,13 @@ void afanasev::cmdInbound(std::istream & in, std::ostream & out, GraphSet & grap
   }
 }
 
-void afanasev::cmdBind(std::istream & in, std::ostream & out, GraphSet & graphs)
+void afanasev::cmdBind(std::istream & in, std::ostream &, GraphSet & graphs)
 {
+  std::string g_name, v1, v2;
+  size_t w = 0;
+  in >> g_name >> v1 >> v2 >> w;
+  Graph & g = graphs.get(g_name);
+  g.addEdge(v1, v2, static_cast< int >(w));
 }
 
 void afanasev::cmdCut(std::istream & in, std::ostream & out, GraphSet & graphs)
