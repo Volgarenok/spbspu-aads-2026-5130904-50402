@@ -93,8 +93,8 @@ namespace dirko
     const_iterator rotateLargeLeft(const_iterator it);
     const_iterator rotateLargeRight(const_iterator it);
 
-    size_t height(const_iterator it);
-    size_t height();
+    size_t height(const_iterator it) const;
+    size_t height() const;
 
     iterator begin();
     iterator end() noexcept;
@@ -492,5 +492,22 @@ dirko::TreeNode< Key, Value > *dirko::BSTree< Key, Value, Compare >::fallLeft(Tr
     node = node->left_;
   }
   return node;
+}
+
+template < class Key, class Value, class Compare >
+size_t dirko::BSTree< Key, Value, Compare >::height() const
+{
+  return calcHeight({root_->right_});
+}
+
+template < class Key, class Value, class Compare >
+size_t dirko::BSTree< Key, Value, Compare >::height(const_iterator it) const
+{
+  if (it.curr_ == nullptr) {
+    return 0;
+  }
+  size_t l = calcHeight(it.curr_->left_);
+  size_t r = calcHeight(it.curr_->left_);
+  return 1 + ((l > r) ? l : r);
 }
 #endif
