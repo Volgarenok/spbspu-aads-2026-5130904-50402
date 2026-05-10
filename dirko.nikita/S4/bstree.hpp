@@ -5,7 +5,6 @@
 #include <functional>
 #include <initializer_list>
 #include <new>
-#include <stdexcept>
 #include <utility>
 namespace dirko
 {
@@ -77,7 +76,8 @@ namespace dirko
     ~BSTree();
 
     void push(const Key &k, const Value &v);
-    Value get(Key k);
+    Value &get(Key k);
+    const Value &get(Key k) const;
     void drop(Key k);
 
     size_t size() const noexcept;
@@ -106,6 +106,7 @@ namespace dirko
     Compare comp_;
 
     void clearFrom(TreeNode< Key, Value > *) noexcept;
+    TreeNode< Key, Value > *fallLeft(TreeNode< Key, Value > *node) const;
   };
 }
 
@@ -384,6 +385,12 @@ dirko::BSTree< Key, Value, Compare > &dirko::BSTree< Key, Value, Compare >::oper
 }
 
 template < class Key, class Value, class Compare >
+dirko::BSTree< Key, Value, Compare >::~BSTree()
+{
+  clear();
+  ::operator delete(root_);
+}
+template < class Key, class Value, class Compare >
 void dirko::BSTree< Key, Value, Compare >::clear()
 {
   clearFrom(root_);
@@ -401,5 +408,53 @@ void dirko::BSTree< Key, Value, Compare >::clearFrom(TreeNode< Key, Value > *nod
     delete node;
   }
   --size_;
+}
+
+template < class Key, class Value, class Compare >
+void dirko::BSTree< Key, Value, Compare >::push(const Key &k, const Value &v)
+{
+  if (root_->right_ == nullptr) {
+    root_->right_ = new TreeNode< Key, Value >(k, v, nullptr);
+    ++size_;
+    return;
+  }
+  TreeNode< Key, Value > *cur = root_->right_;
+  while (true) {
+    if (comp_(k, cur->key_)) {
+      if (cur->left_ == nullptr) {
+        cur->left_ = new TreeNode< Key, Value >(k, v, cur);
+        ++size_;
+        return;
+      }
+      cur = cur->left_;
+    } else if (comp_(cur->key_, k)) {
+      if (cur->right_ == nullptr) {
+        cur->right_ = new TreeNode< Key, Value >(k, v, cur);
+        ++size_;
+        return;
+      }
+      cur = cur->right_;
+    } else {
+      cur->value_ = v;
+      return;
+    }
+  }
+}
+template < class Key, class Value, class Compare >
+Value &dirko::BSTree< Key, Value, Compare >::get(Key k)
+{}
+template < class Key, class Value, class Compare >
+const Value &dirko::BSTree< Key, Value, Compare >::get(Key k) const
+{}
+template < class Key, class Value, class Compare >
+void dirko::BSTree< Key, Value, Compare >::drop(Key k)
+{}
+template < class Key, class Value, class Compare >
+dirko::TreeNode< Key, Value > *dirko::BSTree< Key, Value, Compare >::fallLeft(TreeNode< Key, Value > *node) const
+{
+  while (node && node->left_) {
+    node = node->left_;
+  }
+  return node;
 }
 #endif
