@@ -43,3 +43,21 @@ void dirko::cmdComplement(std::istream &in, std::ostream &, dirko::Datasets &dat
   datasets.push(new_name, std::move(new_ds));
 }
 
+void dirko::cmdIntersect(std::istream &in, std::ostream &, dirko::Datasets &datasets)
+{
+  std::string new_name, name1, name2;
+  if (!(in >> new_name >> name1 >> name2)) {
+    throw std::runtime_error("Invalid input");
+  }
+  const dirko::Dataset &ds1 = datasets.get(name1);
+  const dirko::Dataset &ds2 = datasets.get(name2);
+  dirko::Dataset new_ds;
+  for (const std::pair< const int, std::string > &v : ds1) {
+    try {
+      ds2.get(v.first);
+      new_ds.push(v.first, v.second);
+    } catch (const std::out_of_range &) {
+    }
+  }
+  datasets.push(new_name, std::move(new_ds));
+}
