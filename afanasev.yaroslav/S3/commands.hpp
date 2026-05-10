@@ -224,8 +224,19 @@ void afanasev::cmdBind(std::istream & in, std::ostream &, GraphSet & graphs)
   g.addEdge(v1, v2, static_cast< int >(w));
 }
 
-void afanasev::cmdCut(std::istream & in, std::ostream & out, GraphSet & graphs)
+void afanasev::cmdCut(std::istream & in, std::ostream &, GraphSet & graphs)
 {
+  std::string g_name, v1, v2;
+  size_t w = 0;
+  in >> g_name >> v1 >> v2 >> w;
+  Graph & g = graphs.get(g_name);
+
+  if (!g.hasVertex(v1) || !g.hasVertex(v2))
+  {
+    throw std::runtime_error("Vertex missing");
+  }
+
+  g.removeEdge(v1, v2, static_cast< int >(w));
 }
 
 void afanasev::cmdCreate(std::istream & in, std::ostream & out, GraphSet & graphs)
