@@ -1,4 +1,3 @@
-#define BOOST_TEST_MODULE HashTableTests
 #include <boost/test/unit_test.hpp>
 #include <string>
 #include "Hashtable.hpp"
