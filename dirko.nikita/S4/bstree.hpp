@@ -33,7 +33,13 @@ namespace dirko
     using const_iterator = BSTConstIterator< Key, Value >;
     using iterator = BSTIterator< Key, Value >;
 
-    void push(Key k, Value v);
+    BSTree();
+    BSTree(const BSTree &other);
+    BSTree(BSTree &&other) noexcept;
+    BSTree(std::initializer_list< std::pair< Key, Value > > il);
+    ~BSTree();
+
+    void push(const Key &k, const Value &v);
     Value get(Key k);
     void drop(Key k);
 
@@ -76,4 +82,37 @@ dirko::TreeNode< Key, Value >::TreeNode(Key &&key, Value &&value, TreeNode *pare
   right_(nullptr),
   parent_(parent)
 {}
+
+template < class Key, class Value, class Compare >
+dirko::BSTree< Key, Value, Compare >::BSTree():
+  root_(static_cast< TreeNode< Key, Value > * >(::operator new(sizeof(TreeNode< Key, Value >)))),
+  size_(0),
+  comp_()
+{}
+template < class Key, class Value, class Compare >
+dirko::BSTree< Key, Value, Compare >::BSTree(const BSTree &other):
+  root_(static_cast< TreeNode< Key, Value > * >(::operator new(sizeof(TreeNode< Key, Value >)))),
+  size_(0),
+  comp_(other.comp_)
+{ // TODO:
+}
+template < class Key, class Value, class Compare >
+dirko::BSTree< Key, Value, Compare >::BSTree(BSTree &&other) noexcept:
+  root_(other.root_),
+  size_(other.size_),
+  comp_(std::move(other.comp_))
+{
+  other.root_ = nullptr;
+  other.size_ = 0;
+}
+template < class Key, class Value, class Compare >
+dirko::BSTree< Key, Value, Compare >::BSTree(std::initializer_list< std::pair< Key, Value > > il):
+  root_(static_cast< TreeNode< Key, Value > * >(::operator new(sizeof(TreeNode< Key, Value >)))),
+  size_(0),
+  comp_(Compare{})
+{
+  for (; size_ < il.size(); ++size_) {
+    push(il[size_].first, il[size_].second);
+  }
+}
 #endif
