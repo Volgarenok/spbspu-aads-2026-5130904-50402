@@ -3,8 +3,8 @@
 
 #include <iostream>
 #include <string>
-#include "HashTable.hpp"
-#include "HashFunction.hpp"
+#include "HashTable/HashTable.hpp"
+#include "HashTable/HashFunction.hpp"
 #include "Graph.hpp"
 
 namespace afanasev

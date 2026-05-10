@@ -61,6 +61,34 @@ namespace afanasev
 }
 
 template < class Key, class Value, class Hash, class Equal >
+typename afanasev::HashTable< Key, Value, Hash, Equal >::HIter
+afanasev::HashTable< Key, Value, Hash, Equal >::begin()
+{
+  return HIter(& data_, capacity_, 0);
+}
+
+template < class Key, class Value, class Hash, class Equal >
+typename afanasev::HashTable< Key, Value, Hash, Equal >::HIter
+afanasev::HashTable< Key, Value, Hash, Equal >::end()
+{
+  return HIter();
+}
+
+template < class Key, class Value, class Hash, class Equal >
+typename afanasev::HashTable< Key, Value, Hash, Equal >::HCIter
+afanasev::HashTable< Key, Value, Hash, Equal >::cbegin() const
+{
+  return HCIter(& data_, capacity_, 0);
+}
+
+template < class Key, class Value, class Hash, class Equal >
+typename afanasev::HashTable< Key, Value, Hash, Equal >::HCIter
+afanasev::HashTable< Key, Value, Hash, Equal >::cend() const
+{
+  return HCIter();
+}
+
+template < class Key, class Value, class Hash, class Equal >
 Value & afanasev::HashTable< Key, Value, Hash, Equal >::get(Key k)
 {
   size_t idx = hasher_(k) % capacity_;
