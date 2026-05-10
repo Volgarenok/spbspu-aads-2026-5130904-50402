@@ -73,7 +73,7 @@ afanasev::HashIter< Key, Value, Hash, Equal >::HashIter():
 {}
 
 template < class Key, class Value, class Hash, class Equal >
-afanasev::HashIter< Key, Value, Hash, Equal >::HashIter(Vector< List< type > > * data, 
+afanasev::HashIter< Key, Value, Hash, Equal >::HashIter(Vector< List< type > > * data,
   size_t capacity, size_t start_idx):
   data_(data),
   capacity_(capacity),
@@ -86,7 +86,7 @@ afanasev::HashIter< Key, Value, Hash, Equal >::HashIter(Vector< List< type > > *
 template < class Key, class Value, class Hash, class Equal >
 void afanasev::HashIter< Key, Value, Hash, Equal >::findValid()
 {
-  while (idx_ <  capacity_)
+  while (idx_ < capacity_)
   {
     listIt_ = (*data_)[idx_].begin();
     if (listIt_ != LIter< type >())
@@ -164,7 +164,7 @@ afanasev::HashConstIter< Key, Value, Hash, Equal >::HashConstIter(const Vector< 
 template < class Key, class Value, class Hash, class Equal >
 void afanasev::HashConstIter< Key, Value, Hash, Equal >::findValid()
 {
-  while (idx_ <  capacity_)
+  while (idx_ < capacity_)
   {
     listIt_ = (*data_)[idx_].begin();
     if (listIt_ != LCIter< type >())
