@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <functional>
 #include <initializer_list>
+#include <new>
+#include <stdexcept>
 #include <utility>
 namespace dirko
 {
@@ -102,6 +104,8 @@ namespace dirko
     TreeNode< Key, Value > *root_;
     size_t size_;
     Compare comp_;
+
+    void clearFrom(TreeNode< Key, Value > *) noexcept;
   };
 }
 
@@ -377,5 +381,25 @@ dirko::BSTree< Key, Value, Compare > &dirko::BSTree< Key, Value, Compare >::oper
     other.size_ = 0;
   }
   return *this;
+}
+
+template < class Key, class Value, class Compare >
+void dirko::BSTree< Key, Value, Compare >::clear()
+{
+  clearFrom(root_);
+}
+
+template < class Key, class Value, class Compare >
+void dirko::BSTree< Key, Value, Compare >::clearFrom(TreeNode< Key, Value > *node) noexcept
+{
+  if (node == nullptr) {
+    return;
+  }
+  clearFrom(node->left_);
+  clearFrom(node->right_);
+  if (node != root_) {
+    delete node;
+  }
+  --size_;
 }
 #endif
