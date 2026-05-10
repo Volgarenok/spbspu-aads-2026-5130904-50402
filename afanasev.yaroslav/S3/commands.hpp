@@ -239,8 +239,39 @@ void afanasev::cmdCut(std::istream & in, std::ostream &, GraphSet & graphs)
   g.removeEdge(v1, v2, static_cast< int >(w));
 }
 
-void afanasev::cmdCreate(std::istream & in, std::ostream & out, GraphSet & graphs)
+void afanasev::cmdCreate(std::istream & in, std::ostream &, GraphSet & graphs)
 {
+  std::string g_name;
+  in >> g_name;
+  if (!in)
+  {
+    throw std::runtime_error("Invalid input");
+  }
+  if (graphs.has(g_name))
+  {
+    throw std::runtime_error("Graph already exists");
+  }
+
+  size_t k = 0;
+  in >> k;
+  if (!in)
+  {
+    throw std::runtime_error("Invalid vertex count");
+  }
+
+  Graph g;
+  for (size_t i = 0; i < k; ++i)
+  {
+    std::string v;
+    in >> v;
+    if (!in)
+    {
+      throw std::runtime_error("Invalid vertex name");
+    }
+    g.addVertex(v);
+  }
+
+  graphs.add(g_name, std::move(g));
 }
 
 void afanasev::cmdMerge(std::istream & in, std::ostream & out, GraphSet & graphs)
