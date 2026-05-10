@@ -510,4 +510,76 @@ size_t dirko::BSTree< Key, Value, Compare >::height(const_iterator it) const
   size_t r = calcHeight(it.curr_->left_);
   return 1 + ((l > r) ? l : r);
 }
+
+template < class Key, class Value, class Compare >
+dirko::BSTConstIterator< Key, Value > dirko::BSTree< Key, Value, Compare >::rotateLeft(const_iterator it)
+{
+  TreeNode< Key, Value > *par = it.curr_;
+  if (!par || !par->right_) {
+    return it;
+  }
+  TreeNode< Key, Value > *child = par->right_;
+  par->right_ = child->left_;
+  if (child->left_) {
+    child->left_->parent_ = par;
+  }
+  child->parent_ = par->parent_;
+  if (!par->parent_) {
+    root_ = child;
+  } else if (par == par->parent_->left_) {
+    par->parent_->left_ = child;
+  } else {
+    par->parent_->right_ = child;
+  }
+  child->left_ = par;
+  par->parent_ = child;
+  return {child};
+}
+
+template < class Key, class Value, class Compare >
+dirko::BSTConstIterator< Key, Value > dirko::BSTree< Key, Value, Compare >::rotateRight(const_iterator it)
+{
+  TreeNode< Key, Value > *par = it.curr_;
+  if (!par || !par->left_) {
+    return it;
+  }
+  TreeNode< Key, Value > *child = par->left_;
+  par->left_ = child->right_;
+  if (child->right_) {
+    child->right_->parent_ = par;
+  }
+  child->parent_ = par->parent_;
+  if (!par->parent_) {
+    root_ = child;
+  } else if (par == par->parent_->left_) {
+    par->parent_->left_ = child;
+  } else {
+    par->parent_->right_ = child;
+  }
+  child->right_ = par;
+  par->parent_ = child;
+  return {child};
+}
+
+template < class Key, class Value, class Compare >
+dirko::BSTConstIterator< Key, Value > dirko::BSTree< Key, Value, Compare >::rotateLargeLeft(const_iterator it)
+{
+  TreeNode< Key, Value > *node = it.curr_;
+  if (!node || !node->left_ || !node->left_->right_) {
+    return it;
+  }
+  rotateRight({node->left_});
+  return rotateLeft(it);
+}
+
+template < class Key, class Value, class Compare >
+dirko::BSTConstIterator< Key, Value > dirko::BSTree< Key, Value, Compare >::rotateLargeRight(const_iterator it)
+{
+  TreeNode< Key, Value > *node = it.curr_;
+  if (!node || !node->right_ || !node->right_->left_) {
+    return it;
+  }
+  rotateLeft({node->right_});
+  return rotateRight(it);
+}
 #endif
