@@ -76,6 +76,8 @@ namespace dirko
 
     size_t size() const noexcept;
 
+    void swap(BSTree &other) noexcept;
+
     const_iterator rotateLeft(const_iterator it);
     const_iterator rotateRight(const_iterator it);
 
@@ -87,7 +89,7 @@ namespace dirko
 
     iterator begin();
     iterator end() noexcept;
-    const_iterator cbegin() const noexcept;
+    const_iterator cbegin() const;
     const_iterator cend() const noexcept;
 
   private:
@@ -306,6 +308,21 @@ bool dirko::BSTConstIterator< Key, Value >::operator!=(const BSTConstIterator &o
 {
   return !(*this == other);
 }
+
+template < class Key, class Value, class Compare >
+size_t dirko::BSTree< Key, Value, Compare >::size() const noexcept
+{
+  return size_;
+}
+
+template < class Key, class Value, class Compare >
+void dirko::BSTree< Key, Value, Compare >::swap(BSTree &other) noexcept
+{
+  std::swap(root_, other.root_);
+  std::swap(size_, other.size_);
+  std::swap(comp_, other.comp_);
+}
+
 template < class Key, class Value, class Compare >
 dirko::BSTIterator< Key, Value > dirko::BSTree< Key, Value, Compare >::begin()
 {
