@@ -9,6 +9,7 @@ namespace lavrentev{
     public:
       void vertexes(List<std::pair<std::string, Graph>> grs, std::string name);
       void outbound(List<std::pair<std::string, Graph>> grs, std::string grh, std::string v);
+      void inbound(List<std::pair<std::string, Graph>> grs, std::string grh, std::string v);
     private:
       HashTable< std::pair<std::string, std::string>,
         List< size_t >,
@@ -16,6 +17,7 @@ namespace lavrentev{
         std::equal_to<std::pair<std::string, std::string>>
       > gr;
       List<std::string> vrtxs;
+      bool hasVertex(std::string v) const;
   };
 
   void graphs(List<std::pair<std::string, Graph>> grs);
@@ -101,6 +103,83 @@ inline void lavrentev::Graph::outbound(
   {
     throw std::invalid_argument("<INVALID COMMAND>");
   }
+}
+
+inline void lavrentev::Graph::inbound(
+  List<std::pair<std::string, Graph>> grs,
+  std::string name,
+  std::string v)
+{
+  bool graphFound = false;
+  bool vertexExists = false;
+  LCIter<std::pair<std::string, Graph>> it;
+  for (it = grs.cbegin(); it != grs.cend(); ++it)
+  {
+    if ((*it).first == name)
+    {
+      graphFound = true;
+      if (!(*it).second.hasVertex(v))
+      {
+        break;
+      }
+      vertexExists = true;
+
+      HashCIter<std::pair<std::string, std::string>,
+        List< size_t >,
+        Siphash< std::string >,
+        std::equal_to<std::pair<std::string, std::string>>>
+      vrtxIt((*it).second.gr.ht_,
+             (*it).second.gr.ht_ + (*it).second.gr.bucket_count(),
+             (*it).second.gr.ht_[0].cbegin());
+
+      HashCIter<std::pair<std::string, std::string>,
+        List< size_t >,
+        Siphash< std::string >,
+        std::equal_to<std::pair<std::string, std::string>>>
+      vrtxItEnd((*it).second.gr.ht_ + (*it).second.gr.bucket_count(),
+                (*it).second.gr.ht_ + (*it).second.gr.bucket_count(),
+                (*it).second.gr.ht_[0].cbegin());
+
+      while(vrtxIt != vrtxItEnd)
+      {
+        if ((*vrtxIt).key.second == v)
+        {
+          std::cout << (*vrtxIt).key.first << " ";
+          LCIter<size_t> weightIter = (*vrtxIt).value.cbegin();
+          if (weightIter != (*vrtxIt).value.cend())
+          {
+            std::cout << (*weightIter);
+            ++weightIter;
+            while(weightIter != (*vrtxIt).value.cend())
+            {
+              std::cout << " " << (*weightIter);
+              ++weightIter;
+            }
+          }
+          std::cout << "\n";
+        }
+        ++vrtxIt;
+      }
+      break;
+    }
+  }
+  if (!graphFound || !vertexExists)
+  {
+    throw std::invalid_argument("<INVALID COMMAND>");
+  }
+}
+
+inline bool lavrentev::Graph::hasVertex(std::string v) const
+{
+  LCIter<std::string> it;
+  for(it = vrtxs.cbegin(); it != vrtxs.cend(); ++it)
+  {
+    if ((*it) == v)
+    {
+      return true;
+    }
+  }
+  return false;
 }
 
 #endif
