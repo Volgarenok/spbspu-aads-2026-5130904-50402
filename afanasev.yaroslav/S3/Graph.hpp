@@ -14,7 +14,7 @@ namespace afanasev
 {
   class Graph
   {
-  	public:
+    public:
     Graph();
     explicit Graph(size_t edgeSlots);
 
@@ -38,12 +38,12 @@ namespace afanasev
 }
 
 afanasev::Graph::Graph():
-	vertices_(),
+  vertices_(),
   edges_(32)
 {}
 
 afanasev::Graph::Graph(size_t edgeSlots):
-	vertices_(),
+  vertices_(),
   edges_(edgeSlots)
 {}
 
@@ -124,7 +124,7 @@ afanasev::Graph::getOutEdges(const std::string & vertex) const
   afanasev::Vector< std::pair< std::string, int > > result;
 
   for (HashConstIter< std::pair< std::string, std::string >, List< int >, PairHasher< std::string >, 
-		std::equal_to< std::pair< std::string, std::string > > > it = edges_.cbegin(); it != edges_.cend(); ++it)
+    std::equal_to< std::pair< std::string, std::string > > > it = edges_.cbegin(); it != edges_.cend(); ++it)
   {
     const std::pair< std::string, std::string > & key = (*it).first;
     if (key.first == vertex)
@@ -146,7 +146,7 @@ afanasev::Graph::getInEdges(const std::string& vertex) const
 {
   afanasev::Vector< std::pair< std::string, int > > result;
   for (HashConstIter< std::pair< std::string, std::string >, List< int >, PairHasher< std::string >,
-		std::equal_to< std::pair< std::string, std::string > > > it = edges_.cbegin(); it != edges_.cend(); ++it)
+    std::equal_to< std::pair< std::string, std::string > > > it = edges_.cbegin(); it != edges_.cend(); ++it)
   {
     const std::pair< std::string, std::string > & key = (*it).first;
     if (key.second == vertex)
