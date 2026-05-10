@@ -1,4 +1,3 @@
-#include <string>
 #include <boost/test/unit_test.hpp>
 #include "bstree.hpp"
 
@@ -359,6 +358,15 @@ BOOST_AUTO_TEST_CASE(test_iterator_equality)
   BOOST_CHECK(it1 == it2);
   BOOST_CHECK(it1 != it3);
   BOOST_CHECK(tree.begin() != tree.end());
+}
+
+BOOST_AUTO_TEST_CASE(test_init_list)
+{
+  BSTree< int, std::string > tree = {{1, "one"}, {2, "two"}, {3, "three"}};
+  BOOST_CHECK_EQUAL(tree.size(), 3);
+  BOOST_CHECK_EQUAL(tree.get(1), "one");
+  BOOST_CHECK_EQUAL(tree.get(2), "two");
+  BOOST_CHECK_EQUAL(tree.get(3), "three");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

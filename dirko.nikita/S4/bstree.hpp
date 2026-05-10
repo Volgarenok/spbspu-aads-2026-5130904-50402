@@ -168,8 +168,8 @@ dirko::BSTree< Key, Value, Compare >::BSTree(std::initializer_list< std::pair< K
   comp_(Compare{})
 {
   root_->right_ = nullptr;
-  for (; size_ < il.size(); ++size_) {
-    push(il[size_].first, il[size_].second);
+  for (const std::pair< Key, Value > &v : il) {
+    push(v.first, v.second);
   }
 }
 
