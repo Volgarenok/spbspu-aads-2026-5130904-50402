@@ -23,6 +23,7 @@ namespace lavrentev
     List<Node> *ht_;
     std::size_t slots_;
     std::size_t size_;
+    double loadFactor_;
     Hash hasher_;
     Equal equal_;
 
@@ -30,7 +31,7 @@ namespace lavrentev
     friend class HashIter<Key, Value, Hash, Equal>;
     friend class HashCIter<Key, Value, Hash, Equal>;
     friend class Graph;
-  
+
     HashTable();
     HashTable(const HashTable &);
     HashTable(HashTable &&) noexcept;
@@ -90,7 +91,7 @@ namespace lavrentev
 
 template <class Key, class Value, class Hash, class Equal>
 lavrentev::HashTable<Key, Value, Hash, Equal>::HashTable()
-    : ht_(new List<Node>[5]), slots_(5), size_(0)
+    : ht_(new List<Node>[5]), slots_(5), size_(0), loadFactor_(0.7)
 {
 }
 
@@ -184,11 +185,20 @@ Value &lavrentev::HashTable<Key, Value, Hash, Equal>::operator[](const Key &k)
 template <class Key, class Value, class Hash, class Equal>
 void lavrentev::HashTable<Key, Value, Hash, Equal>::add(Key k, Value v)
 {
+  if (slots_ == 0)
+  {
+    rehash(5);
+  }
+  if ((size_ + 1.0) / slots_ > loadFactor_)
+  {
+    rehash(slots_ * 2);
+  }
+
   size_t idx = hasher_(k) % slots_;
   List<Node> &bucket = ht_[idx];
   for (LIter<Node> it = bucket.begin(); it != bucket.end(); ++it)
   {
-    if (Equal{}((*it).key, k))
+    if (equal_((*it).key, k))
     {
       throw std::invalid_argument("Key already exists");
     }
@@ -238,14 +248,12 @@ void lavrentev::HashTable<Key, Value, Hash, Equal>::rehash(size_t slots)
     throw std::invalid_argument("Amount of slots must be positive");
   }
   List<Node> *new_ht = new List<Node>[slots];
-  size_t new_size = 0;
   for (size_t i = 0; i < slots_; ++i)
   {
     for (LIter<Node> it = ht_[i].begin(); it != ht_[i].end(); ++it)
     {
       size_t new_idx = hasher_((*it).key) % slots;
       new_ht[new_idx].pushFront(Node{(*it).key, (*it).value});
-      ++new_size;
     }
   }
   delete[] ht_;
