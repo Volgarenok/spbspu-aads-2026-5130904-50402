@@ -203,23 +203,68 @@ inline void lavrentev::Graph::bind(List<std::pair<std::string, Graph>> &grs){
 }
 
 inline void lavrentev::Graph::cut(
-  List<std::pair<std::string, Graph>>&)
+  List<std::pair<std::string, Graph>> &grs)
 {
+  std::string name, vrtx1, vrtx2;
+  int weight;
+  std::cin >> name >> vrtx1 >> vrtx2 >> weight;
 }
 
-inline void lavrentev::Graph::create(
-  List<std::pair<std::string, Graph>>&)
+inline void lavrentev::Graph::create(List<std::pair<std::string, Graph>> &grs)
 {
+  std::string name;
+  std::cin >> name;
+  if (grs.begin() == grs.end())
+  {
+    grs.pushFront({name, Graph{}});
+    return;
+  }
+  LIter<std::pair<std::string, Graph>> it = grs.begin();
+  LIter<std::pair<std::string, Graph>> preIt = grs.begin();
+  for(; it != grs.end(); ++it)
+  {
+    if((*it).first == name)
+    {
+      std::cerr << "Graph is already exists";
+      return;
+    } else if ((*it).first > name)
+    {
+      if (it == grs.begin())
+      {
+        grs.pushFront({name, Graph{}});
+      }
+      else
+      {
+        grs.insert(preIt, {name, Graph{}});
+      }
+      return;
+    }
+    preIt = it;
+  }
+  grs.insert(preIt, {name, Graph{}});
 }
 
 inline void lavrentev::Graph::merge(
-  List<std::pair<std::string, Graph>>&)
+  List<std::pair<std::string, Graph>> &grs)
 {
+  std::string newGr, gr1, gr2;
+  std::cin >> newGr >> gr1 >> gr2;
 }
 
 inline void lavrentev::Graph::extract(
-  List<std::pair<std::string, Graph>>&)
+  List<std::pair<std::string, Graph>> &grs)
 {
+  std::string newGr, oldGr;
+  size_t amountVrtxs;
+  List<std::string> vertexes;
+
+  std::cin >> newGr >> oldGr >> amountVrtxs;
+  for(size_t i = 0; i < amountVrtxs; ++i)
+  {
+    std::string v;
+    std::cin >> v;
+    vertexes.pushFront(v);
+  }
 }
 
 #endif

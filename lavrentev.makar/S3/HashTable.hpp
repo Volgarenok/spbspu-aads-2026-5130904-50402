@@ -297,7 +297,7 @@ template <class Key, class Value, class Hash, class Equal>
 bool lavrentev::HashIter<Key, Value, Hash, Equal>::operator!=(
     const HashIter<Key, Value, Hash, Equal> &other) const
 {
-  return list_iter_.curr != other.list_iter_.curr;
+  return !(*this == other);
 }
 
 template <class Key, class Value, class Hash, class Equal>
@@ -318,11 +318,10 @@ typename lavrentev::HashTable<Key, Value, Hash, Equal>::Node &lavrentev::HashIte
 template <class Key, class Value, class Hash, class Equal>
 void lavrentev::HashIter<Key, Value, Hash, Equal>::next()
 {
-  while(bucket_ptr_ != bucket_end_ && list_iter_ == (*bucket_ptr_).end())
+  while (bucket_ptr_ != bucket_end_ && list_iter_ == (*bucket_ptr_).end())
   {
-    ++list_iter_;
-    if (bucket_ptr_ != bucket_end_)
-    {
+    ++bucket_ptr_;
+    if (bucket_ptr_ != bucket_end_){
       list_iter_ = (*bucket_ptr_).begin();
     }
   }
@@ -335,7 +334,7 @@ lavrentev::HashCIter<Key, Value, Hash, Equal>::HashCIter(
   LCIter<Node> lit)
     : bucket_ptr_(ptr), bucket_end_(end), list_iter_(lit)
 {
-  if (bucket_ptr_ != bucket_end_ && list_iter_ == (*bucket_ptr_).end())
+  if (bucket_ptr_ != bucket_end_ && list_iter_ == (*bucket_ptr_).cend())
   {
     next();
   }
@@ -352,7 +351,7 @@ template <class Key, class Value, class Hash, class Equal>
 bool lavrentev::HashCIter<Key, Value, Hash, Equal>::operator!=(
     const HashCIter<Key, Value, Hash, Equal> &other) const
 {
-  return list_iter_.curr != other.list_iter_.curr;
+  return !(*this == other);
 }
 
 template <class Key, class Value, class Hash, class Equal>
@@ -373,12 +372,11 @@ const typename lavrentev::HashTable<Key, Value, Hash, Equal>::Node &lavrentev::H
 template <class Key, class Value, class Hash, class Equal>
 void lavrentev::HashCIter<Key, Value, Hash, Equal>::next()
 {
-  while(bucket_ptr_ != bucket_end_ && list_iter_ == (*bucket_ptr_).end())
+  while (bucket_ptr_ != bucket_end_ && list_iter_ == (*bucket_ptr_).cend())
   {
-    ++list_iter_;
-    if (bucket_ptr_ != bucket_end_)
-    {
-      list_iter_ = (*bucket_ptr_).begin();
+    ++bucket_ptr_;
+    if (bucket_ptr_ != bucket_end_){
+      list_iter_ = (*bucket_ptr_).cbegin();
     }
   }
 }
