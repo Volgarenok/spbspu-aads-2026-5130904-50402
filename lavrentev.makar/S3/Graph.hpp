@@ -5,11 +5,23 @@
 #include <stdexcept>
 
 namespace lavrentev{
+  struct Graph;
+}
+
+using cmd_t = void (*)(
+  lavrentev::List<std::pair<std::string, lavrentev::Graph>> &);
+
+namespace lavrentev{
   struct Graph {
     public:
-      void vertexes(List<std::pair<std::string, Graph>> grs, std::string name);
-      void outbound(List<std::pair<std::string, Graph>> grs, std::string grh, std::string v);
-      void inbound(List<std::pair<std::string, Graph>> grs, std::string grh, std::string v);
+      static void vertexes(List<std::pair<std::string, Graph>> &grs);
+      static void outbound(List<std::pair<std::string, Graph>> &grs);
+      static void inbound(List<std::pair<std::string, Graph>> &grs);
+      static void bind(List<std::pair<std::string, Graph>> &grs);
+      static void cut(List<std::pair<std::string, Graph>> &grs);
+      static void create(List<std::pair<std::string, Graph>> &grs);
+      static void merge(List<std::pair<std::string, Graph>> &grs);
+      static void extract(List<std::pair<std::string, Graph>> &grs);
     private:
       HashTable< std::pair<std::string, std::string>,
         List< size_t >,
@@ -20,10 +32,10 @@ namespace lavrentev{
       bool hasVertex(std::string v) const;
   };
 
-  void graphs(List<std::pair<std::string, Graph>> grs);
+  void graphs(List<std::pair<std::string, Graph>> &grs);
 }
 
-inline void lavrentev::graphs(List<std::pair<std::string, Graph>> grs)
+inline void lavrentev::graphs(List<std::pair<std::string, Graph>> &grs)
 {
   LCIter<std::pair<std::string, Graph>> it;
   for (it = grs.cbegin(); it != grs.cend(); ++it)
@@ -32,8 +44,11 @@ inline void lavrentev::graphs(List<std::pair<std::string, Graph>> grs)
   }
 }
 
-inline void lavrentev::Graph::vertexes(List<std::pair<std::string, Graph>> grs, std::string name)
+inline void lavrentev::Graph::vertexes(List<std::pair<std::string, Graph>> &grs)
 {
+  std::string name;
+  std::cin >> name;
+
   LCIter<std::pair<std::string, Graph>> it;
   for (it = grs.cbegin(); it != grs.cend(); ++it)
   {
@@ -50,11 +65,11 @@ inline void lavrentev::Graph::vertexes(List<std::pair<std::string, Graph>> grs, 
   throw std::invalid_argument("<INVALID COMMAND>");
 }
 
-inline void lavrentev::Graph::outbound(
-  List<std::pair<std::string, Graph>> grs,
-  std::string name,
-  std::string v)
+inline void lavrentev::Graph::outbound(List<std::pair<std::string, Graph>> &grs)
 {
+  std::string name, v;
+  std::cin >> name >> v;
+
   bool graphFound = false;
   bool vertexExists = false;
 
@@ -105,11 +120,11 @@ inline void lavrentev::Graph::outbound(
   }
 }
 
-inline void lavrentev::Graph::inbound(
-  List<std::pair<std::string, Graph>> grs,
-  std::string name,
-  std::string v)
+inline void lavrentev::Graph::inbound(List<std::pair<std::string, Graph>> &grs)
 {
+  std::string name, v;
+  std::cin >> name >> v;
+
   bool graphFound = false;
   bool vertexExists = false;
   LCIter<std::pair<std::string, Graph>> it;
@@ -180,6 +195,12 @@ inline bool lavrentev::Graph::hasVertex(std::string v) const
     }
   }
   return false;
+}
+
+inline void lavrentev::Graph::bind(List<std::pair<std::string, Graph>> &grs){
+  std::string name, vrtx1, vrtx2;
+  int weight;
+  std::cin >> name >> vrtx1 >> vrtx2 >> weight;
 }
 
 #endif
