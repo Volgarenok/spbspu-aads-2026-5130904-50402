@@ -1,8 +1,7 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
 #include "HashTable.hpp"
-#include "List.hpp"
-#include <stdexcept>
+#include "../common/List.hpp"
 
 namespace lavrentev{
   struct Graph;
@@ -62,7 +61,7 @@ inline void lavrentev::Graph::vertexes(List<std::pair<std::string, Graph>> &grs)
       return;
     }
   }
-  throw std::invalid_argument("<INVALID COMMAND>");
+  std::cerr << "<INVALID COMMAND>" << "\n";
 }
 
 inline void lavrentev::Graph::outbound(List<std::pair<std::string, Graph>> &grs)
@@ -116,7 +115,7 @@ inline void lavrentev::Graph::outbound(List<std::pair<std::string, Graph>> &grs)
   }
   if (!graphFound || !vertexExists)
   {
-    throw std::invalid_argument("<INVALID COMMAND>");
+    std::cerr << "<INVALID COMMAND>" << "\n";
   }
 }
 
@@ -180,7 +179,7 @@ inline void lavrentev::Graph::inbound(List<std::pair<std::string, Graph>> &grs)
   }
   if (!graphFound || !vertexExists)
   {
-    throw std::invalid_argument("<INVALID COMMAND>");
+    std::cerr << "<INVALID COMMAND>" << "\n";
   }
 }
 
@@ -201,6 +200,26 @@ inline void lavrentev::Graph::bind(List<std::pair<std::string, Graph>> &grs){
   std::string name, vrtx1, vrtx2;
   int weight;
   std::cin >> name >> vrtx1 >> vrtx2 >> weight;
+}
+
+inline void lavrentev::Graph::cut(
+  List<std::pair<std::string, Graph>>&)
+{
+}
+
+inline void lavrentev::Graph::create(
+  List<std::pair<std::string, Graph>>&)
+{
+}
+
+inline void lavrentev::Graph::merge(
+  List<std::pair<std::string, Graph>>&)
+{
+}
+
+inline void lavrentev::Graph::extract(
+  List<std::pair<std::string, Graph>>&)
+{
 }
 
 #endif
