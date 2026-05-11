@@ -1,5 +1,43 @@
 #include <cstddef>
+#include "Graph.hpp"
 
 int main(int argc, char *argv[]) {
+  lavrentev::HashTable<
+    std::string,
+    cmd_t,
+    Siphash< std::string >,
+    std::equal_to<std::string>
+  > commands;
 
+  lavrentev::List<std::pair<std::string, lavrentev::Graph>> grs;
+
+  commands["graphs"] = lavrentev::graphs;
+  commands["vertexes"] = lavrentev::Graph::vertexes;
+  commands["outbound"] = lavrentev::Graph::outbound;
+  commands["inbound"] = lavrentev::Graph::inbound;
+  commands["bind"] = lavrentev::Graph::bind;
+  commands["cut"] = lavrentev::Graph::cut;
+  commands["create"] = lavrentev::Graph::create;
+  commands["merge"] = lavrentev::Graph::merge;
+  commands["extract"] = lavrentev::Graph::extract;
+
+  std::string cmd;
+  while (std::cin >> cmd)
+  {
+    if(commands.has(cmd))
+    {
+      commands[cmd](grs);
+    } else
+    {
+      std::cout << "<INVALID COMMAND>\n";
+      auto toignore = std::numeric_limits<std::streamsize>::max();
+      std::cin.ignore(toignore, '\n');
+    }
+  }
+
+  if (!std::cin.eof())
+  {
+    std::cerr << "Bad input\n";
+    return 1;
+  }
 }
