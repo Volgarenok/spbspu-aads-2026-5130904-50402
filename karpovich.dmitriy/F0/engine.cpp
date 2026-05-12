@@ -552,4 +552,24 @@ void karpovich::Engine::cmdSetInteract(const Vector< std::string > &args)
   std::cout << "<INVALID COMMAND>\n";
 }
 
+void karpovich::Engine::cmdStart(const Vector< std::string > &)
+{
+  if (!checkMode("game")) {
+    return;
+  }
+  if (!isProjectLoaded()) {
+    return;
+  }
+  game_state_.current_scene_id_ = active_project_.start_scene_id_;
+  game_state_.running_ = true;
+  std::cout << "<GAME STARTED>\n";
+  printSceneInfo(getScene(game_state_.current_scene_id_));
+}
 
+void karpovich::Engine::cmdLook(const Vector< std::string > &)
+{
+  if (!isGameRunning()) {
+    return;
+  }
+  printSceneInfo(getScene(game_state_.current_scene_id_));
+}
