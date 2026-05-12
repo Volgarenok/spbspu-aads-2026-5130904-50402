@@ -51,13 +51,15 @@ namespace karpovich
     save_state_t();
     std::string current_scene_id_;
     HashTable< std::string, int > inventory_;
+    bool running_;
   };
 
 }
 
 karpovich::save_state_t::save_state_t():
   current_scene_id_(),
-  inventory_(16)
+  inventory_(16), 
+  running_(false)
 {}
 
 karpovich::project_t::project_t():

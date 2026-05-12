@@ -106,9 +106,26 @@ void karpovich::Engine::dispatch(const Vector< std::string > &args)
 
 bool karpovich::Engine::checkMode(const std::string &required_mode) const
 {
-  if (mode_ != required_mode)
-  {
+  if (mode_ != required_mode) {
     std::cout << "<INVALID MODE>\n";
+    return false;
+  }
+  return true;
+}
+
+bool karpovich::Engine::isProjectLoaded() const
+{
+  if (!project_loaded_) {
+    std::cout << "<ERROR: NO PROJECT LOADED>\n";
+    return false;
+  }
+  return true;
+}
+
+bool karpovich::Engine::isGameRunning() const
+{
+  if (!game_state_.running_) {
+    std::cout << "<NOT IN GAME>\n";
     return false;
   }
   return true;
