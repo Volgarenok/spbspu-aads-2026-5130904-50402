@@ -254,3 +254,24 @@ void karpovich::Engine::cmdLoadProject(const Vector< std::string > &args)
   std::cout << "<PROJECT LOADED: " << args[1] << ">\n";
   std::cout << "<SCENES: " << active_project_.scenes_.size() << ", ITEMS: 0>\n";
 }
+
+void karpovich::Engine::printSceneInfo(const scene_t &scene) const
+{
+  std::cout << "<" << scene.description_ << ">\n";
+  std::string objects;
+  for (size_t i = 0; i < scene.objects_.getSize(); ++i) {
+    if (i > 0) {
+      objects += ", ";
+    }
+    objects += scene.objects_[i].key_;
+  }
+  std::cout << "<OBJECTS: " << (objects.empty() ? "none" : objects) << ">\n";
+  std::cout << "<CHOICES: ";
+  for (size_t i = 0; i < scene.links_.getSize(); ++i) {
+    if (i > 0) {
+      std::cout << ", ";
+    }
+    std::cout << i << ": \"" << scene.links_[i].description_ << "\"";
+  }
+  std::cout << ">\n";
+}
