@@ -140,3 +140,21 @@ const karpovich::scene_t &karpovich::Engine::getScene(const std::string &id) con
 {
   return active_project_.scenes_.get(id);
 }
+
+void karpovich::Engine::cmdMode(const Vector< std::string > &args)
+{
+  if (args.getSize() < 2) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  if (args[1] != "editor" && args[1] != "game") {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  mode_ = args[1];
+  std::string mode_str = args[1];
+  if (mode_str.size() > 0) {
+    mode_str[0] = std::toupper(mode_str[0]);
+  }
+  std::cout << "<MODE: " << mode_str << ">\n";
+}
