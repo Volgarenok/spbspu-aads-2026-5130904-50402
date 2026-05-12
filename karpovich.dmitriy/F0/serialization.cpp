@@ -87,6 +87,33 @@ void karpovich::serializeObject(const scene_object_t &obj, std::ostream &out)
   out << "OBJ " << obj.key_ << " \"" << obj.action_ << "\" " << obj.gives_ << " " << obj.requires_ << "\n";
 }
 
+karpovich::scene_object_t karpovich::deserializeObject(std::istream &in)
+{
+  std::string line = readLine(in);
+  checkPrefix(line, "OBJ ");
+  size_t pos = 4;
+  scene_object_t res;
+  res.key_ = extractToken(line, pos);
+  res.action_ = extractQuoted(line, pos);
+  res.gives_ = extractToken(line, pos);
+  res.requires_ = extractToken(line, pos);
+  return res;
+}
+
+void karpovich::serializeScene(const scene_t &scene, std::ostream &out)
+{
+  out << "SCENE " << scene.id_ << " \"" << scene.description_ << "\"\n";
+  for (size_t i = 0; i < scene.links_.getSize(); ++i) {
+    serializeLink(scene.links_[i], out);
+  }
+  out << "END_LINKS\n";
+  for (size_t i = 0; i < scene.objects_.getSize(); ++i) {
+    serializeObject(scene.objects_[i], out);
+  }
+  out << "END_OBJECTS\n";
+  out << "END_SCENE\n";
+}
+
 karpovich::scene_t karpovich::deserializeScene(std::istream &in)
 {
   std::string line = readLine(in);
@@ -132,20 +159,6 @@ karpovich::scene_t karpovich::deserializeScene(std::istream &in)
     throw std::runtime_error("Expected END_SCENE");
   }
   return res;
-}
-
-void karpovich::serializeScene(const scene_t &scene, std::ostream &out)
-{
-  out << "SCENE " << scene.id_ << " \"" << scene.description_ << "\"\n";
-  for (size_t i = 0; i < scene.links_.getSize(); ++i) {
-    serializeLink(scene.links_[i], out);
-  }
-  out << "END_LINKS\n";
-  for (size_t i = 0; i < scene.objects_.getSize(); ++i) {
-    serializeObject(scene.objects_[i], out);
-  }
-  out << "END_OBJECTS\n";
-  out << "END_SCENE\n";
 }
 
 void karpovich::serializeProject(const project_t &project, std::ostream &out)
