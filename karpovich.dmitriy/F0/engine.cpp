@@ -1,4 +1,5 @@
 #include "engine.hpp"
+#include <fstream>
 #include <iostream>
 #include "gameTypes.hpp"
 #include "serialization.hpp"
@@ -157,4 +158,39 @@ void karpovich::Engine::cmdMode(const Vector< std::string > &args)
     mode_str[0] = std::toupper(mode_str[0]);
   }
   std::cout << "<MODE: " << mode_str << ">\n";
+}
+
+void karpovich::Engine::cmdLoadGame(const Vector< std::string > &args)
+{
+  if (args.getSize() < 2) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  std::ifstream file(args[1] + ".save");
+  if (!file.is_open()) {
+    std::cout << "<ERROR: SAVE FILE NOT FOUND>\n";
+    return;
+  }
+  if (!isProjectLoaded()) {
+    return;
+  }
+  game_state_ = deserializeSave(file);
+  game_state_.running_ = true;
+  std::cout << "<GAME LOADED: " << args[1] << ">\n";
+  std::cout << "<SCENE: " << game_state_.current_scene_id_ << ">\n";
+}
+
+void karpovich::Engine::cmdSaveGame(const Vector< std::string > &args)
+{
+  if (!isGameRunning() || args.getSize() < 2) {
+    std::cout << "<ERROR: CANNOT SAVE>\n";
+    return;
+  }
+  std::ofstream file(args[1] + ".save");
+  if (!file.is_open()) {
+    std::cout << "<ERROR: CANNOT SAVE>\n";
+    return;
+  }
+  serializeSave(game_state_, file);
+  std::cout << "<GAME SAVED: " << args[1] << ">\n";
 }
