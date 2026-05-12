@@ -1,4 +1,5 @@
 #include "engine.hpp"
+#include <iostream>
 #include "gameTypes.hpp"
 #include "serialization.hpp"
 
@@ -43,4 +44,16 @@ void karpovich::Engine::initCommandTable()
   command_table_.add("load-game", &Engine::cmdLoadGame);
   command_table_.add("mode", &Engine::cmdMode);
   command_table_.add("faq", &Engine::cmdFaq);
+}
+
+void karpovich::Engine::cmdFaq(const Vector< std::string > &args)
+{
+  if (args.getSize() != 1) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  std::cout << "<HELP: create-game, load-project, start, interact, choice, show-inv, "
+               "save-game, load-game, mode, faq, create-item, remove-item, add-asset-db, "
+               "remove-asset-db, show-db, create-scene, remove-scene, link-scene, "
+               "unlink-scene, add-object, remove-object, set-interact, validate, save-project>\n";
 }
