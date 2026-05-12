@@ -26,6 +26,7 @@ namespace lavrentev
     double loadFactor_;
     Hash hasher_;
     Equal equal_;
+    void swap(HashTable<Key, Value, Hash, Equal>& other) noexcept;
 
   public:
     friend class HashIter<Key, Value, Hash, Equal>;
@@ -37,9 +38,7 @@ namespace lavrentev
     HashTable(HashTable &&) noexcept;
     ~HashTable() noexcept;
     HashTable<Key, Value, Hash, Equal> &
-    operator=(const HashTable<Key, Value, Hash, Equal> &);
-    HashTable<Key, Value, Hash, Equal> &
-    operator=(HashTable<Key, Value, Hash, Equal> &&) noexcept;
+    operator=(HashTable<Key, Value, Hash, Equal>);
     Value &operator[](const Key &k);
 
     void add(Key k, Value v);
@@ -124,44 +123,10 @@ lavrentev::HashTable<Key, Value, Hash, Equal>::HashTable(
 }
 
 template <class Key, class Value, class Hash, class Equal>
-lavrentev::HashTable<Key, Value, Hash, Equal> &
-lavrentev::HashTable<Key, Value, Hash, Equal>::operator=(const HashTable &other)
+lavrentev::HashTable<Key, Value, Hash, Equal>&
+lavrentev::HashTable<Key, Value, Hash, Equal>::operator=(HashTable other)
 {
-  if (this != &other)
-  {
-    delete[] ht_;
-    slots_ = other.slots_;
-    size_ = other.size_;
-    hasher_ = other.hasher_;
-    equal_ = other.equal_;
-
-    ht_ = new List<Node>[slots_];
-    for (size_t i = 0; i < slots_; ++i)
-    {
-      ht_[i] = other.ht_[i];
-    }
-  }
-  return *this;
-}
-
-template <class Key, class Value, class Hash, class Equal>
-lavrentev::HashTable<Key, Value, Hash, Equal> &
-lavrentev::HashTable<Key, Value, Hash, Equal>::operator=(
-    HashTable &&other) noexcept
-{
-  if (this != &other)
-  {
-    delete[] ht_;
-    ht_ = other.ht_;
-    slots_ = other.slots_;
-    size_ = other.size_;
-    hasher_ = std::move(other.hasher_);
-    equal_ = std::move(other.equal_);
-
-    other.ht_ = nullptr;
-    other.slots_ = 0;
-    other.size_ = 0;
-  }
+  swap(other);
   return *this;
 }
 
@@ -379,6 +344,18 @@ void lavrentev::HashCIter<Key, Value, Hash, Equal>::next()
       list_iter_ = (*bucket_ptr_).cbegin();
     }
   }
+}
+
+template <class Key, class Value, class Hash, class Equal>
+void lavrentev::HashTable<Key, Value, Hash, Equal>::swap(
+  HashTable<Key, Value, Hash, Equal>& other) noexcept
+{
+  std::swap(ht_, other.ht_);
+  std::swap(slots_, other.slots_);
+  std::swap(size_, other.size_);
+  std::swap(loadFactor_, other.loadFactor_);
+  std::swap(hasher_, other.hasher_);
+  std::swap(equal_, other.equal_);
 }
 
 #endif
