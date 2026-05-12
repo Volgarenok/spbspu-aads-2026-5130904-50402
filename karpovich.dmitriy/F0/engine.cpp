@@ -346,3 +346,33 @@ void karpovich::Engine::cmdAddAssetDb(const Vector< std::string > &args)
   connected_dbs_.pushBack(args[1]);
   std::cout << "<ASSET DB CONNECTED: " << count << " items loaded>\n";
 }
+
+void karpovich::Engine::cmdRemoveAssetDb(const Vector< std::string > &args)
+{
+  if (args.getSize() < 2) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  for (size_t i = 0; i < connected_dbs_.getSize(); ++i) {
+    if (connected_dbs_[i] == args[1]) {
+      connected_dbs_.erase(i);
+      std::cout << "<ASSET DB DISCONNECTED>\n";
+      return;
+    }
+  }
+  std::cout << "<INVALID COMMAND>\n";
+}
+
+void karpovich::Engine::cmdShowDb(const Vector< std::string > &)
+{
+  if (connected_dbs_.getSize() == 0) {
+    std::cout << "<NO DATABASES CONNECTED>\n";
+    return;
+  }
+  std::cout << "<DB CONTENTS:>\n";
+  karpovich::HashTable< std::string, item_template_t >::HIter it = item_db_.begin();
+  karpovich::HashTable< std::string, item_template_t >::HIter end_it = item_db_.end();
+  for (; it != end_it; ++it) {
+    std::cout << "<" << (*it).first << " [" << (*it).second.type_ << "]: \"" << (*it).second.name_ << "\">\n";
+  }
+}
