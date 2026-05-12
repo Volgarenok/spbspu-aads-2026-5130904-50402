@@ -130,3 +130,13 @@ bool karpovich::Engine::isGameRunning() const
   }
   return true;
 }
+
+karpovich::scene_t &karpovich::Engine::getScene(const std::string &id)
+{
+  return const_cast< scene_t & >(const_cast< const Engine * >(this)->getScene(id));
+}
+
+const karpovich::scene_t &karpovich::Engine::getScene(const std::string &id) const
+{
+  return active_project_.scenes_.get(id);
+}
