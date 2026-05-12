@@ -471,3 +471,51 @@ void karpovich::Engine::cmdUnlinkScene(const Vector< std::string > &args)
   s.links_.erase(idx);
   std::cout << "<LINK REMOVED: index " << idx << " from " << args[1] << ">\n";
 }
+
+void karpovich::Engine::cmdAddObject(const Vector< std::string > &args)
+{
+  if (args.getSize() < 3) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  if (!isProjectLoaded()) {
+    return;
+  }
+  if (!active_project_.scenes_.has(args[1])) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  if (!item_db_.has(args[2])) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  scene_t &s = active_project_.scenes_.get(args[1]);
+  s.objects_.pushBack(scene_object_t{args[2], "interact", "", ""});
+  std::cout << "<OBJECT ADDED: " << args[2] << " to scene " << args[1] << ">\n";
+}
+
+void karpovich::Engine::cmdRemoveObject(const Vector< std::string > &args)
+{
+  if (args.getSize() < 3) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  if (!isProjectLoaded()) {
+    return;
+  }
+  if (!active_project_.scenes_.has(args[1])) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  scene_t &s = active_project_.scenes_.get(args[1]);
+  for (size_t i = 0; i < s.objects_.getSize(); ++i) {
+    if (s.objects_[i].key_ == args[2]) {
+      s.objects_.erase(i);
+      std::cout << "<OBJECT REMOVED: " << args[2] << " from scene " << args[1] << ">\n";
+      return;
+    }
+  }
+  std::cout << "<INVALID COMMAND>\n";
+}
+
+
