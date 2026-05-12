@@ -29,6 +29,7 @@ namespace lavrentev{
       > gr;
       List<std::string> vrtxs;
       bool hasVertex(std::string v) const;
+      void insertToVrtxs(std::string v);
   };
 
   void graphs(List<std::pair<std::string, Graph>> &grs);
@@ -196,10 +197,66 @@ inline bool lavrentev::Graph::hasVertex(std::string v) const
   return false;
 }
 
+inline void lavrentev::Graph::insertToVrtxs(std::string v)
+{
+  LIter<std::string> vrtxIt = vrtxs.begin();
+  LIter<std::string> preVrtxIt = vrtxs.begin();
+
+  for (; vrtxIt != vrtxs.end(); ++vrtxIt)
+  {
+    if (*vrtxIt > v)
+    {
+      if (vrtxIt == vrtxs.begin())
+      {
+        vrtxs.pushFront(v);
+      }
+      else
+      {
+        vrtxs.insert(preVrtxIt, v);
+      }
+      break;
+    }
+    preVrtxIt = vrtxIt;
+  }
+
+  if (vrtxIt == vrtxs.end())
+  {
+    if (vrtxs.begin() == vrtxs.end())
+    {
+      vrtxs.pushFront(v);
+    }
+    else
+    {
+      vrtxs.insert(preVrtxIt, v);
+    }
+  }
+}
+
 inline void lavrentev::Graph::bind(List<std::pair<std::string, Graph>> &grs){
-  std::string name, vrtx1, vrtx2;
+  std::string name, v1, v2;
   int weight;
-  std::cin >> name >> vrtx1 >> vrtx2 >> weight;
+  std::cin >> name >> v1 >> v2 >> weight;
+
+  LIter<std::pair<std::string, Graph>> it;
+  for(it = grs.begin(); it != grs.end(); ++it)
+  {
+    if ((*it).first == name)
+    {
+      Graph &g = (*it).second;
+      if (!g.hasVertex(v1))
+      {
+        g.insertToVrtxs(v1);
+      }
+
+      if (!g.hasVertex(v2))
+      {
+        g.insertToVrtxs(v2);
+      }
+      g.gr[{v1, v2}].pushFront(weight);
+      return;
+    }
+  }
+  std::cerr << "<INVALID COMMAND>" << "\n";
 }
 
 inline void lavrentev::Graph::cut(
