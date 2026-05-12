@@ -275,3 +275,31 @@ void karpovich::Engine::printSceneInfo(const scene_t &scene) const
   }
   std::cout << ">\n";
 }
+
+void karpovich::Engine::cmdCreateItem(const Vector< std::string > &args)
+{
+  if (args.getSize() < 4) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  if (item_db_.has(args[1])) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  item_db_.add(args[1], item_template_t{args[1], args[2], args[3]});
+  std::cout << "<ITEM CREATED: " << args[1] << ">\n";
+}
+
+void karpovich::Engine::cmdRemoveItem(const Vector< std::string > &args)
+{
+  if (args.getSize() < 2) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  if (!item_db_.has(args[1])) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  item_db_.drop(args[1]);
+  std::cout << "<ITEM REMOVED: " << args[1] << ">\n";
+}
