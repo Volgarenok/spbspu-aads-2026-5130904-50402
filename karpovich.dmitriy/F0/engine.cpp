@@ -217,3 +217,21 @@ void karpovich::Engine::cmdSaveProject(const Vector< std::string > &)
   std::cout << "<PROJECT SAVED>\n";
   std::cout << "<SCENES: " << scenes << ", LINKS: " << links << ">\n";
 }
+
+void karpovich::Engine::cmdCreateGame(const Vector< std::string > &args)
+{
+  if (args.getSize() < 3) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  for (size_t i = 0; i < known_projects_.getSize(); ++i) {
+    if (known_projects_[i] == args[1]) {
+      std::cout << "<INVALID COMMAND>\n";
+      return;
+    }
+  }
+  known_projects_.pushBack(args[1]);
+  std::ofstream file(args[1] + ".dat");
+  file.close();
+  std::cout << "<PROJECT CREATED: " << args[1] << ".dat>\n";
+}
