@@ -396,3 +396,30 @@ void karpovich::Engine::cmdCreateScene(const Vector< std::string > &args)
   }
   std::cout << "<SCENE CREATED: " << args[1] << ">\n";
 }
+
+void karpovich::Engine::cmdRemoveScene(const Vector< std::string > &args)
+{
+  if (args.getSize() < 2) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  if (!isProjectLoaded()) {
+    return;
+  }
+  if (!active_project_.scenes_.has(args[1])) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  active_project_.scenes_.drop(args[1]);
+  karpovich::HashTable< std::string, scene_t >::HIter it = active_project_.scenes_.begin();
+  karpovich::HashTable< std::string, scene_t >::HIter end_it = active_project_.scenes_.end();
+  for (; it != end_it; ++it) {
+    Vector< scene_link_t > &links = (*it).second.links_;
+    for (size_t i = links.getSize(); i > 0; --i) {
+      if (links[i - 1].target_ == args[1]) {
+        links.erase(i - 1);
+      }
+    }
+  }
+  std::cout << "<SCENE REMOVED: " << args[1] << ">\n";
+}
