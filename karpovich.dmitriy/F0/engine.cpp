@@ -103,3 +103,13 @@ void karpovich::Engine::dispatch(const Vector< std::string > &args)
     std::cout << "<INVALID COMMAND>\n";
   }
 }
+
+bool karpovich::Engine::checkMode(const std::string &required_mode) const
+{
+  if (mode_ != required_mode)
+  {
+    std::cout << "<INVALID MODE>\n";
+    return false;
+  }
+  return true;
+}
