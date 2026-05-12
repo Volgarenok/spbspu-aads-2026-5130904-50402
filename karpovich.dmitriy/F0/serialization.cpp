@@ -87,6 +87,53 @@ void karpovich::serializeObject(const scene_object_t &obj, std::ostream &out)
   out << "OBJ " << obj.key_ << " \"" << obj.action_ << "\" " << obj.gives_ << " " << obj.requires_ << "\n";
 }
 
+karpovich::scene_t karpovich::deserializeScene(std::istream &in)
+{
+  std::string line = readLine(in);
+  checkPrefix(line, "SCENE ");
+  size_t pos = 6;
+  scene_t res;
+  res.id_ = extractToken(line, pos);
+  res.description_ = extractQuoted(line, pos);
+
+  line = readLine(in);
+  while (line != "END_LINKS") {
+    if (line.size() >= 5 && line.substr(0, 5) == "LINK ") {
+      size_t link_pos = 5;
+      scene_link_t link;
+      link.target_ = extractToken(line, link_pos);
+      link.description_ = extractQuoted(line, link_pos);
+      link.condition_ = extractToken(line, link_pos);
+      res.links_.pushBack(link);
+    } else {
+      throw std::runtime_error("Expected LINK or END_LINKS");
+    }
+    line = readLine(in);
+  }
+
+  line = readLine(in);
+  while (line != "END_OBJECTS") {
+    if (line.size() >= 4 && line.substr(0, 4) == "OBJ ") {
+      size_t obj_pos = 4;
+      scene_object_t obj;
+      obj.key_ = extractToken(line, obj_pos);
+      obj.action_ = extractQuoted(line, obj_pos);
+      obj.gives_ = extractToken(line, obj_pos);
+      obj.requires_ = extractToken(line, obj_pos);
+      res.objects_.pushBack(obj);
+    } else {
+      throw std::runtime_error("Expected OBJ or END_OBJECTS");
+    }
+    line = readLine(in);
+  }
+
+  line = readLine(in);
+  if (line != "END_SCENE") {
+    throw std::runtime_error("Expected END_SCENE");
+  }
+  return res;
+}
+
 void karpovich::serializeScene(const scene_t &scene, std::ostream &out)
 {
   out << "SCENE " << scene.id_ << " \"" << scene.description_ << "\"\n";
