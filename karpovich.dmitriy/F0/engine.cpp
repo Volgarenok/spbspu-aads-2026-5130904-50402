@@ -376,3 +376,23 @@ void karpovich::Engine::cmdShowDb(const Vector< std::string > &)
     std::cout << "<" << (*it).first << " [" << (*it).second.type_ << "]: \"" << (*it).second.name_ << "\">\n";
   }
 }
+
+void karpovich::Engine::cmdCreateScene(const Vector< std::string > &args)
+{
+  if (args.getSize() < 3) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  if (!isProjectLoaded()) {
+    return;
+  }
+  if (active_project_.scenes_.has(args[1])) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  active_project_.scenes_.add(args[1], scene_t{args[1], args[2], Vector< scene_link_t >(), Vector< scene_object_t >()});
+  if (active_project_.start_scene_id_.empty()) {
+    active_project_.start_scene_id_ = args[1];
+  }
+  std::cout << "<SCENE CREATED: " << args[1] << ">\n";
+}
