@@ -1,5 +1,5 @@
-int a()
-{
-  int zov = 0;
-  return zov++;
-}
+#include "engine.hpp"
+#include "gameTypes.hpp"
+#include "serialization.hpp"
+
+karpovich::Engine::Engine():
