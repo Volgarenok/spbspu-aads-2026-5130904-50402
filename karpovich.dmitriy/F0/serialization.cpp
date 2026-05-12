@@ -1,52 +1,55 @@
 #include "serialization.hpp"
 #include <iostream>
 
-std::string readLine(std::istream &in)
+namespace
 {
-  std::string line;
-  if (!std::getline(in, line)) {
-    throw std::runtime_error("Unexpected end of input");
+  std::string readLine(std::istream &in)
+  {
+    std::string line;
+    if (!std::getline(in, line)) {
+      throw std::runtime_error("Unexpected end of input");
+    }
+    return line;
   }
-  return line;
-}
 
-void checkPrefix(const std::string &line, const std::string &expected)
-{
-  if (line.size() < expected.size() || line.substr(0, expected.size()) != expected) {
-    throw std::runtime_error("Invalid format: expected '" + expected + "'");
+  void checkPrefix(const std::string &line, const std::string &expected)
+  {
+    if (line.size() < expected.size() || line.substr(0, expected.size()) != expected) {
+      throw std::runtime_error("Invalid format: expected '" + expected + "'");
+    }
   }
-}
 
-std::string extractToken(const std::string &line, size_t &pos)
-{
-  while (pos < line.size() && line[pos] == ' ') {
-    ++pos;
+  std::string extractToken(const std::string &line, size_t &pos)
+  {
+    while (pos < line.size() && line[pos] == ' ') {
+      ++pos;
+    }
+    size_t start = pos;
+    while (pos < line.size() && line[pos] != ' ') {
+      ++pos;
+    }
+    return line.substr(start, pos - start);
   }
-  size_t start = pos;
-  while (pos < line.size() && line[pos] != ' ') {
-    ++pos;
-  }
-  return line.substr(start, pos - start);
-}
 
-std::string extractQuoted(const std::string &line, size_t &pos)
-{
-  while (pos < line.size() && line[pos] == ' ') {
+  std::string extractQuoted(const std::string &line, size_t &pos)
+  {
+    while (pos < line.size() && line[pos] == ' ') {
+      ++pos;
+    }
+    if (pos >= line.size() || line[pos] != '"') {
+      return "";
+    }
     ++pos;
+    size_t start = pos;
+    while (pos < line.size() && line[pos] != '"') {
+      ++pos;
+    }
+    std::string res = line.substr(start, pos - start);
+    if (pos < line.size()) {
+      ++pos;
+    }
+    return res;
   }
-  if (pos >= line.size() || line[pos] != '"') {
-    return "";
-  }
-  ++pos;
-  size_t start = pos;
-  while (pos < line.size() && line[pos] != '"') {
-    ++pos;
-  }
-  std::string res = line.substr(start, pos - start);
-  if (pos < line.size()) {
-    ++pos;
-  }
-  return res;
 }
 
 void karpovich::serializeItem(const item_template_t &item, std::ostream &out)
