@@ -631,3 +631,26 @@ void karpovich::Engine::cmdChoice(const Vector< std::string > &args)
   game_state_.current_scene_id_ = s.links_[idx].target_;
   std::cout << "<MOVED TO: " << game_state_.current_scene_id_ << ">\n";
 }
+
+void karpovich::Engine::cmdShowInv(const Vector< std::string > &)
+{
+  if (!isGameRunning()) {
+    return;
+  }
+  if (game_state_.inventory_.empty()) {
+    std::cout << "<INVENTORY EMPTY>\n";
+    return;
+  }
+  std::cout << "<INVENTORY: ";
+  bool first = true;
+  karpovich::HashTable< std::string, int >::HIter it = game_state_.inventory_.begin();
+  karpovich::HashTable< std::string, int >::HIter end_it = game_state_.inventory_.end();
+  for (; it != end_it; ++it) {
+    if (!first) {
+      std::cout << ", ";
+    }
+    std::cout << (*it).first << " x" << (*it).second;
+    first = false;
+  }
+  std::cout << ">\n";
+}
