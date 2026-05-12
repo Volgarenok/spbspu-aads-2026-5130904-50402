@@ -26,6 +26,8 @@ namespace karpovich
     const T &back() const noexcept;
     LIter< T > begin();
     LIter< T > end();
+    LCIter< T > begin() const;
+    LCIter< T > end() const;
     LCIter< T > cbegin() const;
     LCIter< T > cend() const;
     LIter< T > insert(LIter< T > pos, const T &value);
@@ -252,6 +254,18 @@ namespace karpovich
     delete node;
     size_--;
     return LIter< T >{next};
+  }
+  
+  template < class T >
+  LCIter< T > List< T >::begin() const
+  {
+    return LCIter< T >{fake_->next};
+  }
+
+  template < class T >
+  LCIter< T > List< T >::end() const
+  {
+    return LCIter< T >{fake_};
   }
 }
 #endif
