@@ -235,3 +235,22 @@ void karpovich::Engine::cmdCreateGame(const Vector< std::string > &args)
   file.close();
   std::cout << "<PROJECT CREATED: " << args[1] << ".dat>\n";
 }
+
+void karpovich::Engine::cmdLoadProject(const Vector< std::string > &args)
+{
+  if (args.getSize() < 2) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  std::ifstream file(args[1] + ".dat");
+  if (!file.is_open()) {
+    std::cout << "<ERROR: FILE NOT FOUND>\n";
+    return;
+  }
+  active_project_ = deserializeProject(file);
+  project_filename_ = args[1];
+  project_loaded_ = true;
+  game_state_ = save_state_t{};
+  std::cout << "<PROJECT LOADED: " << args[1] << ">\n";
+  std::cout << "<SCENES: " << active_project_.scenes_.size() << ", ITEMS: 0>\n";
+}
