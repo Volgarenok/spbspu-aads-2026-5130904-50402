@@ -518,4 +518,38 @@ void karpovich::Engine::cmdRemoveObject(const Vector< std::string > &args)
   std::cout << "<INVALID COMMAND>\n";
 }
 
+void karpovich::Engine::cmdSetInteract(const Vector< std::string > &args)
+{
+  if (args.getSize() < 3) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  if (!isProjectLoaded()) {
+    return;
+  }
+  if (!active_project_.scenes_.has(args[1])) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  scene_t &s = active_project_.scenes_.get(args[1]);
+  for (size_t i = 0; i < s.objects_.getSize(); ++i) {
+    if (s.objects_[i].key_ == args[2]) {
+      std::string gives;
+      std::string req;
+      for (size_t j = 3; j < args.getSize(); ++j) {
+        if (args[j].rfind("give:", 0) == 0) {
+          gives = args[j].substr(5);
+        } else if (args[j].rfind("has:", 0) == 0) {
+          req = args[j].substr(4);
+        }
+      }
+      s.objects_[i].gives_ = gives;
+      s.objects_[i].requires_ = req;
+      std::cout << "<INTERACTION SET: " << args[2] << ">\n";
+      return;
+    }
+  }
+  std::cout << "<INVALID COMMAND>\n";
+}
+
 
