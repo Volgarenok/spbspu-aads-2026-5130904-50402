@@ -1,9 +1,47 @@
 #include "serialization.hpp"
 #include <iostream>
 
+std::string readLine(std::istream &in)
+{
+  std::string line;
+  if (!std::getline(in, line)) {
+    throw std::runtime_error("Unexpected end of input");
+  }
+  return line;
+}
+
+void checkPrefix(const std::string &line, const std::string &expected)
+{
+  if (line.size() < expected.size() || line.substr(0, expected.size()) != expected) {
+    throw std::runtime_error("Invalid format: expected '" + expected + "'");
+  }
+}
+
+std::string extractToken(const std::string &line, size_t &pos)
+{
+  while (pos < line.size() && line[pos] == ' ') {
+    ++pos;
+  }
+  size_t start = pos;
+  while (pos < line.size() && line[pos] != ' ') {
+    ++pos;
+  }
+  return line.substr(start, pos - start);
+}
 void karpovich::serializeItem(const item_template_t &item, std::ostream &out)
 {
   out << "ITEM " << item.key_ << " " << item.type_ << " " << item.name_ << "\n";
+}
+
+karpovich::item_template_t karpovich::deserializeItem(std::istream &in)
+{
+  std::string line = readLine(in);
+  checkPrefix(line, "ITEM ");
+  size_t pos = 5;
+  std::string key = extractToken(line, pos);
+  std::string type = extractToken(line, pos);
+  std::string name = extractToken(line, pos);
+  return item_template_t{key, type, name};
 }
 
 void karpovich::serializeLink(const scene_link_t &link, std::ostream &out)
