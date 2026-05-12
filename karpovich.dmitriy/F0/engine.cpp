@@ -573,3 +573,36 @@ void karpovich::Engine::cmdLook(const Vector< std::string > &)
   }
   printSceneInfo(getScene(game_state_.current_scene_id_));
 }
+
+void karpovich::Engine::cmdInteract(const Vector< std::string > &args)
+{
+  if (!isGameRunning()) {
+    return;
+  }
+  if (args.getSize() < 2) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  const scene_t &s = getScene(game_state_.current_scene_id_);
+  for (size_t i = 0; i < s.objects_.getSize(); ++i) {
+    if (s.objects_[i].key_ == args[1]) {
+      const scene_object_t &obj = s.objects_[i];
+      if (!obj.requires_.empty() && !game_state_.inventory_.has(obj.requires_)) {
+        std::cout << "<NOTHING HAPPENS>\n";
+        return;
+      }
+      std::cout << "<ACTION: " << obj.action_ << " " << args[1] << ">\n";
+      if (!obj.gives_.empty()) {
+        if (game_state_.inventory_.has(obj.gives_)) {
+          int &cnt = game_state_.inventory_.get(obj.gives_);
+          ++cnt;
+        } else {
+          game_state_.inventory_.add(obj.gives_, 1);
+        }
+        std::cout << "<ITEM ADDED: " << obj.gives_ << ">\n";
+      }
+      return;
+    }
+  }
+  std::cout << "<NOTHING HAPPENS>\n";
+}
