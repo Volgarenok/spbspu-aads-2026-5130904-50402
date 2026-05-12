@@ -303,3 +303,46 @@ void karpovich::Engine::cmdRemoveItem(const Vector< std::string > &args)
   item_db_.drop(args[1]);
   std::cout << "<ITEM REMOVED: " << args[1] << ">\n";
 }
+
+void karpovich::Engine::cmdAddAssetDb(const Vector< std::string > &args)
+{
+  if (args.getSize() < 2) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  std::ifstream file(args[1]);
+  if (!file.is_open()) {
+    std::cout << "<ERROR: FILE NOT FOUND>\n";
+    return;
+  }
+  size_t count = 0;
+  std::string line;
+  while (std::getline(file, line)) {
+    if (line.empty() || line[0] == '#') {
+      continue;
+    }
+    size_t space1 = line.find(' ');
+    if (space1 == std::string::npos) {
+      continue;
+    }
+    size_t space2 = line.find(' ', space1 + 1);
+    if (space2 == std::string::npos) {
+      continue;
+    }
+
+    std::string key = line.substr(0, space1);
+    std::string type = line.substr(space1 + 1, space2 - space1 - 1);
+    size_t name_start = space2 + 1;
+    while (name_start < line.size() && line[name_start] == ' ') {
+      ++name_start;
+    }
+    std::string name = line.substr(name_start);
+
+    if (!key.empty() && !type.empty() && !name.empty() && !item_db_.has(key)) {
+      item_db_.add(key, item_template_t{key, type, name});
+      ++count;
+    }
+  }
+  connected_dbs_.pushBack(args[1]);
+  std::cout << "<ASSET DB CONNECTED: " << count << " items loaded>\n";
+}
