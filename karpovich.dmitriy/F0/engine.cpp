@@ -606,3 +606,28 @@ void karpovich::Engine::cmdInteract(const Vector< std::string > &args)
   }
   std::cout << "<NOTHING HAPPENS>\n";
 }
+
+void karpovich::Engine::cmdChoice(const Vector< std::string > &args)
+{
+  if (!isGameRunning()) {
+    return;
+  }
+  if (args.getSize() < 2) {
+    std::cout << "<INVALID CHOICE>\n";
+    return;
+  }
+  size_t idx = 0;
+  try {
+    idx = std::stoull(args[1]);
+  } catch (const std::exception &) {
+    std::cout << "<INVALID CHOICE>\n";
+    return;
+  }
+  const scene_t &s = getScene(game_state_.current_scene_id_);
+  if (idx >= s.links_.getSize()) {
+    std::cout << "<INVALID CHOICE>\n";
+    return;
+  }
+  game_state_.current_scene_id_ = s.links_[idx].target_;
+  std::cout << "<MOVED TO: " << game_state_.current_scene_id_ << ">\n";
+}
