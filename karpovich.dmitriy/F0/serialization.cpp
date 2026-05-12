@@ -28,6 +28,27 @@ std::string extractToken(const std::string &line, size_t &pos)
   }
   return line.substr(start, pos - start);
 }
+
+std::string extractQuoted(const std::string &line, size_t &pos)
+{
+  while (pos < line.size() && line[pos] == ' ') {
+    ++pos;
+  }
+  if (pos >= line.size() || line[pos] != '"') {
+    return "";
+  }
+  ++pos;
+  size_t start = pos;
+  while (pos < line.size() && line[pos] != '"') {
+    ++pos;
+  }
+  std::string res = line.substr(start, pos - start);
+  if (pos < line.size()) {
+    ++pos;
+  }
+  return res;
+}
+
 void karpovich::serializeItem(const item_template_t &item, std::ostream &out)
 {
   out << "ITEM " << item.key_ << " " << item.type_ << " " << item.name_ << "\n";
@@ -47,6 +68,18 @@ karpovich::item_template_t karpovich::deserializeItem(std::istream &in)
 void karpovich::serializeLink(const scene_link_t &link, std::ostream &out)
 {
   out << "LINK " << link.target_ << " \"" << link.description_ << "\" " << link.condition_ << "\n";
+}
+
+karpovich::scene_link_t karpovich::deserializeLink(std::istream &in)
+{
+  std::string line = readLine(in);
+  checkPrefix(line, "LINK ");
+  size_t pos = 5;
+  scene_link_t res;
+  res.target_ = extractToken(line, pos);
+  res.description_ = extractQuoted(line, pos);
+  res.condition_ = extractToken(line, pos);
+  return res;
 }
 
 void karpovich::serializeObject(const scene_object_t &obj, std::ostream &out)
