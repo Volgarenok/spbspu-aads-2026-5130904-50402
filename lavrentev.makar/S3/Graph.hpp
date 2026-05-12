@@ -23,7 +23,7 @@ namespace lavrentev{
       static void extract(List<std::pair<std::string, Graph>> &grs);
     private:
       HashTable< std::pair<std::string, std::string>,
-        List< size_t >,
+        List< int >,
         Siphash< std::string >,
         std::equal_to<std::pair<std::string, std::string>>
       > gr;
@@ -81,13 +81,13 @@ inline void lavrentev::Graph::outbound(List<std::pair<std::string, Graph>> &grs)
       graphFound = true;
 
       HashCIter<std::pair<std::string, std::string>,
-        List< size_t >,
+        List< int >,
         Siphash< std::string >,
         std::equal_to<std::pair<std::string, std::string>>>
       vrtxIt((*it).second.gr.ht_, (*it).second.gr.ht_ + (*it).second.gr.bucket_count(), (*it).second.gr.ht_[0].cbegin());
 
       HashCIter<std::pair<std::string, std::string>,
-        List< size_t >,
+        List< int >,
         Siphash< std::string >,
         std::equal_to<std::pair<std::string, std::string>>>
       vrtxItEnd((*it).second.gr.ht_ + (*it).second.gr.bucket_count(), (*it).second.gr.ht_ + (*it).second.gr.bucket_count(), (*it).second.gr.ht_[0].cbegin());
@@ -99,7 +99,7 @@ inline void lavrentev::Graph::outbound(List<std::pair<std::string, Graph>> &grs)
           vertexExists = true;
 
           std::cout << (*vrtxIt).key.second << " ";
-          LCIter<size_t> weightIter = (*vrtxIt).value.cbegin();
+          LCIter< int > weightIter = (*vrtxIt).value.cbegin();
           std::cout << (*weightIter);
           ++weightIter;
           while(weightIter != (*vrtxIt).value.cend())
@@ -140,7 +140,7 @@ inline void lavrentev::Graph::inbound(List<std::pair<std::string, Graph>> &grs)
       vertexExists = true;
 
       HashCIter<std::pair<std::string, std::string>,
-        List< size_t >,
+        List< int >,
         Siphash< std::string >,
         std::equal_to<std::pair<std::string, std::string>>>
       vrtxIt((*it).second.gr.ht_,
@@ -148,7 +148,7 @@ inline void lavrentev::Graph::inbound(List<std::pair<std::string, Graph>> &grs)
              (*it).second.gr.ht_[0].cbegin());
 
       HashCIter<std::pair<std::string, std::string>,
-        List< size_t >,
+        List< int >,
         Siphash< std::string >,
         std::equal_to<std::pair<std::string, std::string>>>
       vrtxItEnd((*it).second.gr.ht_ + (*it).second.gr.bucket_count(),
@@ -160,7 +160,7 @@ inline void lavrentev::Graph::inbound(List<std::pair<std::string, Graph>> &grs)
         if ((*vrtxIt).key.second == v)
         {
           std::cout << (*vrtxIt).key.first << " ";
-          LCIter<size_t> weightIter = (*vrtxIt).value.cbegin();
+          LCIter< int > weightIter = (*vrtxIt).value.cbegin();
           if (weightIter != (*vrtxIt).value.cend())
           {
             std::cout << (*weightIter);
@@ -259,12 +259,49 @@ inline void lavrentev::Graph::bind(List<std::pair<std::string, Graph>> &grs){
   std::cerr << "<INVALID COMMAND>" << "\n";
 }
 
-inline void lavrentev::Graph::cut(
-  List<std::pair<std::string, Graph>> &grs)
+inline void lavrentev::Graph::cut(List<std::pair<std::string, Graph>> &grs)
 {
-  std::string name, vrtx1, vrtx2;
+  std::string name, v1, v2;
   int weight;
-  std::cin >> name >> vrtx1 >> vrtx2 >> weight;
+  std::cin >> name >> v1 >> v2 >> weight;
+
+  LIter<std::pair<std::string, Graph>> it;
+  for(it = grs.begin(); it != grs.end(); ++it)
+  {
+    if ((*it).first == name)
+    {
+      Graph &g = (*it).second;
+      if (!g.hasVertex(v1) || !g.hasVertex(v2))
+      {
+        break;
+      }
+
+      std::pair<std::string, std::string> keyToFind = {v1, v2};
+
+      if (!g.gr.has(keyToFind))
+      {
+        break;
+      }
+
+      List< int > &weights = g.gr[keyToFind];
+      LIter< int > wIt = weights.begin();
+
+      for(; wIt != weights.end(); ++wIt)
+      {
+        if (*wIt == weight)
+        {
+          weights.erase(wIt);
+          if (weights.empty())
+          {
+            g.gr.drop(keyToFind);
+          }
+          return;
+        }
+      }
+      break;
+    }
+  }
+  std::cerr << "<INVALID COMMAND>" << "\n";
 }
 
 inline void lavrentev::Graph::create(List<std::pair<std::string, Graph>> &grs)
