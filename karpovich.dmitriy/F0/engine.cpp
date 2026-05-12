@@ -194,3 +194,26 @@ void karpovich::Engine::cmdSaveGame(const Vector< std::string > &args)
   serializeSave(game_state_, file);
   std::cout << "<GAME SAVED: " << args[1] << ">\n";
 }
+
+void karpovich::Engine::cmdSaveProject(const Vector< std::string > &)
+{
+  if (!isProjectLoaded()) {
+    return;
+  }
+  std::ofstream file(project_filename_ + ".dat");
+  if (!file.is_open()) {
+    std::cout << "<ERROR: WRITE PERMISSION DENIED>\n";
+    return;
+  }
+  serializeProject(active_project_, file);
+  size_t scenes = 0;
+  size_t links = 0;
+  karpovich::HashTable< std::string, scene_t >::HIter it = active_project_.scenes_.begin();
+  karpovich::HashTable< std::string, scene_t >::HIter end_it = active_project_.scenes_.end();
+  for (; it != end_it; ++it) {
+    ++scenes;
+    links += (*it).second.links_.getSize();
+  }
+  std::cout << "<PROJECT SAVED>\n";
+  std::cout << "<SCENES: " << scenes << ", LINKS: " << links << ">\n";
+}
