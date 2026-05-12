@@ -40,32 +40,30 @@ namespace karpovich
 
   struct project_t
   {
-    project_t();
     std::string title_;
     std::string start_scene_id_;
     HashTable< std::string, scene_t > scenes_;
+
+    project_t():
+      title_(),
+      start_scene_id_(),
+      scenes_(16)
+    {}
   };
 
   struct save_state_t
   {
-    save_state_t();
     std::string current_scene_id_;
     HashTable< std::string, int > inventory_;
     bool running_;
+
+    save_state_t():
+      current_scene_id_(),
+      inventory_(16),
+      running_(false)
+    {}
   };
 
 }
-
-karpovich::save_state_t::save_state_t():
-  current_scene_id_(),
-  inventory_(16),
-  running_(false)
-{}
-
-karpovich::project_t::project_t():
-  title_(),
-  start_scene_id_(),
-  scenes_(16)
-{}
 
 #endif

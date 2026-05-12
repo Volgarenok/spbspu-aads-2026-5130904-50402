@@ -654,3 +654,65 @@ void karpovich::Engine::cmdShowInv(const Vector< std::string > &)
   }
   std::cout << ">\n";
 }
+
+void karpovich::Engine::cmdValidate(const Vector< std::string > &)
+{
+  if (!isProjectLoaded()) {
+    return;
+  }
+  std::cout << "<VALIDATION STARTED>\n";
+  if (active_project_.scenes_.empty()) {
+    std::cout << "<STATUS: PASSED>\n";
+    std::cout << "<REACHABLE SCENES: 0/0>\n";
+    return;
+  }
+  std::string start = active_project_.start_scene_id_;
+  if (start.empty() || !active_project_.scenes_.has(start)) {
+    start = (*active_project_.scenes_.begin()).first;
+  }
+  Vector< std::string > queue;
+  queue.pushBack(start);
+  HashTable< std::string, bool > visited(16);
+  visited.add(start, true);
+
+  size_t head = 0;
+  while (head < queue.getSize()) {
+    const std::string &curr = queue[head++];
+    const scene_t &s = active_project_.scenes_.get(curr);
+    for (size_t i = 0; i < s.links_.getSize(); ++i) {
+      const std::string &target = s.links_[i].target_;
+      if (!visited.has(target)) {
+        visited.add(target, true);
+        queue.pushBack(target);
+      }
+    }
+  }
+
+  size_t total = 0;
+  size_t reachable = 0;
+  bool has_errors = false;
+  karpovich::HashTable< std::string, scene_t >::HIter it = active_project_.scenes_.begin();
+  karpovich::HashTable< std::string, scene_t >::HIter end_it = active_project_.scenes_.end();
+  for (; it != end_it; ++it) {
+    ++total;
+    if (visited.has((*it).first)) {
+      ++reachable;
+    } else {
+      has_errors = true;
+    }
+  }
+
+  if (!has_errors) {
+    std::cout << "<STATUS: PASSED>\n";
+    std::cout << "<REACHABLE SCENES: " << reachable << "/" << total << ">\n";
+  } else {
+    std::cout << "<VALIDATION FAILED>\n";
+    karpovich::HashTable< std::string, scene_t >::HIter err_it = active_project_.scenes_.begin();
+    karpovich::HashTable< std::string, scene_t >::HIter err_end = active_project_.scenes_.end();
+    for (; err_it != err_end; ++err_it) {
+      if (!visited.has((*err_it).first)) {
+        std::cout << "<ERROR: Scene \"" << (*err_it).first << "\" is unreachable>\n";
+      }
+    }
+  }
+}
