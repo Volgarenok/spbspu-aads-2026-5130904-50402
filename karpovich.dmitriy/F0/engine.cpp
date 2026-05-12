@@ -79,3 +79,27 @@ void karpovich::Engine::cmdFaq(const Vector< std::string > &args)
                "remove-asset-db, show-db, create-scene, remove-scene, link-scene, "
                "unlink-scene, add-object, remove-object, set-interact, validate, save-project>\n";
 }
+
+void karpovich::Engine::processCommand(const std::string &line)
+{
+  Vector< std::string > tokens;
+  tokenize(line, tokens);
+  if (tokens.getSize() > 0) {
+    dispatch(tokens);
+  }
+}
+
+void karpovich::Engine::dispatch(const Vector< std::string > &args)
+{
+  const std::string &cmd = args[0];
+  try {
+    if (command_table_.has(cmd)) {
+      cmd_handler_t handler = command_table_.get(cmd);
+      (this->*handler)(args);
+    } else {
+      std::cout << "<UNKNOWN COMMAND>\n";
+    }
+  } catch (const std::exception &) {
+    std::cout << "<INVALID COMMAND>\n";
+  }
+}
