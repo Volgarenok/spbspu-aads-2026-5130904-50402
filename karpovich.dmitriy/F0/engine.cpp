@@ -46,6 +46,28 @@ void karpovich::Engine::initCommandTable()
   command_table_.add("faq", &Engine::cmdFaq);
 }
 
+void karpovich::Engine::tokenize(const std::string &line, Vector< std::string > &tokens) const
+{
+  std::string current;
+  bool in_quotes = false;
+  for (size_t i = 0; i < line.size(); ++i) {
+    char c = line[i];
+    if (c == '"') {
+      in_quotes = !in_quotes;
+    } else if (c == ' ' && !in_quotes) {
+      if (!current.empty()) {
+        tokens.pushBack(current);
+        current.clear();
+      }
+    } else {
+      current += c;
+    }
+  }
+  if (!current.empty()) {
+    tokens.pushBack(current);
+  }
+}
+
 void karpovich::Engine::cmdFaq(const Vector< std::string > &args)
 {
   if (args.getSize() != 1) {
