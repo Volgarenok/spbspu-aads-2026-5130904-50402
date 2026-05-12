@@ -423,3 +423,51 @@ void karpovich::Engine::cmdRemoveScene(const Vector< std::string > &args)
   }
   std::cout << "<SCENE REMOVED: " << args[1] << ">\n";
 }
+
+void karpovich::Engine::cmdLinkScene(const Vector< std::string > &args)
+{
+  if (args.getSize() < 4) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  if (!isProjectLoaded()) {
+    return;
+  }
+  if (!active_project_.scenes_.has(args[1]) || !active_project_.scenes_.has(args[2])) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  scene_t &from = active_project_.scenes_.get(args[1]);
+  std::string cond = args.getSize() > 4 ? args[4] : "";
+  from.links_.pushBack(scene_link_t{args[2], args[3], cond});
+  std::cout << "<LINK CREATED: " << args[1] << " -> " << args[2] << ">\n";
+}
+
+void karpovich::Engine::cmdUnlinkScene(const Vector< std::string > &args)
+{
+  if (args.getSize() < 3) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  if (!isProjectLoaded()) {
+    return;
+  }
+  if (!active_project_.scenes_.has(args[1])) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  size_t idx = 0;
+  try {
+    idx = std::stoull(args[2]);
+  } catch (const std::exception &) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  scene_t &s = active_project_.scenes_.get(args[1]);
+  if (idx >= s.links_.getSize()) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
+  s.links_.erase(idx);
+  std::cout << "<LINK REMOVED: index " << idx << " from " << args[1] << ">\n";
+}
