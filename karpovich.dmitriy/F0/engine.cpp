@@ -5,15 +5,15 @@
 #include "serialization.hpp"
 
 karpovich::Engine::Engine():
+  command_table_(32),
   item_db_(16),
-  active_project_(),
-  game_state_(),
   connected_dbs_(),
   known_projects_(),
+  active_project_(),
+  game_state_(),
   mode_("editor"),
-  project_loaded_(false),
   project_filename_(),
-  command_table_(32)
+  project_loaded_(false)
 {
   initCommandTable();
 }
