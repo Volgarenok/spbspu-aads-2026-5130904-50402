@@ -64,7 +64,10 @@ karpovich::item_template_t karpovich::deserializeItem(std::istream &in)
   size_t pos = 5;
   std::string key = extractToken(line, pos);
   std::string type = extractToken(line, pos);
-  std::string name = extractToken(line, pos);
+  while (pos < line.size() && line[pos] == ' ') {
+    ++pos;
+  }
+  std::string name = (pos < line.size()) ? line.substr(pos) : "";
   return item_template_t{key, type, name};
 }
 

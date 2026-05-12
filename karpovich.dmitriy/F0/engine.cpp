@@ -141,7 +141,6 @@ const karpovich::scene_t &karpovich::Engine::getScene(const std::string &id) con
 {
   return active_project_.scenes_.get(id);
 }
-
 void karpovich::Engine::cmdMode(const Vector< std::string > &args)
 {
   if (args.getSize() < 2) {
@@ -153,11 +152,11 @@ void karpovich::Engine::cmdMode(const Vector< std::string > &args)
     return;
   }
   mode_ = args[1];
-  std::string mode_str = args[1];
-  if (mode_str.size() > 0) {
-    mode_str[0] = std::toupper(mode_str[0]);
+  std::string out_str = args[1];
+  for (size_t i = 0; i < out_str.size(); ++i) {
+    out_str[i] = std::toupper(out_str[i]);
   }
-  std::cout << "<MODE: " << mode_str << ">\n";
+  std::cout << "<MODE: " << out_str << ">\n";
 }
 
 void karpovich::Engine::cmdLoadGame(const Vector< std::string > &args)
@@ -231,8 +230,14 @@ void karpovich::Engine::cmdCreateGame(const Vector< std::string > &args)
     }
   }
   known_projects_.pushBack(args[1]);
-  std::ofstream file(args[1] + ".dat");
-  file.close();
+  project_filename_ = args[1];
+
+  std::ofstream file(project_filename_ + ".dat");
+  if (file.is_open()) {
+    file << "PROJECT \"" << args[2] << "\" \n";
+    file << "END_PROJECT\n";
+    file.close();
+  }
   std::cout << "<PROJECT CREATED: " << args[1] << ".dat>\n";
 }
 
