@@ -1,15 +1,24 @@
 #include <cstddef>
 #include "Graph.hpp"
+#include "readfile.hpp"
 
 int main(int argc, char *argv[]) {
+  lavrentev::List<std::pair<std::string, lavrentev::Graph>> grs;
+  std::string name;
+  try
+  {
+    lavrentev::readfile(argv[1], grs);
+  } catch (const std::exception) {
+    std::cerr << "Input processing error " << "\n";
+    return 2;
+  }
+
   lavrentev::HashTable<
     std::string,
     cmd_t,
     Siphash< std::string >,
     std::equal_to<std::string>
   > commands;
-
-  lavrentev::List<std::pair<std::string, lavrentev::Graph>> grs;
 
   commands["graphs"] = lavrentev::graphs;
   commands["vertexes"] = lavrentev::Graph::vertexes;
@@ -26,7 +35,7 @@ int main(int argc, char *argv[]) {
   {
     if(commands.has(cmd))
     {
-      commands[cmd](grs);
+      commands[cmd](std::cin, grs);
     } else
     {
       std::cout << "<INVALID COMMAND>\n";

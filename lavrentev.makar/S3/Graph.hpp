@@ -3,53 +3,55 @@
 #include "HashTable.hpp"
 #include "../common/List.hpp"
 
-namespace lavrentev{
+namespace lavrentev
+{
   struct Graph;
 }
 
-using cmd_t = void (*)(
-  lavrentev::List<std::pair<std::string, lavrentev::Graph>> &);
+using cmd_t = void (*)(std::istream &in, lavrentev::List<std::pair<std::string, lavrentev::Graph>> &);
 
-namespace lavrentev{
-  struct Graph {
-    friend void bindWithArg(std::string name,
-      std::string v1,
-      std::string v2,
-      int weight,
-      List<std::pair<std::string, Graph>> &grs
-    );
+namespace lavrentev
+{
+  struct Graph
+  {
+    friend void bindWithArg(
+      std::string name, std::string v1, std::string v2,
+      size_t weight,
+      List<std::pair<std::string, Graph>> &grs);
+    friend void readfile(std::string name, List<std::pair<std::string, Graph>> &grs);
 
-    public:
-      static void vertexes(List<std::pair<std::string, Graph>> &grs);
-      static void outbound(List<std::pair<std::string, Graph>> &grs);
-      static void inbound(List<std::pair<std::string, Graph>> &grs);
-      static void bind(List<std::pair<std::string, Graph>> &grs);
-      static void cut(List<std::pair<std::string, Graph>> &grs);
-      static void create(List<std::pair<std::string, Graph>> &grs);
-      static void merge(List<std::pair<std::string, Graph>> &grs);
-      static void extract(List<std::pair<std::string, Graph>> &grs);
-    private:
-      HashTable< std::pair<std::string, std::string>,
-        List< int >,
-        Siphash< std::pair<std::string, std::string> >,
-        std::equal_to<std::pair<std::string, std::string>>
-      > gr;
-      List<std::string> vrtxs;
-      bool hasVertex(std::string v) const;
-      void insertToVrtxs(std::string v);
+  public:
+    static void vertexes(std::istream &in, List<std::pair<std::string, Graph>> &grs);
+    static void outbound(std::istream &in, List<std::pair<std::string, Graph>> &grs);
+    static void inbound(std::istream &in, List<std::pair<std::string, Graph>> &grs);
+    static void bind(std::istream &in, List<std::pair<std::string, Graph>> &grs);
+    static void cut(std::istream &in, List<std::pair<std::string, Graph>> &grs);
+    static void create(std::istream &in, List<std::pair<std::string, Graph>> &grs);
+    static void merge(std::istream &in, List<std::pair<std::string, Graph>> &grs);
+    static void extract(std::istream &in, List<std::pair<std::string, Graph>> &grs);
+
+  private:
+    HashTable<std::pair<std::string, std::string>, List<size_t>,
+              Siphash<std::pair<std::string, std::string>>,
+              std::equal_to<std::pair<std::string, std::string>>>
+      gr;
+    List<std::string> vrtxs;
+    bool hasVertex(std::string v) const;
+    void insertToVrtxs(std::string v);
   };
 
-  void graphs(List<std::pair<std::string, Graph>> &grs);
+  void graphs(std::istream &, List<std::pair<std::string, Graph>> &grs);
   void createWithArg(std::string gr, List<std::pair<std::string, Graph>> &grs);
-  void bindWithArg(std::string name,
+  void bindWithArg(
+    std::string name,
     std::string v1,
     std::string v2,
-    int weight,
+    size_t weight, 
     List<std::pair<std::string, Graph>> &grs
   );
 }
 
-inline void lavrentev::graphs(List<std::pair<std::string, Graph>> &grs)
+inline void lavrentev::graphs(std::istream &, List<std::pair<std::string, Graph>> &grs)
 {
   LCIter<std::pair<std::string, Graph>> it;
   for (it = grs.cbegin(); it != grs.cend(); ++it)
@@ -58,10 +60,10 @@ inline void lavrentev::graphs(List<std::pair<std::string, Graph>> &grs)
   }
 }
 
-inline void lavrentev::Graph::vertexes(List<std::pair<std::string, Graph>> &grs)
+inline void lavrentev::Graph::vertexes(std::istream &in, List<std::pair<std::string, Graph>> &grs)
 {
   std::string name;
-  std::cin >> name;
+  in >> name;
 
   LCIter<std::pair<std::string, Graph>> it;
   for (it = grs.cbegin(); it != grs.cend(); ++it)
@@ -79,65 +81,63 @@ inline void lavrentev::Graph::vertexes(List<std::pair<std::string, Graph>> &grs)
   std::cerr << "<INVALID COMMAND>" << "\n";
 }
 
-inline void lavrentev::Graph::outbound(List<std::pair<std::string, Graph>> &grs)
+inline void lavrentev::Graph::outbound(std::istream &in, List<std::pair<std::string, Graph>> &grs)
 {
   std::string name, v;
-  std::cin >> name >> v;
+  in >> name >> v;
 
-  bool graphFound = false;
-  bool vertexExists = false;
-
-  LCIter<std::pair<std::string, Graph>> it;
-  for (it = grs.cbegin(); it != grs.cend(); ++it)
+  LIter<std::pair<std::string, Graph>> it;
+  for (it = grs.begin(); it != grs.end(); ++it)
   {
     if ((*it).first == name)
     {
-      graphFound = true;
+      Graph &g = (*it).second;
 
-      HashCIter<std::pair<std::string, std::string>,
-        List< int >,
-        Siphash<std::pair<std::string, std::string>>,
-        std::equal_to<std::pair<std::string, std::string>>>
-      vrtxIt((*it).second.gr.ht_, (*it).second.gr.ht_ + (*it).second.gr.bucket_count(), (*it).second.gr.ht_[0].cbegin());
-
-      HashCIter<std::pair<std::string, std::string>,
-        List< int >,
-        Siphash<std::pair<std::string, std::string>>,
-        std::equal_to<std::pair<std::string, std::string>>>
-      vrtxItEnd((*it).second.gr.ht_ + (*it).second.gr.bucket_count(), (*it).second.gr.ht_ + (*it).second.gr.bucket_count(), (*it).second.gr.ht_[0].cbegin());
-
-      while(vrtxIt != vrtxItEnd)
+      if (!g.hasVertex(v))
       {
-        if ((*vrtxIt).key.first == v)
-        {
-          vertexExists = true;
+        std::cerr << "<INVALID COMMAND>\n";
+        return;
+      }
+      bool hasEdges = false;
+      LCIter<std::string> vrtxIt;
+      for (vrtxIt = g.vrtxs.cbegin(); vrtxIt != g.vrtxs.cend(); ++vrtxIt)
+      {
+        std::pair<std::string, std::string> key(v, (*vrtxIt));
 
-          std::cout << (*vrtxIt).key.second << " ";
-          LCIter< int > weightIter = (*vrtxIt).value.cbegin();
-          std::cout << (*weightIter);
-          ++weightIter;
-          while(weightIter != (*vrtxIt).value.cend())
+        if (g.gr.has(key))
+        {
+          hasEdges = true;
+          std::cout << (*vrtxIt) << " ";
+          List<size_t> &weights = g.gr[key];
+          LCIter<size_t> wIt = weights.cbegin();
+          if (wIt != weights.cend())
           {
-            std::cout << " " << (*weightIter);
-            ++weightIter;
+            std::cout << (*wIt);
+            ++wIt;
+
+            while (wIt != weights.cend())
+            {
+              std::cout << " " << (*wIt);
+              ++wIt;
+            }
           }
           std::cout << "\n";
         }
-        ++vrtxIt;
       }
-      break;
+      if (!hasEdges)
+      {
+        std::cerr << "<INVALID COMMAND>\n";
+      }
+      return;
     }
   }
-  if (!graphFound || !vertexExists)
-  {
-    std::cerr << "<INVALID COMMAND>" << "\n";
-  }
+  std::cerr << "<INVALID COMMAND>\n";
 }
 
-inline void lavrentev::Graph::inbound(List<std::pair<std::string, Graph>> &grs)
+inline void lavrentev::Graph::inbound(std::istream &in, List<std::pair<std::string, Graph>> &grs)
 {
   std::string name, v;
-  std::cin >> name >> v;
+  in >> name >> v;
 
   bool graphFound = false;
   bool vertexExists = false;
@@ -153,33 +153,38 @@ inline void lavrentev::Graph::inbound(List<std::pair<std::string, Graph>> &grs)
       }
       vertexExists = true;
 
-      HashCIter<std::pair<std::string, std::string>,
-        List< int >,
-        Siphash<std::pair<std::string, std::string>>,
-        std::equal_to<std::pair<std::string, std::string>>>
-      vrtxIt((*it).second.gr.ht_,
-             (*it).second.gr.ht_ + (*it).second.gr.bucket_count(),
-             (*it).second.gr.ht_[0].cbegin());
+      HashCIter<std::pair<std::string, std::string>, List<size_t>,
+                Siphash<std::pair<std::string, std::string>>,
+                std::equal_to<std::pair<std::string, std::string>>>
+      vrtxIt(
+        (*it).second.gr.ht_,
+        (*it).second.gr.ht_ + (*it).second.gr.bucket_count(),
+        (*it).second.gr.ht_[0].cbegin()
+      );
 
-      HashCIter<std::pair<std::string, std::string>,
-        List< int >,
-        Siphash<std::pair<std::string, std::string>>,
-        std::equal_to<std::pair<std::string, std::string>>>
-      vrtxItEnd((*it).second.gr.ht_ + (*it).second.gr.bucket_count(),
-                (*it).second.gr.ht_ + (*it).second.gr.bucket_count(),
-                (*it).second.gr.ht_[0].cbegin());
+      HashCIter<std::pair<std::string, std::string>, List<size_t>,
+                Siphash<std::pair<std::string, std::string>>,
+                std::equal_to<std::pair<std::string, std::string>>>
+      vrtxItEnd(
+        (*it).second.gr.ht_ + (*it).second.gr.bucket_count(),
+        (*it).second.gr.ht_ + (*it).second.gr.bucket_count(),
+        LCIter<typename HashTable<
+            std::pair<std::string, std::string>, List<size_t>,
+            Siphash<std::pair<std::string, std::string>>,
+            std::equal_to<std::pair<std::string, std::string>>>::Node>()
+      );
 
-      while(vrtxIt != vrtxItEnd)
+      while (vrtxIt != vrtxItEnd)
       {
         if ((*vrtxIt).key.second == v)
         {
           std::cout << (*vrtxIt).key.first << " ";
-          LCIter< int > weightIter = (*vrtxIt).value.cbegin();
+          LCIter<size_t> weightIter = (*vrtxIt).value.cbegin();
           if (weightIter != (*vrtxIt).value.cend())
           {
             std::cout << (*weightIter);
             ++weightIter;
-            while(weightIter != (*vrtxIt).value.cend())
+            while (weightIter != (*vrtxIt).value.cend())
             {
               std::cout << " " << (*weightIter);
               ++weightIter;
@@ -201,7 +206,7 @@ inline void lavrentev::Graph::inbound(List<std::pair<std::string, Graph>> &grs)
 inline bool lavrentev::Graph::hasVertex(std::string v) const
 {
   LCIter<std::string> it;
-  for(it = vrtxs.cbegin(); it != vrtxs.cend(); ++it)
+  for (it = vrtxs.cbegin(); it != vrtxs.cend(); ++it)
   {
     if ((*it) == v)
     {
@@ -250,10 +255,11 @@ inline void lavrentev::Graph::insertToVrtxs(std::string v)
   }
 }
 
-inline void lavrentev::Graph::bind(List<std::pair<std::string, Graph>> &grs){
+inline void lavrentev::Graph::bind(std::istream &in, List<std::pair<std::string, Graph>> &grs)
+{
   std::string name, v1, v2;
-  int weight;
-  std::cin >> name >> v1 >> v2 >> weight;
+  size_t weight;
+  in >> name >> v1 >> v2 >> weight;
   bindWithArg(name, v1, v2, weight, grs);
 }
 
@@ -261,11 +267,11 @@ inline void lavrentev::bindWithArg(
   std::string name,
   std::string v1,
   std::string v2,
-  int weight,
+  size_t weight,
   List<std::pair<std::string, Graph>> &grs)
 {
   LIter<std::pair<std::string, Graph>> it;
-  for(it = grs.begin(); it != grs.end(); ++it)
+  for (it = grs.begin(); it != grs.end(); ++it)
   {
     if ((*it).first == name)
     {
@@ -279,21 +285,52 @@ inline void lavrentev::bindWithArg(
       {
         g.insertToVrtxs(v2);
       }
-      g.gr[{v1, v2}].pushFront(weight);
+
+      List<size_t> &weights = g.gr[std::pair<std::string, std::string>(v1, v2)];
+
+      if (weights.begin() == weights.end())
+      {
+        weights.pushFront(weight);
+        return;
+      }
+
+      LIter<size_t> itW = weights.begin();
+
+      if (weight < *itW)
+      {
+        weights.pushFront(weight);
+        return;
+      }
+
+      LIter<size_t> prev = itW;
+      ++itW;
+
+      while (itW != weights.end())
+      {
+        if (weight < *itW)
+        {
+          weights.insert(prev, weight);
+          return;
+        }
+        prev = itW;
+        ++itW;
+      }
+
+      weights.insert(prev, weight);
       return;
     }
   }
   std::cerr << "<INVALID COMMAND>" << "\n";
 }
 
-inline void lavrentev::Graph::cut(List<std::pair<std::string, Graph>> &grs)
+inline void lavrentev::Graph::cut(std::istream &in, List<std::pair<std::string, Graph>> &grs)
 {
   std::string name, v1, v2;
-  int weight;
-  std::cin >> name >> v1 >> v2 >> weight;
+  size_t weight;
+  in >> name >> v1 >> v2 >> weight;
 
   LIter<std::pair<std::string, Graph>> it;
-  for(it = grs.begin(); it != grs.end(); ++it)
+  for (it = grs.begin(); it != grs.end(); ++it)
   {
     if ((*it).first == name)
     {
@@ -310,10 +347,10 @@ inline void lavrentev::Graph::cut(List<std::pair<std::string, Graph>> &grs)
         break;
       }
 
-      List< int > &weights = g.gr[keyToFind];
-      LIter< int > wIt = weights.begin();
+      List<size_t> &weights = g.gr[keyToFind];
+      LIter<size_t> wIt = weights.begin();
 
-      for(; wIt != weights.end(); ++wIt)
+      for (; wIt != weights.end(); ++wIt)
       {
         if (*wIt == weight)
         {
@@ -331,10 +368,10 @@ inline void lavrentev::Graph::cut(List<std::pair<std::string, Graph>> &grs)
   std::cerr << "<INVALID COMMAND>" << "\n";
 }
 
-inline void lavrentev::Graph::create(List<std::pair<std::string, Graph>> &grs)
+inline void lavrentev::Graph::create(std::istream &in, List<std::pair<std::string, Graph>> &grs)
 {
   std::string name;
-  std::cin >> name;
+  in >> name;
   createWithArg(name, grs);
 }
 
@@ -347,13 +384,14 @@ inline void lavrentev::createWithArg(std::string name, List<std::pair<std::strin
   }
   LIter<std::pair<std::string, Graph>> it = grs.begin();
   LIter<std::pair<std::string, Graph>> preIt = grs.begin();
-  for(; it != grs.end(); ++it)
+  for (; it != grs.end(); ++it)
   {
-    if((*it).first == name)
+    if ((*it).first == name)
     {
       std::cerr << "<INVALID COMMAND>" << "\n";
       return;
-    } else if ((*it).first > name)
+    }
+    else if ((*it).first > name)
     {
       if (it == grs.begin())
       {
@@ -370,15 +408,15 @@ inline void lavrentev::createWithArg(std::string name, List<std::pair<std::strin
   grs.insert(preIt, {name, Graph{}});
 }
 
-inline void lavrentev::Graph::merge(List<std::pair<std::string, Graph>>& grs)
+inline void lavrentev::Graph::merge(std::istream &in, List<std::pair<std::string, Graph>> &grs)
 {
   std::string newGrName, gr1Name, gr2Name;
-  std::cin >> newGrName >> gr1Name >> gr2Name;
+  in >> newGrName >> gr1Name >> gr2Name;
 
-  Graph* g1 = nullptr;
-  Graph* g2 = nullptr;
+  Graph *g1 = nullptr;
+  Graph *g2 = nullptr;
 
-  for (auto it = grs.begin(); it != grs.end(); ++it)
+  for (LIter<std::pair<std::string, Graph>> it = grs.begin(); it != grs.end(); ++it)
   {
     if ((*it).first == newGrName)
     {
@@ -403,8 +441,8 @@ inline void lavrentev::Graph::merge(List<std::pair<std::string, Graph>>& grs)
 
   createWithArg(newGrName, grs);
 
-  Graph* newGr = nullptr;
-  for (auto it = grs.begin(); it != grs.end(); ++it)
+  Graph *newGr = nullptr;
+  for (LIter<std::pair<std::string, Graph>> it = grs.begin(); it != grs.end(); ++it)
   {
     if ((*it).first == newGrName)
     {
@@ -413,11 +451,11 @@ inline void lavrentev::Graph::merge(List<std::pair<std::string, Graph>>& grs)
     }
   }
 
-  for (auto vIt = g1->vrtxs.cbegin(); vIt != g1->vrtxs.cend(); ++vIt)
+  for (LCIter<std::string> vIt = g1->vrtxs.cbegin(); vIt != g1->vrtxs.cend(); ++vIt)
   {
     newGr->insertToVrtxs(*vIt);
   }
-  for (auto vIt = g2->vrtxs.cbegin(); vIt != g2->vrtxs.cend(); ++vIt)
+  for (LCIter<std::string> vIt = g2->vrtxs.cbegin(); vIt != g2->vrtxs.cend(); ++vIt)
   {
     newGr->insertToVrtxs(*vIt);
   }
@@ -426,10 +464,10 @@ inline void lavrentev::Graph::merge(List<std::pair<std::string, Graph>>& grs)
   {
     for (auto eIt = g1->gr.ht_[i].begin(); eIt != g1->gr.ht_[i].end(); ++eIt)
     {
-      auto& key = (*eIt).key;
-      auto& weights = (*eIt).value;
+      std::pair<std::string, std::string> &key = (*eIt).key;
+      List<size_t> &weights = (*eIt).value;
 
-      for (auto wIt = weights.cbegin(); wIt != weights.cend(); ++wIt)
+      for (LIter<size_t> wIt = weights.begin(); wIt != weights.end(); ++wIt)
       {
         bindWithArg(newGrName, key.first, key.second, *wIt, grs);
       }
@@ -440,10 +478,10 @@ inline void lavrentev::Graph::merge(List<std::pair<std::string, Graph>>& grs)
   {
     for (auto eIt = g2->gr.ht_[i].begin(); eIt != g2->gr.ht_[i].end(); ++eIt)
     {
-      auto& key = (*eIt).key;
-      auto& weights = (*eIt).value;
+      std::pair<std::string, std::string> &key = (*eIt).key;
+      List<size_t> &weights = (*eIt).value;
 
-      for (auto wIt = weights.cbegin(); wIt != weights.cend(); ++wIt)
+      for (LIter<size_t> wIt = weights.begin(); wIt != weights.end(); ++wIt)
       {
         bindWithArg(newGrName, key.first, key.second, *wIt, grs);
       }
@@ -451,18 +489,17 @@ inline void lavrentev::Graph::merge(List<std::pair<std::string, Graph>>& grs)
   }
 }
 
-inline void lavrentev::Graph::extract(
-  List<std::pair<std::string, Graph>> &grs)
+inline void lavrentev::Graph::extract(std::istream &in, List<std::pair<std::string, Graph>> &grs)
 {
   std::string newGr, oldGr;
   size_t amountVrtxs;
   List<std::string> vertexes;
 
-  std::cin >> newGr >> oldGr >> amountVrtxs;
-  for(size_t i = 0; i < amountVrtxs; ++i)
+  in >> newGr >> oldGr >> amountVrtxs;
+  for (size_t i = 0; i < amountVrtxs; ++i)
   {
     std::string v;
-    std::cin >> v;
+    in >> v;
     vertexes.pushFront(v);
   }
 }

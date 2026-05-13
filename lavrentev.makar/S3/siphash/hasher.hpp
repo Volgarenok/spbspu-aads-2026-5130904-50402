@@ -13,7 +13,9 @@ template <class Key> class Siphash
     std::array<unsigned char, 16> s{};
     std::random_device rd;
     for (auto &b : s)
+    {
       b = static_cast<unsigned char>(rd());
+    }
 
     return s;
   }
@@ -25,14 +27,8 @@ public:
     h_ = boost::hash2::siphash_64(seed.data(), seed.size());
   }
 
-  explicit Siphash(std::array<unsigned char, 16> const &seed)
-      : h_(seed.data(), seed.size())
-  {
-  }
-
-  Siphash(unsigned char const *p, std::size_t n) : h_(p, n)
-  {
-  }
+  explicit Siphash(std::array<unsigned char, 16> const &seed) : h_(seed.data(), seed.size()) {}
+  Siphash(unsigned char const *p, std::size_t n) : h_(p, n) {}
 
   std::size_t operator()(Key const &key) const
   {
@@ -60,12 +56,10 @@ class Siphash<std::pair<std::string, std::string>>
 public:
   Siphash() = default;
 
-  std::size_t operator()(
-      const std::pair<std::string, std::string>& p) const
+  std::size_t operator()(const std::pair<std::string, std::string>& p) const
   {
     std::size_t h1 = stringHasher_(p.first);
     std::size_t h2 = stringHasher_(p.second);
-
     return h1 ^ (h2 + 0x9e3779b97f4a7c15ULL + (h1 << 6) + (h1 >> 2));
   }
 };
