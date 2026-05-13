@@ -31,7 +31,7 @@ namespace lavrentev{
     private:
       HashTable< std::pair<std::string, std::string>,
         List< int >,
-        Siphash< std::string >,
+        Siphash< std::pair<std::string, std::string> >,
         std::equal_to<std::pair<std::string, std::string>>
       > gr;
       List<std::string> vrtxs;
@@ -96,13 +96,13 @@ inline void lavrentev::Graph::outbound(List<std::pair<std::string, Graph>> &grs)
 
       HashCIter<std::pair<std::string, std::string>,
         List< int >,
-        Siphash< std::string >,
+        Siphash<std::pair<std::string, std::string>>,
         std::equal_to<std::pair<std::string, std::string>>>
       vrtxIt((*it).second.gr.ht_, (*it).second.gr.ht_ + (*it).second.gr.bucket_count(), (*it).second.gr.ht_[0].cbegin());
 
       HashCIter<std::pair<std::string, std::string>,
         List< int >,
-        Siphash< std::string >,
+        Siphash<std::pair<std::string, std::string>>,
         std::equal_to<std::pair<std::string, std::string>>>
       vrtxItEnd((*it).second.gr.ht_ + (*it).second.gr.bucket_count(), (*it).second.gr.ht_ + (*it).second.gr.bucket_count(), (*it).second.gr.ht_[0].cbegin());
 
@@ -155,7 +155,7 @@ inline void lavrentev::Graph::inbound(List<std::pair<std::string, Graph>> &grs)
 
       HashCIter<std::pair<std::string, std::string>,
         List< int >,
-        Siphash< std::string >,
+        Siphash<std::pair<std::string, std::string>>,
         std::equal_to<std::pair<std::string, std::string>>>
       vrtxIt((*it).second.gr.ht_,
              (*it).second.gr.ht_ + (*it).second.gr.bucket_count(),
@@ -163,7 +163,7 @@ inline void lavrentev::Graph::inbound(List<std::pair<std::string, Graph>> &grs)
 
       HashCIter<std::pair<std::string, std::string>,
         List< int >,
-        Siphash< std::string >,
+        Siphash<std::pair<std::string, std::string>>,
         std::equal_to<std::pair<std::string, std::string>>>
       vrtxItEnd((*it).second.gr.ht_ + (*it).second.gr.bucket_count(),
                 (*it).second.gr.ht_ + (*it).second.gr.bucket_count(),
