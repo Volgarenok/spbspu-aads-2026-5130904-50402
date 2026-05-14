@@ -2,6 +2,7 @@
 #define GRAPH_HPP
 #include "HashTable.hpp"
 #include <List.hpp>
+#include <stdexcept>
 
 namespace lavrentev
 {
@@ -78,7 +79,7 @@ inline void lavrentev::Graph::vertexes(std::istream &in, List<std::pair<std::str
       return;
     }
   }
-  throw;
+  throw std::logic_error("");
 }
 
 inline void lavrentev::Graph::outbound(std::istream &in, List<std::pair<std::string, Graph>> &grs)
@@ -95,7 +96,7 @@ inline void lavrentev::Graph::outbound(std::istream &in, List<std::pair<std::str
 
       if (!g.hasVertex(v))
       {
-        throw;
+        throw std::logic_error("");
       }
       bool hasEdges = false;
       LCIter<std::string> vrtxIt;
@@ -125,12 +126,12 @@ inline void lavrentev::Graph::outbound(std::istream &in, List<std::pair<std::str
       }
       if (!hasEdges)
       {
-        throw;
+        throw std::logic_error("");
       }
       return;
     }
   }
-  throw;
+  throw std::logic_error("");
 }
 
 inline void lavrentev::Graph::inbound(std::istream &in, List<std::pair<std::string, Graph>> &grs)
@@ -198,7 +199,7 @@ inline void lavrentev::Graph::inbound(std::istream &in, List<std::pair<std::stri
   }
   if (!graphFound || !vertexExists)
   {
-    throw;
+    throw std::logic_error("");
   }
 }
 
@@ -319,7 +320,7 @@ inline void lavrentev::bindWithArg(
       return;
     }
   }
-  throw;
+  throw std::logic_error("");
 }
 
 inline void lavrentev::Graph::cut(std::istream &in, List<std::pair<std::string, Graph>> &grs)
@@ -364,7 +365,7 @@ inline void lavrentev::Graph::cut(std::istream &in, List<std::pair<std::string, 
       break;
     }
   }
-  throw;
+  throw std::logic_error("");
 }
 
 inline void lavrentev::Graph::create(std::istream &in, List<std::pair<std::string, Graph>> &grs)
@@ -387,7 +388,7 @@ inline void lavrentev::createWithArg(std::string name, List<std::pair<std::strin
   {
     if ((*it).first == name)
     {
-      throw;
+      throw std::logic_error("");
     }
     else if ((*it).first > name)
     {
@@ -418,7 +419,7 @@ inline void lavrentev::Graph::merge(std::istream &in, List<std::pair<std::string
   {
     if ((*it).first == newGrName)
     {
-      throw;
+      throw std::logic_error("");
     }
     if ((*it).first == gr1Name)
     {
@@ -432,7 +433,7 @@ inline void lavrentev::Graph::merge(std::istream &in, List<std::pair<std::string
 
   if (!g1 || !g2)
   {
-    throw;
+    throw std::logic_error("");
   }
 
   createWithArg(newGrName, grs);
@@ -510,7 +511,7 @@ inline void lavrentev::Graph::extract(std::istream &in, List<std::pair<std::stri
       {
         if (!(*it).second.hasVertex(*needVrtxsIt))
         {
-          throw;
+          throw std::logic_error("");
         }
       }
       flag = true;
@@ -523,7 +524,7 @@ inline void lavrentev::Graph::extract(std::istream &in, List<std::pair<std::stri
   }
   if (!flag || !flagNew)
   {
-    throw;
+    throw std::logic_error("");
   }
 
   createWithArg(newGrName, grs);
