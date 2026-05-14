@@ -247,12 +247,18 @@ void karpovich::Engine::cmdLoadProject(const Vector< std::string > &args)
     std::cout << "<INVALID COMMAND>\n";
     return;
   }
-  std::ifstream file(args[1] + ".dat");
+  std::string fname = args[1] + ".dat";
+  std::ifstream file(fname);
   if (!file.is_open()) {
     std::cout << "<ERROR: FILE NOT FOUND>\n";
     return;
   }
-  active_project_ = deserializeProject(file);
+  try {
+    active_project_ = deserializeProject(file);
+  } catch (const std::exception &) {
+    std::cout << "<INVALID COMMAND>\n";
+    return;
+  }
   project_filename_ = args[1];
   project_loaded_ = true;
   game_state_ = save_state_t{};
@@ -525,7 +531,7 @@ void karpovich::Engine::cmdRemoveObject(const Vector< std::string > &args)
 
 void karpovich::Engine::cmdSetInteract(const Vector< std::string > &args)
 {
-  if (args.getSize() < 3) {
+  if (args.getSize() < 4) {
     std::cout << "<INVALID COMMAND>\n";
     return;
   }
@@ -542,9 +548,9 @@ void karpovich::Engine::cmdSetInteract(const Vector< std::string > &args)
       std::string gives;
       std::string req;
       for (size_t j = 3; j < args.getSize(); ++j) {
-        if (args[j].rfind("give:", 0) == 0) {
+        if (args[j].size() >= 5 && args[j].substr(0, 5) == "give:") {
           gives = args[j].substr(5);
-        } else if (args[j].rfind("has:", 0) == 0) {
+        } else if (args[j].size() >= 4 && args[j].substr(0, 4) == "has:") {
           req = args[j].substr(4);
         }
       }
@@ -599,8 +605,7 @@ void karpovich::Engine::cmdInteract(const Vector< std::string > &args)
       std::cout << "<ACTION: " << obj.action_ << " " << args[1] << ">\n";
       if (!obj.gives_.empty()) {
         if (game_state_.inventory_.has(obj.gives_)) {
-          int &cnt = game_state_.inventory_.get(obj.gives_);
-          ++cnt;
+          game_state_.inventory_.get(obj.gives_)++;
         } else {
           game_state_.inventory_.add(obj.gives_, 1);
         }
@@ -648,9 +653,8 @@ void karpovich::Engine::cmdShowInv(const Vector< std::string > &)
   }
   std::cout << "<INVENTORY: ";
   bool first = true;
-  karpovich::HashTable< std::string, int >::HIter it = game_state_.inventory_.begin();
-  karpovich::HashTable< std::string, int >::HIter end_it = game_state_.inventory_.end();
-  for (; it != end_it; ++it) {
+  for (karpovich::HashTable< std::string, int >::HIter it = game_state_.inventory_.begin();
+       it != game_state_.inventory_.end(); ++it) {
     if (!first) {
       std::cout << ", ";
     }
