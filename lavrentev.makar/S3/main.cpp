@@ -3,13 +3,18 @@
 #include "readfile.hpp"
 
 int main(int argc, char *argv[]) {
+  if (argc != 2)
+  {
+    std::cerr << "Input processing error" << "\n";
+    return 1;
+  }
   lavrentev::List<std::pair<std::string, lavrentev::Graph>> grs;
   std::string name;
   try
   {
     lavrentev::readfile(argv[1], grs);
   } catch (const std::exception) {
-    std::cerr << "Input processing error " << "\n";
+    std::cerr << "Input processing error" << "\n";
     return 2;
   }
 

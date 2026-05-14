@@ -2,7 +2,7 @@
 #define HASHTABLE_HPP
 #include <cstddef>
 #include <stdexcept>
-#include "../common/List.hpp"
+#include <List.hpp>
 #include "siphash/hasher.hpp"
 
 namespace lavrentev
@@ -31,7 +31,7 @@ namespace lavrentev
   public:
     friend class HashIter<Key, Value, Hash, Equal>;
     friend class HashCIter<Key, Value, Hash, Equal>;
-    friend class Graph;
+    friend struct Graph;
 
     HashTable();
     HashTable(const HashTable &);

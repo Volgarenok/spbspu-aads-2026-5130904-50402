@@ -1,7 +1,8 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
 #include "HashTable.hpp"
-#include "../common/List.hpp"
+#include <List.hpp>
+//#include <stdexcept>
 
 namespace lavrentev
 {
@@ -491,16 +492,88 @@ inline void lavrentev::Graph::merge(std::istream &in, List<std::pair<std::string
 
 inline void lavrentev::Graph::extract(std::istream &in, List<std::pair<std::string, Graph>> &grs)
 {
-  std::string newGr, oldGr;
+  std::string newGrName, oldGrName;
   size_t amountVrtxs;
   List<std::string> vertexes;
 
-  in >> newGr >> oldGr >> amountVrtxs;
+  in >> newGrName >> oldGrName >> amountVrtxs;
   for (size_t i = 0; i < amountVrtxs; ++i)
   {
     std::string v;
     in >> v;
     vertexes.pushFront(v);
+  }
+
+  LIter<std::pair<std::string, Graph>> it = grs.begin();
+  bool flag = false, flagNew = true;
+  for(; it != grs.end(); ++it)
+  {
+    if ((*it).first == oldGrName)
+    {
+      LIter<std::string> needVrtxsIt = vertexes.begin();
+      for(; needVrtxsIt != vertexes.end(); ++needVrtxsIt)
+      {
+        if (!(*it).second.hasVertex(*needVrtxsIt))
+        {
+          std::cerr << "<INVALID COMMAND>\n";
+          return;
+          //throw std::logic_error("<INVALID COMMAND>");
+        }
+      }
+      flag = true;
+      break;
+    }
+    if ((*it).first == newGrName)
+    {
+      flagNew = false;
+    }
+  }
+  if (!flag || !flagNew)
+  {
+    std::cerr << "<INVALID COMMAND>\n";
+    return;
+  }
+
+  createWithArg(newGrName, grs);
+
+  Graph *newGr = nullptr;
+  Graph *oldGr = nullptr;
+  for (LIter<std::pair<std::string, Graph>> it = grs.begin(); it != grs.end(); ++it)
+  {
+    if ((*it).first == newGrName)
+    {
+      newGr = &(*it).second;
+    }
+    if ((*it).first == oldGrName)
+    {
+      oldGr = &(*it).second;
+    }
+  }
+
+  LIter<std::string> needVrtxsIt = vertexes.begin();
+  for (; needVrtxsIt != vertexes.end(); ++needVrtxsIt)
+  {
+    newGr->insertToVrtxs(*needVrtxsIt);
+  }
+
+  LIter<std::string> vrtxItFirst = vertexes.begin();
+  LIter<std::string> vrtxItSecond = vertexes.begin();
+  for (; vrtxItFirst != vertexes.end(); ++vrtxItFirst)
+  {
+    for(; vrtxItSecond != vertexes.end(); ++vrtxItSecond)
+    {
+      std::pair<std::string, std::string> key = {(*vrtxItFirst), (*vrtxItSecond)};
+      if ((*oldGr).gr.has(key))
+      {
+        List<size_t> &w = (*oldGr).gr[key];
+        LIter<size_t> wIt = w.begin();
+        for(; wIt != w.end(); ++wIt)
+        {
+          bindWithArg(newGrName, *vrtxItFirst, *vrtxItSecond, *wIt, grs);
+        }
+      }
+    }
+    vrtxItSecond = vertexes.begin();
   }
 }
 
