@@ -255,7 +255,7 @@ namespace karpovich
     size_--;
     return LIter< T >{next};
   }
-  
+
   template < class T >
   LCIter< T > List< T >::begin() const
   {
