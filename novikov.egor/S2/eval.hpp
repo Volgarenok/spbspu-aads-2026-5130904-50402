@@ -67,15 +67,37 @@ namespace novikov
 
   long long apply(long long a, long long b, const std::string &op)
   {
-    if (op == "+")
+    if (op == "+") {
+      if ((b > 0 && a > std::numeric_limits< long long >::max() - b)
+          || (b < 0 && a < std::numeric_limits< long long >::min() - b)) {
+        throw std::runtime_error("Overflow");
+      }
       return a + b;
-    if (op == "-")
+    }
+    if (op == "-") {
+      if ((b < 0 && a > std::numeric_limits< long long >::max() + b)
+          || (b > 0 && a < std::numeric_limits< long long >::min() + b)) {
+        throw std::runtime_error("Overflow");
+      }
       return a - b;
-    if (op == "*")
+    }
+    if (op == "*") {
+      if (a != 0 && b != 0) {
+        if ((a > 0 && b > 0 && a > std::numeric_limits< long long >::max() / b)
+            || (a > 0 && b < 0 && b < std::numeric_limits< long long >::min() / a)
+            || (a < 0 && b > 0 && a < std::numeric_limits< long long >::min() / b)
+            || (a < 0 && b < 0 && a < std::numeric_limits< long long >::max() / b)) {
+          throw std::runtime_error("Overflow");
+        }
+      }
       return a * b;
+    }
     if (op == "/") {
       if (b == 0) {
         throw std::runtime_error("Division by zero");
+      }
+      if (a == std::numeric_limits< long long >::min() && b == -1) {
+        throw std::runtime_error("Overflow");
       }
       return a / b;
     }
