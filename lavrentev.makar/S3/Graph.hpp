@@ -78,7 +78,7 @@ inline void lavrentev::Graph::vertexes(std::istream &in, List<std::pair<std::str
       return;
     }
   }
-  std::cerr << "<INVALID COMMAND>" << "\n";
+  std::cout << "<INVALID COMMAND>" << "\n";
 }
 
 inline void lavrentev::Graph::outbound(std::istream &in, List<std::pair<std::string, Graph>> &grs)
@@ -95,7 +95,7 @@ inline void lavrentev::Graph::outbound(std::istream &in, List<std::pair<std::str
 
       if (!g.hasVertex(v))
       {
-        std::cerr << "<INVALID COMMAND>\n";
+        std::cout << "<INVALID COMMAND>\n";
         return;
       }
       bool hasEdges = false;
@@ -126,12 +126,12 @@ inline void lavrentev::Graph::outbound(std::istream &in, List<std::pair<std::str
       }
       if (!hasEdges)
       {
-        std::cerr << "<INVALID COMMAND>\n";
+        std::cout << "<INVALID COMMAND>\n";
       }
       return;
     }
   }
-  std::cerr << "<INVALID COMMAND>\n";
+  std::cout << "<INVALID COMMAND>\n";
 }
 
 inline void lavrentev::Graph::inbound(std::istream &in, List<std::pair<std::string, Graph>> &grs)
@@ -199,7 +199,7 @@ inline void lavrentev::Graph::inbound(std::istream &in, List<std::pair<std::stri
   }
   if (!graphFound || !vertexExists)
   {
-    std::cerr << "<INVALID COMMAND>" << "\n";
+    std::cout << "<INVALID COMMAND>" << "\n";
   }
 }
 
@@ -320,7 +320,7 @@ inline void lavrentev::bindWithArg(
       return;
     }
   }
-  std::cerr << "<INVALID COMMAND>" << "\n";
+  std::cout << "<INVALID COMMAND>" << "\n";
 }
 
 inline void lavrentev::Graph::cut(std::istream &in, List<std::pair<std::string, Graph>> &grs)
@@ -365,7 +365,7 @@ inline void lavrentev::Graph::cut(std::istream &in, List<std::pair<std::string, 
       break;
     }
   }
-  std::cerr << "<INVALID COMMAND>" << "\n";
+  std::cout << "<INVALID COMMAND>" << "\n";
 }
 
 inline void lavrentev::Graph::create(std::istream &in, List<std::pair<std::string, Graph>> &grs)
@@ -388,7 +388,7 @@ inline void lavrentev::createWithArg(std::string name, List<std::pair<std::strin
   {
     if ((*it).first == name)
     {
-      std::cerr << "<INVALID COMMAND>" << "\n";
+      std::cout << "<INVALID COMMAND>" << "\n";
       return;
     }
     else if ((*it).first > name)
@@ -420,7 +420,7 @@ inline void lavrentev::Graph::merge(std::istream &in, List<std::pair<std::string
   {
     if ((*it).first == newGrName)
     {
-      std::cerr << "<INVALID COMMAND>\n";
+      std::cout << "<INVALID COMMAND>\n";
       return;
     }
     if ((*it).first == gr1Name)
@@ -435,7 +435,7 @@ inline void lavrentev::Graph::merge(std::istream &in, List<std::pair<std::string
 
   if (!g1 || !g2)
   {
-    std::cerr << "<INVALID COMMAND>\n";
+    std::cout << "<INVALID COMMAND>\n";
     return;
   }
 
@@ -514,9 +514,8 @@ inline void lavrentev::Graph::extract(std::istream &in, List<std::pair<std::stri
       {
         if (!(*it).second.hasVertex(*needVrtxsIt))
         {
-          std::cerr << "<INVALID COMMAND>\n";
+          std::cout << "<INVALID COMMAND>\n";
           return;
-          //throw std::logic_error("<INVALID COMMAND>");
         }
       }
       flag = true;
@@ -529,7 +528,7 @@ inline void lavrentev::Graph::extract(std::istream &in, List<std::pair<std::stri
   }
   if (!flag || !flagNew)
   {
-    std::cerr << "<INVALID COMMAND>\n";
+    std::cout << "<INVALID COMMAND>\n";
     return;
   }
 
