@@ -93,6 +93,8 @@ BOOST_AUTO_TEST_CASE(test_scene_management_and_validation)
 
   out = runCommand(engine, "remove-scene garden");
   BOOST_CHECK(out.find("<SCENE REMOVED: garden>") != std::string::npos);
+
+  std::remove("quest_gamma.dat");
 }
 
 BOOST_AUTO_TEST_CASE(test_gameplay_errors)
@@ -109,6 +111,60 @@ BOOST_AUTO_TEST_CASE(test_gameplay_errors)
 
   out = runCommand(engine, "load-game missing_slot");
   BOOST_CHECK(out.find("<ERROR: SAVE FILE NOT FOUND>") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(test_gameplay_loop)
+{
+  Engine engine;
+  std::string out = runCommand(engine, "create-game loop_quest \"Loop Quest\"");
+  BOOST_CHECK(out.find("<PROJECT CREATED: loop_quest.dat>") != std::string::npos);
+
+  out = runCommand(engine, "load-project loop_quest");
+  BOOST_CHECK(out.find("<PROJECT LOADED: loop_quest>") != std::string::npos);
+
+  runCommand(engine, "create-scene start \"Start area\"");
+  runCommand(engine, "create-scene next \"Next area\"");
+  runCommand(engine, "link-scene start next \"Go forward\"");
+  runCommand(engine, "add-object start crate");
+  runCommand(engine, "set-interact start crate give:key");
+  runCommand(engine, "add-object start vault");
+  runCommand(engine, "set-interact start vault give:gem has:key");
+
+  runCommand(engine, "mode game");
+  out = runCommand(engine, "start");
+  BOOST_CHECK(out.find("<GAME STARTED>") != std::string::npos);
+
+  out = runCommand(engine, "show-inv");
+  BOOST_CHECK(out.find("<INVENTORY EMPTY>") != std::string::npos);
+
+  out = runCommand(engine, "interact vault");
+  BOOST_CHECK(out.find("<NOTHING HAPPENS>") != std::string::npos);
+
+  out = runCommand(engine, "interact crate");
+  BOOST_CHECK(out.find("<ITEM ADDED: key>") != std::string::npos);
+
+  out = runCommand(engine, "interact vault");
+  BOOST_CHECK(out.find("<ITEM ADDED: gem>") != std::string::npos);
+
+  out = runCommand(engine, "show-inv");
+  BOOST_CHECK(out.find("<INVENTORY: ") != std::string::npos);
+  BOOST_CHECK(out.find("key x1") != std::string::npos);
+  BOOST_CHECK(out.find("gem x1") != std::string::npos);
+
+  out = runCommand(engine, "choice 0");
+  BOOST_CHECK(out.find("<MOVED TO: next>") != std::string::npos);
+
+  out = runCommand(engine, "choice 5");
+  BOOST_CHECK(out.find("<INVALID CHOICE>") != std::string::npos);
+
+  out = runCommand(engine, "save-game save_slot");
+  BOOST_CHECK(out.find("<GAME SAVED: save_slot>") != std::string::npos);
+
+  out = runCommand(engine, "load-game save_slot");
+  BOOST_CHECK(out.find("<GAME LOADED: save_slot>") != std::string::npos);
+
+  std::remove("loop_quest.dat");
+  std::remove("save_slot.save");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
