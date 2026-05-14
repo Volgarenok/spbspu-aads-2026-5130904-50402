@@ -55,9 +55,15 @@ namespace lavrentev
 inline void lavrentev::graphs(std::istream &, List<std::pair<std::string, Graph>> &grs)
 {
   LCIter<std::pair<std::string, Graph>> it;
+  bool flag = false;
   for (it = grs.cbegin(); it != grs.cend(); ++it)
   {
     std::cout << (*it).first << "\n";
+    flag = true;
+  }
+  if (!flag)
+  {
+    std::cout << "\n";
   }
 }
 
