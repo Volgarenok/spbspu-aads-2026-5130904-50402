@@ -99,6 +99,7 @@ inline void lavrentev::Graph::outbound(std::istream &in, List<std::pair<std::str
   std::string name, v;
   in >> name >> v;
   bool hasVrtx = false;
+  bool hasOut = false;
 
   LIter<std::pair<std::string, Graph>> it;
   for (it = grs.begin(); it != grs.end(); ++it)
@@ -129,6 +130,7 @@ inline void lavrentev::Graph::outbound(std::istream &in, List<std::pair<std::str
           LCIter<size_t> wIt = weights.cbegin();
           if (wIt != weights.cend())
           {
+            hasOut = true;
             std::cout << (*wIt);
             ++wIt;
 
@@ -144,6 +146,10 @@ inline void lavrentev::Graph::outbound(std::istream &in, List<std::pair<std::str
       if (!hasEdges && !hasVrtx)
       {
         throw std::logic_error("");
+      }
+      if (!hasOut)
+      {
+        std::cout << "\n";
       }
       return;
     }
