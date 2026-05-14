@@ -1,12 +1,12 @@
 #ifndef HASH_TABLE_HPP
 #define HASH_TABLE_HPP
-#include "Vector.hpp"
 #include <cstddef>
 #include <functional>
-#include "list.hpp"
 #include <stdexcept>
 #include <utility>
+#include "Vector.hpp"
 #include "hashIters.hpp"
+#include "list.hpp"
 
 namespace karpovich
 {
