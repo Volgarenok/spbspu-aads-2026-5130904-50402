@@ -41,8 +41,14 @@ int main(int argc, char *argv[]) {
   {
     if(commands.has(cmd))
     {
-      commands[cmd](std::cin, grs);
-    } else
+      try
+      {
+        commands[cmd](std::cin, grs);
+      } catch (...) {
+        std::cout << "<INVALID COMMAND>\n";
+      }
+    }
+    else
     {
       std::cout << "<INVALID COMMAND>\n";
       auto toignore = std::numeric_limits<std::streamsize>::max();

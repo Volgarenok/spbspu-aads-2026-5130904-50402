@@ -78,7 +78,7 @@ inline void lavrentev::Graph::vertexes(std::istream &in, List<std::pair<std::str
       return;
     }
   }
-  std::cout << "<INVALID COMMAND>" << "\n";
+  throw;
 }
 
 inline void lavrentev::Graph::outbound(std::istream &in, List<std::pair<std::string, Graph>> &grs)
@@ -95,8 +95,7 @@ inline void lavrentev::Graph::outbound(std::istream &in, List<std::pair<std::str
 
       if (!g.hasVertex(v))
       {
-        std::cout << "<INVALID COMMAND>\n";
-        return;
+        throw;
       }
       bool hasEdges = false;
       LCIter<std::string> vrtxIt;
@@ -126,12 +125,12 @@ inline void lavrentev::Graph::outbound(std::istream &in, List<std::pair<std::str
       }
       if (!hasEdges)
       {
-        std::cout << "<INVALID COMMAND>\n";
+        throw;
       }
       return;
     }
   }
-  std::cout << "<INVALID COMMAND>\n";
+  throw;
 }
 
 inline void lavrentev::Graph::inbound(std::istream &in, List<std::pair<std::string, Graph>> &grs)
@@ -199,7 +198,7 @@ inline void lavrentev::Graph::inbound(std::istream &in, List<std::pair<std::stri
   }
   if (!graphFound || !vertexExists)
   {
-    std::cout << "<INVALID COMMAND>" << "\n";
+    throw;
   }
 }
 
@@ -320,7 +319,7 @@ inline void lavrentev::bindWithArg(
       return;
     }
   }
-  std::cout << "<INVALID COMMAND>" << "\n";
+  throw;
 }
 
 inline void lavrentev::Graph::cut(std::istream &in, List<std::pair<std::string, Graph>> &grs)
@@ -365,7 +364,7 @@ inline void lavrentev::Graph::cut(std::istream &in, List<std::pair<std::string, 
       break;
     }
   }
-  std::cout << "<INVALID COMMAND>" << "\n";
+  throw;
 }
 
 inline void lavrentev::Graph::create(std::istream &in, List<std::pair<std::string, Graph>> &grs)
@@ -388,8 +387,7 @@ inline void lavrentev::createWithArg(std::string name, List<std::pair<std::strin
   {
     if ((*it).first == name)
     {
-      std::cout << "<INVALID COMMAND>" << "\n";
-      return;
+      throw;
     }
     else if ((*it).first > name)
     {
@@ -420,8 +418,7 @@ inline void lavrentev::Graph::merge(std::istream &in, List<std::pair<std::string
   {
     if ((*it).first == newGrName)
     {
-      std::cout << "<INVALID COMMAND>\n";
-      return;
+      throw;
     }
     if ((*it).first == gr1Name)
     {
@@ -435,8 +432,7 @@ inline void lavrentev::Graph::merge(std::istream &in, List<std::pair<std::string
 
   if (!g1 || !g2)
   {
-    std::cout << "<INVALID COMMAND>\n";
-    return;
+    throw;
   }
 
   createWithArg(newGrName, grs);
@@ -514,8 +510,7 @@ inline void lavrentev::Graph::extract(std::istream &in, List<std::pair<std::stri
       {
         if (!(*it).second.hasVertex(*needVrtxsIt))
         {
-          std::cout << "<INVALID COMMAND>\n";
-          return;
+          throw;
         }
       }
       flag = true;
@@ -528,8 +523,7 @@ inline void lavrentev::Graph::extract(std::istream &in, List<std::pair<std::stri
   }
   if (!flag || !flagNew)
   {
-    std::cout << "<INVALID COMMAND>\n";
-    return;
+    throw;
   }
 
   createWithArg(newGrName, grs);
