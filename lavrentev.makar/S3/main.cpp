@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <stdexcept>
 #include "Graph.hpp"
 #include "readfile.hpp"
 
@@ -13,7 +14,7 @@ int main(int argc, char *argv[]) {
   try
   {
     lavrentev::readfile(argv[1], grs);
-  } catch (const std::exception) {
+  } catch (const std::runtime_error &) {
     std::cerr << "Input processing error" << "\n";
     return 2;
   }
