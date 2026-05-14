@@ -46,6 +46,8 @@ int main(int argc, char *argv[]) {
         commands[cmd](std::cin, grs);
       } catch (...) {
         std::cout << "<INVALID COMMAND>\n";
+        auto toignore = std::numeric_limits<std::streamsize>::max();
+        std::cin.ignore(toignore, '\n');
         if (std::cin.fail())
         {
           std::cin.clear();
