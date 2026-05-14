@@ -105,9 +105,11 @@ void karpovich::HashIter< Key, Value, Hash, Equal >::findValid()
 template < class Key, class Value, class Hash, class Equal >
 karpovich::HashIter< Key, Value, Hash, Equal > &karpovich::HashIter< Key, Value, Hash, Equal >::operator++()
 {
-  ++listIt_;
   if (listIt_ != listEnd_) {
-    return *this;
+    ++listIt_;
+    if (listIt_ != listEnd_) {
+      return *this;
+    }
   }
   ++idx_;
   findValid();
@@ -180,7 +182,13 @@ void karpovich::HashConstIter< Key, Value, Hash, Equal >::findValid()
 template < class Key, class Value, class Hash, class Equal >
 karpovich::HashConstIter< Key, Value, Hash, Equal > &karpovich::HashConstIter< Key, Value, Hash, Equal >::operator++()
 {
-  ++listIt_;
+  if (listIt_ != listEnd_) {
+    ++listIt_;
+    if (listIt_ != listEnd_) {
+      return *this;
+    }
+  }
+  ++idx_;
   findValid();
   return *this;
 }
