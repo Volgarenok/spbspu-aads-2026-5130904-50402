@@ -68,6 +68,7 @@ namespace lavrentev
     T &front();
     const T &front() const;
     bool empty() const;
+    void pushFront(const T& v);
 
   private:
     Node *head;
@@ -77,7 +78,6 @@ namespace lavrentev
   getline(std::istream &in);
   void
   printTrans(lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>> arr);
-
 }
 
 inline lavrentev::List<std::pair<std::string, lavrentev::List<size_t>>>
@@ -477,6 +477,13 @@ template <class T> bool lavrentev::List<T>::empty() const
   {
     return false;
   }
+}
+
+template <class T>
+void lavrentev::List<T>::pushFront(const T& value)
+{
+    Node* newNode = new Node{value, head};
+    head = newNode;
 }
 
 #endif
