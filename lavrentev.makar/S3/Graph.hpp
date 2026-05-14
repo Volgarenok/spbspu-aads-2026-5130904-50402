@@ -78,9 +78,15 @@ inline void lavrentev::Graph::vertexes(std::istream &in, List<std::pair<std::str
     if ((*it).first == name)
     {
       LCIter<std::string> vrtxIt;
+      bool flag = false;
       for (vrtxIt = (*it).second.vrtxs.cbegin(); vrtxIt != (*it).second.vrtxs.cend(); ++vrtxIt)
       {
         std::cout << (*vrtxIt) << "\n";
+        flag = true;
+      }
+      if (!flag)
+      {
+        std::cout << "\n";
       }
       return;
     }
