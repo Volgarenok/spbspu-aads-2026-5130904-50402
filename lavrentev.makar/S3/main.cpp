@@ -37,28 +37,25 @@ int main(int argc, char *argv[]) {
   commands["extract"] = lavrentev::Graph::extract;
 
   std::string cmd;
-  while (std::cin >> cmd)
+  while (true)
   {
-    if(commands.has(cmd))
+    if (!(std::cin >> cmd))
     {
-      try
-      {
-        commands[cmd](std::cin, grs);
-      } catch (...) {
-        std::cout << "<INVALID COMMAND>\n";
-        if (std::cin.fail())
-        {
-          std::cin.clear();
-        }
-        auto toignore = std::numeric_limits<std::streamsize>::max();
-        std::cin.ignore(toignore, '\n');
-      }
+      break;
     }
-    else
+    try
+    {
+      if (!commands.has(cmd))
+      {
+        throw std::logic_error("Unknown command");
+      }
+      commands[cmd](std::cin, grs);
+    }
+    catch (...)
     {
       std::cout << "<INVALID COMMAND>\n";
-      auto toignore = std::numeric_limits<std::streamsize>::max();
-      std::cin.ignore(toignore, '\n');
+      std::cin.clear();
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
   }
 
