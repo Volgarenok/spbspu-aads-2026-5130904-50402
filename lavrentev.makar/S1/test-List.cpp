@@ -1,6 +1,5 @@
 #define BOOST_TEST_MODULE ListTest
 #include <boost/test/included/unit_test.hpp>
-//#include <sstream>
 #include "List.hpp"
 
 BOOST_AUTO_TEST_CASE(clear_test)

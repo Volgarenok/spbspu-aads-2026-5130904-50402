@@ -5,7 +5,8 @@
 #include <boost/hash2/hash_append.hpp>
 #include <boost/hash2/get_integral_result.hpp>
 
-template <class Key> class Siphash
+template <class Key>
+class Siphash
 {
   boost::hash2::siphash_64 h_;
   static std::array<unsigned char, 16> make_seed_16()

@@ -47,7 +47,7 @@ namespace lavrentev
     std::string name,
     std::string v1,
     std::string v2,
-    size_t weight, 
+    size_t weight,
     List<std::pair<std::string, Graph>> &grs
   );
 }
