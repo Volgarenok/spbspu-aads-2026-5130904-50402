@@ -1,9 +1,10 @@
 #ifndef HASH_ITERS_HPP
 #define HASH_ITERS_HPP
-#include "Vector.hpp"
+
 #include <cstddef>
-#include "list.hpp"
 #include <utility>
+#include "Vector.hpp"
+#include "list.hpp"
 
 namespace karpovich
 {
@@ -116,14 +117,14 @@ karpovich::HashIter< Key, Value, Hash, Equal > &karpovich::HashIter< Key, Value,
 template < class Key, class Value, class Hash, class Equal >
 bool karpovich::HashIter< Key, Value, Hash, Equal >::operator==(const HashIter &other) const
 {
-  if (data_ == nullptr && other.data_ == nullptr) {
+  bool this_end = (data_ == nullptr || idx_ >= capacity_);
+  bool other_end = (other.data_ == nullptr || other.idx_ >= other.capacity_);
+
+  if (this_end && other_end) {
     return true;
   }
-  if (data_ == nullptr || other.data_ == nullptr) {
+  if (this_end || other_end) {
     return false;
-  }
-  if (idx_ >= capacity_ && other.idx_ >= other.capacity_) {
-    return true;
   }
   return idx_ == other.idx_ && listIt_ == other.listIt_;
 }
@@ -173,6 +174,7 @@ void karpovich::HashConstIter< Key, Value, Hash, Equal >::findValid()
     }
     ++idx_;
   }
+  data_ = nullptr;
 }
 
 template < class Key, class Value, class Hash, class Equal >
@@ -186,14 +188,14 @@ karpovich::HashConstIter< Key, Value, Hash, Equal > &karpovich::HashConstIter< K
 template < class Key, class Value, class Hash, class Equal >
 bool karpovich::HashConstIter< Key, Value, Hash, Equal >::operator==(const HashConstIter &other) const
 {
-  if (data_ == nullptr && other.data_ == nullptr) {
+  bool this_end = (data_ == nullptr || idx_ >= capacity_);
+  bool other_end = (other.data_ == nullptr || other.idx_ >= other.capacity_);
+
+  if (this_end && other_end) {
     return true;
   }
-  if (data_ == nullptr || other.data_ == nullptr) {
+  if (this_end || other_end) {
     return false;
-  }
-  if (idx_ >= capacity_ && other.idx_ >= other.capacity_) {
-    return true;
   }
   return idx_ == other.idx_ && listIt_ == other.listIt_;
 }
