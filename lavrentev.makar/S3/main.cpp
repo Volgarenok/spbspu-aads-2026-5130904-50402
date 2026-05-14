@@ -38,26 +38,31 @@ int main(int argc, char *argv[]) {
 
   std::string cmd;
   while (true)
+{
+  if (!(std::cin >> cmd))
   {
-    if (!(std::cin >> cmd))
-    {
-      break;
-    }
-    try
-    {
-      if (!commands.has(cmd))
-      {
-        throw std::logic_error("Unknown command");
-      }
-      commands[cmd](std::cin, grs);
-    }
-    catch (...)
-    {
-      std::cout << "<INVALID COMMAND>\n";
-      std::cin.clear();
-      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    }
+    break;
   }
+  try
+  {
+    if (!commands.has(cmd))
+    {
+      throw std::logic_error("Unknown command");
+    }
+
+    commands[cmd](std::cin, grs);
+  }
+  catch (...)
+  {
+    std::cout << "<INVALID COMMAND>\n";
+
+    std::cin.clear();
+    std::cin.ignore(
+      std::numeric_limits<std::streamsize>::max(),
+      '\n'
+    );
+  }
+}
 
   if (!std::cin.eof())
   {

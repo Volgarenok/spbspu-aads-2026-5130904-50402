@@ -151,68 +151,51 @@ inline void lavrentev::Graph::inbound(std::istream &in, List<std::pair<std::stri
   std::string name, v;
   in >> name >> v;
 
-  bool graphFound = false;
-  bool vertexExists = false;
-  LCIter<std::pair<std::string, Graph>> it;
-  for (it = grs.cbegin(); it != grs.cend(); ++it)
+  LIter<std::pair<std::string, Graph>> it;
+  for (it = grs.begin(); it != grs.end(); ++it)
   {
     if ((*it).first == name)
     {
-      graphFound = true;
-      if (!(*it).second.hasVertex(v))
+      Graph &g = (*it).second;
+
+      if (!g.hasVertex(v))
       {
-        break;
+        throw std::logic_error("");
       }
-      vertexExists = true;
-
-      HashCIter<std::pair<std::string, std::string>, List<size_t>,
-                Siphash<std::pair<std::string, std::string>>,
-                std::equal_to<std::pair<std::string, std::string>>>
-      vrtxIt(
-        (*it).second.gr.ht_,
-        (*it).second.gr.ht_ + (*it).second.gr.bucket_count(),
-        (*it).second.gr.ht_[0].cbegin()
-      );
-
-      HashCIter<std::pair<std::string, std::string>, List<size_t>,
-                Siphash<std::pair<std::string, std::string>>,
-                std::equal_to<std::pair<std::string, std::string>>>
-      vrtxItEnd(
-        (*it).second.gr.ht_ + (*it).second.gr.bucket_count(),
-        (*it).second.gr.ht_ + (*it).second.gr.bucket_count(),
-        LCIter<typename HashTable<
-            std::pair<std::string, std::string>, List<size_t>,
-            Siphash<std::pair<std::string, std::string>>,
-            std::equal_to<std::pair<std::string, std::string>>>::Node>()
-      );
-
-      while (vrtxIt != vrtxItEnd)
+      bool hasEdges = false;
+      LCIter<std::string> vrtxIt;
+      for (vrtxIt = g.vrtxs.cbegin(); vrtxIt != g.vrtxs.cend(); ++vrtxIt)
       {
-        if ((*vrtxIt).key.second == v)
+        std::pair<std::string, std::string> key((*vrtxIt), v);
+
+        if (g.gr.has(key))
         {
-          std::cout << (*vrtxIt).key.first << " ";
-          LCIter<size_t> weightIter = (*vrtxIt).value.cbegin();
-          if (weightIter != (*vrtxIt).value.cend())
+          hasEdges = true;
+          std::cout << (*vrtxIt) << " ";
+          List<size_t> &weights = g.gr[key];
+          LCIter<size_t> wIt = weights.cbegin();
+          if (wIt != weights.cend())
           {
-            std::cout << (*weightIter);
-            ++weightIter;
-            while (weightIter != (*vrtxIt).value.cend())
+            std::cout << (*wIt);
+            ++wIt;
+
+            while (wIt != weights.cend())
             {
-              std::cout << " " << (*weightIter);
-              ++weightIter;
+              std::cout << " " << (*wIt);
+              ++wIt;
             }
           }
           std::cout << "\n";
         }
-        ++vrtxIt;
       }
-      break;
+      if (!hasEdges)
+      {
+        throw std::logic_error("");
+      }
+      return;
     }
   }
-  if (!graphFound || !vertexExists)
-  {
-    throw std::logic_error("");
-  }
+  throw std::logic_error("");
 }
 
 inline bool lavrentev::Graph::hasVertex(std::string v) const
