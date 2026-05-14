@@ -46,6 +46,10 @@ int main(int argc, char *argv[]) {
         commands[cmd](std::cin, grs);
       } catch (...) {
         std::cout << "<INVALID COMMAND>\n";
+        if (std::cin.fail())
+        {
+          std::cin.clear();
+        }
       }
     }
     else
