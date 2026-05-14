@@ -1,9 +1,9 @@
 #ifndef ENGINE_HPP
 #define ENGINE_HPP
 
+#include <Vector.hpp>
+#include <hashTable.hpp>
 #include <string>
-#include "../common/Vector.hpp"
-#include "../common/hashTable.hpp"
 #include "gameTypes.hpp"
 
 namespace karpovich

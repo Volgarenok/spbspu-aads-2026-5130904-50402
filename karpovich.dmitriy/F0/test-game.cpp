@@ -1,3 +1,4 @@
+#include <fstream>
 #include <boost/test/tools/old/interface.hpp>
 #include <boost/test/unit_test.hpp>
 #include "engine.hpp"
@@ -169,6 +170,75 @@ BOOST_AUTO_TEST_CASE(test_gameplay_loop)
 
   std::remove("loop_quest.dat");
   std::remove("save_slot.save");
+}
+
+BOOST_AUTO_TEST_CASE(test_asset_db_management)
+{
+  Engine engine;
+  std::ofstream asset_file("test_assets.dat");
+  asset_file << "sword WEAPON IronSword\n";
+  asset_file << "potion CONSUMABLE HealthPotion\n";
+  asset_file.close();
+
+  std::string out = runCommand(engine, "add-asset-db test_assets.dat");
+  BOOST_CHECK(out.find("<ASSET DB CONNECTED: 2 items loaded>") != std::string::npos);
+
+  out = runCommand(engine, "show-db");
+  BOOST_CHECK(out.find("<DB CONTENTS:>") != std::string::npos);
+
+  out = runCommand(engine, "remove-asset-db test_assets.dat");
+  BOOST_CHECK(out.find("<ASSET DB DISCONNECTED>") != std::string::npos);
+
+  out = runCommand(engine, "remove-asset-db nonexistent.dat");
+  BOOST_CHECK(out.find("<INVALID COMMAND>") != std::string::npos);
+
+  std::remove("test_assets.dat");
+}
+
+BOOST_AUTO_TEST_CASE(test_project_save_and_remove_item)
+{
+  Engine engine;
+  runCommand(engine, "create-game proj_sv \"SaveProject\"");
+  runCommand(engine, "load-project proj_sv");
+  runCommand(engine, "create-scene room \"Test Room\"");
+  runCommand(engine, "create-item torch ITEM \"Bright Torch\"");
+
+  std::string out = runCommand(engine, "save-project");
+  BOOST_CHECK(out.find("<PROJECT SAVED>") != std::string::npos);
+  BOOST_CHECK(out.find("<SCENES: 1, LINKS: 0>") != std::string::npos);
+
+  out = runCommand(engine, "remove-item torch");
+  BOOST_CHECK(out.find("<ITEM REMOVED: torch>") != std::string::npos);
+
+  out = runCommand(engine, "remove-item missing");
+  BOOST_CHECK(out.find("<INVALID COMMAND>") != std::string::npos);
+
+  std::remove("proj_sv.dat");
+}
+
+BOOST_AUTO_TEST_CASE(test_remove_object_and_look)
+{
+  Engine engine;
+  runCommand(engine, "create-game proj_lk \"LookTest\"");
+  runCommand(engine, "load-project proj_lk");
+  runCommand(engine, "create-item shield ITEM \"Rusty Shield\"");
+  runCommand(engine, "create-scene cave \"Dark Cave\"");
+  runCommand(engine, "add-object cave shield");
+
+  runCommand(engine, "mode game");
+  runCommand(engine, "start");
+
+  std::string out = runCommand(engine, "look");
+  BOOST_CHECK(out.find("<Dark Cave>") != std::string::npos);
+  BOOST_CHECK(out.find("<OBJECTS: shield>") != std::string::npos);
+
+  out = runCommand(engine, "remove-object cave shield");
+  BOOST_CHECK(out.find("<OBJECT REMOVED: shield from scene cave>") != std::string::npos);
+
+  out = runCommand(engine, "look");
+  BOOST_CHECK(out.find("<OBJECTS: none>") != std::string::npos);
+
+  std::remove("proj_lk.dat");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

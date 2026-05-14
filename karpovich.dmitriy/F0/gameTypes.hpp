@@ -1,9 +1,9 @@
 #ifndef GAME_TYPES_HPP
 #define GAME_TYPES_HPP
 
+#include <Vector.hpp>
+#include <hashTable.hpp>
 #include <string>
-#include "../common/Vector.hpp"
-#include "../common/hashTable.hpp"
 
 namespace karpovich
 {
