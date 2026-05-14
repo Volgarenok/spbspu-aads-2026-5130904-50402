@@ -18,7 +18,7 @@ namespace novikov
     if (op == "*" || op == "/" || op == "%")
       return 2;
     if (op == "^")
-      return 0;
+      return 3;
     return 0;
   }
 
