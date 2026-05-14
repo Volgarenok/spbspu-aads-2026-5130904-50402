@@ -531,7 +531,7 @@ void karpovich::Engine::cmdRemoveObject(const Vector< std::string > &args)
 
 void karpovich::Engine::cmdSetInteract(const Vector< std::string > &args)
 {
-  if (args.getSize() < 4) {
+  if (args.getSize() < 3) {
     std::cout << "<INVALID COMMAND>\n";
     return;
   }
@@ -548,10 +548,11 @@ void karpovich::Engine::cmdSetInteract(const Vector< std::string > &args)
       std::string gives;
       std::string req;
       for (size_t j = 3; j < args.getSize(); ++j) {
-        if (args[j].size() >= 5 && args[j].substr(0, 5) == "give:") {
-          gives = args[j].substr(5);
-        } else if (args[j].size() >= 4 && args[j].substr(0, 4) == "has:") {
-          req = args[j].substr(4);
+        const std::string &arg = args[j];
+        if (arg.size() >= 5 && arg.substr(0, 5) == "give:") {
+          gives = arg.substr(5);
+        } else if (arg.size() >= 4 && arg.substr(0, 4) == "has:") {
+          req = arg.substr(4);
         }
       }
       s.objects_[i].gives_ = gives;

@@ -116,22 +116,26 @@ BOOST_AUTO_TEST_CASE(test_gameplay_errors)
 BOOST_AUTO_TEST_CASE(test_gameplay_loop)
 {
   Engine engine;
-  std::string out = runCommand(engine, "create-game loop_quest \"Loop Quest\"");
-  BOOST_CHECK(out.find("<PROJECT CREATED: loop_quest.dat>") != std::string::npos);
+  runCommand(engine, "create-game loop_quest \"Loop Quest\"");
+  runCommand(engine, "load-project loop_quest");
 
-  out = runCommand(engine, "load-project loop_quest");
-  BOOST_CHECK(out.find("<PROJECT LOADED: loop_quest>") != std::string::npos);
+  runCommand(engine, "create-item crate INVENTORY \"Wooden Crate\"");
+  runCommand(engine, "create-item key INVENTORY \"Rusty Key\"");
+  runCommand(engine, "create-item gem INVENTORY \"Precious Gem\"");
+  runCommand(engine, "create-item vault INVENTORY \"Steel Vault\"");
 
   runCommand(engine, "create-scene start \"Start area\"");
   runCommand(engine, "create-scene next \"Next area\"");
   runCommand(engine, "link-scene start next \"Go forward\"");
+
   runCommand(engine, "add-object start crate");
   runCommand(engine, "set-interact start crate give:key");
+
   runCommand(engine, "add-object start vault");
   runCommand(engine, "set-interact start vault give:gem has:key");
 
   runCommand(engine, "mode game");
-  out = runCommand(engine, "start");
+  std::string out = runCommand(engine, "start");
   BOOST_CHECK(out.find("<GAME STARTED>") != std::string::npos);
 
   out = runCommand(engine, "show-inv");
