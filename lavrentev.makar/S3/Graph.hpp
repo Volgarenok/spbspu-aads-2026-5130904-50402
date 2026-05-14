@@ -1,8 +1,7 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
-#include "HashTable.hpp"
+#include <HashTable.hpp>
 #include <List.hpp>
-//#include <stdexcept>
 
 namespace lavrentev
 {
