@@ -64,7 +64,7 @@ namespace novikov
     return output;
   }
 
-  int apply(int a, int b, const std::string &op)
+  long long apply(long long a, long long b, const std::string &op)
   {
     if (op == "+")
       return a + b;
@@ -90,18 +90,18 @@ namespace novikov
     throw std::runtime_error("Unknown operator: " + op);
   }
 
-  int eval(const std::string &expr)
+  long long eval(const std::string &expr)
   {
     Queue< std::string > postfix = toPostfix(expr);
-    Stack< int > st;
+    Stack< long long > st;
 
     while (!postfix.empty()) {
       std::string token = postfix.drop();
       if (isNumber(token)) {
-        st.push(std::stoi(token));
+        st.push(std::stoll(token));
       } else {
-        int b = st.drop();
-        int a = st.drop();
+        long long b = st.drop();
+        long long a = st.drop();
         st.push(apply(a, b, token));
       }
     }
