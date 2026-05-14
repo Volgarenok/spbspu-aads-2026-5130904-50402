@@ -152,11 +152,11 @@ void lavrentev::HashTable<Key, Value, Hash, Equal>::add(Key k, Value v)
 {
   if (slots_ == 0)
   {
-    rehash(5);
+    throw std::invalid_argument("Not enougth slots");
   }
   if ((size_ + 1.0) / slots_ > loadFactor_)
   {
-    rehash(slots_ * 2);
+    throw std::overflow_error("Overflow error");
   }
 
   size_t idx = hasher_(k) % slots_;

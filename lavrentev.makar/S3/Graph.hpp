@@ -98,6 +98,7 @@ inline void lavrentev::Graph::outbound(std::istream &in, List<std::pair<std::str
 {
   std::string name, v;
   in >> name >> v;
+  bool hasVrtx = false;
 
   LIter<std::pair<std::string, Graph>> it;
   for (it = grs.begin(); it != grs.end(); ++it)
@@ -109,6 +110,10 @@ inline void lavrentev::Graph::outbound(std::istream &in, List<std::pair<std::str
       if (!g.hasVertex(v))
       {
         throw std::logic_error("");
+      }
+      else
+      {
+        hasVrtx = true;
       }
       bool hasEdges = false;
       LCIter<std::string> vrtxIt;
@@ -136,7 +141,7 @@ inline void lavrentev::Graph::outbound(std::istream &in, List<std::pair<std::str
           std::cout << "\n";
         }
       }
-      if (!hasEdges)
+      if (!hasEdges && !hasVrtx)
       {
         throw std::logic_error("");
       }
@@ -150,6 +155,7 @@ inline void lavrentev::Graph::inbound(std::istream &in, List<std::pair<std::stri
 {
   std::string name, v;
   in >> name >> v;
+  bool hasVrtx = false;
 
   LIter<std::pair<std::string, Graph>> it;
   for (it = grs.begin(); it != grs.end(); ++it)
@@ -161,6 +167,9 @@ inline void lavrentev::Graph::inbound(std::istream &in, List<std::pair<std::stri
       if (!g.hasVertex(v))
       {
         throw std::logic_error("");
+      }
+      else{
+        hasVrtx = true;
       }
       bool hasEdges = false;
       LCIter<std::string> vrtxIt;
@@ -188,7 +197,7 @@ inline void lavrentev::Graph::inbound(std::istream &in, List<std::pair<std::stri
           std::cout << "\n";
         }
       }
-      if (!hasEdges)
+      if (!hasEdges && !hasVrtx)
       {
         throw std::logic_error("");
       }
