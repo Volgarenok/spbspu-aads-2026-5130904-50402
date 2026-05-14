@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
   }
 
   while (!expressions.empty()) {
-    int result;
+    long long result;
     try {
       result = novikov::eval(expressions.front());
     } catch (...) {

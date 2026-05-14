@@ -17,8 +17,6 @@ namespace novikov
       return 1;
     if (op == "*" || op == "/" || op == "%")
       return 2;
-    if (op == "^")
-      return 0;
     return 0;
   }
 
@@ -26,9 +24,21 @@ namespace novikov
   {
     if (s.empty())
       return false;
-    if (s[0] == '-' && s.size() > 1)
-      return true;
-    return std::isdigit(s[0]);
+    size_t start = (s[0] == '-') ? 1 : 0;
+    for (size_t i = start; i < s.size(); ++i) {
+      if (!std::isdigit(s[i]))
+        return false;
+    }
+    return true;
+  }
+
+  long long safe_stoll(const std::string &s)
+  {
+    std::istringstream iss(s);
+    long long result;
+    if (iss >> result)
+      return result;
+    throw std::runtime_error("Invalid number: " + s);
   }
 
   Queue< std::string > toPostfix(const std::string &expr)
@@ -47,12 +57,11 @@ namespace novikov
         while (!ops.empty() && ops.front() != "(") {
           output.push(ops.drop());
         }
-        if (ops.empty()) {
+        if (ops.empty())
           throw std::runtime_error("Bracket mismatch");
-        }
         ops.drop();
       } else {
-        while (!ops.empty() && priority(ops.front()) >= priority(token)) {
+        while (!ops.empty() && ops.front() != "(" && priority(ops.front()) >= priority(token)) {
           output.push(ops.drop());
         }
         ops.push(token);
@@ -93,23 +102,22 @@ namespace novikov
       return a * b;
     }
     if (op == "/") {
-      if (b == 0) {
+      if (b == 0)
         throw std::runtime_error("Division by zero");
-      }
-      if (a == std::numeric_limits< long long >::min() && b == -1) {
+      if (a == std::numeric_limits< long long >::min() && b == -1)
         throw std::runtime_error("Overflow");
-      }
       return a / b;
     }
     if (op == "%") {
-      if (b == 0) {
+      if (b == 0)
         throw std::runtime_error("Division by zero");
-      }
-      return a % b;
+      long long result = a % b;
+      if (result < 0)
+        result += (b < 0 ? -b : b);
+      return result;
     }
-    if (op == "^") {
+    if (op == "^")
       return a ^ b;
-    }
     throw std::runtime_error("Unknown operator: " + op);
   }
 
@@ -121,7 +129,7 @@ namespace novikov
     while (!postfix.empty()) {
       std::string token = postfix.drop();
       if (isNumber(token)) {
-        st.push(std::stoll(token));
+        st.push(safe_stoll(token));
       } else {
         long long b = st.drop();
         long long a = st.drop();
