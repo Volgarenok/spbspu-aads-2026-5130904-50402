@@ -425,8 +425,6 @@ inline void lavrentev::createWithArg(std::string name, List<std::pair<std::strin
     preIt = it;
   }
   grs.insert(preIt, {name, Graph{}});
-
-  
 }
 
 inline void lavrentev::createWithArgs(std::istream &in, std::string gr, List<std::pair<std::string, Graph>> &grs)
