@@ -55,5 +55,19 @@ int main(int argc, char* argv[])
   }
 
   file.close();
+  while (std::getline(std::cin, line)) {
+    if (line.empty()) {
+      continue;
+    }
 
+    std::istringstream iss(line);
+    std::string command;
+    iss >> command;
+    try {
+
+    } catch (...) {
+
+    }
+  }
+  return 0;
 }
