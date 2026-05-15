@@ -23,7 +23,13 @@ namespace petrov {
       return hash;
     }
   };
-
+  template< class T >
+  struct DefaultEqual {
+    bool operator()(const T& lhs, const T& rhs) const
+    {
+      return lhs == rhs;
+    }
+  };
 }
 #endif
 
