@@ -13,7 +13,7 @@ namespace petrov {
   struct SHA1Hasher {
     size_t operator()(const T& value) const
     {
-      boost::hash2::sha1_128 hasher;
+      boost::hash2::sha1_160 hasher;
       boost::hash2::hash_append(hasher, {}, value);
       auto digest = hasher.result();
       size_t hash = 0;
@@ -23,6 +23,7 @@ namespace petrov {
       return hash;
     }
   };
+
   template< class T >
   struct DefaultEqual {
     bool operator()(const T& lhs, const T& rhs) const
@@ -31,5 +32,6 @@ namespace petrov {
     }
   };
 }
+
 #endif
 

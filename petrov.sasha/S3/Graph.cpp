@@ -3,6 +3,7 @@
 #include <set>
 
 namespace petrov {
+
   Graph::Graph():
     edges_(100)
   {}
@@ -37,7 +38,18 @@ namespace petrov {
     }
   }
 
-  std::vector<std::pair<std::string, std::vector<unsigned int>>> Graph::getOutbound(const std::string& vertex) const
+  std::vector< std::string > Graph::getVertices() const
+  {
+    std::set< std::string > vertexSet;
+    for (auto it = edges_.cbegin(); it != edges_.cend(); ++it) {
+      auto pair = *it;
+      vertexSet.insert(pair.first.first);
+      vertexSet.insert(pair.first.second);
+    }
+    return std::vector< std::string >(vertexSet.begin(), vertexSet.end());
+  }
+
+  std::vector< std::pair< std::string, std::vector< unsigned int > > > Graph::getOutbound(const std::string& vertex) const
   {
     HashTable< std::string, EdgeValue, SHA1Hasher< std::string >, DefaultEqual< std::string > > result(50);
 
