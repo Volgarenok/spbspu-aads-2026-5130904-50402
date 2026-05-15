@@ -20,6 +20,7 @@ namespace lavrentev
       size_t weight,
       List<std::pair<std::string, Graph>> &grs);
     friend void readfile(std::string name, List<std::pair<std::string, Graph>> &grs);
+    friend void createWithArgs(std::istream &in, std::string gr, List<std::pair<std::string, Graph>> &grs);
 
   public:
     static void vertexes(std::istream &in, List<std::pair<std::string, Graph>> &grs);
@@ -43,6 +44,7 @@ namespace lavrentev
 
   void graphs(std::istream &, List<std::pair<std::string, Graph>> &grs);
   void createWithArg(std::string gr, List<std::pair<std::string, Graph>> &grs);
+  void createWithArgs(std::istream &in, std::string gr, List<std::pair<std::string, Graph>> &grs);
   void bindWithArg(
     std::string name,
     std::string v1,
@@ -382,7 +384,15 @@ inline void lavrentev::Graph::create(std::istream &in, List<std::pair<std::strin
 {
   std::string name;
   in >> name;
-  createWithArg(name, grs);
+  LIter<std::pair<std::string, Graph>> it = grs.begin();
+  for (; it != grs.end(); ++it)
+  {
+    if ((*it).first == name)
+    {
+      throw std::logic_error("");
+    }
+  }
+  createWithArgs(in, name, grs);
 }
 
 inline void lavrentev::createWithArg(std::string name, List<std::pair<std::string, Graph>> &grs)
@@ -415,6 +425,53 @@ inline void lavrentev::createWithArg(std::string name, List<std::pair<std::strin
     preIt = it;
   }
   grs.insert(preIt, {name, Graph{}});
+
+  
+}
+
+inline void lavrentev::createWithArgs(std::istream &in, std::string gr, List<std::pair<std::string, Graph>> &grs)
+{
+  size_t k = 0;
+  in >> k;
+
+  Graph g;
+  for (size_t i = 0; i < k; ++i) {
+    std::string v;
+    in >> v;
+    if (!in) {
+      throw std::runtime_error("Invalid vertex name");
+    }
+    g.insertToVrtxs(v);
+  }
+
+  if (grs.begin() == grs.end())
+  {
+    grs.pushFront({gr, g});
+    return;
+  }
+  LIter<std::pair<std::string, Graph>> it = grs.begin();
+  LIter<std::pair<std::string, Graph>> preIt = grs.begin();
+  for (; it != grs.end(); ++it)
+  {
+    if ((*it).first == gr)
+    {
+      throw std::logic_error("");
+    }
+    else if ((*it).first > gr)
+    {
+      if (it == grs.begin())
+      {
+        grs.pushFront({gr, g});
+      }
+      else
+      {
+        grs.insert(preIt, {gr, g});
+      }
+      return;
+    }
+    preIt = it;
+  }
+  grs.insert(preIt, {gr, g});
 }
 
 inline void lavrentev::Graph::merge(std::istream &in, List<std::pair<std::string, Graph>> &grs)
