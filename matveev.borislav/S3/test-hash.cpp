@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE hash_table_tests
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include "hash-table.hpp"
 
