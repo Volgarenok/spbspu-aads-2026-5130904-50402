@@ -185,7 +185,7 @@ bool executeCommand(std::ostream& out, GraphCollection& graphs, const List< std:
 
   if (command == CREATE_COMMAND)
   {
-    if (!hasArgCount(tokens, 2))
+    if (countArgs(tokens) < 3)
     {
       out << INVALID_COMMAND << '\n';
       return false;
@@ -194,9 +194,31 @@ bool executeCommand(std::ostream& out, GraphCollection& graphs, const List< std:
     ++it;
     const std::string& graph_name = *it;
 
+    ++it;
+    size_t vertex_count = 0;
+
+    if (!parseSize(*it, vertex_count))
+    {
+      out << INVALID_COMMAND << '\n';
+      return false;
+    }
+
+    if (countArgs(tokens) != vertex_count + 3)
+    {
+      out << INVALID_COMMAND << '\n';
+      return false;
+    }
+
+    List< std::string > vertexes;
+
+    for (size_t i = 0; i < vertex_count; ++i)
+    {
+      ++it;
+      vertexes.insertAfter(vertexes.beforeBegin(), *it);
+    }
+
     try
     {
-      List< std::string > vertexes;
       graphs.createGraph(graph_name, vertexes);
     }
     catch (const std::exception&)

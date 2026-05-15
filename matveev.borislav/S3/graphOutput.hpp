@@ -164,6 +164,11 @@ inline void printStringList(std::ostream& out, const List< std::string >& list)
   {
     out << *it << '\n';
   }
+
+  if (list.begin() == list.end())
+  {
+    out << '\n';
+  }
 }
 
 inline void printEdgeRows(std::ostream& out, const List< EdgeOutput >& rows)
@@ -177,6 +182,11 @@ inline void printEdgeRows(std::ostream& out, const List< EdgeOutput >& rows)
       out << ' ' << *weight;
     }
 
+    out << '\n';
+  }
+
+  if (rows.begin() == rows.end())
+  {
     out << '\n';
   }
 }
