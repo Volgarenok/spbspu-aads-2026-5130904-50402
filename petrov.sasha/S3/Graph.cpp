@@ -36,4 +36,39 @@ namespace petrov {
       edges_.drop(key);
     }
   }
+
+  std::vector< std::pair< std::string, std::vector< unsigned int > > > Graph::getOutbound(const std::string& vertex) const
+  {
+    HashTable< std::string, EdgeValue, SHA1Hasher< std::string >, DefaultEqual< std::string > > result(50);
+
+    for (auto it = edges_.cbegin(); it != edges_.cend(); ++it) {
+      auto edge = *it;
+      if (edge.first.first == vertex) {
+        const std::string& to = edge.first.second;
+        const EdgeValue& weights = edge.second;
+
+        if (result.has(to)) {
+          EdgeValue& existingWeights = result.get(to);
+          existingWeights.insert(existingWeights.end(), weights.begin(), weights.end());
+        } else {
+          result.add(to, weights);
+        }
+      }
+    }
+
+    std::vector< std::pair< std::string, EdgeValue > > output;
+    for (auto it = result.begin(); it != result.end(); ++it) {
+      auto pair = *it;
+      EdgeValue sortedWeights = pair.second;
+      std::sort(sortedWeights.begin(), sortedWeights.end());
+      output.push_back({pair.first, sortedWeights});
+    }
+
+    std::sort(output.begin(), output.end(), [](const auto& a, const auto& b) {
+      return a.first < b.first;
+    });
+
+    return output;
+  }
 }
+
