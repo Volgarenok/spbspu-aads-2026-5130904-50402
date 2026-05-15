@@ -20,12 +20,29 @@ int main(int argc, char** argv)
     novikov::Stack< std::string > expressions;
     if (argc == 1)
     {
-        expressions = novikov::input(std::cin);
+        try
+        {
+            expressions = novikov::input(std::cin);
+        }
+        catch (const std::bad_alloc&)
+        {
+            std::cerr << "Bad allocation\n";
+            return 3;
+        }
     }
     else if (argc == 2)
     {
-        std::ifstream in(argv[1]);
-        expressions = novikov::input(in);
+        try
+        {
+            std::ifstream in(argv[1]);
+            expressions = novikov::input(in);
+            in.close();
+        }
+        catch (const std::bad_alloc&)
+        {
+            std::cerr << "Bad allocation\n";
+            return 3;
+        }
     }
     else
     {
@@ -49,6 +66,11 @@ int main(int argc, char** argv)
         {
             std::cerr << "Out of range\n";
             return 2;
+        }
+        catch (...)
+        {
+          std::cerr << "Unknown error\n";
+          return 4;
         }
         std::cout << res;
         expressions.pop();
