@@ -3,6 +3,10 @@
 #include <limits>
 #include <string>
 #include <stdexcept>
+//#include "HashTable/HashTable.hpp"
+//#include "HashTable/HashFunction.hpp"
+//#include "Graph.hpp"
+#include "commands.hpp"
 
 int main(int argc, char * argv[])
 {
