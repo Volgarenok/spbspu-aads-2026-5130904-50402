@@ -4,22 +4,22 @@
 
 namespace novikov
 {
-    template < typename T >
-    class Queue
-    {
-    public:
-        T& front();
-        const T& front() const;
-        T& back();
-        const T& back() const;
-        bool empty() const;
-        void push(const T& value);
-        void push(T&& value);
-        void pop();
+  template < typename T >
+  class Queue
+  {
+  public:
+    T& front();
+    const T& front() const;
+    T& back();
+    const T& back() const;
+    bool empty() const;
+    void push(const T& value);
+    void push(T&& value);
+    void pop();
 
-    private:
-        BiList< T > list_;
-    };
+  private:
+    BiList< T > list_;
+  };
 }
 
 #endif
