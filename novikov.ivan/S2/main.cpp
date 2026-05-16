@@ -130,6 +130,7 @@ long long novikov::eval(std::string line)
         {
           throw std::overflow_error("Overflow");
         }
+        res = op1 + op2;
       }
       else if (val == "-")
       {
@@ -141,6 +142,7 @@ long long novikov::eval(std::string line)
         {
           throw std::underflow_error("Underflow");
         }
+        res = op1 - op2;
       }
       else if (val == "*")
       {
@@ -152,6 +154,7 @@ long long novikov::eval(std::string line)
         {
           throw std::underflow_error("Underflow");
         }
+        res = op1 * op2;
       }
       else if (val == "/")
       {
