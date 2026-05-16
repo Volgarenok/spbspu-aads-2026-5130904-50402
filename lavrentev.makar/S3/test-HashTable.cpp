@@ -44,5 +44,5 @@ BOOST_AUTO_TEST_CASE(rehash_test)
   hs.add("c", 3);
   BOOST_CHECK_THROW(hs.rehash(0), std::invalid_argument);
   hs.rehash(10);
-  BOOST_TEST(hs.bucket_count() == 10);
+  BOOST_TEST(hs.bucketCount() == 10);
 }
