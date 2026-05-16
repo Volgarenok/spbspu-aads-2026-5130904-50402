@@ -54,7 +54,7 @@ namespace lavrentev
     void clear(Node *fakeroot);
     Node *copyNodes(Node *other);
     void swap(BSTree &other) noexcept;
-    Value insertNode(Key k, Value v, bool flag);
+    Value &insertNode(Key k, Value v, bool flag);
   };
 }
 
@@ -93,7 +93,7 @@ lavrentev::BSTree<Key, Value, Compare> &lavrentev::BSTree<Key, Value, Compare>::
 }
 
 template< class Key, class Value, class Compare >
-Value lavrentev::BSTree<Key, Value, Compare>::insertNode(Key k, Value v, bool isOperator)
+Value &lavrentev::BSTree<Key, Value, Compare>::insertNode(Key k, Value v, bool isOperator)
 {
   Node *curr = fakeroot_;
   Node *next = fakeroot_->left_;
@@ -198,6 +198,30 @@ const Value &lavrentev::BSTree<Key, Value, Compare>::get(const Key &k) const
     else
     {
       return curr->value_;
+    }
+  }
+  throw std::out_of_range("Key does not exist");
+}
+
+template< class Key, class Value, class Compare >
+void lavrentev::BSTree<Key, Value, Compare>::drop(Key k)
+{
+  Node *curr = fakeroot_;
+  Node *next = fakeroot_->left_;
+  while (next)
+  {
+    curr = next;
+    if (compare_(k, curr->key_))
+    {
+      next = curr->left_;
+    }
+    else if (compare_(curr->key_, k))
+    {
+      next = curr->right_;
+    }
+    else
+    {
+      // Я ЕБУ???
     }
   }
   throw std::out_of_range("Key does not exist");
