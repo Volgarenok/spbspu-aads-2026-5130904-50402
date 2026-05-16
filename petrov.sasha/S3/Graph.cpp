@@ -5,11 +5,15 @@
 namespace petrov {
 
   Graph::Graph():
-    edges_(100)
+    edges_(100),
+    vertices_()
   {}
 
   void Graph::addEdge(const std::string& from, const std::string& to, unsigned int weight)
   {
+    vertices_.insert(from);
+    vertices_.insert(to);
+    
     EdgeKey key = {from, to};
     if (edges_.has(key)) {
       EdgeValue& weights = edges_.get(key);
@@ -40,13 +44,7 @@ namespace petrov {
 
   std::vector< std::string > Graph::getVertices() const
   {
-    std::set< std::string > vertexSet;
-    for (auto it = edges_.cbegin(); it != edges_.cend(); ++it) {
-      auto pair = *it;
-      vertexSet.insert(pair.first.first);
-      vertexSet.insert(pair.first.second);
-    }
-    return std::vector< std::string >(vertexSet.begin(), vertexSet.end());
+    return std::vector< std::string >(vertices_.begin(), vertices_.end());
   }
 
   std::vector< std::pair< std::string, std::vector< unsigned int > > > Graph::getOutbound(const std::string& vertex) const
