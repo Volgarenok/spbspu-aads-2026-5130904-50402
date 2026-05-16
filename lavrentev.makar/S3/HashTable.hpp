@@ -46,7 +46,7 @@ namespace lavrentev
     bool has(Key k) const;
     void rehash(size_t slots);
     size_t size() const;
-    size_t bucket_count() const;
+    size_t bucketCount() const;
   };
 
   template <class Key, class Value, class Hash, class Equal> class HashIter
@@ -232,7 +232,7 @@ size_t lavrentev::HashTable<Key, Value, Hash, Equal>::size() const
 }
 
 template <class Key, class Value, class Hash, class Equal>
-size_t lavrentev::HashTable<Key, Value, Hash, Equal>::bucket_count() const
+size_t lavrentev::HashTable<Key, Value, Hash, Equal>::bucketCount() const
 {
   return slots_;
 }
