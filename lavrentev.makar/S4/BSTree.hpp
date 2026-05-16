@@ -54,6 +54,7 @@ namespace lavrentev
     void clear(Node *fakeroot);
     Node *copyNodes(Node *other);
     void swap(BSTree &other) noexcept;
+    Value insertNode(Key k, Value v, bool flag);
   };
 }
 
@@ -92,7 +93,7 @@ lavrentev::BSTree<Key, Value, Compare> &lavrentev::BSTree<Key, Value, Compare>::
 }
 
 template< class Key, class Value, class Compare >
-Value &lavrentev::BSTree<Key, Value, Compare>::operator[](const Key &k)
+Value lavrentev::BSTree<Key, Value, Compare>::insertNode(Key k, Value v, bool isOperator)
 {
   Node *curr = fakeroot_;
   Node *next = fakeroot_->left_;
@@ -109,13 +110,20 @@ Value &lavrentev::BSTree<Key, Value, Compare>::operator[](const Key &k)
     }
     else
     {
-      return curr->value_;
+      if (isOperator)
+      {
+        return curr->value_;
+      }
+      else
+      {
+        throw std::invalid_argument("Value is already exists");
+      }
     }
   }
   Node *newNode = new Node;
   newNode->key_ = k;
-  newNode->value_ = Value();
-  if (curr == fakeroot_ || compare(k, curr->key_))
+  newNode->value_ = v;
+  if (curr == fakeroot_ || compare_(k, curr->key_))
   {
     curr->left_ = newNode;
   }
@@ -124,6 +132,12 @@ Value &lavrentev::BSTree<Key, Value, Compare>::operator[](const Key &k)
     curr->right_ = newNode;
   }
   return newNode->value_;
+}
+
+template< class Key, class Value, class Compare >
+Value &lavrentev::BSTree<Key, Value, Compare>::operator[](const Key &k)
+{
+  return insertNode(k, Value(), true);
 }
 
 template< class Key, class Value, class Compare >
@@ -152,6 +166,19 @@ typename lavrentev::BSTree<Key, Value, Compare>::Node
   newBST->left_ = copyNodes(other->left_);
   newBST->right_ = copyNodes(other->right_);
   return newBST;
+}
+
+template< class Key, class Value, class Compare >
+void lavrentev::BSTree<Key, Value, Compare>::swap(BSTree &other) noexcept
+{
+  std::swap(fakeroot_, other.fakeroot_);
+  std::swap(compare_, other.compare_);
+}
+
+template< class Key, class Value, class Compare >
+void lavrentev::BSTree<Key, Value, Compare>::push(Key k, Value v)
+{
+  insertNode(k, v, false);
 }
 
 #endif
