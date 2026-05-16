@@ -102,8 +102,8 @@ lavrentev::HashTable<Key, Value, Hash, Equal>::~HashTable() noexcept
 
 template <class Key, class Value, class Hash, class Equal>
 lavrentev::HashTable<Key, Value, Hash, Equal>::HashTable(const HashTable &other)
-    : ht_(new List<Node>[other.slots_]), slots_(other.slots_),
-      size_(other.size_), hasher_(other.hasher_), equal_(other.equal_)
+    : slots_(other.slots_), size_(other.size_), hasher_(other.hasher_),
+      equal_(other.equal_), ht_(new List<Node>[other.slots_])
 {
   for (size_t i = 0; i < slots_; ++i)
   {
@@ -114,8 +114,8 @@ lavrentev::HashTable<Key, Value, Hash, Equal>::HashTable(const HashTable &other)
 template <class Key, class Value, class Hash, class Equal>
 lavrentev::HashTable<Key, Value, Hash, Equal>::HashTable(
     HashTable &&other) noexcept
-    : ht_(other.ht_), slots_(other.slots_), size_(other.size_),
-      hasher_(std::move(other.hasher_)), equal_(std::move(other.equal_))
+    : slots_(other.slots_), size_(other.size_), hasher_(std::move(other.hasher_)),
+      equal_(std::move(other.equal_)), ht_(other.ht_)
 {
   other.ht_ = nullptr;
   other.slots_ = 0;
