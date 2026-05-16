@@ -108,4 +108,20 @@ void lavrentev::BSTree<Key, Value, Compare>::clear(Node *root)
   delete root;
 }
 
+template< class Key, class Value, class Compare >
+typename lavrentev::BSTree<Key, Value, Compare>::Node
+  *lavrentev::BSTree<Key, Value, Compare>::copyNodes(Node *other)
+{
+  if (!other)
+  {
+    return nullptr;
+  }
+  Node* newBST = new Node;
+  newBST->key_ = other->key_;
+  newBST->value_ = other->value_;
+  newBST->left_ = copyNodes(other->left_);
+  newBST->right_ = copyNodes(other->right_);
+  return newBST;
+}
+
 #endif
