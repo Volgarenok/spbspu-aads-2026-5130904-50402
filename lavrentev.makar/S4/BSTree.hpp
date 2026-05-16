@@ -18,6 +18,13 @@ namespace lavrentev
   class BSTree {
 
   public:
+    BSTree();
+    ~BSTree();
+    BSTree(const BSTree &other);
+    BSTree(BSTree &&other) noexcept;
+    BSTree &operator=(const BSTree &other);
+    BSTree &operator=(BSTree &&other) noexcept;
+
     void push(Key k, Value v);
     Value get(Key k) const;
     void drop(Key k);
@@ -41,6 +48,8 @@ namespace lavrentev
     };
     Node *fakeroot_;
     Compare compare_;
+
+    void clear(Node *fakeroot);
   };
 }
 
