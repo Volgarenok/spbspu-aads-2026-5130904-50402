@@ -28,7 +28,7 @@ namespace lavrentev
     Value &operator[](const Key &k);
 
     void push(Key k, Value v);
-    Value get(Key k) const;
+    const Value &get(const Key &k) const;
     void drop(Key k);
 
     using const_iterator = BSTConstIterator< Key, Value >;
@@ -179,6 +179,28 @@ template< class Key, class Value, class Compare >
 void lavrentev::BSTree<Key, Value, Compare>::push(Key k, Value v)
 {
   insertNode(k, v, false);
+}
+
+template< class Key, class Value, class Compare >
+const Value &lavrentev::BSTree<Key, Value, Compare>::get(const Key &k) const
+{
+  Node *curr = fakeroot_->left_;
+  while (curr)
+  {
+    if (compare_(k, curr->key_))
+    {
+      curr = curr->left_;
+    }
+    else if (compare_(curr->key_, k))
+    {
+      curr = curr->right_;
+    }
+    else
+    {
+      return curr->value_;
+    }
+  }
+  throw std::out_of_range("Key does not exist");
 }
 
 #endif
