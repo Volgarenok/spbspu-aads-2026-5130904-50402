@@ -6,7 +6,9 @@
 #include <functional>
 #include <cstddef>
 #include <algorithm>
+
 namespace petrov {
+
   template< class Key, class Value >
   struct Node {
     Key key;
@@ -79,12 +81,14 @@ namespace petrov {
 
     void findNext()
     {
-      while (index_ < capacity_ && current_ == nullptr) {
-        ++index_;
-        if (index_ < capacity_) {
+      while (index_ < capacity_) {
+        if (table_[index_]) {
           current_ = table_[index_];
+          return;
         }
+        ++index_;
       }
+      current_ = nullptr;
     }
   };
 
@@ -147,12 +151,14 @@ namespace petrov {
 
     void findNext()
     {
-      while (index_ < capacity_ && current_ == nullptr) {
-        ++index_;
-        if (index_ < capacity_) {
+      while (index_ < capacity_) {
+        if (table_[index_]) {
           current_ = table_[index_];
+          return;
         }
+        ++index_;
       }
+      current_ = nullptr;
     }
   };
 
@@ -396,5 +402,6 @@ namespace petrov {
     lhs.swap(rhs);
   }
 }
+
 #endif
 
