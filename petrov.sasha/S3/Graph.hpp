@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <set>
 #include "HashTable.hpp"
 #include "SHA1Hash.hpp"
 
@@ -23,6 +24,7 @@ namespace petrov {
     using EdgeKey = std::pair< std::string, std::string >;
     using EdgeValue = std::vector< unsigned int >;
     HashTable< EdgeKey, EdgeValue, SHA1Hasher< EdgeKey >, DefaultEqual< EdgeKey > > edges_;
+    std::set< std::string > vertices_;
   };
 }
 
