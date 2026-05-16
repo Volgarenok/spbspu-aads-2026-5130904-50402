@@ -42,7 +42,7 @@ namespace lavrentev
     Value &operator[](const Key &k);
 
     void add(Key k, Value v);
-    Value drop(Key k);
+    void drop(Key k);
     bool has(Key k) const;
     void rehash(size_t slots);
     size_t size() const;
@@ -173,7 +173,7 @@ void lavrentev::HashTable<Key, Value, Hash, Equal>::add(Key k, Value v)
 }
 
 template <class Key, class Value, class Hash, class Equal>
-Value lavrentev::HashTable<Key, Value, Hash, Equal>::drop(Key k)
+void lavrentev::HashTable<Key, Value, Hash, Equal>::drop(Key k)
 {
   size_t idx = hasher_(k) % slots_;
   List<Node> &bucket = ht_[idx];
@@ -184,7 +184,6 @@ Value lavrentev::HashTable<Key, Value, Hash, Equal>::drop(Key k)
       Value out = (*it).value;
       bucket.erase(it);
       --size_;
-      return out;
     }
   }
   throw std::invalid_argument("Key is not exists");
