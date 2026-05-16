@@ -225,6 +225,20 @@ novikov::Queue< std::string > novikov::infixToPostfix(novikov::Queue< std::strin
     }
     else if (val == ")")
     {
+      std::string op = stack.top();
+      while (isOperation(op))
+      {
+        postfix.push(op);
+        stack.pop();
+        op = stack.top();
+      }
+      if (stack.top() == "(")
+      {
+        stack.pop();
+      }
+    }
+    else if (novikov::isOperation(val))
+    {
       if (!stack.empty())
       {
         std::string op = stack.top();
@@ -238,20 +252,6 @@ novikov::Queue< std::string > novikov::infixToPostfix(novikov::Queue< std::strin
           }
           op = stack.top();
         }
-      }
-      if (stack.top() == "(")
-      {
-        stack.pop();
-      }
-    }
-    else if (novikov::isOperation(val))
-    {
-      std::string op = stack.top();
-      while (novikov::getPriority(op) <= novikov::getPriority(val))
-      {
-        postfix.push(op);
-        stack.pop();
-        op = stack.top();
       }
       stack.push(val);
     }
