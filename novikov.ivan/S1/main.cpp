@@ -14,10 +14,10 @@ int main()
     size_t num;
     while (std::cin >> num)
     {
-      nums.push_back(num);
+      nums.pushBack(num);
     }
     std::cin.clear();
-    seq.push_back({name, nums});
+    seq.pushBack({name, nums});
   }
 
   for (auto it = seq.begin(); it != seq.end(); ++it)
@@ -36,7 +36,7 @@ int main()
   novikov::List< std::pair< novikov::LIter< size_t >, novikov::LIter< size_t > > > iterators{};
   for (auto it = seq.begin(); it != seq.end(); ++it)
   {
-    iterators.push_back({(*it).second.begin(), (*it).second.end()});
+    iterators.pushBack({(*it).second.begin(), (*it).second.end()});
   }
 
   while (true)
@@ -67,7 +67,7 @@ int main()
   iterators.clear();
   for (auto it = seq.begin(); it != seq.end(); ++it)
   {
-    iterators.push_back({(*it).second.begin(), (*it).second.end()});
+    iterators.pushBack({(*it).second.begin(), (*it).second.end()});
   }
 
   novikov::List< size_t > sums{};
@@ -94,7 +94,7 @@ int main()
     {
       break;
     }
-    sums.push_back(sum);
+    sums.pushBack(sum);
   }
 
   if (sums.empty())

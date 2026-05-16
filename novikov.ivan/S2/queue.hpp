@@ -16,7 +16,7 @@ namespace novikov
     void pop();
 
   private:
-    BiList< T > list_;
+    List< T > list_;
   };
 }
 
