@@ -13,7 +13,7 @@ namespace petrov {
   {
     vertices_.insert(from);
     vertices_.insert(to);
-    
+
     EdgeKey key = {from, to};
     if (edges_.has(key)) {
       EdgeValue& weights = edges_.get(key);

@@ -91,7 +91,7 @@ int main(int argc, char* argv[])
 
         petrov::Graph& graph = graphs.get(graphName);
         std::vector< std::string > vertices = graph.getVertices();
-        
+
         if (vertices.empty()) {
           std::cout << "\n";
         } else {
@@ -203,7 +203,7 @@ int main(int argc, char* argv[])
         }
 
         petrov::Graph newGraph;
-        
+
         for (size_t i = 0; i < vertexCount; ++i) {
           std::string vertex;
           iss >> vertex;
@@ -217,7 +217,6 @@ int main(int argc, char* argv[])
         std::string graph1Name;
         std::string graph2Name;
         iss >> newGraphName >> graph1Name >> graph2Name;
-
         if (graphs.has(newGraphName) || !graphs.has(graph1Name) || !graphs.has(graph2Name)) {
           std::cout << "<INVALID COMMAND>\n";
           continue;
