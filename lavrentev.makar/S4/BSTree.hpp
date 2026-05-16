@@ -96,4 +96,16 @@ void lavrentev::BSTree<Key, Value, Compare>::swap(BSTree &other) noexcept
   std::swap(compare_, other.compare_);
 }
 
+template< class Key, class Value, class Compare >
+void lavrentev::BSTree<Key, Value, Compare>::clear(Node *root)
+{
+  if (!root)
+  {
+    return;
+  }
+  clear(root->left_);
+  clear(root->right_);
+  delete root;
+}
+
 #endif
