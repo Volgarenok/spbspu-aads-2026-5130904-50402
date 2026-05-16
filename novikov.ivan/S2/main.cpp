@@ -14,7 +14,7 @@ namespace novikov
   int getPriority(const std::string& op);
   bool isNumber(const std::string& line);
   bool isOperation(const std::string& s);
-  Queue< std::string > infixToPostfix(novikov::Queue< std::string > infix);
+  Queue< std::string > infixToPostfix(Queue< std::string > infix);
 }
 
 int main(int argc, char** argv)
@@ -192,7 +192,7 @@ int novikov::getPriority(const std::string& op)
   return 0;
 }
 
-bool isNumber(const std::string& line)
+bool novikov::isNumber(const std::string& line)
 {
   for (size_t i = 0; i < line.length(); ++i)
   {
@@ -269,7 +269,7 @@ novikov::Queue< std::string > novikov::infixToPostfix(novikov::Queue< std::strin
   return postfix;
 }
 
-novikov::Queue< std::string > split(const std::string& line)
+novikov::Queue< std::string > novikov::split(const std::string& line)
 {
   novikov::Queue< std::string > res;
   std::string curr;
