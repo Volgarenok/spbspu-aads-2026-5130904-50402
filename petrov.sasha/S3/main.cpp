@@ -280,6 +280,7 @@ int main(int argc, char* argv[])
           }
         }
 
+
         graphs.add(newGraphName, newGraph);
       } else {
         std::cout << "<INVALID COMMAND>\n";
