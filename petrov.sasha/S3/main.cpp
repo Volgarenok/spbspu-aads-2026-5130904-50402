@@ -268,19 +268,6 @@ int main(int argc, char* argv[])
         petrov::Graph& oldGraph = graphs.get(oldGraphName);
         std::vector< std::string > allVertices = oldGraph.getVertices();
 
-        bool valid = true;
-        for (const auto& vertex : vertices) {
-          if (std::find(allVertices.begin(), allVertices.end(), vertex) == allVertices.end()) {
-            valid = false;
-            break;
-          }
-        }
-
-        if (!valid) {
-          std::cout << "<INVALID COMMAND>\n";
-          continue;
-        }
-
         petrov::Graph newGraph;
         for (const auto& from : vertices) {
           auto outbound = oldGraph.getOutbound(from);

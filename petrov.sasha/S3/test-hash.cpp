@@ -7,7 +7,7 @@ BOOST_AUTO_TEST_SUITE(HashTableTests)
 
 BOOST_AUTO_TEST_CASE(test_add_and_get)
 {
-  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table(10);
+  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table(100);
 
   table.add(1, "one");
   table.add(2, "two");
@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_CASE(test_add_and_get)
 
 BOOST_AUTO_TEST_CASE(test_has)
 {
-  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table(10);
+  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table(100);
 
   table.add(5, "five");
 
@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(test_has)
 
 BOOST_AUTO_TEST_CASE(test_drop)
 {
-  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table(10);
+  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table(100);
 
   table.add(3, "three");
   BOOST_CHECK(table.has(3));
@@ -41,29 +41,30 @@ BOOST_AUTO_TEST_CASE(test_drop)
 
 BOOST_AUTO_TEST_CASE(test_drop_nonexistent)
 {
-  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table(10);
+  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table(100);
 
   BOOST_CHECK_THROW(table.drop(999), std::out_of_range);
 }
 
 BOOST_AUTO_TEST_CASE(test_get_nonexistent)
 {
-  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table(10);
+  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table(100);
 
   BOOST_CHECK_THROW(table.get(999), std::out_of_range);
 }
 
 BOOST_AUTO_TEST_CASE(test_collision_handling)
 {
-  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table(5);
+  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table(100);
 
   table.add(1, "one");
-  table.add(6, "six");
-  table.add(11, "eleven");
+  table.add(101, "one-hundred-one");
+  table.add(201, "two-hundred-one");
 
   BOOST_CHECK_EQUAL(table.get(1), "one");
-  BOOST_CHECK_EQUAL(table.get(6), "six");
-  BOOST_CHECK_EQUAL(table.get(11), "eleven");
+  BOOST_CHECK_EQUAL(table.get(101), "one-hundred-one");
+  BOOST_CHECK_EQUAL(table.get(201), "two-hundred-one");
+  BOOST_CHECK_EQUAL(table.size(), 3);
 }
 
 BOOST_AUTO_TEST_CASE(test_rehash)
@@ -74,7 +75,8 @@ BOOST_AUTO_TEST_CASE(test_rehash)
   table.add(2, "two");
   table.add(3, "three");
 
-  table.rehash(20);
+  table.rehash(200);
+
   BOOST_CHECK_EQUAL(table.get(1), "one");
   BOOST_CHECK_EQUAL(table.get(2), "two");
   BOOST_CHECK_EQUAL(table.get(3), "three");
@@ -83,7 +85,7 @@ BOOST_AUTO_TEST_CASE(test_rehash)
 
 BOOST_AUTO_TEST_CASE(test_copy_constructor)
 {
-  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table1(10);
+  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table1(100);
   table1.add(1, "one");
   table1.add(2, "two");
 
@@ -96,7 +98,7 @@ BOOST_AUTO_TEST_CASE(test_copy_constructor)
 
 BOOST_AUTO_TEST_CASE(test_move_constructor)
 {
-  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table1(10);
+  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table1(100);
   table1.add(1, "one");
   table1.add(2, "two");
 
@@ -110,10 +112,10 @@ BOOST_AUTO_TEST_CASE(test_move_constructor)
 
 BOOST_AUTO_TEST_CASE(test_iterator)
 {
-  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table(10);
-  table.add(1, "one");
-  table.add(2, "two");
-  table.add(3, "three");
+  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table(100);
+  table.add(100, "one-hundred");
+  table.add(200, "two-hundred");
+  table.add(300, "three-hundred");
 
   int count = 0;
   for (auto it = table.begin(); it != table.end(); ++it) {
@@ -121,11 +123,12 @@ BOOST_AUTO_TEST_CASE(test_iterator)
   }
 
   BOOST_CHECK_EQUAL(count, 3);
+  BOOST_CHECK_EQUAL(table.size(), 3);
 }
 
 BOOST_AUTO_TEST_CASE(test_empty)
 {
-  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table(10);
+  petrov::HashTable< int, std::string, petrov::SHA1Hasher< int >, petrov::DefaultEqual< int > > table(100);
 
   BOOST_CHECK(table.empty());
 
@@ -138,7 +141,7 @@ BOOST_AUTO_TEST_CASE(test_empty)
 
 BOOST_AUTO_TEST_CASE(test_string_keys)
 {
-  petrov::HashTable< std::string, int, petrov::SHA1Hasher< std::string >, petrov::DefaultEqual< std::string > > table(10);
+  petrov::HashTable< std::string, int, petrov::SHA1Hasher< std::string >, petrov::DefaultEqual< std::string > > table(100);
 
   table.add("hello", 1);
   table.add("world", 2);
@@ -150,13 +153,14 @@ BOOST_AUTO_TEST_CASE(test_string_keys)
 BOOST_AUTO_TEST_CASE(test_pair_keys)
 {
   using KeyType = std::pair< std::string, std::string >;
-  petrov::HashTable< KeyType, int, petrov::SHA1Hasher< KeyType >, petrov::DefaultEqual< KeyType > > table(10);
+  petrov::HashTable< KeyType, int, petrov::SHA1Hasher< KeyType >, petrov::DefaultEqual< KeyType > > table(100);
+
   table.add({"a", "b"}, 100);
   table.add({"c", "d"}, 200);
 
   BOOST_CHECK_EQUAL(table.get({"a", "b"}), 100);
   BOOST_CHECK_EQUAL(table.get({"c", "d"}), 200);
+  BOOST_CHECK_EQUAL(table.size(), 2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-
