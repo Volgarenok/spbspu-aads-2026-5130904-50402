@@ -2,6 +2,7 @@
 #define BSTREE_HPP
 #include <iostream>
 #include <cstddef>
+#include <stdexcept>
 
 namespace lavrentev
 {
@@ -24,6 +25,7 @@ namespace lavrentev
     BSTree(const BSTree &other);
     BSTree(BSTree &&other) noexcept;
     BSTree &operator=(BSTree other);
+    Value &operator[](const Key &k);
 
     void push(Key k, Value v);
     Value get(Key k) const;
@@ -90,10 +92,38 @@ lavrentev::BSTree<Key, Value, Compare> &lavrentev::BSTree<Key, Value, Compare>::
 }
 
 template< class Key, class Value, class Compare >
-void lavrentev::BSTree<Key, Value, Compare>::swap(BSTree &other) noexcept
+Value &lavrentev::BSTree<Key, Value, Compare>::operator[](const Key &k)
 {
-  std::swap(fakeroot_, other.fakeroot_);
-  std::swap(compare_, other.compare_);
+  Node *curr = fakeroot_;
+  Node *next = fakeroot_->left_;
+  while (next)
+  {
+    curr = next;
+    if (compare_(k, curr->key_))
+    {
+      next = curr->left_;
+    }
+    else if (compare_(curr->key_, k))
+    {
+      next = curr->right_;
+    }
+    else
+    {
+      return curr->value_;
+    }
+  }
+  Node *newNode = new Node;
+  newNode->key_ = k;
+  newNode->value_ = Value();
+  if (curr == fakeroot_ || compare(k, curr->key_))
+  {
+    curr->left_ = newNode;
+  }
+  else
+  {
+    curr->right_ = newNode;
+  }
+  return newNode->value_;
 }
 
 template< class Key, class Value, class Compare >
