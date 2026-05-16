@@ -6,6 +6,15 @@
 
 namespace lavrentev
 {
+  template< class Key, class Value, class Compare >
+  struct BSTree;
+}
+
+using cmd_t = void (*)(std::istream &in, lavrentev::BSTree<std::string, size_t, std::less<std::string>>);
+
+namespace lavrentev
+{
+  
   template< class Key, class Value >
   class BSTIterator {
 
@@ -17,7 +26,7 @@ namespace lavrentev
   };
 
   template< class Key, class Value, class Compare >
-  class BSTree {
+  struct BSTree {
 
   public:
     BSTree();
@@ -56,6 +65,11 @@ namespace lavrentev
     void swap(BSTree &other) noexcept;
     Value &insertNode(Key k, Value v, bool flag);
   };
+
+  void print(std::istream &in, lavrentev::BSTree<std::string, size_t, std::less<std::string>>);
+  void complement(std::istream &in, lavrentev::BSTree<std::string, size_t, std::less<std::string>>);
+  void intersect(std::istream &in, lavrentev::BSTree<std::string, size_t, std::less<std::string>>);
+  void unionn(std::istream &in, lavrentev::BSTree<std::string, size_t, std::less<std::string>>);
 }
 
 template< class Key, class Value, class Compare >
