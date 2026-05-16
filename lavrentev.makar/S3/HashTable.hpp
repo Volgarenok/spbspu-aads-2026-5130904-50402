@@ -20,12 +20,12 @@ namespace lavrentev
       Key key;
       Value value;
     };
-    List<Node> *ht_;
     std::size_t slots_;
     std::size_t size_;
     double loadFactor_;
     Hash hasher_;
     Equal equal_;
+    List<Node> *ht_;
     void swap(HashTable<Key, Value, Hash, Equal>& other) noexcept;
 
   public:
@@ -90,7 +90,7 @@ namespace lavrentev
 
 template <class Key, class Value, class Hash, class Equal>
 lavrentev::HashTable<Key, Value, Hash, Equal>::HashTable()
-    : ht_(new List<Node>[5]), slots_(5), size_(0), loadFactor_(0.7)
+    : slots_(5), size_(0), loadFactor_(0.7), hasher_(Hash{}), equal_(Equal{}), ht_(new List<Node>[5])
 {
 }
 
@@ -137,7 +137,7 @@ Value &lavrentev::HashTable<Key, Value, Hash, Equal>::operator[](const Key &k)
   List<Node> &bucket = ht_[idx];
   for (LIter<Node> it = bucket.begin(); it != bucket.end(); ++it)
   {
-    if (Equal{}((*it).key, k))
+    if (equal_((*it).key, k))
     {
       return (*it).value;
     }
