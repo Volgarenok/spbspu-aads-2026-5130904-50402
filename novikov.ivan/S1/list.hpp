@@ -71,13 +71,13 @@ namespace novikov
     T& back();
     const T& back() const;
 
-    void push_front(const T&);
-    void push_front(T&&);
-    void push_back(const T&);
-    void push_back(T&&);
+    void pushFront(const T&);
+    void pushFront(T&&);
+    void pushBack(const T&);
+    void pushBack(T&&);
 
-    void pop_front();
-    void pop_back();
+    void popFront();
+    void popBack();
 
     void clear() noexcept;
     bool empty() const noexcept;
@@ -149,7 +149,7 @@ novikov::LIter< T >::LIter(typename List< T >::Node* node): curr(node)
 }
 
 template < class T >
-void novikov::List< T >::push_back(T&& value)
+void novikov::List< T >::pushBack(T&& value)
 {
   if (!head)
   {
@@ -183,7 +183,7 @@ void novikov::List< T >::push_back(T&& value)
 }
 
 template < class T >
-void novikov::List< T >::push_back(const T& value)
+void novikov::List< T >::pushBack(const T& value)
 {
   if (!head)
   {
@@ -289,7 +289,7 @@ novikov::LIter< T >& novikov::LIter< T >::operator--()
 }
 
 template < class T >
-void novikov::List< T >::push_front(const T& value)
+void novikov::List< T >::pushFront(const T& value)
 {
   if (!head)
   {
@@ -323,7 +323,7 @@ void novikov::List< T >::push_front(const T& value)
 }
 
 template < class T >
-void novikov::List< T >::push_front(T&& value)
+void novikov::List< T >::pushFront(T&& value)
 {
   if (!head)
   {
@@ -357,7 +357,7 @@ void novikov::List< T >::push_front(T&& value)
 }
 
 template < class T >
-void novikov::List< T >::pop_front()
+void novikov::List< T >::popFront()
 {
   if (!head)
   {
@@ -377,7 +377,7 @@ void novikov::List< T >::pop_front()
 }
 
 template < class T >
-void novikov::List< T >::pop_back()
+void novikov::List< T >::popBack()
 {
   if (!tail)
   {
