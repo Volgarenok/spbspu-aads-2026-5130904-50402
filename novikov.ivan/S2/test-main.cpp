@@ -1,5 +1,6 @@
 #define BOOST_TEST_MODULE S2
 #include <boost/test/included/unit_test.hpp>
+#include "eval.hpp"
 
 BOOST_AUTO_TEST_CASE(bitwise_or_test)
 {

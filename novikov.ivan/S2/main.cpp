@@ -5,12 +5,12 @@
 #include <limits>
 #include "stack.hpp"
 #include "queue.hpp"
+#include "eval.hpp"
 
 namespace novikov
 {
   Stack< std::string > input(std::istream& in);
   Queue< std::string > split(const std::string& line);
-  long long eval(std::string line);
   int getPriority(const std::string& op);
   bool isNumber(const std::string& line);
   bool isOperation(const std::string& s);
