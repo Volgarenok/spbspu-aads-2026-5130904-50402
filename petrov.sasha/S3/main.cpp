@@ -4,6 +4,7 @@
 #include <sstream>
 #include <algorithm>
 #include <limits>
+#include <set>
 #include "Graph.hpp"
 #include "HashTable.hpp"
 #include "SHA1Hash.hpp"
@@ -50,11 +51,11 @@ int main(int argc, char* argv[])
     }
 
     file.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
-
     graphs.add(graphName, graph);
   }
 
   file.close();
+
   while (std::getline(std::cin, line)) {
     if (line.empty()) {
       continue;
@@ -63,6 +64,7 @@ int main(int argc, char* argv[])
     std::istringstream iss(line);
     std::string command;
     iss >> command;
+
     try {
       if (command == "graphs") {
         std::vector< std::string > names;
@@ -70,9 +72,13 @@ int main(int argc, char* argv[])
           auto pair = *it;
           names.push_back(pair.first);
         }
-        std::sort(names.begin(), names.end());
-        for (const auto& name : names) {
-          std::cout << name << "\n";
+        if (names.empty()) {
+          std::cout << "\n";
+        } else {
+          std::sort(names.begin(), names.end());
+          for (const auto& name : names) {
+            std::cout << name << "\n";
+          }
         }
       } else if (command == "vertexes") {
         std::string graphName;
@@ -85,10 +91,14 @@ int main(int argc, char* argv[])
 
         petrov::Graph& graph = graphs.get(graphName);
         std::vector< std::string > vertices = graph.getVertices();
-        std::sort(vertices.begin(), vertices.end());
-
-        for (const auto& vertex : vertices) {
-          std::cout << vertex << "\n";
+        
+        if (vertices.empty()) {
+          std::cout << "\n";
+        } else {
+          std::sort(vertices.begin(), vertices.end());
+          for (const auto& vertex : vertices) {
+            std::cout << vertex << "\n";
+          }
         }
       } else if (command == "outbound") {
         std::string graphName;
@@ -109,12 +119,16 @@ int main(int argc, char* argv[])
         }
 
         auto outbound = graph.getOutbound(vertex);
-        for (const auto& pair : outbound) {
-          std::cout << pair.first;
-          for (unsigned int weight : pair.second) {
-            std::cout << " " << weight;
-          }
+        if (outbound.empty()) {
           std::cout << "\n";
+        } else {
+          for (const auto& pair : outbound) {
+            std::cout << pair.first;
+            for (unsigned int weight : pair.second) {
+              std::cout << " " << weight;
+            }
+            std::cout << "\n";
+          }
         }
       } else if (command == "inbound") {
         std::string graphName;
@@ -135,12 +149,16 @@ int main(int argc, char* argv[])
         }
 
         auto inbound = graph.getInbound(vertex);
-        for (const auto& pair : inbound) {
-          std::cout << pair.first;
-          for (unsigned int weight : pair.second) {
-            std::cout << " " << weight;
-          }
+        if (inbound.empty()) {
           std::cout << "\n";
+        } else {
+          for (const auto& pair : inbound) {
+            std::cout << pair.first;
+            for (unsigned int weight : pair.second) {
+              std::cout << " " << weight;
+            }
+            std::cout << "\n";
+          }
         }
       } else if (command == "bind") {
         std::string graphName;
@@ -176,7 +194,8 @@ int main(int argc, char* argv[])
         }
       } else if (command == "create") {
         std::string graphName;
-        iss >> graphName;
+        size_t vertexCount = 0;
+        iss >> graphName >> vertexCount;
 
         if (graphs.has(graphName)) {
           std::cout << "<INVALID COMMAND>\n";
@@ -184,6 +203,14 @@ int main(int argc, char* argv[])
         }
 
         petrov::Graph newGraph;
+        
+        for (size_t i = 0; i < vertexCount; ++i) {
+          std::string vertex;
+          iss >> vertex;
+          newGraph.addEdge(vertex, vertex, 0);
+          newGraph.removeEdge(vertex, vertex, 0);
+        }
+
         graphs.add(graphName, newGraph);
       } else if (command == "merge") {
         std::string newGraphName;
@@ -200,20 +227,22 @@ int main(int argc, char* argv[])
         petrov::Graph& g1 = graphs.get(graph1Name);
         petrov::Graph& g2 = graphs.get(graph2Name);
 
-        for (auto it = g1.getVertices().begin(); it != g1.getVertices().end(); ++it) {
-          auto outbound = g1.getOutbound(*it);
+        std::vector< std::string > vertices1 = g1.getVertices();
+        for (const auto& vertex : vertices1) {
+          auto outbound = g1.getOutbound(vertex);
           for (const auto& pair : outbound) {
             for (unsigned int weight : pair.second) {
-              newGraph.addEdge(*it, pair.first, weight);
+              newGraph.addEdge(vertex, pair.first, weight);
             }
           }
         }
 
-        for (auto it = g2.getVertices().begin(); it != g2.getVertices().end(); ++it) {
-          auto outbound = g2.getOutbound(*it);
+        std::vector< std::string > vertices2 = g2.getVertices();
+        for (const auto& vertex : vertices2) {
+          auto outbound = g2.getOutbound(vertex);
           for (const auto& pair : outbound) {
             for (unsigned int weight : pair.second) {
-              newGraph.addEdge(*it, pair.first, weight);
+              newGraph.addEdge(vertex, pair.first, weight);
             }
           }
         }
@@ -273,6 +302,7 @@ int main(int argc, char* argv[])
       std::cout << "<INVALID COMMAND>\n";
     }
   }
+
   return 0;
 }
 
