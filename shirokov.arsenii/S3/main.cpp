@@ -10,15 +10,25 @@
 
 int main()
 {
-  using cmd_t = void (*)(std::ostream&, std::istream&, shirokov::Graph graph);
+  using cmd_t = void (*)(std::ostream&, std::istream&, shirokov::Graph&);
   shirokov::HashTable< std::string, cmd_t, shirokov::SHA1< std::string >, std::equal_to< std::string > > cmds;
+  cmds["graphs"] = shirokov::graphs;
+  cmds["vertexes"] = shirokov::vertexes;
+  cmds["outbound"] = shirokov::outbound;
+  cmds["inbound"] = shirokov::inbound;
+  cmds["bind"] = shirokov::bind;
+  cmds["cut"] = shirokov::cut;
+  cmds["create"] = shirokov::create;
+  cmds["merge"] = shirokov::merge;
+  cmds["extract"] = shirokov::extract;
 
   std::string cmd;
   while (std::cin >> cmd)
   {
     try
     {
-      cmds.at(cmd)(std::cout, std::cin, shirokov::Graph()); // TODO: исправить на нормальный граф
+      shirokov::Graph graph;
+      cmds.at(cmd)(std::cout, std::cin, graph); // TODO: исправить на нормальный граф
     }
     catch (...)
     {
