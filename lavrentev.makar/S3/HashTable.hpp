@@ -181,9 +181,9 @@ void lavrentev::HashTable<Key, Value, Hash, Equal>::drop(Key k)
   {
     if (equal_((*it).key, k))
     {
-      Value out = (*it).value;
       bucket.erase(it);
       --size_;
+      return;
     }
   }
   throw std::invalid_argument("Key is not exists");
