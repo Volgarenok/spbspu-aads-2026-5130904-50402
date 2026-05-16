@@ -268,7 +268,7 @@ bool novikov::isOperation(const std::string& s)
   return res;
 }
 
-novikov::Queue< std::string > infixToPostfix(novikov::Queue< std::string > infix)
+novikov::Queue< std::string > novikov::infixToPostfix(novikov::Queue< std::string > infix)
 {
   novikov::Queue< std::string > postfix;
   novikov::Stack< std::string > stack;
