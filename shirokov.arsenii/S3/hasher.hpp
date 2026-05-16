@@ -3,7 +3,6 @@
 #include <boost/hash2/get_integral_result.hpp>
 #include <boost/hash2/hash_append.hpp>
 #include <boost/hash2/sha1.hpp>
-#include <boost/unordered/unordered_flat_map.hpp>
 
 namespace shirokov
 {

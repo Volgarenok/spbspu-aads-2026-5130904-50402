@@ -4,12 +4,13 @@
 #include <limits>
 #include <ostream>
 #include <string>
+#include "Graph.hpp"
 #include "HashTable.hpp"
 #include "hasher.hpp"
 
 int main()
 {
-  using cmd_t = void (*)(std::ostream&, std::istream&);
+  using cmd_t = void (*)(std::ostream&, std::istream&, shirokov::Graph graph);
   shirokov::HashTable< std::string, cmd_t, shirokov::SHA1< std::string >, std::equal_to< std::string > > cmds;
 
   std::string cmd;
@@ -17,7 +18,7 @@ int main()
   {
     try
     {
-      cmds.at(cmd)(std::cout, std::cin);
+      cmds.at(cmd)(std::cout, std::cin, shirokov::Graph()); // TODO: исправить на нормальный граф
     }
     catch (...)
     {
