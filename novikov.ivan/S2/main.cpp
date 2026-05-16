@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <limits>
 #include "stack.hpp"
 #include "queue.hpp"
 
@@ -11,6 +12,7 @@ namespace novikov
   Queue< std::string > split(const std::string& line);
   long long eval(std::string line);
   int getPriority(const std::string& op);
+  bool isNumber(const std::string& line);
   bool isOperation(const std::string& s);
   Queue< std::string > infixToPostfix(novikov::Queue< std::string > infix);
 }
@@ -27,7 +29,7 @@ int main(int argc, char** argv)
     catch (const std::bad_alloc&)
     {
       std::cerr << "Bad allocation\n";
-      return 3;
+      return 2;
     }
   }
   else if (argc == 2)
@@ -41,7 +43,7 @@ int main(int argc, char** argv)
     catch (const std::bad_alloc&)
     {
       std::cerr << "Bad allocation\n";
-      return 3;
+      return 2;
     }
   }
   else
@@ -57,20 +59,10 @@ int main(int argc, char** argv)
     {
       res = novikov::eval(expressions.top());
     }
-    catch (const std::invalid_argument&)
-    {
-      std::cerr << "Invalid arguments\n";
-      return 1;
-    }
-    catch (const std::out_of_range&)
-    {
-      std::cerr << "Out of range\n";
-      return 2;
-    }
     catch (...)
     {
       std::cerr << "Unknown error\n";
-      return 4;
+      return 3;
     }
     std::cout << res;
     expressions.pop();
@@ -88,7 +80,10 @@ novikov::Stack< std::string > novikov::input(std::istream& in)
   std::string exp;
   while (std::getline(in, exp))
   {
-    res.push(exp);
+    if (!exp.empty())
+    {
+      res.push(exp);
+    }
   }
   return res;
 }
@@ -98,147 +93,84 @@ long long novikov::eval(std::string line)
   Queue< std::string > infix = split(line);
   Queue< std::string > postfix = infixToPostfix(infix);
   Stack< long long > results;
-  results.push(0);
-  long long operand1 = 0, operand2 = 0;
-  int status = 0;
+  long long llmax = std::numeric_limits< long long >::max();
+  long long llmin = std::numeric_limits< long long >::min();
 
   while (!postfix.empty())
   {
     std::string val = postfix.front();
-    if (val == "+")
+    postfix.pop();
+    if (isNumber(val))
     {
-      if (status == 2)
-      {
-        results.push(operand1 + operand2);
-      }
-      else if (status == 1)
-      {
-        results.top() += operand1;
-      }
-      else if (status == 0)
-      {
-        long long op1 = results.top();
-        results.pop();
-        long long op2 = results.top();
-        results.pop();
-        results.top() = op1 + op2;
-      }
-      status = 0;
-    }
-    else if (val == "-")
-    {
-      if (status == 2)
-      {
-        results.push(operand1 - operand2);
-      }
-      else if (status == 1)
-      {
-        results.top() -= operand1;
-      }
-      else if (status == 0)
-      {
-        long long op1 = results.top();
-        results.pop();
-        long long op2 = results.top();
-        results.pop();
-        results.top() = op1 - op2;
-      }
-      status = 0;
-    }
-    else if (val == "*")
-    {
-      if (status == 2)
-      {
-        results.push(operand1 * operand2);
-      }
-      else if (status == 1)
-      {
-        results.top() *= operand1;
-      }
-      else if (status == 0)
-      {
-        long long op1 = results.top();
-        results.pop();
-        long long op2 = results.top();
-        results.pop();
-        results.top() = op1 * op2;
-      }
-      status = 0;
-    }
-    else if (val == "/")
-    {
-      if (status == 2)
-      {
-        results.push(operand1 / operand2);
-      }
-      else if (status == 1)
-      {
-        results.top() /= operand1;
-      }
-      else if (status == 0)
-      {
-        long long op1 = results.top();
-        results.pop();
-        long long op2 = results.top();
-        results.pop();
-        results.top() = op1 / op2;
-      }
-      status = 0;
-    }
-    else if (val == "%")
-    {
-      if (status == 2)
-      {
-        results.push(operand1 % operand2);
-      }
-      else if (status == 1)
-      {
-        results.top() %= operand1;
-      }
-      else if (status == 0)
-      {
-        long long op1 = results.top();
-        results.pop();
-        long long op2 = results.top();
-        results.pop();
-        results.top() = op1 % op2;
-      }
-      status = 0;
-    }
-    else if (val == "|")
-    {
-      if (status == 2)
-      {
-        results.push(operand1 | operand2);
-      }
-      else if (status == 1)
-      {
-        results.top() |= operand1;
-      }
-      else if (status == 0)
-      {
-        long long op1 = results.top();
-        results.pop();
-        long long op2 = results.top();
-        results.pop();
-        results.top() = op1 | op2;
-      }
-      status = 0;
+      results.push(std::stoll(val));
     }
     else
     {
-      if (status == 0)
+      if (results.empty())
       {
-        operand1 = std::stoll(val);
-        status = 1;
+        throw std::runtime_error("Not enough operands");
       }
-      else if (status == 1)
+      long long op2 = results.top();
+      results.pop();
+      if (results.empty())
       {
-        operand2 = std::stoll(val);
-        status = 2;
+        throw std::runtime_error("Not enough operands");
       }
+      long long op1 = results.top();
+      results.pop();
+
+      long long res = 0;
+      if (val == "+")
+      {
+        if (op1 < 0 && op2 < 0 && op1 < llmin - op2)
+        {
+          throw std::underflow_error("Underflow");
+        }
+        else if (op1 > 0 && op2 > 0 && op1 > llmax - op2)
+        {
+          throw std::overflow_error("Overflow");
+        }
+      }
+      else if (val == "-")
+      {
+        if (op1 > 0 && op2 < 0 && op1 > llmax + op2)
+        {
+          throw std::overflow_error("Overflow");
+        }
+        else if (op1 < 0 && op2 > 0 && op1 < llmin + op2)
+        {
+          throw std::underflow_error("Underflow");
+        }
+      }
+      else if (val == "*")
+      {
+        if (((op1 > 0 && op2 > 0) || (op1 < 0 && op2 < 0)) && op1 > llmax / op2)
+        {
+          throw std::overflow_error("Overflow");
+        }
+        else if (((op1 > 0 && op2 < 0) || (op1 < 0 && op2 > 0)) && op1 < llmin / op2)
+        {
+          throw std::underflow_error("Underflow");
+        }
+      }
+      else if (val == "/")
+      {
+        res = op1 / op2;
+      }
+      else if (val == "%")
+      {
+        res = op1 % op2;
+        if (op1 < 0 || op2 < 0)
+        {
+          res += op2;
+        }
+      }
+      else if (val == "|")
+      {
+        res = op1 | op2;
+      }
+      results.push(res);
     }
-    postfix.pop();
   }
   return results.top();
 }
@@ -260,6 +192,18 @@ int novikov::getPriority(const std::string& op)
   return 0;
 }
 
+bool isNumber(const std::string& line)
+{
+  for (size_t i = 0; i < line.length(); ++i)
+  {
+    if (!('0' <= line[i] && line[i] <= '9'))
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
 bool novikov::isOperation(const std::string& s)
 {
   bool res = s == "|";
@@ -272,7 +216,7 @@ novikov::Queue< std::string > novikov::infixToPostfix(novikov::Queue< std::strin
 {
   novikov::Queue< std::string > postfix;
   novikov::Stack< std::string > stack;
-  while (!postfix.empty())
+  while (!infix.empty())
   {
     std::string val = infix.front();
     if (val == "(")
@@ -281,12 +225,19 @@ novikov::Queue< std::string > novikov::infixToPostfix(novikov::Queue< std::strin
     }
     else if (val == ")")
     {
-      std::string op = stack.top();
-      while (novikov::isOperation(op))
+      if (!stack.empty())
       {
-        postfix.push(op);
-        stack.pop();
-        op = stack.top();
+        std::string op = stack.top();
+        while (op != "(" && getPriority(op) >= getPriority(val))
+        {
+          postfix.push(op);
+          stack.pop();
+          if (stack.empty())
+          {
+            break;
+          }
+          op = stack.top();
+        }
       }
       if (stack.top() == "(")
       {
@@ -333,6 +284,10 @@ novikov::Queue< std::string > split(const std::string& line)
     {
       curr += line[i];
     }
+  }
+  if (!curr.empty())
+  {
+    res.push(curr);
   }
   return res;
 }
