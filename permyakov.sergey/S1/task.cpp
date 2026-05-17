@@ -8,15 +8,14 @@ namespace permyakov
   void input(std::istream & in, List < pair_t > & list)
   {
     std::string title;
+    List < size_t > numbers;
     if(in >> title) {
-      List < size_t > numbers;
       inputNum(in, numbers);
-      pair_t pairL(title, numbers);
-      list.push_front(pairL);
     }
+    pair_t pairL(title, numbers);
+    list.push_front(pairL);
     LIter < pair_t > iterList = list.begin();
     while(in >> title) {
-      List < size_t > numbers;
       inputNum(in, numbers);
       pair_t pairL(title, numbers);
       list.insert_after(iterList, pairL);
@@ -26,9 +25,13 @@ namespace permyakov
 
   void inputNum(std::istream & in, List < size_t > & numbers)
   {
+    numbers.clear();
     size_t num;
     if(in >> num){
       numbers.push_front(num);
+    } else {
+      in.clear();
+      return;
     }
     LIter < size_t > iter = numbers.begin();
     while(in >> num) {
@@ -41,6 +44,8 @@ namespace permyakov
   List < size_t > idList(const List < pair_t > list, size_t id)
   {
     List < size_t > idList;
+    idList.push_front(0);
+    LIter < size_t > iterIdList = idList.begin();
     LCIter < pair_t > iterList = list.beginC();
     for(size_t i = 0; i < list.size(); ++i) {
       List < size_t > iList = (*(iterList)).second;
@@ -52,8 +57,10 @@ namespace permyakov
       for(size_t j = 0; j < id; ++j) {
         ++iIterList;
       }
-      idList.push_front(*iIterList);
+      idList.insert_after(iterIdList, *iIterList);
+      ++iterIdList;
     }
+    idList.pop_front();
     return idList;
   }
 
@@ -62,12 +69,10 @@ namespace permyakov
     if(list.isEmpty()) {
       return;
     }
-    LCIter < pair_t > iter = list.beginC();
-    pair_t pairIt = *iter;
-    out << pairIt.first;
-    for(size_t i = 1; i < list.size(); ++i) {
-      pairIt = *(++iter);
-      out << ' ' << pairIt.first;
+    LCIter < pair_t > iterList = list.beginC();
+    for(size_t i = 0; i < list.size(); ++i) {
+      out << (*iterList).first << ' ';
+      ++iterList;
     }
     out << '\n';
   }
@@ -77,12 +82,11 @@ namespace permyakov
     if(list.isEmpty()) {
       return;
     }
-    LCIter < size_t > iter = list.beginC();
-    out << *iter;
-    for(size_t i = 1; i < list.size(); ++i) {
-      ++iter;
-      out << ' ' << *iter;
+    LCIter < size_t > iterList = list.beginC();
+    for(size_t i = 0; i < list.size(); ++i) {
+      out << *iterList << ' ';
+      ++iterList;
     }
-    out << '\n';
+    out <<'\n';
   }
 }

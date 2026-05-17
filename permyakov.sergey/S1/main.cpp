@@ -9,10 +9,12 @@ int main()
   per::input(std::cin, bgList);
   per::outputName (std::cout, bgList);
   per::LIter < pair_t > iterList = bgList.begin();
-  size_t max_size = (*++iterList).second.size();
+  size_t max_size = (*iterList).second.size();
   for(size_t i = 1; i < bgList.size(); ++i) {
-    if((*(++iterList)).second.size() > max_size) {
-      max_size = (*(++iterList)).second.size();
+    ++iterList;
+    size_t iSize = (*(iterList)).second.size();
+    if(iSize > max_size) {
+      max_size = iSize;
     }
   }
   for(size_t i = 0; i < max_size; ++i) {
