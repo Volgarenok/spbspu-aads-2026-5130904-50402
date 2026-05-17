@@ -141,4 +141,10 @@ bool shirokov::HashTable< Key, Value, Hash, Equal >::insert(Key k, Value v)
   throw std::runtime_error("Hash table is full or cluster limit exceeded");
 }
 
+template < class Key, class Value, class Hash, class Equal >
+bool shirokov::HashTable< Key, Value, Hash, Equal >::contains(Key k) const
+{
+  return false;
+}
+
 #endif
