@@ -73,7 +73,67 @@ namespace afanasev
     Compare comp_;
 
     NodeBiTree< Key, Value > * findNode(const Key & k) const;
+    NodeBiTree<Key, Value> * fallLeft(NodeBiTree<Key, Value> * node) const;
   };
+}
+
+template< class Key, class Value, class Compare >
+Value afanasev::BSTree< Key, Value, Compare >::
+drop(const Key & k)
+{
+  NodeBiTree< Key, Value > * node = findNode(k);
+
+  if (node == &sentinel_)
+  {
+    throw std::out_of_range("Key not found");
+  }
+
+  Value result = std::move(node->val_);
+
+  if (node->left_ != &sentinel_ && node->right_ != &sentinel_)
+  {
+    NodeBiTree< Key, Value > * succ = fallLeft(node->right_);
+
+    node->key_ = std::move(succ->key_);
+    node->val_ = std::move(succ->val_);
+
+    node = succ;
+  }
+
+  NodeBiTree< Key, Value > * child = (node->left_ != &sentinel_) ? node->left_ : node->right_;
+
+  if (child != &sentinel_)
+  {
+    child->parent_ = node->parent_;
+  }
+
+  if (node->parent_ == &sentinel_)
+  {
+    root_ = child;
+  }
+  else if (node == node->parent_->left_)
+  {
+    node->parent_->left_ = child;
+  }
+  else
+  {
+    node->parent_->right_ = child;
+  }
+
+  delete node;
+  --size_;
+  return result;
+}
+
+template< class Key, class Value, class Compare >
+afanasev::NodeBiTree< Key, Value > * afanasev::BSTree< class Key, class Value, class Compare >::
+fallLeft(NodeBiTree< Key, Value > * node) const
+{
+  while (node != &sentinel_)
+  {
+    node = node->left_;
+  }
+  return node;
 }
 
 template< class Key, class Value, class Compare >
@@ -241,6 +301,5 @@ BSTree():
   size_(0),
   comp_()
 {}
-
 
 #endif
