@@ -14,11 +14,13 @@ namespace sogdanov
     Node<Key, Value> *right;
     Node<Key, Value> *parent;
 
-    Node(const Key &k, const Value &v, Node<Key, Value> *p = nullptr);
+    Node(const Key &k,
+         const Value &v, Node<Key, Value> *p = nullptr);
   };
 
   template <class Key, class Value>
-  Node<Key, Value>::Node(const Key &k, const Value &v, Node<Key, Value> *p)
+  Node<Key, Value>::Node(
+      const Key &k, const Value &v, Node<Key, Value> *p)
       : data(k, v), left(nullptr), right(nullptr), parent(p)
   {
   }
@@ -30,15 +32,18 @@ namespace sogdanov
     Node<Key, Value> *node;
     Node<Key, Value> *fake_leaf;
 
-    BSTIterator(Node<Key, Value> *n, Node<Key, Value> *f);
+    BSTIterator(
+        Node<Key, Value> *n, Node<Key, Value> *f);
 
     std::pair<Key, Value> &operator*() const;
 
     BSTIterator<Key, Value> &operator++();
     BSTIterator<Key, Value> operator++(int);
 
-    bool operator==(const BSTIterator<Key, Value> &other) const;
-    bool operator!=(const BSTIterator<Key, Value> &other) const;
+    bool operator==(
+        const BSTIterator<Key, Value> &other) const;
+    bool operator!=(
+        const BSTIterator<Key, Value> &other) const;
   };
 
   template <class Key, class Value>
@@ -48,7 +53,8 @@ namespace sogdanov
     const Node<Key, Value> *node;
     const Node<Key, Value> *fake_leaf;
 
-    BSTConstIterator(const Node<Key, Value> *n, const Node<Key, Value> *f);
+    BSTConstIterator(const Node<Key, Value> *n,
+                     const Node<Key, Value> *f);
     BSTConstIterator(const BSTIterator<Key, Value> &it);
 
     const std::pair<Key, Value> &operator*() const;
@@ -56,12 +62,15 @@ namespace sogdanov
     BSTConstIterator<Key, Value> &operator++();
     BSTConstIterator<Key, Value> operator++(int);
 
-    bool operator==(const BSTConstIterator<Key, Value> &other) const;
-    bool operator!=(const BSTConstIterator<Key, Value> &other) const;
+    bool operator==(
+        const BSTConstIterator<Key, Value> &other) const;
+    bool operator!=(
+        const BSTConstIterator<Key, Value> &other) const;
   };
 
   template <class Key, class Value>
-  BSTIterator<Key, Value>::BSTIterator(Node<Key, Value> *n, Node<Key, Value> *f)
+  BSTIterator<Key, Value>::BSTIterator(
+      Node<Key, Value> *n, Node<Key, Value> *f)
       : node(n), fake_leaf(f)
   {
   }
@@ -116,25 +125,29 @@ namespace sogdanov
   }
 
   template <class Key, class Value>
-  bool BSTIterator<Key, Value>::operator==(const BSTIterator<Key, Value> &other) const
+  bool BSTIterator<Key, Value>::operator==(
+      const BSTIterator<Key, Value> &other) const
   {
     return node == other.node;
   }
 
   template <class Key, class Value>
-  bool BSTIterator<Key, Value>::operator!=(const BSTIterator<Key, Value> &other) const
+  bool BSTIterator<Key, Value>::operator!=(
+      const BSTIterator<Key, Value> &other) const
   {
     return node != other.node;
   }
 
   template <class Key, class Value>
-  BSTConstIterator<Key, Value>::BSTConstIterator(const Node<Key, Value> *n, const Node<Key, Value> *f)
+  BSTConstIterator<Key, Value>::BSTConstIterator(
+      const Node<Key, Value> *n, const Node<Key, Value> *f)
       : node(n), fake_leaf(f)
   {
   }
 
   template <class Key, class Value>
-  BSTConstIterator<Key, Value>::BSTConstIterator(const BSTIterator<Key, Value> &it)
+  BSTConstIterator<Key, Value>::BSTConstIterator(
+      const BSTIterator<Key, Value> &it)
       : node(it.node), fake_leaf(it.fake_leaf)
   {
   }
@@ -189,13 +202,15 @@ namespace sogdanov
   }
 
   template <class Key, class Value>
-  bool BSTConstIterator<Key, Value>::operator==(const BSTConstIterator<Key, Value> &other) const
+  bool BSTConstIterator<Key, Value>::operator==(
+      const BSTConstIterator<Key, Value> &other) const
   {
     return node == other.node;
   }
 
   template <class Key, class Value>
-  bool BSTConstIterator<Key, Value>::operator!=(const BSTConstIterator<Key, Value> &other) const
+  bool BSTConstIterator<Key, Value>::operator!=(
+      const BSTConstIterator<Key, Value> &other) const
   {
     return node != other.node;
   }
