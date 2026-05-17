@@ -1,3 +1,5 @@
+#include <boost/test/tools/old/interface.hpp>
+#include <boost/test/unit_test_suite.hpp>
 #define BOOST_TEST_MODULE S3
 #include <functional>
 #include <stdexcept>
@@ -79,4 +81,21 @@ BOOST_AUTO_TEST_CASE(write_non_existent_value)
   shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > ht;
   ht[0] = 1;
   BOOST_TEST(ht[0] == 1);
+}
+
+BOOST_AUTO_TEST_CASE(erase_existing_value)
+{
+  shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > ht;
+  BOOST_REQUIRE(ht.insert(0, 1));
+  ht.insert(2, 5);
+  BOOST_REQUIRE(ht.erase(0));
+  BOOST_TEST(!ht.contains(0));
+}
+
+BOOST_AUTO_TEST_CASE(erase_non_existent_value)
+{
+  shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > ht;
+  ht.insert(0, 1);
+  ht.insert(2, 5);
+  BOOST_TEST(!ht.erase(10));
 }
