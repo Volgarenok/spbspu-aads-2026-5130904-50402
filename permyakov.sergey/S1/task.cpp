@@ -73,7 +73,7 @@ namespace permyakov
     size_t result = 0;
     LCIter < size_t > iterList = list.beginC();
     for(size_t i = 0; i < list.size(); ++i) {
-      if(MAX_NUM - result <= *iterList) {
+      if(MAX_NUM - result >= *iterList) {
         result += *iterList;
       } else {
         throw std::overflow_error("max");

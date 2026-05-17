@@ -12,8 +12,6 @@ int main()
     return 0;
   }
 
-  per::outputName (std::cout, bgList);
-
   per::LIter < pair_t > iterList = bgList.begin();
   size_t max_size = (*iterList).second.size();
   for(size_t i = 1; i < bgList.size(); ++i) {
@@ -25,21 +23,36 @@ int main()
   }
 
   if(!max_size) {
+    per::outputName (std::cout, bgList);
     std::cout << "0\n";
     return 0;
   }
 
   try {
+    per::List < per::List < size_t > > nums;
+    nums.push_front(per::List < size_t > ());
+    per::LIter < per::List < size_t > > iterNums = nums.begin();
+
     per::List < size_t > sums;
     sums.push_front(0);
     per::LIter < size_t > iterSums = sums.begin();
+
     for(size_t i = 0; i < max_size; ++i) {
       per::List < size_t > outList = per::idList(bgList, i);
-      per::outputNum(std::cout, outList);
+      nums.insert_after(iterNums, outList);
       sums.insert_after(iterSums, per::sumList(outList));
       ++iterSums;
     }
+
+    nums.pop_front();
     sums.pop_front();
+
+    iterNums = nums.begin();
+    per::outputName (std::cout, bgList);
+    for(size_t i = 0; i < max_size; ++i) {
+      per::outputNum(std::cout, *iterNums);
+      ++iterList;
+    }
     per::outputNum(std::cout, sums);
   } catch (const std::overflow_error & e) {
     std::cerr << e.what() << '\n';
