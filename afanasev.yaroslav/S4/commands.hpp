@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <string>
-#include "BiTree.hpp"
+#include "BiTree/BiTree.hpp"
 
 namespace afanasev
 {

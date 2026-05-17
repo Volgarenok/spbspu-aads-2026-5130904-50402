@@ -3,9 +3,7 @@
 #include <limits>
 #include <string>
 #include <stdexcept>
-//#include "HashTable/HashTable.hpp"
-//#include "HashTable/HashFunction.hpp"
-//#include "Graph.hpp"
+#include "BiTree/BiTree.hpp"
 #include "commands.hpp"
 
 int main(int argc, char * argv[])
@@ -15,14 +13,6 @@ int main(int argc, char * argv[])
     std::cerr << "need two arg";
     return 1;
   }
-
-
-
-
-
-
-
-
   
   std::ifstream file(argv[1]);
   if (!file.is_open())
@@ -33,21 +23,16 @@ int main(int argc, char * argv[])
 
   file.close();
 
+
+  using CmdFunc = void (*)(std::istream &, std::ostream &, afanasev::Datasets &);
+  afanasev::BSTree< std::string, CmdFunc > commands;
+
+  commands.push("print",      afanasev::cmdPrint);
+  commands.push("complement", afanasev::cmdComplement);
+  commands.push("intersect",  afanasev::cmdIntersect);
+  commands.push("union",      afanasev::cmdUnion);
+
   /*
-  using CmdFunc = void (*)(std::istream &, std::ostream &, afanasev::GraphSet &);
-  using CmdHash = afanasev::Hasher< std::string >;
-  afanasev::HashTable< std::string, CmdFunc, CmdHash, std::equal_to< std::string > > commands(9);
-
-  commands.add("graphs",   afanasev::cmdGraphs);
-  commands.add("vertexes", afanasev::cmdVertexes);
-  commands.add("outbound", afanasev::cmdOutbound);
-  commands.add("inbound",  afanasev::cmdInbound);
-  commands.add("bind",     afanasev::cmdBind);
-  commands.add("cut",      afanasev::cmdCut);
-  commands.add("create",   afanasev::cmdCreate);
-  commands.add("merge",    afanasev::cmdMerge);
-  commands.add("extract",  afanasev::cmdExtract);
-
   std::string cmd;
   while (std::cin >> cmd)
   {
@@ -61,7 +46,7 @@ int main(int argc, char * argv[])
       std::cin.clear();
       std::cin.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
     }
-  }
-*/
+  }*/
+
   return 0;
 }
