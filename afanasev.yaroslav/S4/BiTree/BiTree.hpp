@@ -46,6 +46,7 @@ namespace afanasev
     BSTree();
 
     ~BSTree();
+    void clear(NodeBiTree< Key, Value > * node)
 
     void push(Key k, Value v);
     Value get(Key k);
@@ -72,6 +73,19 @@ namespace afanasev
     size_t size_;
     Compare comp_;
   };
+}
+
+
+template< class Key, class Value, class Compare >
+void afanasev::BSTree< class Key, class Value, class Compare >::clear(NodeBiTree< Key, Value > * node)
+{
+  if (node == &sentinel_)
+  {
+    return;
+  }
+  clear(node->left_);
+  clear(node->right_);
+  delete node;
 }
 
 template< class Key, class Value, class Compare >
