@@ -49,7 +49,7 @@ namespace permyakov
   {
     return curr -> val;
   }
-  
+
   template < class T > LIter < T > & LIter < T >::operator++()
   {
     curr = curr -> next;

@@ -110,7 +110,7 @@ namespace permyakov
     }
     return LIter < T > (nodes);
   }
-  
+
   template < class T > LIter < T > List < T >::end()
   {
     if(isEmpty()) {
@@ -170,7 +170,7 @@ namespace permyakov
     }
     Node < T > * ersNode = pos.curr -> next;
     pos.curr -> next = ersNode -> next;
-    delete[] ersNode; 
+    delete[] ersNode;
     size_--;
     if(isEmpty()) {
       nodes = new Node < T > {T(), nullptr};
@@ -203,7 +203,7 @@ namespace permyakov
     }
     Node < T > * ersNode = nodes;
     nodes = nodes -> next;
-    delete ersNode; 
+    delete ersNode;
     size_--;
     if(isEmpty()) {
       nodes = new Node < T > {T(), nullptr};
