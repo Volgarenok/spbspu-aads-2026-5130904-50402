@@ -158,8 +158,4 @@ bool shirokov::HashTable< Key, Value, Hash, Equal >::contains(Key k) const
   return false;
 }
 
-template < class Key, class Value, class Hash, class Equal >
-Value& shirokov::HashTable< Key, Value, Hash, Equal >::at(Key k)
-{}
-
 #endif
