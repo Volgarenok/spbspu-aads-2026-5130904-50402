@@ -1,5 +1,6 @@
 #ifndef BSTREE_HPP
 #define BSTREE_HPP
+#include <List.hpp>
 #include <iostream>
 #include <cstddef>
 #include <stdexcept>
@@ -10,7 +11,8 @@ namespace lavrentev
   struct BSTree;
 }
 
-using cmd_t = void (*)(std::istream &in, lavrentev::BSTree<std::string, size_t, std::less<std::string>>);
+using BSTList = lavrentev::List<lavrentev::BSTree<std::string, size_t, std::less<std::string>>>;
+using cmd_t = void (*)(std::istream &in, BSTList);
 
 namespace lavrentev
 {
@@ -39,6 +41,7 @@ namespace lavrentev
     void push(Key k, Value v);
     const Value &get(const Key &k) const;
     void drop(Key k);
+    bool has(const Key &k) const;
 
     using const_iterator = BSTConstIterator< Key, Value >;
     const_iterator rotateLeft(const_iterator it);
@@ -66,10 +69,10 @@ namespace lavrentev
     Value &insertNode(Key k, Value v, bool flag);
   };
 
-  void print(std::istream &in, lavrentev::BSTree<std::string, size_t, std::less<std::string>>);
-  void complement(std::istream &in, lavrentev::BSTree<std::string, size_t, std::less<std::string>>);
-  void intersect(std::istream &in, lavrentev::BSTree<std::string, size_t, std::less<std::string>>);
-  void unionn(std::istream &in, lavrentev::BSTree<std::string, size_t, std::less<std::string>>);
+  void print(std::istream &in, BSTList);
+  void complement(std::istream &in, BSTList);
+  void intersect(std::istream &in, BSTList);
+  void unionn(std::istream &in, BSTList);
 }
 
 template< class Key, class Value, class Compare >
