@@ -106,6 +106,59 @@ namespace sogdanov
     destroy(root);
     delete fake_leaf;
   }
+  template <class Key, class Value, class Compare>
+  BSTree<Key, Value, Compare> &BSTree<Key, Value, Compare>::operator=(const BSTree<Key, Value, Compare> &other)
+  {
+    if (this != &other)
+    {
+      destroy(root);
+      root = copyTree(other.root, nullptr, other.fake_leaf);
+      tree_size = other.tree_size;
+      comp = other.comp;
+    }
+    return *this;
+  }
+
+  template <class Key, class Value, class Compare>
+  bool BSTree<Key, Value, Compare>::empty() const
+  {
+    return root == fake_leaf;
+  }
+
+  template <class Key, class Value, class Compare>
+  BSTIterator<Key, Value> BSTree<Key, Value, Compare>::begin()
+  {
+    Node<Key, Value> *curr = root;
+    while (curr != fake_leaf && curr->left != fake_leaf)
+    {
+      curr = curr->left;
+    }
+    return BSTIterator<Key, Value>(curr, fake_leaf);
+  }
+
+  template <class Key, class Value, class Compare>
+  BSTIterator<Key, Value> BSTree<Key, Value, Compare>::end()
+  {
+    return BSTIterator<Key, Value>(fake_leaf, fake_leaf);
+  }
+
+  template <class Key, class Value, class Compare>
+  BSTConstIterator<Key, Value> BSTree<Key, Value, Compare>::begin() const
+  {
+    const Node<Key, Value> *curr = root;
+    while (curr != fake_leaf && curr->left != fake_leaf)
+    {
+      curr = curr->left;
+    }
+    return BSTConstIterator<Key, Value>(curr, fake_leaf);
+  }
+
+  template <class Key, class Value, class Compare>
+  BSTConstIterator<Key, Value> BSTree<Key, Value, Compare>::end() const
+  {
+    return BSTConstIterator<Key, Value>(fake_leaf, fake_leaf);
+  }
+
 }
 
 #endif
