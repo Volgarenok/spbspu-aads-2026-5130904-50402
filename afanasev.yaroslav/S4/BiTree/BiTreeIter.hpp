@@ -28,7 +28,10 @@ namespace afanasev
     friend class BSTree;
 
   private:
-    NodeBiTree< Key, Value > *node_;
+    NodeBiTree< Key, Value > * node_;
+
+    NodeBiTree< Key, Value > * goLeftMost(NodeBiTree< Key, Value > * p);
+    NodeBiTree< Key, Value > * goRightMost(NodeBiTree< Key, Value > * p);
   };
 
   template< class Key, class Value >
@@ -50,8 +53,113 @@ namespace afanasev
     friend class BSTree;
 
   private:
-    NodeBiTree< Key, Value > *node_;
+    NodeBiTree< Key, Value > * node_;
+
+    NodeBiTree< Key, Value > * goLeftMost(NodeBiTree< Key, Value > * p);
+    NodeBiTree< Key, Value > * goRightMost(NodeBiTree< Key, Value > * p);
   };
+}
+
+template< class Key, class Value >
+afanasev::BSTIterator< Key, Value > & afanasev::BSTIterator< Key, Value >::
+operator++()
+{
+  if (!node_)
+  {
+    return *this;
+  }
+
+  if (node_->right_ != nullptr && node_->right_ != node_)
+  {
+    node_ = goLeftMost(node_->right_);
+  }
+  else
+  {
+    NodeBiTree< Key, Value > * parent = node_->parent_;
+    while (parent != nullptr && parent->right_ == node_)
+    {
+      node_ = parent;
+      parent = parent->parent_;
+    }
+    node_ = parent;
+  }
+  return *this;
+}
+
+template< class Key, class Value >
+afanasev::BSTIterator< Key, Value > afanasev::BSTIterator< Key, Value >::
+operator++(int)
+{
+  BSTIterator tmp = *this;
+  ++(*this);
+  return tmp;
+}
+
+template< class Key, class Value >
+afanasev::BSTIterator< Key, Value > & afanasev::BSTIterator< Key, Value >::
+operator--()
+{
+  if (node_ == nullptr)
+  {
+    return *this;
+  }
+
+  if (node_->left_ && node_->left_ != node_)
+  {
+    node_ = goRightMost(node_->left_);
+  }
+  else
+  {
+    NodeBiTree< Key, Value > * parent = node_->parent_;
+    while (parent != nullptr && parent->left_ == node_)
+    {
+      node_ = parent;
+      parent = parent->parent_;
+    }
+    node_ = parent;
+  }
+  return *this;
+}
+
+template< class Key, class Value >
+afanasev::BSTIterator< Key, Value > afanasev::BSTIterator< Key, Value >::
+operator--(int)
+{
+  BSTIterator tmp = *this;
+  --(*this);
+  return tmp;
+}
+
+template< class Key, class Value >
+afanasev::NodeBiTree< Key, Value > * afanasev::BSTIterator< Key, Value >::
+goLeftMost(NodeBiTree< Key, Value > * p)
+{
+  if (!p)
+  {
+    return nullptr;
+  }
+
+  while (p->left_ && p->left_ != p)
+  {
+    p = p->left_;
+  }
+  return p;
+}
+
+template< class Key, class Value >
+afanasev::NodeBiTree< Key, Value > * afanasev::BSTIterator< Key, Value >::
+goRightMost(NodeBiTree< Key, Value > * p)
+{
+  if (!p)
+  {
+    return nullptr;
+  }
+
+  while (p->right_ && p->right_ != p)
+  {
+    p = p->right_;
+  }
+  return p;
 }
 
 template< class Key, class Value >
