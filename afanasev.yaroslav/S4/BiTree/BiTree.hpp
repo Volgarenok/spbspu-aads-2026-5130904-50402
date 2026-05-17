@@ -316,7 +316,7 @@ drop(const Key & k)
 }
 
 template< class Key, class Value, class Compare >
-afanasev::NodeBiTree< Key, Value > * afanasev::BSTree< class Key, class Value, class Compare >::
+afanasev::NodeBiTree< Key, Value > * afanasev::BSTree< Key, Value, Compare >::
 fallLeft(NodeBiTree< Key, Value > * node) const
 {
   while (node->left_ != &sentinel_)
@@ -327,7 +327,7 @@ fallLeft(NodeBiTree< Key, Value > * node) const
 }
 
 template< class Key, class Value, class Compare >
-void afanasev::BSTree< class Key, class Value, class Compare >::
+void afanasev::BSTree< Key, Value, Compare >::
 push(const Key & k, const Value & v)
 {
     if (root_ == &sentinel_)
@@ -376,7 +376,7 @@ push(const Key & k, const Value & v)
 }
 
 template< class Key, class Value, class Compare >
-void afanasev::BSTree< class Key, class Value, class Compare >::
+void afanasev::BSTree< Key, Value, Compare >::
 push(Key && k, Value && v)
 {
   if (root_ == &sentinel_)
@@ -425,7 +425,7 @@ push(Key && k, Value && v)
 }
 
 template< class Key, class Value, class Compare >
-Value afanasev::BSTree< class Key, class Value, class Compare >::
+Value afanasev::BSTree< Key, Value, Compare >::
 get(const Key & k) const
 {
   NodeBiTree< Key, Value > * node = findNode(k);
@@ -438,7 +438,7 @@ get(const Key & k) const
 }
 
 template< class Key, class Value, class Compare >
-afanasev::NodeBiTree< Key, Value > * afanasev::BSTree< class Key, class Value, class Compare >::
+afanasev::NodeBiTree< Key, Value > * afanasev::BSTree< Key, Value, Compare >::
 findNode(const Key & k) const
 {
   NodeBiTree< Key, Value > * cur = root_;
@@ -462,7 +462,7 @@ findNode(const Key & k) const
 }
 
 template< class Key, class Value, class Compare >
-void afanasev::BSTree< class Key, class Value, class Compare >::
+void afanasev::BSTree< Key, Value, Compare >::
 clear() noexcept
 {
   if (root_ == &sentinel_)
@@ -477,14 +477,14 @@ clear() noexcept
 }
 
 template< class Key, class Value, class Compare >
-afanasev::BSTree< class Key, class Value, class Compare >::
+afanasev::BSTree< Key, Value, Compare >::
 ~BSTree()
 {
   clear();
 }
 
 template< class Key, class Value, class Compare >
-afanasev::BSTree< class Key, class Value, class Compare >::
+afanasev::BSTree< Key, Value, Compare >::
 BSTree():
   sentinel_(),
   root_(&sentinel_),
