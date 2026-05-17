@@ -144,6 +144,16 @@ bool shirokov::HashTable< Key, Value, Hash, Equal >::insert(Key k, Value v)
 template < class Key, class Value, class Hash, class Equal >
 bool shirokov::HashTable< Key, Value, Hash, Equal >::contains(Key k) const
 {
+  size_t limit = std::log2(size_);
+  size_t pos = Hash{}(k) & (size_ - 1);
+  for (size_t i = 0; i < limit; ++i)
+  {
+    if (slots_[pos].key == k)
+    {
+      return true;
+    }
+    pos = (pos + i) & (size_ - 1);
+  }
   return false;
 }
 
