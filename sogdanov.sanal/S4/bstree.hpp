@@ -311,6 +311,86 @@ namespace sogdanov
     tree_size--;
     return val;
   }
+   
+  template <class Key, class Value, class Compare>
+  BSTConstIterator<Key, Value> BSTree<Key, Value, Compare>::rotateLeft(BSTConstIterator<Key, Value> it)
+  {
+    Node<Key, Value> *node = const_cast<Node<Key, Value> *>(it.node);
+    if (node == fake_leaf || node->parent == nullptr || node->parent->right != node)
+    {
+      return it;
+    }
+
+    Node<Key, Value> *parent = node->parent;
+    Node<Key, Value> *grand = parent->parent;
+
+    parent->right = node->left;
+    if (node->left != fake_leaf)
+    {
+      node->left->parent = parent;
+    }
+
+    node->left = parent;
+    parent->parent = node;
+
+    node->parent = grand;
+    if (grand != nullptr)
+    {
+      if (grand->left == parent)
+      {
+        grand->left = node;
+      }
+      else
+      {
+        grand->right = node;
+      }
+    }
+    else
+    {
+      root = node;
+    }
+    return BSTConstIterator<Key, Value>(node, fake_leaf);
+  }
+
+  template <class Key, class Value, class Compare>
+  BSTConstIterator<Key, Value> BSTree<Key, Value, Compare>::rotateRight(BSTConstIterator<Key, Value> it)
+  {
+    Node<Key, Value> *node = const_cast<Node<Key, Value> *>(it.node);
+    if (node == fake_leaf || node->parent == nullptr || node->parent->left != node)
+    {
+      return it;
+    }
+
+    Node<Key, Value> *parent = node->parent;
+    Node<Key, Value> *grand = parent->parent;
+
+    parent->left = node->right;
+    if (node->right != fake_leaf)
+    {
+      node->right->parent = parent;
+    }
+
+    node->right = parent;
+    parent->parent = node;
+
+    node->parent = grand;
+    if (grand != nullptr)
+    {
+      if (grand->left == parent)
+      {
+        grand->left = node;
+      }
+      else
+      {
+        grand->right = node;
+      }
+    }
+    else
+    {
+      root = node;
+    }
+    return BSTConstIterator<Key, Value>(node, fake_leaf);
+  }
 }
 
 #endif
