@@ -20,3 +20,10 @@ BOOST_AUTO_TEST_CASE(insert_value_make_non_empty)
   BOOST_TEST(ht.slotsCount() == 1);
   BOOST_TEST(!ht.empty());
 }
+
+BOOST_AUTO_TEST_CASE(contains_after_insert)
+{
+  shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > ht;
+  BOOST_REQUIRE(ht.insert(0, 1));
+  BOOST_TEST(ht.contains(0));
+}
