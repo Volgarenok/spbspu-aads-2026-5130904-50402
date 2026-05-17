@@ -38,6 +38,25 @@ namespace permyakov
     in.clear();
   }
 
+  List < size_t > idList(const List < pair_t > list, size_t id)
+  {
+    List < size_t > idList;
+    LCIter < pair_t > iterList = list.beginC();
+    for(size_t i = 0; i < list.size(); ++i) {
+      List < size_t > iList = (*(iterList)).second;
+      ++iterList;
+      if(iList.size() <= id) {
+        continue;
+      }
+      LCIter < size_t > iIterList = iList.beginC();
+      for(size_t j = 0; j < id; ++j) {
+        ++iIterList;
+      }
+      idList.push_front(*iIterList);
+    }
+    return idList;
+  }
+
   void outputName(std::ostream & out, const List < pair_t > & list)
   {
     if(list.isEmpty()) {
