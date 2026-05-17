@@ -170,7 +170,7 @@ namespace permyakov
     }
     Node < T > * ersNode = pos.curr -> next;
     pos.curr -> next = ersNode -> next;
-    delete[] ersNode;
+    delete ersNode;
     size_--;
     if(isEmpty()) {
       nodes = new Node < T > {T(), nullptr};
