@@ -11,11 +11,11 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  lavrentev::List<lavrentev::BSTree<std::string, size_t, std::less<std::string>>> bst{};
+  lavrentev::List<lavrentev::BSTree<std::string, size_t, std::less<std::string>>> bsts{};
 
   try
   {
-    lavrentev::readfile(argv[1], bst);
+    lavrentev::readfile(argv[1], bsts);
   } catch (const std::runtime_error &) {
     std::cerr << "Input processing error" << "\n";
     return 2;
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
         throw std::logic_error("Unknown command");
       }
 
-      commands[cmd](std::cin, bst);
+      commands[cmd](std::cin, bsts);
     }
     catch (...)
     {

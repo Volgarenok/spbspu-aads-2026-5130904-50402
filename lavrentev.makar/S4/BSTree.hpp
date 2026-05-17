@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstddef>
 #include <stdexcept>
+#include <utility>
 
 namespace lavrentev
 {
@@ -40,7 +41,7 @@ namespace lavrentev
 
     void push(Key k, Value v);
     const Value &get(const Key &k) const;
-    void drop(Key k);
+    void drop(const Key &k);
     bool has(const Key &k) const;
 
     using const_iterator = BSTConstIterator< Key, Value >;
@@ -67,6 +68,7 @@ namespace lavrentev
     Node *copyNodes(Node *other);
     void swap(BSTree &other) noexcept;
     Value &insertNode(Key k, Value v, bool flag);
+    Node *fallLeft(Node *node);
   };
 
   void print(std::istream &in, BSTList);
@@ -221,27 +223,82 @@ const Value &lavrentev::BSTree<Key, Value, Compare>::get(const Key &k) const
 }
 
 template< class Key, class Value, class Compare >
-void lavrentev::BSTree<Key, Value, Compare>::drop(Key k)
+void lavrentev::BSTree<Key, Value, Compare>::drop(const Key &k)
 {
-  Node *curr = fakeroot_;
-  Node *next = fakeroot_->left_;
-  while (next)
+  Node *parent = fakeroot_;
+  Node *curr = fakeroot_->left_;
+
+  while (curr)
   {
-    curr = next;
     if (compare_(k, curr->key_))
     {
-      next = curr->left_;
+      parent = curr;
+      curr = curr->left_;
     }
     else if (compare_(curr->key_, k))
     {
-      next = curr->right_;
+      parent = curr;
+      curr = curr->right_;
     }
-    else
-    {
-      // Я ЕБУ???
-    }
+    else break;
   }
-  throw std::out_of_range("Key does not exist");
+
+  if (!curr) throw std::out_of_range("Key does not exist");
+
+  if (curr->left_ && curr->right_)
+  {
+    Node *newCurr = fallLeft(curr->right_);
+    Node *newCurrParent = curr;
+    if (newCurrParent->right_ != newCurr)
+    {
+      newCurrParent = curr->right_;
+      while (newCurrParent->left_ != newCurr)
+      {
+        newCurrParent = newCurrParent->left_;
+      }
+    }
+
+    curr->key_ = newCurr->key_;
+    curr->value_ = newCurr->value_;
+    parent = newCurrParent;
+    curr = newCurr;
+  }
+
+  Node *child;
+  if (curr->left_)
+  {
+    child = curr->left_;
+  }
+  else
+  {
+    child = curr->right_;
+  }
+
+  if (parent->left_ == curr)
+  {
+    parent->left_ = child;
+  }
+  else
+  {
+    parent->right_ = child;
+  }
+
+  delete curr;
+}
+
+template< class Key, class Value, class Compare >
+typename lavrentev::BSTree<Key, Value, Compare>::Node
+  *lavrentev::BSTree<Key, Value, Compare>::fallLeft(Node *node)
+{
+  if (!node)
+  {
+    return node;
+  }
+  while(node->left_)
+  {
+    node = node->left_;
+  }
+  return node;
 }
 
 #endif
