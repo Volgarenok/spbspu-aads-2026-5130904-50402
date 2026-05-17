@@ -34,7 +34,9 @@ int main()
       sums.insert_after(iterSums, per::sumList(outList));
       ++iterSums;
     }
-    sums.pop_front();
+    if(!max_size) {
+      sums.pop_front();
+    }
     per::outputNum(std::cout, sums);
   } catch (const std::overflow_error & e) {
     std::cerr << e.what() << '\n';

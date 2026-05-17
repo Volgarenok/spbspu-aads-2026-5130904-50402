@@ -1,9 +1,11 @@
 #include <iostream>
+#include <limits>
 #include "task.hpp"
 
 namespace permyakov
 {
   using pair_t = std::pair < std::string, List < size_t > >;
+  const size_t MAX_NUM = std::numeric_limits < size_t > ::max();
 
   bool input(std::istream & in, List < pair_t > & list)
   {
@@ -71,7 +73,11 @@ namespace permyakov
     size_t result = 0;
     LCIter < size_t > iterList = list.beginC();
     for(size_t i = 0; i < list.size(); ++i) {
-      result += *iterList;
+      if(MAX_NUM - result <= *iterList) {
+        result += *iterList;
+      } else {
+        std::__throw_overflow_error;
+      }
       ++iterList;
     }
     return result;
