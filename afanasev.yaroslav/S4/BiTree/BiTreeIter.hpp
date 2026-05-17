@@ -61,6 +61,20 @@ namespace afanasev
 }
 
 template< class Key, class Value >
+bool afanasev::BSTIterator< Key, Value >::
+operator==(const BSTIterator & other) const
+{
+  return node_ == other.node_;
+}
+
+template< class Key, class Value >
+bool afanasev::BSTIterator< Key, Value >::
+operator!=(const BSTIterator & other) const
+{
+  return !(*this == other);
+}
+
+template< class Key, class Value >
 afanasev::BSTIterator< Key, Value > & afanasev::BSTIterator< Key, Value >::
 operator++()
 {
@@ -99,7 +113,7 @@ template< class Key, class Value >
 afanasev::BSTIterator< Key, Value > & afanasev::BSTIterator< Key, Value >::
 operator--()
 {
-  if (node_ == nullptr)
+  if (!node_)
   {
     return *this;
   }
