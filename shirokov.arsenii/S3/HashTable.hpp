@@ -75,20 +75,21 @@ namespace shirokov
     {
       Key key;
       Value value;
-      bool isEmpty;
+      bool isEmpty = true;
     };
     size_t size_;
     size_t slotsCount_;
     Slot* slots_;
     void expand();
+    size_t findPos(Key k);
   };
 }
 
 template < class Key, class Value, class Hash, class Equal >
 shirokov::HashTable< Key, Value, Hash, Equal >::HashTable():
-  size_(0),
+  size_(16),
   slotsCount_(0),
-  slots_(nullptr)
+  slots_(new Slot[16])
 {}
 
 template < class Key, class Value, class Hash, class Equal >
