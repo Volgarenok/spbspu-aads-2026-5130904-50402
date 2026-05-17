@@ -81,11 +81,11 @@ namespace permyakov
       return;
     }
     LCIter < pair_t > iterList = list.beginC();
-    for(size_t i = 0; i < list.size(); ++i) {
+    for(size_t i = 1; i < list.size(); ++i) {
       out << (*iterList).first << ' ';
       ++iterList;
     }
-    out << '\n';
+    out << (*iterList).first << '\n';
   }
 
   void outputNum(std::ostream & out, const List < size_t > & list)
@@ -94,10 +94,10 @@ namespace permyakov
       return;
     }
     LCIter < size_t > iterList = list.beginC();
-    for(size_t i = 0; i < list.size(); ++i) {
+    for(size_t i = 1; i < list.size(); ++i) {
       out << *iterList << ' ';
       ++iterList;
     }
-    out <<'\n';
+    out << *iterList << '\n';
   }
 }
