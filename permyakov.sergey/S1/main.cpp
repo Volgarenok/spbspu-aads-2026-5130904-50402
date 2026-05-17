@@ -24,6 +24,11 @@ int main()
     }
   }
 
+  if(!max_size) {
+    std::cout << "0\n";
+    return 0;
+  }
+
   try {
     per::List < size_t > sums;
     sums.push_front(0);
@@ -34,9 +39,7 @@ int main()
       sums.insert_after(iterSums, per::sumList(outList));
       ++iterSums;
     }
-    if(!max_size) {
-      sums.pop_front();
-    }
+    sums.pop_front();
     per::outputNum(std::cout, sums);
   } catch (const std::overflow_error & e) {
     std::cerr << e.what() << '\n';

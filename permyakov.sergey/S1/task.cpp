@@ -76,7 +76,7 @@ namespace permyakov
       if(MAX_NUM - result <= *iterList) {
         result += *iterList;
       } else {
-        std::__throw_overflow_error;
+        throw std::overflow_error("max");
       }
       ++iterList;
     }
