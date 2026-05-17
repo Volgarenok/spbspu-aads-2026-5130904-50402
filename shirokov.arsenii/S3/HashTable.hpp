@@ -73,7 +73,7 @@ namespace shirokov
     size_t size() const;
     Value& at(Key key);
     const Value& at(Key key) const;
-    void swap();
+    void swap(HashTable< Key, Value, Hash, Equal >& rhs);
 
   private:
     struct Slot
@@ -149,13 +149,65 @@ bool shirokov::HashTable< Key, Value, Hash, Equal >::contains(Key k) const
   size_t pos = Hash{}(k) & (size_ - 1);
   for (size_t i = 0; i < limit; ++i)
   {
-    if (slots_[pos].key == k)
+    if (!slots_[pos].isEmpty && slots_[pos].key == k)
     {
       return true;
     }
     pos = (pos + i) & (size_ - 1);
   }
   return false;
+}
+
+template < class Key, class Value, class Hash, class Equal >
+const Value& shirokov::HashTable< Key, Value, Hash, Equal >::at(Key k) const
+{
+  size_t limit = std::log2(size_);
+  size_t pos = Hash{}(k) & (size_ - 1);
+  for (size_t i = 0; i < limit; ++i)
+  {
+    if (!slots_[pos].isEmpty && slots_[pos].key == k)
+    {
+      return slots_[pos].value;
+    }
+    pos = (pos + i) & (size_ - 1);
+  }
+  throw std::out_of_range("Value with this key not found");
+}
+
+template < class Key, class Value, class Hash, class Equal >
+Value& shirokov::HashTable< Key, Value, Hash, Equal >::at(Key k)
+{
+  const HashTable< Key, Value, Hash, Equal >* cthis = this;
+  const Value& ret = cthis->at(k);
+  return const_cast< Value& >(ret);
+}
+
+template < class Key, class Value, class Hash, class Equal >
+Value& shirokov::HashTable< Key, Value, Hash, Equal >::operator[](Key k)
+{
+  size_t limit = std::log2(size_);
+  size_t pos = Hash{}(k) & (size_ - 1);
+  for (size_t i = 0; i < limit; ++i)
+  {
+    if (!slots_[pos].isEmpty && slots_[pos].key == k)
+    {
+      return slots_[pos].value;
+    }
+    pos = (pos + i) & (size_ - 1);
+  }
+
+  pos = Hash{}(k) & (size_ - 1);
+  for (size_t i = 0; i < limit; ++i)
+  {
+    if (slots_[pos].isEmpty)
+    {
+      slots_[pos] = {k, Value(), false};
+      ++slotsCount_;
+      return slots_[pos].value;
+    }
+    pos = (pos + i) & (size_ - 1);
+  }
+  throw std::runtime_error("Hash table is full or cluster limit exceeded");
 }
 
 #endif

@@ -1,10 +1,7 @@
-#include <stdexcept>
-#include <boost/test/tools/interface.hpp>
 #define BOOST_TEST_MODULE S3
 #include <functional>
+#include <stdexcept>
 #include <boost/test/included/unit_test.hpp>
-#include <boost/test/tools/old/interface.hpp>
-#include <boost/test/unit_test_suite.hpp>
 #include "HashTable.hpp"
 #include "hasher.hpp"
 
