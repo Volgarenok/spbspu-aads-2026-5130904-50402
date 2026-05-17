@@ -83,3 +83,19 @@ BOOST_AUTO_TEST_CASE(write_non_existent_value)
   ht[0] = 1;
   BOOST_TEST(ht[0] == 1);
 }
+
+BOOST_AUTO_TEST_CASE(valid_const_at)
+{
+  shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > ht;
+  BOOST_REQUIRE(ht.insert(0, 1));
+  const shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > cht = ht;
+  BOOST_TEST(cht.at(0) == 1);
+}
+
+BOOST_AUTO_TEST_CASE(invalid_const_at)
+{
+  shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > ht;
+  ht.insert(0, 1);
+  const shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > cht = ht;
+  BOOST_CHECK_THROW(cht.at(5), std::out_of_range);
+}

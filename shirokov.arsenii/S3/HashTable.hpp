@@ -54,7 +54,7 @@ namespace shirokov
     ~HashTable();
     HashTable& operator=(const HashTable& rhs);
     HashTable& operator=(HashTable&& rhs);
-    Value& operator[](Key key) noexcept;
+    Value& operator[](Key key);
 
     HTIter< Key, Value, Hash, Equal > begin();
     HTCIter< Key, Value, Hash, Equal > begin() const;
@@ -72,6 +72,7 @@ namespace shirokov
     size_t slotsCount() const;
     size_t size() const;
     Value& at(Key key);
+    const Value& at(Key key) const;
     void swap();
 
   private:
@@ -156,5 +157,9 @@ bool shirokov::HashTable< Key, Value, Hash, Equal >::contains(Key k) const
   }
   return false;
 }
+
+template < class Key, class Value, class Hash, class Equal >
+Value& shirokov::HashTable< Key, Value, Hash, Equal >::at(Key k)
+{}
 
 #endif
