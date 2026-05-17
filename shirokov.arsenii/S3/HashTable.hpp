@@ -77,7 +77,9 @@ namespace shirokov
       bool isEmpty;
     };
     size_t size_;
+    size_t slotsCount_;
     Slot* slots_;
+    void expand();
   };
 }
 
