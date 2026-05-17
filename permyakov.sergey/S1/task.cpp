@@ -5,24 +5,37 @@ namespace permyakov
 {
   using pair_t = std::pair < std::string, List < size_t > >;
 
-  void input(std::istream & in, List < std::pair < std::string, List < size_t > > > & list)
+  void input(std::istream & in, List < pair_t > & list)
   {
     std::string title;
-    while(in >> title) {
+    if(in >> title) {
       List < size_t > numbers;
-      size_t num;
-      if(in >> num){
-        numbers.push_front(num);
-      }
-      LIter < size_t > iter = numbers.begin();
-      while(in >> num) {
-        numbers.insert_after(iter, num);
-        ++iter;
-      }
-      in.clear();
-      std::pair < std::string, List < size_t > > pairL(title, numbers);
+      inputNum(in, numbers);
+      pair_t pairL(title, numbers);
       list.push_front(pairL);
     }
+    LIter < pair_t > iterList = list.begin();
+    while(in >> title) {
+      List < size_t > numbers;
+      inputNum(in, numbers);
+      pair_t pairL(title, numbers);
+      list.insert_after(iterList, pairL);
+      ++iterList;
+    }
+  }
+
+  void inputNum(std::istream & in, List < size_t > & numbers)
+  {
+    size_t num;
+    if(in >> num){
+      numbers.push_front(num);
+    }
+    LIter < size_t > iter = numbers.begin();
+    while(in >> num) {
+      numbers.insert_after(iter, num);
+      ++iter;
+    }
+    in.clear();
   }
 
   void outputName(std::ostream & out, const List < pair_t > & list)
