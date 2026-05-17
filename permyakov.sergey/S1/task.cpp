@@ -4,9 +4,8 @@
 namespace permyakov
 {
   using pair_t = std::pair < std::string, List < size_t > >;
-  using list_t = List < pair_t >;
 
-  void input(std::istream & in, list_t & list)
+  void input(std::istream & in, List < std::pair < std::string, List < size_t > > > & list)
   {
     std::string title;
     while(in >> title) {
@@ -21,13 +20,37 @@ namespace permyakov
         ++iter;
       }
       in.clear();
-      pair_t pairL(title, numbers);
+      std::pair < std::string, List < size_t > > pairL(title, numbers);
       list.push_front(pairL);
     }
   }
 
-  /*void output(std::ostream & out, const list_t & list)
+  void outputName(std::ostream & out, const List < pair_t > & list)
   {
-    return;
-  }*/
+    if(list.isEmpty()) {
+      return;
+    }
+    LCIter < pair_t > iter = list.beginC();
+    pair_t pairIt = *iter;
+    out << pairIt.first;
+    for(size_t i = 1; i < list.size(); ++i) {
+      pairIt = *(++iter);
+      out << ' ' << pairIt.first;
+    }
+    out << '\n';
+  }
+
+  void outputNum(std::ostream & out, const List < size_t > & list)
+  {
+    if(list.isEmpty()) {
+      return;
+    }
+    LCIter < size_t > iter = list.beginC();
+    out << *iter;
+    for(size_t i = 1; i < list.size(); ++i) {
+      ++iter;
+      out << ' ' << *iter;
+    }
+    out << '\n';
+  }
 }

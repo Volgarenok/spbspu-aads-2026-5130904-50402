@@ -5,8 +5,6 @@
 #include <stdexcept>
 #include "iterators.hpp"
 
-#include <iostream>
-
 namespace permyakov
 {
   template < class T > class List
@@ -77,12 +75,14 @@ namespace permyakov
   {
     List < T > list(scndList);
     *this = std::move(list);
+    return *this;
   }
 
   template < class T > List < T > & List < T >::operator=(List< T > && scndList)
   {
     clear();
     swap(scndList);
+    return *this;
   }
 
   template < class T > T List < T >::front() const
