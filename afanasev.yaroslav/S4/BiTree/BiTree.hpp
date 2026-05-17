@@ -71,12 +71,52 @@ namespace afanasev
     NodeBiTree< Key, Value > * root_;
     size_t size_;
     Compare comp_;
+
+    NodeBiTree< Key, Value > * findNode(const Key & k) const;
   };
+}
+
+template< class Key, class Value, class Compare >
+Value afanasev::BSTree< class Key, class Value, class Compare >::
+get(const Key & k) const
+{
+  NodeBiTree< Key, Value > * node = findNode(k);
+
+  if (node == &sentinel_)
+  {
+    throw std::out_of_range("Key not found");
+  }
+  return &node->val_;
 }
 
 
 template< class Key, class Value, class Compare >
-void afanasev::BSTree< class Key, class Value, class Compare >::clear(NodeBiTree< Key, Value > * node) noexcept
+afanasev::NodeBiTree< Key, Value > * afanasev::BSTree< class Key, class Value, class Compare >::
+findNode(const Key & k) const
+{
+  NodeBiTree< Key, Value > * cur = root_;
+
+  while (cur != &sentinel_)
+  {
+    if (comp_(k, cur->key_))
+    {
+      cur = cur->left_;
+    }
+    else if (comp_(cur->key_, k))
+    {
+      cur = cur->right_;
+    }
+    else
+    {
+      return cur;
+    }
+  }
+  return &sentinel_;
+}
+
+template< class Key, class Value, class Compare >
+void afanasev::BSTree< class Key, class Value, class Compare >::
+clear(NodeBiTree< Key, Value > * node) noexcept
 {
   if (node == &sentinel_)
   {
@@ -89,14 +129,16 @@ void afanasev::BSTree< class Key, class Value, class Compare >::clear(NodeBiTree
 }
 
 template< class Key, class Value, class Compare >
-afanasev::BSTree< class Key, class Value, class Compare >::~BSTree()
+afanasev::BSTree< class Key, class Value, class Compare >::
+~BSTree()
 {
   clear(root_);
   root_ = &sentinel_;
 }
 
 template< class Key, class Value, class Compare >
-afanasev::BSTree< class Key, class Value, class Compare >::BSTree():
+afanasev::BSTree< class Key, class Value, class Compare >::
+BSTree():
   sentinel_(),
   root_(&sentinel_)
   size_(0),
