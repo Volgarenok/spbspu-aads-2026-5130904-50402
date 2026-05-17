@@ -111,7 +111,7 @@ size_t shirokov::HashTable< Key, Value, Hash, Equal >::slotsCount() const
 template < class Key, class Value, class Hash, class Equal >
 bool shirokov::HashTable< Key, Value, Hash, Equal >::empty() const
 {
-  return false;
+  return !slotsCount_;
 }
 
 #endif
