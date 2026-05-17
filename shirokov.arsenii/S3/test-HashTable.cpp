@@ -1,3 +1,5 @@
+#include <stdexcept>
+#include <boost/test/tools/interface.hpp>
 #define BOOST_TEST_MODULE S3
 #include <functional>
 #include <boost/test/included/unit_test.hpp>
@@ -36,4 +38,48 @@ BOOST_AUTO_TEST_CASE(insert_duplicate)
   size_t oldSlotsCount = ht.slotsCount();
   BOOST_TEST(!ht.insert(0, 2));
   BOOST_TEST(ht.slotsCount() == oldSlotsCount);
+}
+
+BOOST_AUTO_TEST_CASE(valid_at)
+{
+  shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > ht;
+  BOOST_REQUIRE(ht.insert(0, 1));
+  BOOST_TEST(ht.at(0) == 1);
+}
+
+BOOST_AUTO_TEST_CASE(change_value_of_at)
+{
+  shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > ht;
+  BOOST_REQUIRE(ht.insert(0, 1));
+  ht.at(0) = 2;
+  BOOST_TEST(ht.at(0) == 2);
+}
+
+BOOST_AUTO_TEST_CASE(invalid_at)
+{
+  shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > ht;
+  ht.insert(0, 1);
+  BOOST_CHECK_THROW(ht.at(5), std::out_of_range);
+}
+
+BOOST_AUTO_TEST_CASE(read_value)
+{
+  shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > ht;
+  BOOST_REQUIRE(ht.insert(0, 1));
+  BOOST_TEST(ht[0] == 1);
+}
+
+BOOST_AUTO_TEST_CASE(write_existing_value)
+{
+  shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > ht;
+  BOOST_REQUIRE(ht.insert(0, 1));
+  ht[0] = 2;
+  BOOST_TEST(ht[0] == 2);
+}
+
+BOOST_AUTO_TEST_CASE(write_non_existent_value)
+{
+  shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > ht;
+  ht[0] = 1;
+  BOOST_TEST(ht[0] == 1);
 }
