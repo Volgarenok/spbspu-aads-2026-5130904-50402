@@ -83,4 +83,29 @@ namespace shirokov
   };
 }
 
+template < class Key, class Value, class Hash, class Equal >
+shirokov::HashTable< Key, Value, Hash, Equal >::HashTable():
+  size_(1),
+  slotsCount_(1),
+  slots_(nullptr)
+{}
+
+template < class Key, class Value, class Hash, class Equal >
+shirokov::HashTable< Key, Value, Hash, Equal >::HashTable::~HashTable()
+{
+  delete[] slots_;
+}
+
+template < class Key, class Value, class Hash, class Equal >
+size_t shirokov::HashTable< Key, Value, Hash, Equal >::size() const
+{
+  return size_;
+}
+
+template < class Key, class Value, class Hash, class Equal >
+size_t shirokov::HashTable< Key, Value, Hash, Equal >::slotsCount() const
+{
+  return slotsCount_;
+}
+
 #endif
