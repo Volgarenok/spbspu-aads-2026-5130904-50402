@@ -173,7 +173,7 @@ typename afanasev::BSTree< Key, Value, Compare >::iterator
 afanasev::BSTree< Key, Value, Compare >::
 begin()
 {
-  return iterator(fallLeft(root_));
+  return iterator(fallLeft(root_), &sentinel_);
 }
 
 template< class Key, class Value, class Compare >
@@ -181,7 +181,7 @@ typename afanasev::BSTree< Key, Value, Compare >::iterator
 afanasev::BSTree< Key, Value, Compare >::
 end() noexcept
 {
-  return iterator(&sentinel_);
+  return iterator(&sentinel_, &sentinel_);
 }
 
 template< class Key, class Value, class Compare >
@@ -189,7 +189,7 @@ typename afanasev::BSTree< Key, Value, Compare >::const_iterator
 afanasev::BSTree< Key, Value, Compare >::
 begin() const
 {
-  return const_iterator(fallLeft(root_));
+  return const_iterator(fallLeft(root_), &sentinel_);
 }
 
 template< class Key, class Value, class Compare >
@@ -197,7 +197,7 @@ typename afanasev::BSTree< Key, Value, Compare >::const_iterator
 afanasev::BSTree< Key, Value, Compare >::
 end() const noexcept
 {
-  return const_iterator(&sentinel_);
+  return const_iterator(&sentinel_, &sentinel_);
 }
 
 template< class Key, class Value, class Compare >
