@@ -1,3 +1,4 @@
+#include <boost/test/tools/old/interface.hpp>
 #define BOOST_TEST_MODULE S3
 #include <functional>
 #include <boost/test/included/unit_test.hpp>
@@ -15,8 +16,7 @@ BOOST_AUTO_TEST_CASE(default_constructor)
 BOOST_AUTO_TEST_CASE(insert_value_make_non_empty)
 {
   shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > ht;
-  ht.insert(0, 1);
-  BOOST_TEST(ht.size() > 0);
+  BOOST_REQUIRE(ht.insert(0, 1));
   BOOST_TEST(ht.slotsCount() == 1);
   BOOST_TEST(!ht.empty());
 }

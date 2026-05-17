@@ -1,6 +1,8 @@
 #ifndef HASH_TABLE_HPP
 #define HASH_TABLE_HPP
+#include <cmath>
 #include <cstddef>
+#include <stdexcept>
 #include <utility>
 
 namespace shirokov
@@ -20,6 +22,7 @@ namespace shirokov
     std::pair< Key, Value >& operator*();
 
   private:
+    friend class HashTable< Key, Value, Hash, Equal >;
     size_t pos_;
     HashTable< Key, Value, Hash, Equal >& table_;
   };
@@ -36,6 +39,7 @@ namespace shirokov
     const std::pair< Key, Value >& operator*();
 
   private:
+    friend class HashTable< Key, Value, Hash, Equal >;
     size_t pos_;
     const HashTable< Key, Value, Hash, Equal >& table_;
   };
@@ -60,8 +64,8 @@ namespace shirokov
     HTCIter< Key, Value, Hash, Equal > end() const;
     HTCIter< Key, Value, Hash, Equal > cend() const;
 
-    void insert(Key k, Value v);
-    void erase(Key k);
+    bool insert(Key k, Value v);
+    bool erase(Key k);
     bool contains(Key k) const;
     void rehash(size_t slots);
     bool empty() const;
@@ -81,7 +85,6 @@ namespace shirokov
     size_t slotsCount_;
     Slot* slots_;
     void expand();
-    size_t findPos(Key k);
   };
 }
 
@@ -114,6 +117,28 @@ template < class Key, class Value, class Hash, class Equal >
 bool shirokov::HashTable< Key, Value, Hash, Equal >::empty() const
 {
   return !slotsCount_;
+}
+
+template < class Key, class Value, class Hash, class Equal >
+bool shirokov::HashTable< Key, Value, Hash, Equal >::insert(Key k, Value v)
+{
+  size_t limit = std::log2(size_);
+  size_t pos = Hash{}(k) & (size_ - 1);
+  for (size_t i = 0; i < limit; ++i)
+  {
+    if (slots_[pos].isEmpty)
+    {
+      slots_[pos] = {k, v, false};
+      ++slotsCount_;
+      return true;
+    }
+    if (slots_[pos].key == k)
+    {
+      return false;
+    }
+    pos = (pos + i) & (size_ - 1);
+  }
+  throw std::runtime_error("Hash table is full or cluster limit exceeded");
 }
 
 #endif
