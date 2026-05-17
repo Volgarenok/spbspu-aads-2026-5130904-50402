@@ -37,14 +37,13 @@ namespace afanasev
       parent_(nullptr)
     {}
   };
-  
 
   template< class Key, class Value, class Compare >
   class BSTree
   {
   public:
 
-    BSTree() : root_(& sentinel_) {}
+    BSTree();
 
     ~BSTree();
 
@@ -74,5 +73,17 @@ namespace afanasev
     Compare comp_;
   };
 }
+
+template< class Key, class Value, class Compare >
+afanasev::BSTree< class Key, class Value, class Compare >::~BSTree()
+{
+  clear();
+}
+
+template< class Key, class Value, class Compare >
+afanasev::BSTree< class Key, class Value, class Compare >::BSTree():
+  root_(& sentinel_)
+{}
+
 
 #endif
