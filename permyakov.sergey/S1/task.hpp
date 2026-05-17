@@ -8,7 +8,7 @@ namespace permyakov
 {
   using list_t = List < std::pair < std::string, List < size_t > > >;
 
-  void input(std::istream & in, list_t & list);
+  bool input(std::istream & in, list_t & list);
   void inputNum(std::istream & in, List < size_t > & numbers);
   List < size_t > idList(const list_t list, size_t id);
   size_t sumList(const List < size_t >);
