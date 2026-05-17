@@ -33,26 +33,24 @@ int main()
     nums.push_front(per::List < size_t > ());
     per::LIter < per::List < size_t > > iterNums = nums.begin();
 
-    per::List < size_t > sums;
-    sums.push_front(0);
-    per::LIter < size_t > iterSums = sums.begin();
-
+    per::outputName (std::cout, bgList);
     for(size_t i = 0; i < max_size; ++i) {
       per::List < size_t > outList = per::idList(bgList, i);
       nums.insert_after(iterNums, outList);
-      sums.insert_after(iterSums, per::sumList(outList));
+      ++iterNums;
+      per::outputNum(std::cout, outList);
+    }
+    nums.pop_front();
+    iterNums = nums.begin();
+    per::List < size_t > sums;
+    sums.push_front(0);
+    per::LIter < size_t > iterSums = sums.begin();
+    for(size_t i = 0; i < max_size; ++i) {
+      sums.insert_after(iterSums, per::sumList(*iterNums));
+      ++iterNums;
       ++iterSums;
     }
-
-    nums.pop_front();
     sums.pop_front();
-
-    iterNums = nums.begin();
-    per::outputName (std::cout, bgList);
-    for(size_t i = 0; i < max_size; ++i) {
-      per::outputNum(std::cout, *iterNums);
-      ++iterList;
-    }
     per::outputNum(std::cout, sums);
   } catch (const std::overflow_error & e) {
     std::cerr << e.what() << '\n';
