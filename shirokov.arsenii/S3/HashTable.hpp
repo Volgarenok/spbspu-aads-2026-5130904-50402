@@ -85,8 +85,8 @@ namespace shirokov
 
 template < class Key, class Value, class Hash, class Equal >
 shirokov::HashTable< Key, Value, Hash, Equal >::HashTable():
-  size_(1),
-  slotsCount_(1),
+  size_(0),
+  slotsCount_(0),
   slots_(nullptr)
 {}
 
