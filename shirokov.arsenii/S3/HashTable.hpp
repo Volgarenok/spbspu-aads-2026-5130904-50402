@@ -68,6 +68,7 @@ namespace shirokov
     size_t slotsCount() const;
     size_t size() const;
     Value& at(Key key);
+    void swap();
 
   private:
     struct Slot
