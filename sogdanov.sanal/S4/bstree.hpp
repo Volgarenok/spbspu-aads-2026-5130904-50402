@@ -158,7 +158,27 @@ namespace sogdanov
   {
     return BSTConstIterator<Key, Value>(fake_leaf, fake_leaf);
   }
-
+  template <class Key, class Value, class Compare>
+  BSTIterator<Key, Value> BSTree<Key, Value, Compare>::find(const Key &k)
+  {
+    Node<Key, Value> *curr = root;
+    while (curr != fake_leaf)
+    {
+      if (comp(k, curr->data.first))
+      {
+        curr = curr->left;
+      }
+      else if (comp(curr->data.first, k))
+      {
+        curr = curr->right;
+      }
+      else
+      {
+        return BSTIterator<Key, Value>(curr, fake_leaf);
+      }
+    }
+    return end();
+  }
 }
 
 #endif
