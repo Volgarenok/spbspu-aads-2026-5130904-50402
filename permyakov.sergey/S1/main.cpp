@@ -17,8 +17,15 @@ int main()
       max_size = iSize;
     }
   }
+  per::List < size_t > sums;
+  sums.push_front(0);
+  per::LIter < size_t > iterSums = sums.begin();
   for(size_t i = 0; i < max_size; ++i) {
     per::List < size_t > outList = per::idList(bgList, i);
-    per::outputNum (std::cout, outList);
+    per::outputNum(std::cout, outList);
+    sums.insert_after(iterSums, per::sumList(outList));
+    ++iterSums;
   }
+  sums.pop_front();
+  per::outputNum(std::cout, sums);
 }

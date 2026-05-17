@@ -64,6 +64,17 @@ namespace permyakov
     return idList;
   }
 
+  size_t sumList(const List < size_t > list)
+  {
+    size_t result = 0;
+    LCIter < size_t > iterList = list.beginC();
+    for(size_t i = 0; i < list.size(); ++i) {
+      result += *iterList;
+      ++iterList;
+    }
+    return result;
+  }
+
   void outputName(std::ostream & out, const List < pair_t > & list)
   {
     if(list.isEmpty()) {
