@@ -1,6 +1,7 @@
 #ifndef BITREE_HPP
 #define BITREE_HPP
 
+#include <algorithm>
 #include <utility>
 
 namespace afanasev
@@ -73,8 +74,30 @@ namespace afanasev
     Compare comp_;
 
     NodeBiTree< Key, Value > * findNode(const Key & k) const;
-    NodeBiTree<Key, Value> * fallLeft(NodeBiTree<Key, Value> * node) const;
+    NodeBiTree< Key, Value > * fallLeft(NodeBiTree< Key, Value > * node) const;
   };
+}
+
+template< class Key, class Value, class Compare >
+size_t afanasev::BSTree< Key, Value, Compare >::height(const_iterator it) const
+{
+  NodeBiTree< Key, Value > * node = const_cast< NodeBiTree< Key, Value > * >(it.node_);
+
+  if (node == &sentinel_)
+  {
+    return 0;
+  }
+
+  size_t leftH = height(const_iterator(node->left_));
+  size_t rightH = height(const_iterator(node->right_));
+
+  return 1 + std::max(leftH, rightH);
+}
+
+template< class Key, class Value, class Compare >
+size_t afanasev::BSTree< Key, Value, Compare >::height() const
+{
+  return height(const_iterator(root_));
 }
 
 template< class Key, class Value, class Compare >
