@@ -179,6 +179,138 @@ namespace sogdanov
     }
     return end();
   }
+  template <class Key, class Value, class Compare>
+  void BSTree<Key, Value, Compare>::push(Key k, Value v)
+  {
+    if (root == fake_leaf)
+    {
+      root = new Node<Key, Value>(k, v, nullptr);
+      root->left = fake_leaf;
+      root->right = fake_leaf;
+      tree_size++;
+      return;
+    }
+    Node<Key, Value> *curr = root;
+    Node<Key, Value> *parent = nullptr;
+    while (curr != fake_leaf)
+    {
+      parent = curr;
+      if (comp(k, curr->data.first))
+      {
+        curr = curr->left;
+      }
+      else if (comp(curr->data.first, k))
+      {
+        curr = curr->right;
+      }
+      else
+      {
+        curr->data.second = v;
+        return;
+      }
+    }
+    Node<Key, Value> *newNode = new Node<Key, Value>(k, v, parent);
+    newNode->left = fake_leaf;
+    newNode->right = fake_leaf;
+    if (comp(k, parent->data.first))
+    {
+      parent->left = newNode;
+    }
+    else
+    {
+      parent->right = newNode;
+    }
+    tree_size++;
+  }
+
+  template <class Key, class Value, class Compare>
+  Value BSTree<Key, Value, Compare>::get(Key k)
+  {
+    BSTIterator<Key, Value> it = find(k);
+    if (it != end())
+    {
+      return (*it).second;
+    }
+    throw std::out_of_range("Key not found");
+  }
+
+  template <class Key, class Value, class Compare>
+  Value BSTree<Key, Value, Compare>::drop(Key k)
+  {
+    BSTIterator<Key, Value> it = find(k);
+    if (it == end())
+    {
+      throw std::out_of_range("Key not found");
+    }
+    Value val = (*it).second;
+
+    Node<Key, Value> *node = it.node;
+    if (node->left == fake_leaf && node->right == fake_leaf)
+    {
+      if (node->parent != nullptr)
+      {
+        if (node->parent->left == node)
+        {
+          node->parent->left = fake_leaf;
+        }
+        else
+        {
+          node->parent->right = fake_leaf;
+        }
+      }
+      else
+      {
+        root = fake_leaf;
+      }
+      delete node;
+    }
+    else if (node->left == fake_leaf || node->right == fake_leaf)
+    {
+      Node<Key, Value> *child = (node->left != fake_leaf) ? node->left : node->right;
+      child->parent = node->parent;
+      if (node->parent != nullptr)
+      {
+        if (node->parent->left == node)
+        {
+          node->parent->left = child;
+        }
+        else
+        {
+          node->parent->right = child;
+        }
+      }
+      else
+      {
+        root = child;
+      }
+      delete node;
+    }
+    else
+    {
+      Node<Key, Value> *succ = node->right;
+      while (succ->left != fake_leaf)
+      {
+        succ = succ->left;
+      }
+      node->data = succ->data;
+      Node<Key, Value> *child = succ->right;
+      if (succ->parent->left == succ)
+      {
+        succ->parent->left = child;
+      }
+      else
+      {
+        succ->parent->right = child;
+      }
+      if (child != fake_leaf)
+      {
+        child->parent = succ->parent;
+      }
+      delete succ;
+    }
+    tree_size--;
+    return val;
+  }
 }
 
 #endif
