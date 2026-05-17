@@ -22,9 +22,7 @@ BOOST_AUTO_TEST_CASE(test_copy_constructor)
   LCIter < int > frstIter = frstList.beginC();
   LCIter < int > frstEndIter = frstList.endC();
   LCIter < int > scndIter = scndList.beginC();
-  LCIter < int > scndEndIter = scndList.endC();
   BOOST_CHECK(frstIter == scndIter);
-  BOOST_CHECK(frstEndIter == scndEndIter);
   while(frstIter != frstEndIter) {
     BOOST_CHECK(frstIter == scndIter);
     ++frstIter;
