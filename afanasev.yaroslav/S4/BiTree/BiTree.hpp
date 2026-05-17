@@ -82,6 +82,9 @@ namespace afanasev
     size_t height() const;
     size_t height(const_iterator it) const;
 
+    friend class BSTConstIterator< Key, Value >;
+    friend class BSTIterator< Key, Value >;
+
   private:
     NodeBiTree< Key, Value > sentinel_;
     NodeBiTree< Key, Value > * root_;
