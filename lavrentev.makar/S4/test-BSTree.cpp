@@ -35,3 +35,12 @@ BOOST_AUTO_TEST_CASE(setGetName_test)
   bst.setName("graph");
   BOOST_TEST(bst.getName() == "graph");
 }
+
+BOOST_AUTO_TEST_CASE(height_test)
+{
+  lavrentev::BSTree<std::string, size_t, std::less<std::string>> bst{};
+  lavrentev::BSTConstIterator<std::string, size_t> it;
+  BOOST_TEST(bst.height() == 0);
+  bst.push("a", 1);
+  BOOST_TEST(bst.height() == 1);
+}

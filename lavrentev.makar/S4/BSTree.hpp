@@ -350,4 +350,16 @@ size_t lavrentev::BSTree<Key, Value, Compare>::getHeight(Node *node)
   }
 }
 
+template< class Key, class Value, class Compare >
+size_t lavrentev::BSTree<Key, Value, Compare>::height() const
+{
+  return getHeight(fakeroot_->left_);
+}
+
+template< class Key, class Value, class Compare >
+size_t lavrentev::BSTree<Key, Value, Compare>::height(const_iterator it) const
+{
+  return getHeight(*it);
+}
+
 #endif
