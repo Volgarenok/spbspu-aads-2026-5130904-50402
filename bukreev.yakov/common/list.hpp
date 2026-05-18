@@ -188,7 +188,7 @@ namespace bukreev
   T List< T >::popBack() noexcept
   {
     Node< T >* lastNode;
-    Node< T >* prevNode = std::addressof(m_fake);
+    Node< T >* prevNode = &m_fake;
     for (Node< T >* node = m_fake.next; node!= nullptr; node = node->next)
     {
       lastNode = node;
