@@ -12,7 +12,7 @@ namespace sogdanov
     BSTIterator<std::string, Dataset> it = datasets.find(name);
     if (it == datasets.end())
     {
-      out << "<EMPTY>\n";
+      out << "<INVALID COMMAND>\n";
       return;
     }
 
@@ -33,7 +33,7 @@ namespace sogdanov
   }
 
   void cmdComplement(std::istream &in,
-                     std::ostream &, Datasets &datasets)
+                     std::ostream &out, Datasets &datasets)
   {
     std::string new_name;
     std::string d1_name;
@@ -43,18 +43,19 @@ namespace sogdanov
     BSTIterator<std::string, Dataset> it1 = datasets.find(d1_name);
     BSTIterator<std::string, Dataset> it2 = datasets.find(d2_name);
 
-    Dataset new_tree;
-
-    if (it1 != datasets.end())
+    if (it1 == datasets.end() || it2 == datasets.end())
     {
-      for (BSTIterator<int, std::string> val_it = (*it1).second.begin();
-           val_it != (*it1).second.end(); ++val_it)
+      out << "<INVALID COMMAND>\n";
+      return;
+    }
+    Dataset new_tree;
+    for (BSTIterator<int, std::string> val_it = (*it1).second.begin();
+         val_it != (*it1).second.end(); ++val_it)
+    {
+      if (it2 == datasets.end() ||
+          (*it2).second.find((*val_it).first) == (*it2).second.end())
       {
-        if (it2 == datasets.end() ||
-            (*it2).second.find((*val_it).first) == (*it2).second.end())
-        {
-          new_tree.push((*val_it).first, (*val_it).second);
-        }
+        new_tree.push((*val_it).first, (*val_it).second);
       }
     }
 
@@ -62,7 +63,7 @@ namespace sogdanov
   }
 
   void cmdIntersect(std::istream &in,
-                    std::ostream &, Datasets &datasets)
+                    std::ostream &out, Datasets &datasets)
   {
     std::string new_name;
     std::string d1_name;
@@ -72,17 +73,19 @@ namespace sogdanov
     BSTIterator<std::string, Dataset> it1 = datasets.find(d1_name);
     BSTIterator<std::string, Dataset> it2 = datasets.find(d2_name);
 
-    Dataset new_tree;
-
-    if (it1 != datasets.end() && it2 != datasets.end())
+    if (it1 == datasets.end() || it2 == datasets.end())
     {
-      for (BSTIterator<int, std::string> val_it = (*it1).second.begin();
-           val_it != (*it1).second.end(); ++val_it)
+      out << "<INVALID COMMAND>\n";
+      return;
+    }
+
+    Dataset new_tree;
+    for (BSTIterator<int, std::string> val_it = (*it1).second.begin();
+         val_it != (*it1).second.end(); ++val_it)
+    {
+      if ((*it2).second.find((*val_it).first) != (*it2).second.end())
       {
-        if ((*it2).second.find((*val_it).first) != (*it2).second.end())
-        {
-          new_tree.push((*val_it).first, (*val_it).second);
-        }
+        new_tree.push((*val_it).first, (*val_it).second);
       }
     }
 
@@ -90,7 +93,7 @@ namespace sogdanov
   }
 
   void cmdUnion(std::istream &in,
-                std::ostream &, Datasets &datasets)
+                std::ostream &out, Datasets &datasets)
   {
     std::string new_name;
     std::string d1_name;
@@ -100,15 +103,16 @@ namespace sogdanov
     BSTIterator<std::string, Dataset> it1 = datasets.find(d1_name);
     BSTIterator<std::string, Dataset> it2 = datasets.find(d2_name);
 
-    Dataset new_tree;
-
-    if (it1 != datasets.end())
+    if (it1 == datasets.end() || it2 == datasets.end())
     {
-      for (BSTIterator<int, std::string> val_it = (*it1).second.begin();
-           val_it != (*it1).second.end(); ++val_it)
-      {
-        new_tree.push((*val_it).first, (*val_it).second);
-      }
+      out << "<INVALID COMMAND>\n";
+      return;
+    }
+    Dataset new_tree;
+    for (BSTIterator<int, std::string> val_it = (*it1).second.begin();
+         val_it != (*it1).second.end(); ++val_it)
+    {
+      new_tree.push((*val_it).first, (*val_it).second);
     }
 
     if (it2 != datasets.end())
