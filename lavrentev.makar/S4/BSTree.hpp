@@ -63,6 +63,7 @@ namespace lavrentev
       Value value_;
       Node *left_ = nullptr;
       Node *right_ = nullptr;
+      size_t height_;
     };
     Node *fakeroot_;
     Compare compare_;
@@ -71,8 +72,10 @@ namespace lavrentev
     void clear(Node *fakeroot);
     Node *copyNodes(Node *other);
     void swap(BSTree &other) noexcept;
-    Value &insertNode(Key k, Value v, bool flag);
+    Value &insertNode(Node* &node, Key k, Value v, bool isOperator);
     Node *fallLeft(Node *node);
+    void updateHeight(Node *node);
+    size_t getHeight(Node *node);
   };
 
   void print(std::istream &in, BSTList);
@@ -116,51 +119,49 @@ lavrentev::BSTree<Key, Value, Compare> &lavrentev::BSTree<Key, Value, Compare>::
 }
 
 template< class Key, class Value, class Compare >
-Value &lavrentev::BSTree<Key, Value, Compare>::insertNode(Key k, Value v, bool isOperator)
+Value &lavrentev::BSTree<Key, Value, Compare>::insertNode(Node* &node, Key k, Value v, bool isOperator)
 {
-  Node *curr = fakeroot_;
-  Node *next = fakeroot_->left_;
-  while (next)
+  if (node == nullptr)
   {
-    curr = next;
-    if (compare_(k, curr->key_))
-    {
-      next = curr->left_;
-    }
-    else if (compare_(curr->key_, k))
-    {
-      next = curr->right_;
-    }
-    else
-    {
-      if (isOperator)
-      {
-        return curr->value_;
-      }
-      else
-      {
-        throw std::invalid_argument("Value is already exists");
-      }
-    }
+    node = new Node();
+    node->key_ = k;
+    node->value_ = v;
+    node->height_ = 1;
+    return node->value_;
   }
-  Node *newNode = new Node;
-  newNode->key_ = k;
-  newNode->value_ = v;
-  if (curr == fakeroot_ || compare_(k, curr->key_))
+
+  Value* result = nullptr;
+
+  if (compare_(k, node->key_))
   {
-    curr->left_ = newNode;
+    result = &insertNode(node->left_, k, v, isOperator);
+  }
+  else if (compare_(node->key_, k))
+  {
+    result = &insertNode(node->right_, k, v, isOperator);
   }
   else
   {
-    curr->right_ = newNode;
+    if (isOperator)
+    {
+      return node->value_;
+    }
+    else
+    {
+      throw std::invalid_argument("Key already exists");
+    }
   }
-  return newNode->value_;
+
+  updateHeight(node);
+  return *result;
 }
 
 template< class Key, class Value, class Compare >
 Value &lavrentev::BSTree<Key, Value, Compare>::operator[](const Key &k)
 {
-  return insertNode(k, Value(), true);
+  Value &res = insertNode(fakeroot_->left_, k, Value(), true);
+  updateHeight(fakeroot_);
+  return res;
 }
 
 template< class Key, class Value, class Compare >
@@ -201,7 +202,8 @@ void lavrentev::BSTree<Key, Value, Compare>::swap(BSTree &other) noexcept
 template< class Key, class Value, class Compare >
 void lavrentev::BSTree<Key, Value, Compare>::push(Key k, Value v)
 {
-  insertNode(k, v, false);
+  insertNode(fakeroot_->left_, k, v, false);
+  updateHeight(fakeroot_);
 }
 
 template< class Key, class Value, class Compare >
@@ -315,6 +317,37 @@ template< class Key, class Value, class Compare >
 std::string lavrentev::BSTree<Key, Value, Compare>::getName()
 {
   return name_;
+}
+
+template< class Key, class Value, class Compare >
+void lavrentev::BSTree<Key, Value, Compare>::updateHeight(Node *node)
+{
+  if (node)
+  {
+    size_t h1 = getHeight(node->left_);
+    size_t h2 = getHeight(node->right_);
+    if (h1 > h2)
+    {
+      node->height_ = 1 + h1;
+    }
+    else
+    {
+      node->height_ = 1 + h2;
+    }
+  }
+}
+
+template< class Key, class Value, class Compare >
+size_t lavrentev::BSTree<Key, Value, Compare>::getHeight(Node *node)
+{
+  if (node)
+  {
+    return node->height_;
+  }
+  else
+  {
+    return 0;
+  }
 }
 
 #endif
