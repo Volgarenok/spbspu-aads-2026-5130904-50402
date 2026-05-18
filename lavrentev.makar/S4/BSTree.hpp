@@ -12,7 +12,7 @@ namespace lavrentev
   struct BSTree;
 }
 
-using BSTList = lavrentev::List<lavrentev::BSTree<std::string, size_t, std::less<std::string>>>;
+using BSTList = lavrentev::List<lavrentev::BSTree<size_t, std::string, std::less<size_t>>>;
 using cmd_t = void (*)(std::istream &in, BSTList);
 
 namespace lavrentev
@@ -53,6 +53,8 @@ namespace lavrentev
     size_t height(const_iterator it) const;
     size_t height() const;
 
+    void setName(std::string name);
+
   private:
     struct Node
     {
@@ -63,6 +65,7 @@ namespace lavrentev
     };
     Node *fakeroot_;
     Compare compare_;
+    std::string name_;
 
     void clear(Node *fakeroot);
     Node *copyNodes(Node *other);
@@ -299,6 +302,12 @@ typename lavrentev::BSTree<Key, Value, Compare>::Node
     node = node->left_;
   }
   return node;
+}
+
+template< class Key, class Value, class Compare >
+void lavrentev::BSTree<Key, Value, Compare>::setName(std::string name)
+{
+  name_ = name;
 }
 
 #endif

@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  lavrentev::List<lavrentev::BSTree<std::string, size_t, std::less<std::string>>> bsts{};
+  lavrentev::List<lavrentev::BSTree<size_t, std::string, std::less<size_t>>> bsts{};
 
   try
   {
