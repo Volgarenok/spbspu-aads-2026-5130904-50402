@@ -2,10 +2,10 @@
 #include <fstream>
 #include <string>
 #include "queue.hpp"
+#include "eval.hpp"
 
 namespace bukreev
 {
-  using Expression = Queue< std::string >;
   void inputExpressions(std::istream& file, Queue< Expression >& exprs);
 }
 
@@ -36,6 +36,15 @@ int main(int argc, char** argv)
 
   bukreev::Queue< bukreev::Expression > infix;
   bukreev::inputExpressions(*input, infix);
+
+  while (!infix.empty())
+  {
+    bukreev::Expression expr = toPostfix(infix.pop());
+    while (!expr.empty())
+    {
+      std::cout << expr.pop() << '\n';
+    }
+  }
 }
 
 void bukreev::inputExpressions(std::istream& file, Queue< Expression >& exprs)
