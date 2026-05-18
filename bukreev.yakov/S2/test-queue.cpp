@@ -26,6 +26,7 @@ BOOST_AUTO_TEST_CASE(test_pop)
   popped = queue.pop();
   BOOST_CHECK_EQUAL(queue.size(), 0);
   BOOST_CHECK_EQUAL(popped, 2);
+  BOOST_CHECK(queue.empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

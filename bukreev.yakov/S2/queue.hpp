@@ -12,6 +12,7 @@ namespace bukreev
     void push(const T& val);
     T pop() noexcept;
     size_t size() const noexcept;
+    bool empty() const noexcept;
 
   private:
     List< T > m_data;
@@ -33,6 +34,12 @@ namespace bukreev
   size_t Queue< T >::size() const noexcept
   {
     return m_data.size();
+  }
+
+  template< class T >
+  bool Queue< T >::empty() const noexcept
+  {
+    return size() == 0;
   }
 }
 
