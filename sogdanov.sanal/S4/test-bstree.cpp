@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE(test_modify_value)
     BSTIterator<int, int> it = tree.find(1);
     BOOST_REQUIRE(it != tree.end());
     (*it).second = 100;
-    
+
     BOOST_CHECK_EQUAL(tree.get(1), 100);
 }
 
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(test_copy_constructor)
 
     BSTIterator<int, int> it = tree2.find(1);
     (*it).second = 100;
-    
+
     BOOST_CHECK_EQUAL(tree1.get(1), 10);
     BOOST_CHECK_EQUAL(tree2.get(1), 100);
 }
@@ -124,22 +124,22 @@ BOOST_AUTO_TEST_CASE(test_iterator_traversal)
     tree.push(4, 40);
 
     BSTIterator<int, int> it = tree.begin();
-    
+
     BOOST_REQUIRE(it != tree.end());
     BOOST_CHECK_EQUAL((*it).first, 1);
-    
+
     ++it;
     BOOST_REQUIRE(it != tree.end());
     BOOST_CHECK_EQUAL((*it).first, 2);
-    
+
     ++it;
     BOOST_REQUIRE(it != tree.end());
     BOOST_CHECK_EQUAL((*it).first, 3);
-    
+
     ++it;
     BOOST_REQUIRE(it != tree.end());
     BOOST_CHECK_EQUAL((*it).first, 4);
-    
+
     ++it;
     BOOST_CHECK(it == tree.end());
 }
@@ -148,10 +148,10 @@ BOOST_AUTO_TEST_CASE(test_const_iterator)
 {
     BSTree< int, int > tree;
     tree.push(1, 10);
-    
+
     const BSTree< int, int >& ctree = tree;
     BSTConstIterator<int, int> it = ctree.begin();
-    
+
     BOOST_CHECK(it != ctree.end());
     BOOST_CHECK_EQUAL((*it).first, 1);
 }
