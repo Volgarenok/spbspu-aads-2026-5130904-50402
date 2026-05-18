@@ -6,7 +6,7 @@
 namespace bukreev
 {
   template< class T >
-  class Stack
+  class Queue
   {
   public:
     void push(const T& val);
@@ -18,19 +18,19 @@ namespace bukreev
   };
 
   template< class T >
-  void Stack< T >::push(const T& val)
+  void Queue< T >::push(const T& val)
   {
     m_data.pushBack(val);
   }
 
   template< class T >
-  T Stack< T >::pop() noexcept
+  T Queue< T >::pop() noexcept
   {
     return m_data.popFront();
   }
 
   template< class T >
-  size_t Stack< T >::size() const noexcept
+  size_t Queue< T >::size() const noexcept
   {
     return m_data.size();
   }

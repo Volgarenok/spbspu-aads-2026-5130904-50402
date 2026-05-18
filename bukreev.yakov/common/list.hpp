@@ -208,7 +208,7 @@ namespace bukreev
   }
 
   template< class T >
-  T List< T >::popBack() noexcept
+  T List< T >::popFront() noexcept
   {
     Node< T >* toDel = m_fake.next;
 
