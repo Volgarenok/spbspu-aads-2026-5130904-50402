@@ -100,7 +100,7 @@ int bukreev::evaluateOperation(std::string op, int a, int b)
   {
   case '+':
     return a + b;
-  
+
   case '-':
     return a - b;
 

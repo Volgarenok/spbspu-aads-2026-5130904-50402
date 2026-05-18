@@ -93,7 +93,7 @@ void bukreev::inputExpressions(std::istream& file, Queue< Expression >& exprs)
         }
       }
     }
-    
+
     if (!token.empty())
     {
       expr.push(token);
