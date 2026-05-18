@@ -39,8 +39,10 @@ BOOST_AUTO_TEST_CASE(setGetName_test)
 BOOST_AUTO_TEST_CASE(height_test)
 {
   lavrentev::BSTree<std::string, size_t, std::less<std::string>> bst{};
-  lavrentev::BSTConstIterator<std::string, size_t> it;
+  lavrentev::BSTConstIterator< std::string, size_t > it(bst.begin());
   BOOST_TEST(bst.height() == 0);
+  BOOST_TEST(bst.height(it) == 0);
   bst.push("a", 1);
   BOOST_TEST(bst.height() == 1);
+  BOOST_TEST(bst.height(it) == 1);
 }

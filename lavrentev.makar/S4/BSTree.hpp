@@ -17,20 +17,50 @@ using cmd_t = void (*)(std::istream &in, BSTList);
 
 namespace lavrentev
 {
-  
+  template <class Key, class Value>
+  struct Node
+  {
+    Key key_;
+    Value value_;
+    Node *left_ = nullptr;
+    Node *right_ = nullptr;
+    size_t height_;
+    Node *parent_;
+  };
+
   template< class Key, class Value >
   class BSTIterator {
+    using Node = Node<Key, Value>;
+  public:
+    BSTIterator(Node *other);
 
+    bool operator==(const BSTIterator<Key, Value > &other) const;
+    bool operator!=(const BSTIterator<Key, Value > &other) const;
+    BSTIterator<Key, Value > &operator++();
+    Node &operator*();
+
+  private:
+    Node *curr_;
   };
 
   template< class Key, class Value >
   class BSTConstIterator {
+    using Node = Node<Key, Value>;
+  public:
+    BSTConstIterator(const Node *other);
 
+    bool operator==(const BSTConstIterator<Key, Value > &other) const;
+    bool operator!=(const BSTConstIterator<Key, Value > &other) const;
+    BSTConstIterator<Key, Value > &operator++();
+    const Node &operator*();
+
+  private:
+    const Node *curr_;
   };
 
   template< class Key, class Value, class Compare >
   struct BSTree {
-
+    using Node = Node<Key, Value>;
   public:
     BSTree();
     ~BSTree();
@@ -55,16 +85,9 @@ namespace lavrentev
 
     void setName(std::string name);
     std::string getName();
+    Node *begin();
 
   private:
-    struct Node
-    {
-      Key key_;
-      Value value_;
-      Node *left_ = nullptr;
-      Node *right_ = nullptr;
-      size_t height_;
-    };
     Node *fakeroot_;
     Compare compare_;
     std::string name_;
