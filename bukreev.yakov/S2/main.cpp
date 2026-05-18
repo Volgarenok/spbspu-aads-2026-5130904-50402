@@ -37,14 +37,33 @@ int main(int argc, char** argv)
   bukreev::Queue< bukreev::Expression > infix;
   bukreev::inputExpressions(*input, infix);
 
+  bukreev::Stack< int > results;
   while (!infix.empty())
   {
     bukreev::Expression expr = toPostfix(infix.pop());
-    while (!expr.empty())
+
+    try
     {
-      std::cout << expr.pop() << '\n';
+      results.push(evaluatePostfix(expr));
+    }
+    catch(const std::logic_error& e)
+    {
+      std::cerr << e.what() << '\n';
+      return 1;
     }
   }
+
+  if (!results.empty())
+  {
+    std::cout << results.pop();
+  }
+
+  while (!results.empty())
+  {
+    std::cout << ' ' << results.pop();
+  }
+
+  std::cout << '\n';
 }
 
 void bukreev::inputExpressions(std::istream& file, Queue< Expression >& exprs)
@@ -74,6 +93,7 @@ void bukreev::inputExpressions(std::istream& file, Queue< Expression >& exprs)
         }
       }
     }
+    
     if (!token.empty())
     {
       expr.push(token);

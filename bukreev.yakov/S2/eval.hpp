@@ -9,6 +9,8 @@ namespace bukreev
   using Expression = Queue< std::string >;
 
   Expression toPostfix(Expression infix);
+  int evaluatePostfix(Expression postfix);
+  int evaluateOperation(std::string op, int a, int b);
 }
 
 #endif
