@@ -4,7 +4,7 @@ namespace sogdanov
 {
 
   void cmdPrint(std::istream &in,
-    std::ostream &out, Datasets &datasets)
+                std::ostream &out, Datasets &datasets)
   {
     std::string name;
     in >> name;
@@ -25,7 +25,7 @@ namespace sogdanov
 
     out << name;
     for (BSTIterator<int, std::string> val_it = tree.begin();
-    val_it != tree.end(); ++val_it)
+         val_it != tree.end(); ++val_it)
     {
       out << " " << (*val_it).first << " " << (*val_it).second;
     }
@@ -33,7 +33,7 @@ namespace sogdanov
   }
 
   void cmdComplement(std::istream &in,
-     std::ostream &out, Datasets &datasets)
+                     std::ostream &, Datasets &datasets)
   {
     std::string new_name;
     std::string d1_name;
@@ -48,10 +48,10 @@ namespace sogdanov
     if (it1 != datasets.end())
     {
       for (BSTIterator<int, std::string> val_it = (*it1).second.begin();
-      val_it != (*it1).second.end(); ++val_it)
+           val_it != (*it1).second.end(); ++val_it)
       {
         if (it2 == datasets.end() ||
-        (*it2).second.find((*val_it).first) == (*it2).second.end())
+            (*it2).second.find((*val_it).first) == (*it2).second.end())
         {
           new_tree.push((*val_it).first, (*val_it).second);
         }
@@ -62,7 +62,7 @@ namespace sogdanov
   }
 
   void cmdIntersect(std::istream &in,
-    std::ostream &out, Datasets &datasets)
+                    std::ostream &, Datasets &datasets)
   {
     std::string new_name;
     std::string d1_name;
@@ -77,7 +77,7 @@ namespace sogdanov
     if (it1 != datasets.end() && it2 != datasets.end())
     {
       for (BSTIterator<int, std::string> val_it = (*it1).second.begin();
-      val_it != (*it1).second.end(); ++val_it)
+           val_it != (*it1).second.end(); ++val_it)
       {
         if ((*it2).second.find((*val_it).first) != (*it2).second.end())
         {
@@ -90,7 +90,7 @@ namespace sogdanov
   }
 
   void cmdUnion(std::istream &in,
-    std::ostream &out, Datasets &datasets)
+                std::ostream &, Datasets &datasets)
   {
     std::string new_name;
     std::string d1_name;
@@ -105,7 +105,7 @@ namespace sogdanov
     if (it1 != datasets.end())
     {
       for (BSTIterator<int, std::string> val_it = (*it1).second.begin();
-      val_it != (*it1).second.end(); ++val_it)
+           val_it != (*it1).second.end(); ++val_it)
       {
         new_tree.push((*val_it).first, (*val_it).second);
       }
@@ -114,7 +114,7 @@ namespace sogdanov
     if (it2 != datasets.end())
     {
       for (BSTIterator<int, std::string> val_it = (*it2).second.begin();
-      val_it != (*it2).second.end(); ++val_it)
+           val_it != (*it2).second.end(); ++val_it)
       {
         if (new_tree.find((*val_it).first) == new_tree.end())
         {

@@ -101,7 +101,7 @@ namespace sogdanov
 
   template <class Key, class Value, class Compare>
   BSTree<Key, Value, Compare>::BSTree(
-      const BSTree<Key, Value, Compare> &other) : tree_size(other.tree_size), comp(other.comp)
+      const BSTree<Key, Value, Compare> &other) : comp(other.comp), tree_size(other.tree_size)
   {
     fake_leaf = new Node<Key, Value>(Key(), Value(), nullptr);
     fake_leaf->left = fake_leaf;
