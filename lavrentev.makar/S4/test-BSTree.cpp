@@ -28,3 +28,10 @@ BOOST_AUTO_TEST_CASE(drop_test)
   bst.drop("a");
   BOOST_CHECK_THROW(bst.get("a"), std::out_of_range);
 }
+
+BOOST_AUTO_TEST_CASE(setGetName_test)
+{
+  lavrentev::BSTree<std::string, size_t, std::less<std::string>> bst{};
+  bst.setName("graph");
+  BOOST_TEST(bst.getName() == "graph");
+}

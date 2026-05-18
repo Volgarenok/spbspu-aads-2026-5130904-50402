@@ -54,6 +54,7 @@ namespace lavrentev
     size_t height() const;
 
     void setName(std::string name);
+    std::string getName();
 
   private:
     struct Node
@@ -308,6 +309,12 @@ template< class Key, class Value, class Compare >
 void lavrentev::BSTree<Key, Value, Compare>::setName(std::string name)
 {
   name_ = name;
+}
+
+template< class Key, class Value, class Compare >
+std::string lavrentev::BSTree<Key, Value, Compare>::getName()
+{
+  return name_;
 }
 
 #endif
