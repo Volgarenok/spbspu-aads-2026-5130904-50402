@@ -70,6 +70,7 @@ namespace bukreev
     LCIter< T > cend() const noexcept;
     void pushBack(const T& value);
     T popBack() noexcept;
+    T popFront() noexcept;
 
   private:
     Node< T > m_fake;
@@ -202,6 +203,23 @@ namespace bukreev
 
     T retval = lastNode->val;
     delete lastNode;
+
+    return retval;
+  }
+
+  template< class T >
+  T List< T >::popBack() noexcept
+  {
+    Node< T >* toDel = m_fake.next;
+
+    T retval = toDel->val;
+    m_fake.next = toDel->next;
+    delete toDel;
+
+    if (m_fake.next == nullptr)
+    {
+      m_tail = nullptr;
+    }
 
     return retval;
   }
