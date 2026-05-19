@@ -61,6 +61,8 @@ namespace lavrentev
   template< class Key, class Value, class Compare >
   struct BSTree {
     using Node = Node<Key, Value>;
+    friend class BSTIterator<Key, Value>;
+    friend class BSTConstIterator<Key, Value>;
   public:
     BSTree();
     ~BSTree();
@@ -383,6 +385,92 @@ template< class Key, class Value, class Compare >
 size_t lavrentev::BSTree<Key, Value, Compare>::height(const_iterator it) const
 {
   return getHeight(*it);
+}
+
+template< class Key, class Value >
+lavrentev::BSTIterator<Key, Value>::BSTIterator(Node *other):
+  curr_(other)
+{
+}
+
+template< class Key, class Value >
+bool lavrentev::BSTIterator<Key, Value>::operator==(const BSTIterator<Key, Value > &other) const
+{
+  return curr_ == other.curr_;
+}
+
+template< class Key, class Value >
+bool lavrentev::BSTIterator<Key, Value>::operator!=(const BSTIterator<Key, Value > &other) const
+{
+  return curr_ != other.curr_;
+}
+
+template< class Key, class Value >
+lavrentev::BSTIterator<Key, Value> &lavrentev::BSTIterator<Key, Value>::operator++()
+{
+  if (curr_->right_)
+  {
+    curr_ = curr_->right_;
+    curr_ = fallLeft(curr_);
+  }
+  else
+  {
+    while(curr_->parent_ != nullptr && curr_ != curr_->parent_->left_)
+    {
+      curr_ = curr_->parent_;
+    }
+    curr_ = curr_->parent_;
+  }
+  return *this;
+}
+
+template< class Key, class Value >
+lavrentev::Node<Key, Value> &lavrentev::BSTIterator<Key, Value>::operator*() 
+{
+  return curr_;
+}
+
+template< class Key, class Value >
+lavrentev::BSTConstIterator<Key, Value>::BSTConstIterator(const Node *other):
+  curr_(other)
+{
+}
+
+template< class Key, class Value >
+bool lavrentev::BSTConstIterator<Key, Value>::operator==(const BSTConstIterator<Key, Value > &other) const
+{
+  return curr_ == other.curr_;
+}
+
+template< class Key, class Value >
+bool lavrentev::BSTConstIterator<Key, Value>::operator!=(const BSTConstIterator<Key, Value > &other) const
+{
+  return curr_ != other.curr_;
+}
+
+template< class Key, class Value >
+lavrentev::BSTConstIterator<Key, Value> &lavrentev::BSTConstIterator<Key, Value>::operator++()
+{
+  if (curr_->right_)
+  {
+    curr_ = curr_->right_;
+    curr_ = fallLeft(curr_);
+  }
+  else
+  {
+    while(curr_->parent_ != nullptr && curr_ != curr_->parent_->left_)
+    {
+      curr_ = curr_->parent_;
+    }
+    curr_ = curr_->parent_;
+  }
+  return *this;
+}
+
+template< class Key, class Value >
+const lavrentev::Node<Key, Value> &lavrentev::BSTConstIterator<Key, Value>::operator*() 
+{
+  return curr_;
 }
 
 #endif
