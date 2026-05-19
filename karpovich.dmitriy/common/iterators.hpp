@@ -56,7 +56,7 @@ namespace karpovich
   template< class T >
   T *LIter< T >::operator->() const noexcept
   {
-    return &(ptr_->data);
+    return &(ptr_->val);
   }
 
   template< class T >
@@ -115,7 +115,7 @@ namespace karpovich
   template< class T >
   const T *LCIter< T >::operator->() const noexcept
   {
-    return &(ptr_->data);
+    return &(ptr_->val);
   }
 
   template< class T >
