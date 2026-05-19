@@ -39,9 +39,10 @@ int main()
     iterators.pushBack({(*it).second.begin(), (*it).second.end()});
   }
 
-  while (true)
+  bool areValid = true;
+  while (areValid)
   {
-    bool areValid = false;
+    areValid = false;
     bool isFirst = true;
     for (auto& ends : iterators)
     {
@@ -57,11 +58,10 @@ int main()
         areValid = true;
       }
     }
-    if (!areValid)
+    if (areValid)
     {
-      break;
+      std::cout << '\n';
     }
-    std::cout << '\n';
   }
 
   iterators.clear();
@@ -71,9 +71,10 @@ int main()
   }
 
   shirokov::BiList< size_t > sums{};
-  while (true)
+  areValid = true;
+  while (areValid)
   {
-    bool areValid = false;
+    areValid = false;
     size_t sum = 0;
     for (auto& ends : iterators)
     {
@@ -90,11 +91,10 @@ int main()
       }
     }
 
-    if (!areValid)
+    if (areValid)
     {
-      break;
+      sums.pushBack(sum);
     }
-    sums.pushBack(sum);
   }
 
   if (sums.empty())
