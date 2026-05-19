@@ -23,6 +23,7 @@ namespace karpovich
     bool operator==(const LIter< T > &other) const noexcept;
     bool operator!=(const LIter< T > &other) const noexcept;
   };
+
   template < class T >
   class LCIter
   {
