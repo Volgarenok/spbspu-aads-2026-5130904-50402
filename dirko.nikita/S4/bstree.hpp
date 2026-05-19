@@ -4,7 +4,6 @@
 #include <cstddef>
 #include <functional>
 #include <initializer_list>
-#include <new>
 #include <stdexcept>
 #include <utility>
 namespace dirko
@@ -18,6 +17,7 @@ namespace dirko
     TreeNode *right_;
     TreeNode *parent_;
 
+    TreeNode();
     TreeNode(const Key &key, const Value &value, TreeNode *parent);
     TreeNode(Key &&key, Value &&value, TreeNode *parent);
   };
@@ -117,6 +117,15 @@ namespace dirko
 }
 
 template < class Key, class Value >
+dirko::TreeNode< Key, Value >::TreeNode():
+  key_(Key()),
+  value_(Value()),
+  left_(nullptr),
+  right_(nullptr),
+  parent_(nullptr)
+{}
+
+template < class Key, class Value >
 dirko::TreeNode< Key, Value >::TreeNode(const Key &key, const Value &value, TreeNode *parent):
   key_(key),
   value_(value),
@@ -135,13 +144,13 @@ dirko::TreeNode< Key, Value >::TreeNode(Key &&key, Value &&value, TreeNode *pare
 
 template < class Key, class Value, class Compare >
 dirko::BSTree< Key, Value, Compare >::BSTree():
-  root_(new TreeNode< Key, Value >{Key(), Value(), nullptr, nullptr, nullptr}),
+  root_(new TreeNode< Key, Value >()),
   size_(0),
   comp_(Compare{})
 {}
 template < class Key, class Value, class Compare >
 dirko::BSTree< Key, Value, Compare >::BSTree(const BSTree &other):
-  root_(new TreeNode< Key, Value >{Key(), Value(), nullptr, nullptr, nullptr}),
+  root_(new TreeNode< Key, Value >()),
   size_(0),
   comp_(other.comp_)
 {
@@ -160,7 +169,7 @@ dirko::BSTree< Key, Value, Compare >::BSTree(BSTree &&other) noexcept:
 }
 template < class Key, class Value, class Compare >
 dirko::BSTree< Key, Value, Compare >::BSTree(std::initializer_list< std::pair< Key, Value > > il):
-  root_(new TreeNode< Key, Value >{Key(), Value(), nullptr, nullptr, nullptr}),
+  root_(new TreeNode< Key, Value >()),
   size_(0),
   comp_(Compare{})
 {
