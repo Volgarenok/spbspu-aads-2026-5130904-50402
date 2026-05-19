@@ -109,8 +109,8 @@ namespace lavrentev
   Node<Key, Value> *fallLeft(Node<Key, Value> *node);
 
   void print(std::istream &in, std::ostream &out, BSTList &bstl);
-  void complement(std::istream &in, std::ostream &out, BSTList &bstl); //realize
-  void intersect(std::istream &in, std::ostream &out, BSTList &bstl); //realize
+  void complement(std::istream &in, std::ostream &out, BSTList &bstl);
+  void intersect(std::istream &in, std::ostream &out, BSTList &bstl);
   void unionn(std::istream &in, std::ostream &out, BSTList &bstl); //realize
 }
 
@@ -608,6 +608,50 @@ inline void lavrentev::intersect(std::istream &in, std::ostream &out, BSTList &b
   for(; bstIt != (*bst1).end(); ++bstIt)
   {
     if ((*bst2).has((*bstIt).first))
+    {
+      newBst[(*bstIt).first] = (*bstIt).second;
+    }
+  }
+  bstl.pushFront(std::move(newBst));
+}
+
+inline void lavrentev::unionn(std::istream &in, std::ostream &out, BSTList &bstl)
+{
+  std::string newBstName, BstName1, BstName2;
+  in >> newBstName >> BstName1 >> BstName2;
+  BSTree<size_t, std::string, std::less<size_t>> newBst;
+  LIter<BSTree<size_t, std::string, std::less<size_t>>> it = bstl.begin();
+  BSTree<size_t, std::string, std::less<size_t>> *bst1 = nullptr;
+  BSTree<size_t, std::string, std::less<size_t>> *bst2 = nullptr;
+  bool is1 = false, is2 = false;
+  while (it != nullptr)
+  {
+    if ((*it).getName() == BstName1)
+    {
+      is1 = true;
+      bst1 = &(*it);
+    }
+    if ((*it).getName() == BstName2)
+    {
+      is2 = true;
+      bst2 = &(*it);
+    }
+    if (is1 && is2)
+    {
+      break;
+    }
+    ++it;
+  }
+  if (!is1 || !is2)
+  {
+    throw std::out_of_range("");
+  }
+  newBst = *bst1;
+  newBst.setName(newBstName);
+  BSTIterator<size_t, std::string> bstIt = (*bst2).begin();
+  for(; bstIt != (*bst2).end(); ++bstIt)
+  {
+    if (!newBst.has((*bstIt).first))
     {
       newBst[(*bstIt).first] = (*bstIt).second;
     }
