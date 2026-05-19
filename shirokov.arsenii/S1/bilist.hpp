@@ -215,7 +215,7 @@ T& shirokov::BiList< T >::front()
 {
   if (!head)
   {
-    throw std::out_of_range("Empty list");
+    return head;
   }
   return head->value;
 }
@@ -225,7 +225,7 @@ const T& shirokov::BiList< T >::front() const
 {
   if (!head)
   {
-    throw std::out_of_range("Empty list");
+    return head;
   }
   return head->value;
 }
@@ -235,7 +235,7 @@ T& shirokov::BiList< T >::back()
 {
   if (!head)
   {
-    throw std::out_of_range("Empty list");
+    return head;
   }
   return tail->value;
 }
@@ -245,7 +245,7 @@ const T& shirokov::BiList< T >::back() const
 {
   if (!head)
   {
-    throw std::out_of_range("Empty list");
+    return head;
   }
   return tail->value;
 }
