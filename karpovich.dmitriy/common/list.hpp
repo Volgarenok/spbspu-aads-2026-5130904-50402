@@ -44,6 +44,17 @@ namespace karpovich
     void swap(List< T > &other) noexcept;
     size_t size() const noexcept;
     bool empty() const noexcept;
+    void splice(LIter< T > position, List< T > &other) noexcept;
+    void splice(LIter< T > position, List< T > &other, LIter< T > i) noexcept;
+    void splice(LIter< T > position, List< T > &other, LIter< T > first, LIter< T > last) noexcept;
+    void sort() noexcept;
+    template< class Comparator >
+    void sort(Comparator cmp) noexcept;
+    void merge(List< T > &other) noexcept;
+    template< class Comparator >
+    void merge(List< T > &other, Comparator cmp) noexcept;
+    template< class Predicate >
+    LIter< T > partition(Predicate pred);
   };
 
   template< class T >
