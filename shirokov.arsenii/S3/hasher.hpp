@@ -6,7 +6,7 @@
 
 namespace shirokov
 {
-  template < class T >
+  template< class T >
   class SHA1
   {
   public:
@@ -19,12 +19,12 @@ namespace shirokov
   };
 }
 
-template < class T >
+template< class T >
 shirokov::SHA1< T >::SHA1():
   h_(seed_)
 {}
 
-template < class T >
+template< class T >
 size_t shirokov::SHA1< T >::operator()(const T& v) const
 {
   boost::hash2::sha1_160 h(h_);

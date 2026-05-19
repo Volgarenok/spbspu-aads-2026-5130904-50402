@@ -12,10 +12,10 @@ namespace
 
 namespace shirokov
 {
-  template < class Key, class Value, class Hash, class Equal >
+  template< class Key, class Value, class Hash, class Equal >
   class HashTable;
 
-  template < class Key, class Value, class Hash, class Equal >
+  template< class Key, class Value, class Hash, class Equal >
   class HTIter
   {
   public:
@@ -32,7 +32,7 @@ namespace shirokov
     HashTable< Key, Value, Hash, Equal >& table_;
   };
 
-  template < class Key, class Value, class Hash, class Equal >
+  template< class Key, class Value, class Hash, class Equal >
   class HTCIter
   {
   public:
@@ -49,7 +49,7 @@ namespace shirokov
     const HashTable< Key, Value, Hash, Equal >& table_;
   };
 
-  template < class Key, class Value, class Hash, class Equal >
+  template< class Key, class Value, class Hash, class Equal >
   class HashTable
   {
   public:
@@ -94,38 +94,38 @@ namespace shirokov
   };
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 shirokov::HashTable< Key, Value, Hash, Equal >::HashTable():
   size_(START_SIZE),
   slotsCount_(0),
   slots_(new Slot[START_SIZE])
 {}
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 shirokov::HashTable< Key, Value, Hash, Equal >::HashTable::~HashTable()
 {
   delete[] slots_;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 size_t shirokov::HashTable< Key, Value, Hash, Equal >::size() const
 {
   return size_;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 size_t shirokov::HashTable< Key, Value, Hash, Equal >::slotsCount() const
 {
   return slotsCount_;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 bool shirokov::HashTable< Key, Value, Hash, Equal >::empty() const
 {
   return !slotsCount_;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 bool shirokov::HashTable< Key, Value, Hash, Equal >::insert(Key k, Value v)
 {
   size_t limit = std::log2(size_);
@@ -147,7 +147,7 @@ bool shirokov::HashTable< Key, Value, Hash, Equal >::insert(Key k, Value v)
   throw std::runtime_error("Hash table is full or cluster limit exceeded");
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 bool shirokov::HashTable< Key, Value, Hash, Equal >::contains(Key k) const
 {
   size_t limit = std::log2(size_);
@@ -163,7 +163,7 @@ bool shirokov::HashTable< Key, Value, Hash, Equal >::contains(Key k) const
   return false;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 const Value& shirokov::HashTable< Key, Value, Hash, Equal >::at(Key k) const
 {
   size_t limit = std::log2(size_);
@@ -179,7 +179,7 @@ const Value& shirokov::HashTable< Key, Value, Hash, Equal >::at(Key k) const
   throw std::out_of_range("Value with this key not found");
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 Value& shirokov::HashTable< Key, Value, Hash, Equal >::at(Key k)
 {
   const HashTable< Key, Value, Hash, Equal >* cthis = this;
@@ -187,7 +187,7 @@ Value& shirokov::HashTable< Key, Value, Hash, Equal >::at(Key k)
   return const_cast< Value& >(ret);
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 Value& shirokov::HashTable< Key, Value, Hash, Equal >::operator[](Key k)
 {
   size_t limit = std::log2(size_);
@@ -215,7 +215,7 @@ Value& shirokov::HashTable< Key, Value, Hash, Equal >::operator[](Key k)
   throw std::runtime_error("Hash table is full or cluster limit exceeded");
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 bool shirokov::HashTable< Key, Value, Hash, Equal >::erase(Key k)
 {
   size_t limit = std::log2(size_);
@@ -232,7 +232,7 @@ bool shirokov::HashTable< Key, Value, Hash, Equal >::erase(Key k)
   return false;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 shirokov::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable& rhs):
   size_(rhs.size_),
   slotsCount_(rhs.slotsCount_),
@@ -244,7 +244,7 @@ shirokov::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable& rhs):
   }
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 shirokov::HashTable< Key, Value, Hash, Equal >::HashTable(HashTable&& rhs):
   size_(rhs.size_),
   slotsCount_(rhs.slotsCount_),
