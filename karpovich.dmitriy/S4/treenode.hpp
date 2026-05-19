@@ -5,7 +5,7 @@
 
 namespace karpovich
 {
-  template < class Key, class Value >
+  template< class Key, class Value >
   struct TreeNode
   {
     Key key_;
@@ -19,7 +19,7 @@ namespace karpovich
   };
 }
 
-template < class Key, class Value >
+template< class Key, class Value >
 karpovich::TreeNode< Key, Value >::TreeNode(const Key &key, const Value &value,
                                             karpovich::TreeNode< Key, Value > *parent):
   key_(key),
@@ -29,7 +29,7 @@ karpovich::TreeNode< Key, Value >::TreeNode(const Key &key, const Value &value,
   parent_(parent)
 {}
 
-template < class Key, class Value >
+template< class Key, class Value >
 karpovich::TreeNode< Key, Value >::TreeNode(Key &&key, Value &&value, karpovich::TreeNode< Key, Value > *parent):
   key_(std::move(key)),
   value_(std::move(value)),

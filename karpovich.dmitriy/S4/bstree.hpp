@@ -11,7 +11,7 @@
 
 namespace karpovich
 {
-  template < class Key, class Value, class Compare = std::less< Key > >
+  template< class Key, class Value, class Compare = std::less< Key > >
   class BSTree
   {
   public:
@@ -70,14 +70,14 @@ namespace karpovich
   };
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 karpovich::BSTree< Key, Value, Compare >::BSTree():
   root_(nullptr),
   size_(0),
   comp_()
 {}
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 karpovich::BSTree< Key, Value, Compare >::BSTree(const BSTree &other):
   root_(nullptr),
   size_(0),
@@ -87,7 +87,7 @@ karpovich::BSTree< Key, Value, Compare >::BSTree(const BSTree &other):
   size_ = other.size_;
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 karpovich::BSTree< Key, Value, Compare >::BSTree(BSTree &&other) noexcept:
   root_(other.root_),
   size_(other.size_),
@@ -97,13 +97,13 @@ karpovich::BSTree< Key, Value, Compare >::BSTree(BSTree &&other) noexcept:
   other.size_ = 0;
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 karpovich::BSTree< Key, Value, Compare >::~BSTree()
 {
   clear();
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 karpovich::BSTree< Key, Value, Compare > &karpovich::BSTree< Key, Value, Compare >::operator=(const BSTree &other)
 {
   if (this != std::addressof(other)) {
@@ -113,7 +113,7 @@ karpovich::BSTree< Key, Value, Compare > &karpovich::BSTree< Key, Value, Compare
   return *this;
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 karpovich::BSTree< Key, Value, Compare > &karpovich::BSTree< Key, Value, Compare >::operator=(BSTree &&other) noexcept
 {
   if (this != std::addressof(other)) {
@@ -127,19 +127,19 @@ karpovich::BSTree< Key, Value, Compare > &karpovich::BSTree< Key, Value, Compare
   return *this;
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 bool karpovich::BSTree< Key, Value, Compare >::empty() const
 {
   return !size_;
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 size_t karpovich::BSTree< Key, Value, Compare >::size() const
 {
   return size_;
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 karpovich::TreeNode< Key, Value > *karpovich::BSTree< Key, Value, Compare >::clone(TreeNode< Key, Value > *src,
                                                                                    TreeNode< Key, Value > *parent)
 {
@@ -152,7 +152,7 @@ karpovich::TreeNode< Key, Value > *karpovich::BSTree< Key, Value, Compare >::clo
   return n;
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 karpovich::TreeNode< Key, Value > *karpovich::BSTree< Key, Value, Compare >::findNode(const Key &k) const
 {
   TreeNode< Key, Value > *cur = root_;
@@ -168,7 +168,7 @@ karpovich::TreeNode< Key, Value > *karpovich::BSTree< Key, Value, Compare >::fin
   return nullptr;
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 const Value &karpovich::BSTree< Key, Value, Compare >::at(const Key &k) const
 {
   TreeNode< Key, Value > *n = findNode(k);
@@ -178,7 +178,7 @@ const Value &karpovich::BSTree< Key, Value, Compare >::at(const Key &k) const
   return n->value_;
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 Value &karpovich::BSTree< Key, Value, Compare >::at(const Key &k)
 {
   TreeNode< Key, Value > *n = findNode(k);
@@ -188,7 +188,7 @@ Value &karpovich::BSTree< Key, Value, Compare >::at(const Key &k)
   return n->value_;
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 void karpovich::BSTree< Key, Value, Compare >::push(const Key &k, const Value &v)
 {
   if (root_ == nullptr) {
@@ -219,7 +219,7 @@ void karpovich::BSTree< Key, Value, Compare >::push(const Key &k, const Value &v
   }
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 void karpovich::BSTree< Key, Value, Compare >::push(Key &&k, Value &&v)
 {
   if (root_ == nullptr) {
@@ -250,7 +250,7 @@ void karpovich::BSTree< Key, Value, Compare >::push(Key &&k, Value &&v)
   }
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 Value karpovich::BSTree< Key, Value, Compare >::drop(const Key &k)
 {
   TreeNode< Key, Value > *node = findNode(k);
@@ -280,7 +280,7 @@ Value karpovich::BSTree< Key, Value, Compare >::drop(const Key &k)
   return res;
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 void karpovich::BSTree< Key, Value, Compare >::clearImpl(TreeNode< Key, Value > *node) noexcept
 {
   if (node == nullptr) {
@@ -291,7 +291,7 @@ void karpovich::BSTree< Key, Value, Compare >::clearImpl(TreeNode< Key, Value > 
   delete node;
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 void karpovich::BSTree< Key, Value, Compare >::clear() noexcept
 {
   clearImpl(root_);
@@ -299,7 +299,7 @@ void karpovich::BSTree< Key, Value, Compare >::clear() noexcept
   size_ = 0;
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 void karpovich::BSTree< Key, Value, Compare >::swap(BSTree &other) noexcept
 {
   std::swap(root_, other.root_);
@@ -307,7 +307,7 @@ void karpovich::BSTree< Key, Value, Compare >::swap(BSTree &other) noexcept
   std::swap(comp_, other.comp_);
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 karpovich::TreeNode< Key, Value > *
 karpovich::BSTree< Key, Value, Compare >::fallLeft(TreeNode< Key, Value > *node) const
 {
@@ -317,47 +317,47 @@ karpovich::BSTree< Key, Value, Compare >::fallLeft(TreeNode< Key, Value > *node)
   return node;
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 typename karpovich::BSTree< Key, Value, Compare >::iterator karpovich::BSTree< Key, Value, Compare >::begin()
 {
   return iterator(fallLeft(root_));
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 typename karpovich::BSTree< Key, Value, Compare >::iterator karpovich::BSTree< Key, Value, Compare >::end() noexcept
 {
   return iterator(nullptr);
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 typename karpovich::BSTree< Key, Value, Compare >::const_iterator
 karpovich::BSTree< Key, Value, Compare >::begin() const
 {
   return const_iterator(fallLeft(root_));
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 typename karpovich::BSTree< Key, Value, Compare >::const_iterator
 karpovich::BSTree< Key, Value, Compare >::end() const noexcept
 {
   return const_iterator(nullptr);
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 typename karpovich::BSTree< Key, Value, Compare >::const_iterator
 karpovich::BSTree< Key, Value, Compare >::cbegin() const noexcept
 {
   return const_iterator(fallLeft(root_));
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 typename karpovich::BSTree< Key, Value, Compare >::const_iterator
 karpovich::BSTree< Key, Value, Compare >::cend() const noexcept
 {
   return const_iterator(nullptr);
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 typename karpovich::BSTree< Key, Value, Compare >::const_iterator
 karpovich::BSTree< Key, Value, Compare >::rotateLeft(const_iterator it)
 {
@@ -383,7 +383,7 @@ karpovich::BSTree< Key, Value, Compare >::rotateLeft(const_iterator it)
   return const_iterator(y);
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 typename karpovich::BSTree< Key, Value, Compare >::const_iterator
 karpovich::BSTree< Key, Value, Compare >::rotateRight(const_iterator it)
 {
@@ -409,7 +409,7 @@ karpovich::BSTree< Key, Value, Compare >::rotateRight(const_iterator it)
   return const_iterator(x);
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 typename karpovich::BSTree< Key, Value, Compare >::const_iterator
 karpovich::BSTree< Key, Value, Compare >::rotateLargeLeft(const_iterator it)
 {
@@ -421,7 +421,7 @@ karpovich::BSTree< Key, Value, Compare >::rotateLargeLeft(const_iterator it)
   return rotateLeft(it);
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 typename karpovich::BSTree< Key, Value, Compare >::const_iterator
 karpovich::BSTree< Key, Value, Compare >::rotateLargeRight(const_iterator it)
 {
@@ -433,7 +433,7 @@ karpovich::BSTree< Key, Value, Compare >::rotateLargeRight(const_iterator it)
   return rotateRight(it);
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 size_t karpovich::BSTree< Key, Value, Compare >::calcHeight(TreeNode< Key, Value > *node) const
 {
   if (node == nullptr) {
@@ -444,13 +444,13 @@ size_t karpovich::BSTree< Key, Value, Compare >::calcHeight(TreeNode< Key, Value
   return 1 + ((l > r) ? l : r);
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 size_t karpovich::BSTree< Key, Value, Compare >::height() const
 {
   return calcHeight(root_);
 }
 
-template < class Key, class Value, class Compare >
+template< class Key, class Value, class Compare >
 size_t karpovich::BSTree< Key, Value, Compare >::height(const_iterator it) const
 {
   return calcHeight(static_cast< TreeNode< Key, Value > * >(it.node_));
