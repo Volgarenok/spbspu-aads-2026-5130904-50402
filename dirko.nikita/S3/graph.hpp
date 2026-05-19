@@ -1,10 +1,8 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
 #include <cstddef>
-#include <list.hpp>
 #include <string>
 #include "hash-table.hpp"
-#include "hasher.hpp"
 namespace dirko
 {
   class Graph

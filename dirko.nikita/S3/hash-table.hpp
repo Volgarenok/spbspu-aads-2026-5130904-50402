@@ -3,11 +3,11 @@
 #include <Vector.hpp>
 #include <cstddef>
 #include <functional>
+#include <hasher.hpp>
 #include <initializer_list>
 #include <list.hpp>
 #include <stdexcept>
 #include <utility>
-#include "hasher.hpp"
 
 namespace dirko
 {
