@@ -70,9 +70,9 @@ int main()
   }
 
   shirokov::BiList< size_t > sums{};
+  areValid = false;
   while (true)
   {
-    bool areValid = false;
     size_t sum = 0;
     for (auto& ends : iterators)
     {
@@ -91,9 +91,8 @@ int main()
 
     if (!areValid)
     {
-      break;
+      sums.pushBack(sum);
     }
-    sums.pushBack(sum);
   }
 
   if (sums.empty())
