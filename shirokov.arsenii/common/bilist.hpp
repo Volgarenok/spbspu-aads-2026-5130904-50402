@@ -5,10 +5,10 @@
 
 namespace shirokov
 {
-  template < class T >
+  template< class T >
   class BiList;
 
-  template < class T >
+  template< class T >
   class BLIter
   {
   public:
@@ -24,7 +24,7 @@ namespace shirokov
     typename BiList< T >::Node* curr = nullptr;
   };
 
-  template < class T >
+  template< class T >
   class BLCIter
   {
   public:
@@ -40,7 +40,7 @@ namespace shirokov
     const typename BiList< T >::Node* curr = nullptr;
   };
 
-  template < class T >
+  template< class T >
   class BiList
   {
   public:
@@ -88,19 +88,19 @@ namespace shirokov
   };
 }
 
-template < class T >
+template< class T >
 bool shirokov::BiList< T >::empty() const noexcept
 {
   return !head;
 }
 
-template < class T >
+template< class T >
 shirokov::BiList< T >::BiList::~BiList()
 {
   clear();
 }
 
-template < class T >
+template< class T >
 void shirokov::BiList< T >::clear() noexcept
 {
   while (head)
@@ -113,36 +113,36 @@ void shirokov::BiList< T >::clear() noexcept
   tail = nullptr;
 }
 
-template < class T >
+template< class T >
 shirokov::BLIter< T > shirokov::BiList< T >::begin()
 {
   return shirokov::BLIter< T >(head);
 }
 
-template < class T >
+template< class T >
 shirokov::BLIter< T > shirokov::BiList< T >::end()
 {
   return shirokov::BLIter< T >(nullptr);
 }
 
-template < class T >
+template< class T >
 shirokov::BLCIter< T > shirokov::BiList< T >::cend() const
 {
   return shirokov::BLCIter< T >(nullptr);
 }
 
-template < class T >
+template< class T >
 bool shirokov::BLIter< T >::operator==(const shirokov::BLIter< T >& other) const noexcept
 {
   return curr == other.curr;
 }
 
-template < class T >
+template< class T >
 shirokov::BLIter< T >::BLIter(typename BiList< T >::Node* node):
   curr(node)
 {}
 
-template < class T >
+template< class T >
 void shirokov::BiList< T >::pushBack(T&& value)
 {
   if (!head)
@@ -150,7 +150,7 @@ void shirokov::BiList< T >::pushBack(T&& value)
     head = nullptr;
     try
     {
-      head = new Node{std::move(value)}; // T::T(T&&)
+      head = new Node{std::move(value)};
       tail = head;
     }
     catch (...)
@@ -164,7 +164,7 @@ void shirokov::BiList< T >::pushBack(T&& value)
     Node* next = nullptr;
     try
     {
-      next = new Node{std::move(value), nullptr, tail}; // T::T(T&&)
+      next = new Node{std::move(value), nullptr, tail};
       tail->next = next;
       tail = next;
     }
@@ -176,7 +176,7 @@ void shirokov::BiList< T >::pushBack(T&& value)
   }
 }
 
-template < class T >
+template< class T >
 void shirokov::BiList< T >::pushBack(const T& value)
 {
   if (!head)
@@ -184,7 +184,7 @@ void shirokov::BiList< T >::pushBack(const T& value)
     head = nullptr;
     try
     {
-      head = new Node{value}; // T::T(const T&)
+      head = new Node{value};
       tail = head;
     }
     catch (...)
@@ -198,7 +198,7 @@ void shirokov::BiList< T >::pushBack(const T& value)
     Node* next = nullptr;
     try
     {
-      next = new Node{value, nullptr, tail}; // T::T(const T&)
+      next = new Node{value, nullptr, tail};
       tail->next = next;
       tail = next;
     }
@@ -210,47 +210,31 @@ void shirokov::BiList< T >::pushBack(const T& value)
   }
 }
 
-template < class T >
+template< class T >
 T& shirokov::BiList< T >::front()
 {
-  if (!head)
-  {
-    throw std::out_of_range("Empty list");
-  }
   return head->value;
 }
 
-template < class T >
+template< class T >
 const T& shirokov::BiList< T >::front() const
 {
-  if (!head)
-  {
-    throw std::out_of_range("Empty list");
-  }
   return head->value;
 }
 
-template < class T >
+template< class T >
 T& shirokov::BiList< T >::back()
 {
-  if (!head)
-  {
-    throw std::out_of_range("Empty list");
-  }
   return tail->value;
 }
 
-template < class T >
+template< class T >
 const T& shirokov::BiList< T >::back() const
 {
-  if (!head)
-  {
-    throw std::out_of_range("Empty list");
-  }
   return tail->value;
 }
 
-template < class T >
+template< class T >
 T& shirokov::BLIter< T >::operator*()
 {
   if (!curr)
@@ -260,7 +244,7 @@ T& shirokov::BLIter< T >::operator*()
   return curr->value;
 }
 
-template < class T >
+template< class T >
 shirokov::BLIter< T >& shirokov::BLIter< T >::operator++()
 {
   if (!curr)
@@ -271,7 +255,7 @@ shirokov::BLIter< T >& shirokov::BLIter< T >::operator++()
   return *this;
 }
 
-template < class T >
+template< class T >
 shirokov::BLIter< T >& shirokov::BLIter< T >::operator--()
 {
   if (!curr)
@@ -282,7 +266,7 @@ shirokov::BLIter< T >& shirokov::BLIter< T >::operator--()
   return *this;
 }
 
-template < class T >
+template< class T >
 void shirokov::BiList< T >::pushFront(const T& value)
 {
   if (!head)
@@ -290,7 +274,7 @@ void shirokov::BiList< T >::pushFront(const T& value)
     head = nullptr;
     try
     {
-      head = new Node{value}; // T::T(const T&)
+      head = new Node{value};
       tail = head;
     }
     catch (...)
@@ -304,7 +288,7 @@ void shirokov::BiList< T >::pushFront(const T& value)
     Node* prev = nullptr;
     try
     {
-      prev = new Node{value, head, nullptr}; // T::T(const T&)
+      prev = new Node{value, head, nullptr};
       head->prev = prev;
       head = prev;
     }
@@ -316,7 +300,7 @@ void shirokov::BiList< T >::pushFront(const T& value)
   }
 }
 
-template < class T >
+template< class T >
 void shirokov::BiList< T >::pushFront(T&& value)
 {
   if (!head)
@@ -324,7 +308,7 @@ void shirokov::BiList< T >::pushFront(T&& value)
     head = nullptr;
     try
     {
-      head = new Node{std::move(value)}; // T::T(T&&)
+      head = new Node{std::move(value)};
       tail = head;
     }
     catch (...)
@@ -338,7 +322,7 @@ void shirokov::BiList< T >::pushFront(T&& value)
     Node* prev = nullptr;
     try
     {
-      prev = new Node{std::move(value), head, nullptr}; // T::T(T&&)
+      prev = new Node{std::move(value), head, nullptr};
       head->prev = prev;
       head = prev;
     }
@@ -350,7 +334,7 @@ void shirokov::BiList< T >::pushFront(T&& value)
   }
 }
 
-template < class T >
+template< class T >
 void shirokov::BiList< T >::popFront()
 {
   if (!head)
@@ -370,7 +354,7 @@ void shirokov::BiList< T >::popFront()
   }
 }
 
-template < class T >
+template< class T >
 void shirokov::BiList< T >::popBack()
 {
   if (!tail)
@@ -390,13 +374,13 @@ void shirokov::BiList< T >::popBack()
   }
 }
 
-template < class T >
+template< class T >
 shirokov::BLCIter< T > shirokov::BiList< T >::cbegin() const
 {
   return shirokov::BLCIter< T >(head);
 }
 
-template < class T >
+template< class T >
 const T& shirokov::BLCIter< T >::operator*()
 {
   if (!curr)
@@ -406,7 +390,7 @@ const T& shirokov::BLCIter< T >::operator*()
   return curr->value;
 }
 
-template < class T >
+template< class T >
 shirokov::BLCIter< T >& shirokov::BLCIter< T >::operator++()
 {
   if (!curr)
@@ -417,7 +401,7 @@ shirokov::BLCIter< T >& shirokov::BLCIter< T >::operator++()
   return *this;
 }
 
-template < class T >
+template< class T >
 shirokov::BLCIter< T >& shirokov::BLCIter< T >::operator--()
 {
   if (!curr)
@@ -428,12 +412,12 @@ shirokov::BLCIter< T >& shirokov::BLCIter< T >::operator--()
   return *this;
 }
 
-template < class T >
+template< class T >
 shirokov::BLCIter< T >::BLCIter(const typename BiList< T >::Node* node):
   curr(node)
 {}
 
-template < class T >
+template< class T >
 shirokov::BiList< T >::BiList(const BiList< T >& other)
 {
   try
@@ -444,12 +428,12 @@ shirokov::BiList< T >::BiList(const BiList< T >& other)
     {
       if (!curr)
       {
-        head = new Node{otherCurr->value}; // T::T(const T&)
+        head = new Node{otherCurr->value};
         curr = head;
         otherCurr = otherCurr->next;
         continue;
       }
-      Node* next = new Node{otherCurr->value, nullptr, curr}; // T::T(const T&)
+      Node* next = new Node{otherCurr->value, nullptr, curr};
       curr->next = next;
       curr = next;
       otherCurr = otherCurr->next;
@@ -463,7 +447,7 @@ shirokov::BiList< T >::BiList(const BiList< T >& other)
   }
 }
 
-template < class T >
+template< class T >
 shirokov::BiList< T >& shirokov::BiList< T >::operator=(const BiList< T >& other)
 {
   if (this == &other)
@@ -478,12 +462,12 @@ shirokov::BiList< T >& shirokov::BiList< T >::operator=(const BiList< T >& other
     {
       if (!curr)
       {
-        head = new Node{otherCurr->value}; // T::T(const T&)
+        head = new Node{otherCurr->value};
         curr = head;
         otherCurr = otherCurr->next;
         continue;
       }
-      Node* next = new Node{otherCurr->value, nullptr, curr}; // T::T(const T&)
+      Node* next = new Node{otherCurr->value, nullptr, curr};
       curr->next = next;
       curr = next;
       otherCurr = otherCurr->next;
@@ -498,7 +482,7 @@ shirokov::BiList< T >& shirokov::BiList< T >::operator=(const BiList< T >& other
   return *this;
 }
 
-template < class T >
+template< class T >
 shirokov::BiList< T >::BiList(BiList< T >&& other):
   head(other.head),
   tail(other.tail)
@@ -507,7 +491,7 @@ shirokov::BiList< T >::BiList(BiList< T >&& other):
   other.tail = nullptr;
 }
 
-template < class T >
+template< class T >
 shirokov::BiList< T >& shirokov::BiList< T >::operator=(BiList< T >&& other)
 {
   if (this == &other)
@@ -522,19 +506,19 @@ shirokov::BiList< T >& shirokov::BiList< T >::operator=(BiList< T >&& other)
   return *this;
 }
 
-template < class T >
+template< class T >
 bool shirokov::BLIter< T >::operator!=(const BLIter< T >& other) const noexcept
 {
   return !(*this == other);
 }
 
-template < class T >
+template< class T >
 bool shirokov::BLCIter< T >::operator==(const BLCIter< T >& other)
 {
   return curr == other.curr;
 }
 
-template < class T >
+template< class T >
 bool shirokov::BLCIter< T >::operator!=(const BLCIter< T >& other)
 {
   return !(*this == other);
