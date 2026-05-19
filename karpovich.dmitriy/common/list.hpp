@@ -356,5 +356,30 @@ namespace karpovich
     posNode->prev = node;
     size_++;
   }
+
+  template< class T >
+  void List< T >::splice(LIter< T > position, List< T > &other, LIter< T > first, LIter< T > last) noexcept
+  {
+    if (first == last) {
+      return;
+    }
+    details::Node< T > *fNode = first.ptr_;
+    details::Node< T > *lNode = last.ptr_;
+    details::Node< T > *rangeLast = lNode->prev;
+
+    fNode->prev->next = lNode;
+    lNode->prev = fNode->prev;
+    size_t count = 0;
+    for (details::Node< T > *cur = fNode; cur != lNode; cur = cur->next) {
+      ++count;
+    }
+    other.size_ -= count;
+    size_ += count;
+    details::Node< T > *posNode = position.ptr_;
+    fNode->prev = posNode->prev;
+    posNode->prev->next = fNode;
+    rangeLast->next = posNode;
+    posNode->prev = rangeLast;
+  }
 }
 #endif
