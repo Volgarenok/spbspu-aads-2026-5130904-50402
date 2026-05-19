@@ -394,5 +394,22 @@ namespace karpovich
     merge(other, std::less< T >{});
   }
 
+  template< class T >
+  template< class Comparator >
+  void List< T >::sort(Comparator cmp) noexcept
+  {
+    if (size_ < 2) {
+      return;
+    }
+    LIter< T > mid = begin();
+    for (size_t i = 0; i < size_ / 2; ++i) {
+      ++mid;
+    }
+    List< T > left;
+    left.splice(left.end(), *this, begin(), mid);
+    left.sort(cmp);
+    sort(cmp);
+    merge(left, cmp);
+  }
 }
 #endif
