@@ -5,6 +5,11 @@
 #include <stdexcept>
 #include <utility>
 
+namespace
+{
+  const size_t START_SIZE = 16;
+}
+
 namespace shirokov
 {
   template < class Key, class Value, class Hash, class Equal >
@@ -91,9 +96,9 @@ namespace shirokov
 
 template < class Key, class Value, class Hash, class Equal >
 shirokov::HashTable< Key, Value, Hash, Equal >::HashTable():
-  size_(16),
+  size_(START_SIZE),
   slotsCount_(0),
-  slots_(new Slot[16])
+  slots_(new Slot[START_SIZE])
 {}
 
 template < class Key, class Value, class Hash, class Equal >
