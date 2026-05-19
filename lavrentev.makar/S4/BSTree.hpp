@@ -26,7 +26,7 @@ namespace lavrentev
 }
 
 using BSTList = lavrentev::List<lavrentev::BSTree<size_t, std::string, std::less<size_t>>>;
-using cmd_t = void (*)(std::istream &in, std::ostream &out, BSTList bstl);
+using cmd_t = void (*)(std::istream &in, std::ostream &out, BSTList &bstl);
 
 namespace lavrentev
 {
@@ -89,7 +89,9 @@ namespace lavrentev
     void setName(std::string name);
     std::string getName();
     BSTIterator<Key, Value> begin();
+    BSTConstIterator<Key, Value> cbegin();
     BSTIterator<Key, Value> end();
+    BSTConstIterator<Key, Value> cend();
 
 
   private:
@@ -111,7 +113,7 @@ namespace lavrentev
   void print(std::istream &in, std::ostream &out, BSTList &bstl);
   void complement(std::istream &in, std::ostream &out, BSTList &bstl);
   void intersect(std::istream &in, std::ostream &out, BSTList &bstl);
-  void unionn(std::istream &in, std::ostream &out, BSTList &bstl); //realize
+  void unionn(std::istream &in, std::ostream &out, BSTList &bstl);
 }
 
 template< class Key, class Value, class Compare >
@@ -477,10 +479,24 @@ lavrentev::BSTIterator<Key, Value> lavrentev::BSTree<Key, Value, Compare>::begin
 }
 
 template< class Key, class Value, class Compare >
+lavrentev::BSTConstIterator<Key, Value> lavrentev::BSTree<Key, Value, Compare>::cbegin()
+{
+  Node *min = fallLeft(fakeroot_->left_);
+  return BSTConstIterator<Key, Value>(min);
+}
+
+template< class Key, class Value, class Compare >
 lavrentev::BSTIterator<Key, Value> lavrentev::BSTree<Key, Value, Compare>::end()
 {
   Node *min = fallLeft(fakeroot_->left_);
   return BSTIterator<Key, Value>(min);
+}
+
+template< class Key, class Value, class Compare >
+lavrentev::BSTConstIterator<Key, Value> lavrentev::BSTree<Key, Value, Compare>::cend()
+{
+  Node *min = fallLeft(fakeroot_->left_);
+  return BSTConstIterator<Key, Value>(min);
 }
 
 template< class Key, class Value >
