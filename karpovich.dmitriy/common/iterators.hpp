@@ -5,6 +5,7 @@ namespace karpovich
 {
   template < class T >
   class List;
+
   template < class T >
   class LIter
   {

@@ -93,13 +93,14 @@ namespace karpovich
   List< T > &List< T >::operator=(List< T > &&other) noexcept
   {
     assert(this != std::addressof(other));
+    details::Node< T > *newFake = new details::Node< T >{T(), nullptr, nullptr};
+    newFake->next = newFake;
+    newFake->prev = newFake;
     clear();
     delete fake_;
     fake_ = other.fake_;
     size_ = other.size_;
-    other.fake_ = new details::Node< T >{T(), nullptr, nullptr};
-    other.fake_->next = other.fake_;
-    other.fake_->prev = other.fake_;
+    other.fake_ = newFake;
     other.size_ = 0;
     return *this;
   }

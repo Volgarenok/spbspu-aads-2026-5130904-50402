@@ -16,7 +16,7 @@ int main()
   karp::transpose(sequences, transposed);
   try {
     karp::output(std::cout, sequences, transposed);
-  } catch (std::overflow_error &e) {
+  } catch (const std::overflow_error &e) {
     std::cerr << e.what() << '\n';
     return 1;
   }
