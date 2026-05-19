@@ -244,4 +244,15 @@ shirokov::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable& rhs):
   }
 }
 
+template < class Key, class Value, class Hash, class Equal >
+shirokov::HashTable< Key, Value, Hash, Equal >::HashTable(HashTable&& rhs):
+  size_(rhs.size_),
+  slotsCount_(rhs.slotsCount_),
+  slots_(nullptr)
+{
+  rhs.slots_ = nullptr;
+  rhs.size_ = 0;
+  rhs.slotsCount_ = 0;
+}
+
 #endif
