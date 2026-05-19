@@ -1,5 +1,6 @@
 #ifndef LIST_HPP
 #define LIST_HPP
+#include <cassert>
 #include <cstddef>
 #include <memory>
 #include "iterators.hpp"
@@ -31,9 +32,12 @@ namespace karpovich
     LCIter< T > cbegin() const noexcept;
     LCIter< T > cend() const noexcept;
     LIter< T > insert(LIter< T > pos, const T &value);
+    LIter< T > insert(LIter< T > pos, T &&value);
     LIter< T > erase(LIter< T > pos) noexcept;
     void pushFront(const T &val);
+    void pushFront(T &&val);
     void pushBack(const T &val);
+    void pushBack(T &&val);
     void popFront() noexcept;
     void popBack() noexcept;
     void clear() noexcept;
@@ -79,26 +83,24 @@ namespace karpovich
   template < class T >
   List< T > &List< T >::operator=(const List< T > &other)
   {
-    if (this != std::addressof(other)) {
-      List< T > stub(other);
-      swap(stub);
-    }
+    assert(this != std::addressof(other));
+    List< T > stub(other);
+    swap(stub);
     return *this;
   }
 
   template < class T >
   List< T > &List< T >::operator=(List< T > &&other) noexcept
   {
-    if (this != std::addressof(other)) {
-      clear();
-      delete fake_;
-      fake_ = other.fake_;
-      size_ = other.size_;
-      other.fake_ = new details::Node< T >{T(), nullptr, nullptr};
-      other.fake_->next = other.fake_;
-      other.fake_->prev = other.fake_;
-      other.size_ = 0;
-    }
+    assert(this != std::addressof(other));
+    clear();
+    delete fake_;
+    fake_ = other.fake_;
+    size_ = other.size_;
+    other.fake_ = new details::Node< T >{T(), nullptr, nullptr};
+    other.fake_->next = other.fake_;
+    other.fake_->prev = other.fake_;
+    other.size_ = 0;
     return *this;
   }
 
@@ -139,9 +141,27 @@ namespace karpovich
   }
 
   template < class T >
+  void List< T >::pushBack(T &&val)
+  {
+    details::Node< T > *node = new details::Node< T >{std::move(val), fake_, fake_->prev};
+    fake_->prev->next = node;
+    fake_->prev = node;
+    size_++;
+  }
+
+  template < class T >
   void List< T >::pushFront(const T &val)
   {
     details::Node< T > *node = new details::Node< T >{val, fake_->next, fake_};
+    fake_->next->prev = node;
+    fake_->next = node;
+    size_++;
+  }
+
+  template < class T >
+  void List< T >::pushFront(T &&val)
+  {
+    details::Node< T > *node = new details::Node< T >{std::move(val), fake_->next, fake_};
     fake_->next->prev = node;
     fake_->next = node;
     size_++;
@@ -215,6 +235,19 @@ namespace karpovich
   {
     details::Node< T > *posNode = pos.ptr_;
     details::Node< T > *newNode = new details::Node< T >{value, posNode, posNode->prev};
+
+    posNode->prev->next = newNode;
+    posNode->prev = newNode;
+    size_++;
+
+    return LIter< T >{newNode};
+  }
+
+  template < class T >
+  LIter< T > List< T >::insert(LIter< T > pos, T &&value)
+  {
+    details::Node< T > *posNode = pos.ptr_;
+    details::Node< T > *newNode = new details::Node< T >{std::move(value), posNode, posNode->prev};
 
     posNode->prev->next = newNode;
     posNode->prev = newNode;
