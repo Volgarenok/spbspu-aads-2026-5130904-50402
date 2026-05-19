@@ -381,5 +381,18 @@ namespace karpovich
     rangeLast->next = posNode;
     posNode->prev = rangeLast;
   }
+
+  template< class T >
+  void List< T >::sort() noexcept
+  {
+    sort(std::less< T >{});
+  }
+
+  template< class T >
+  void List< T >::merge(List< T > &other) noexcept
+  {
+    merge(other, std::less< T >{});
+  }
+
 }
 #endif
