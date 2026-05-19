@@ -298,7 +298,7 @@ lavrentev::List< T >& lavrentev::List< T >::operator=(const List< T >& other)
   if (this != &other)
   {
     List< T > temp(other);
-    std::swap(this->head, temp);
+    std::swap(this->head, temp.head);
   }
   return *this;
 }
@@ -431,7 +431,7 @@ T* lavrentev::List< T >::front()
     return nullptr;
   }
   lavrentev::LIter< T > h = this->begin();
-  return h.curr->val;
+  return &(h.curr->val);
 }
 
 template< class T >
@@ -439,10 +439,10 @@ const T* lavrentev::List< T >::front() const
 {
   if (head == nullptr)
   {
-    nullptr;
+    return nullptr;
   }
   lavrentev::LCIter< T > h = this->cbegin();
-  return h.curr->val;
+  return &(h.curr->val);
 }
 
 template< class T >

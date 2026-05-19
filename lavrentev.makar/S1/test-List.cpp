@@ -1,6 +1,5 @@
 #define BOOST_TEST_MODULE ListTest
 #include <boost/test/included/unit_test.hpp>
-#include <sstream>
 #include "List.hpp"
 
 BOOST_AUTO_TEST_CASE(clear_test)
@@ -18,7 +17,7 @@ BOOST_AUTO_TEST_CASE(insert_test)
   lavrentev::List<size_t> k{};
   lavrentev::LIter<size_t> it;
   it = k.insert(it, 1);
-  BOOST_TEST(k.front() == 1);
+  BOOST_TEST(*k.front() == 1);
 }
 
 BOOST_AUTO_TEST_CASE(popFront_test)
@@ -70,14 +69,14 @@ BOOST_AUTO_TEST_CASE(cend_test)
 BOOST_AUTO_TEST_CASE(front_test)
 {
   lavrentev::List<size_t> k{};
-  BOOST_CHECK_THROW(k.front(), std::out_of_range);
+  BOOST_TEST(k.front() == nullptr);
 
   lavrentev::LIter<size_t> it;
   it = k.insert(it, 3);
-  BOOST_TEST(k.front() == 3);
+  BOOST_TEST(*k.front() == 3);
 
   const lavrentev::List<size_t> &ck = k;
-  BOOST_TEST(ck.front() == 3);
+  BOOST_TEST(*ck.front() == 3);
 }
 
 BOOST_AUTO_TEST_CASE(empty_test)
