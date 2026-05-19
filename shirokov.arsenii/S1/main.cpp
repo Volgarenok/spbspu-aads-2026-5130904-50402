@@ -39,9 +39,9 @@ int main()
     iterators.pushBack({(*it).second.begin(), (*it).second.end()});
   }
 
-  while (true)
+  bool areValid = false;
+  while (!areValid)
   {
-    bool areValid = false;
     bool isFirst = true;
     for (auto& ends : iterators)
     {
@@ -57,11 +57,10 @@ int main()
         areValid = true;
       }
     }
-    if (!areValid)
+    if (areValid)
     {
-      break;
+      std::cout << '\n';
     }
-    std::cout << '\n';
   }
 
   iterators.clear();
