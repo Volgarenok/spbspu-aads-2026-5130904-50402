@@ -150,7 +150,7 @@ void shirokov::BiList< T >::pushBack(T&& value)
     head = nullptr;
     try
     {
-      head = new Node{std::move(value)}; // T::T(T&&)
+      head = new Node{std::move(value)};
       tail = head;
     }
     catch (...)
@@ -164,7 +164,7 @@ void shirokov::BiList< T >::pushBack(T&& value)
     Node* next = nullptr;
     try
     {
-      next = new Node{std::move(value), nullptr, tail}; // T::T(T&&)
+      next = new Node{std::move(value), nullptr, tail};
       tail->next = next;
       tail = next;
     }
@@ -184,7 +184,7 @@ void shirokov::BiList< T >::pushBack(const T& value)
     head = nullptr;
     try
     {
-      head = new Node{value}; // T::T(const T&)
+      head = new Node{value};
       tail = head;
     }
     catch (...)
@@ -198,7 +198,7 @@ void shirokov::BiList< T >::pushBack(const T& value)
     Node* next = nullptr;
     try
     {
-      next = new Node{value, nullptr, tail}; // T::T(const T&)
+      next = new Node{value, nullptr, tail};
       tail->next = next;
       tail = next;
     }
@@ -290,7 +290,7 @@ void shirokov::BiList< T >::pushFront(const T& value)
     head = nullptr;
     try
     {
-      head = new Node{value}; // T::T(const T&)
+      head = new Node{value};
       tail = head;
     }
     catch (...)
@@ -304,7 +304,7 @@ void shirokov::BiList< T >::pushFront(const T& value)
     Node* prev = nullptr;
     try
     {
-      prev = new Node{value, head, nullptr}; // T::T(const T&)
+      prev = new Node{value, head, nullptr};
       head->prev = prev;
       head = prev;
     }
@@ -324,7 +324,7 @@ void shirokov::BiList< T >::pushFront(T&& value)
     head = nullptr;
     try
     {
-      head = new Node{std::move(value)}; // T::T(T&&)
+      head = new Node{std::move(value)};
       tail = head;
     }
     catch (...)
@@ -338,7 +338,7 @@ void shirokov::BiList< T >::pushFront(T&& value)
     Node* prev = nullptr;
     try
     {
-      prev = new Node{std::move(value), head, nullptr}; // T::T(T&&)
+      prev = new Node{std::move(value), head, nullptr};
       head->prev = prev;
       head = prev;
     }
@@ -444,12 +444,12 @@ shirokov::BiList< T >::BiList(const BiList< T >& other)
     {
       if (!curr)
       {
-        head = new Node{otherCurr->value}; // T::T(const T&)
+        head = new Node{otherCurr->value};
         curr = head;
         otherCurr = otherCurr->next;
         continue;
       }
-      Node* next = new Node{otherCurr->value, nullptr, curr}; // T::T(const T&)
+      Node* next = new Node{otherCurr->value, nullptr, curr};
       curr->next = next;
       curr = next;
       otherCurr = otherCurr->next;
@@ -478,12 +478,12 @@ shirokov::BiList< T >& shirokov::BiList< T >::operator=(const BiList< T >& other
     {
       if (!curr)
       {
-        head = new Node{otherCurr->value}; // T::T(const T&)
+        head = new Node{otherCurr->value};
         curr = head;
         otherCurr = otherCurr->next;
         continue;
       }
-      Node* next = new Node{otherCurr->value, nullptr, curr}; // T::T(const T&)
+      Node* next = new Node{otherCurr->value, nullptr, curr};
       curr->next = next;
       curr = next;
       otherCurr = otherCurr->next;
