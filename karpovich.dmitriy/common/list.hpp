@@ -462,11 +462,10 @@ namespace karpovich
       }
       it = next;
     }
-    size_t splitPos = size_ - falseList.size();
-    LIter< T > split = begin();
-    for (size_t i = 0; i < splitPos; ++i) {
-      ++split;
+    if (falseList.empty()) {
+      return end();
     }
+    LIter< T > split = falseList.begin();
     splice(end(), falseList);
     return split;
   }
