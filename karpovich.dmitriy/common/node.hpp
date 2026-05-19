@@ -3,12 +3,15 @@
 
 namespace karpovich
 {
-  template < class T >
-  struct Node
+  namespace details
   {
-    T val;
-    Node< T > *next;
-    Node< T > *prev;
-  };
+    template< class T >
+    struct Node
+    {
+      T val;
+      Node< T > *next;
+      Node< T > *prev;
+    };
+  }
 }
 #endif
