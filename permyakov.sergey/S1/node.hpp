@@ -3,10 +3,10 @@
 
 namespace permyakov
 {
-  template < class T > struct Node
+  template< class T > struct Node
   {
     T val;
-    Node < T > * next;
+    Node< T > * next;
   };
 }
 

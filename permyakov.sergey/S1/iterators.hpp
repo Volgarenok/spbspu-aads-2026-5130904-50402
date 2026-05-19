@@ -4,92 +4,92 @@
 
 namespace permyakov
 {
-  template < class T > class List;
+  template< class T > class List;
 
-  template < class T > class LIter
+  template< class T > class LIter
   {
-    friend class List < T >;
-    Node < T > * curr;
+    friend class List< T >;
+    Node< T > * curr;
     public:
       LIter(Node< T > * node);
       T & operator*();
       LIter & operator++();
       bool isIdle();
-      bool operator==(LIter < T > & scndIter);
-      bool operator!=(LIter < T > & scndIter);
+      bool operator==(LIter< T > & scndIter);
+      bool operator!=(LIter< T > & scndIter);
   };
 
-  template < class T > class LCIter
+  template< class T > class LCIter
   {
-    friend class List < T >;
-    const Node < T > * curr;
+    friend class List< T >;
+    const Node< T > * curr;
     public:
       LCIter(Node< T > * node);
       const T & operator*();
       LCIter & operator++();
       bool isIdle();
-      bool operator==(LCIter < T > & scndIter);
-      bool operator!=(LCIter < T > & scndIter);
+      bool operator==(LCIter< T > & scndIter);
+      bool operator!=(LCIter< T > & scndIter);
   };
 
-  template < class T > LIter < T >::LIter(Node< T > * node):
+  template< class T > LIter< T >::LIter(Node< T > * node):
     curr(node)
   {}
 
-  template < class T > LCIter < T >::LCIter(Node< T > * node):
+  template< class T > LCIter< T >::LCIter(Node< T > * node):
     curr(node)
   {}
 
-  template < class T > T & LIter < T >::operator*()
+  template< class T > T & LIter< T >::operator*()
   {
-    return curr -> val;
+    return curr->val;
   }
 
-  template < class T > const T & LCIter < T >::operator*()
+  template< class T > const T & LCIter< T >::operator*()
   {
-    return curr -> val;
+    return curr->val;
   }
 
-  template < class T > LIter < T > & LIter < T >::operator++()
+  template< class T > LIter< T > & LIter< T >::operator++()
   {
-    curr = curr -> next;
+    curr = curr->next;
     return *this;
   }
 
-  template < class T > LCIter < T > & LCIter < T >::operator++()
+  template< class T > LCIter< T > & LCIter< T >::operator++()
   {
-    curr = curr -> next;
+    curr = curr->next;
     return *this;
   }
 
-  template < class T > bool LIter < T >::isIdle()
+  template< class T > bool LIter< T >::isIdle()
   {
     return !curr;
   }
 
-  template < class T > bool LCIter < T >::isIdle()
+  template< class T > bool LCIter< T >::isIdle()
   {
     return !curr;
   }
 
-  template < class T > bool LIter < T >::operator==(LIter < T > & scndIter)
+  template< class T > bool LIter< T >::operator==(LIter< T > & scndIter)
   {
-    return curr -> val == scndIter.curr -> val;
+    return curr->val == scndIter.curr->val;
   }
 
-  template < class T > bool LIter < T >::operator!=(LIter < T > & scndIter)
+  template< class T > bool LIter< T >::operator!=(LIter< T > & scndIter)
   {
-    return curr -> val != scndIter.curr -> val;
+    return curr->val != scndIter.curr->val;
   }
 
-  template < class T > bool LCIter < T >::operator==(LCIter < T > & scndIter)
+  template< class T > bool LCIter< T >::operator==(LCIter< T > & scndIter)
   {
-    return curr -> val == scndIter.curr -> val;
+    return curr->val == scndIter.curr->val;
   }
 
-  template < class T > bool LCIter < T >::operator!=(LCIter < T > & scndIter)
+  template< class T > bool LCIter< T >::operator!=(LCIter< T > & scndIter)
   {
-    return curr -> val != scndIter.curr -> val;
+    return curr->val != scndIter.curr->val;
   }
 }
 
