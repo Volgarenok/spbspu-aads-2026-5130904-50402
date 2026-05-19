@@ -135,19 +135,16 @@ dirko::TreeNode< Key, Value >::TreeNode(Key &&key, Value &&value, TreeNode *pare
 
 template < class Key, class Value, class Compare >
 dirko::BSTree< Key, Value, Compare >::BSTree():
-  root_(static_cast< TreeNode< Key, Value > * >(::operator new(sizeof(TreeNode< Key, Value >)))),
+  root_(new TreeNode< Key, Value >{Key(), Value(), nullptr, nullptr, nullptr}),
   size_(0),
   comp_(Compare{})
-{
-  root_->right_ = nullptr;
-}
+{}
 template < class Key, class Value, class Compare >
 dirko::BSTree< Key, Value, Compare >::BSTree(const BSTree &other):
-  root_(static_cast< TreeNode< Key, Value > * >(::operator new(sizeof(TreeNode< Key, Value >)))),
+  root_(new TreeNode< Key, Value >{Key(), Value(), nullptr, nullptr, nullptr}),
   size_(0),
   comp_(other.comp_)
 {
-  root_->right_ = nullptr;
   for (const std::pair< Key, Value > &v : other) {
     push(v.first, v.second);
   }
@@ -163,11 +160,10 @@ dirko::BSTree< Key, Value, Compare >::BSTree(BSTree &&other) noexcept:
 }
 template < class Key, class Value, class Compare >
 dirko::BSTree< Key, Value, Compare >::BSTree(std::initializer_list< std::pair< Key, Value > > il):
-  root_(static_cast< TreeNode< Key, Value > * >(::operator new(sizeof(TreeNode< Key, Value >)))),
+  root_(new TreeNode< Key, Value >{Key(), Value(), nullptr, nullptr, nullptr}),
   size_(0),
   comp_(Compare{})
 {
-  root_->right_ = nullptr;
   for (const std::pair< Key, Value > &v : il) {
     push(v.first, v.second);
   }
@@ -415,7 +411,7 @@ dirko::BSTree< Key, Value, Compare >::~BSTree()
 {
   if (root_) {
     clear();
-    ::operator delete(root_);
+    delete root_;
   }
 }
 template < class Key, class Value, class Compare >
