@@ -3,10 +3,10 @@
 #include "node.hpp"
 namespace karpovich
 {
-  template < class T >
+  template< class T >
   class List;
 
-  template < class T >
+  template< class T >
   class LIter
   {
     friend class List< T >;
@@ -24,7 +24,7 @@ namespace karpovich
     bool operator!=(const LIter< T > &other) const noexcept;
   };
 
-  template < class T >
+  template< class T >
   class LCIter
   {
     friend class List< T >;
@@ -42,50 +42,50 @@ namespace karpovich
     bool operator!=(const LCIter< T > &other) const noexcept;
   };
 
-  template < class T >
+  template< class T >
   LIter< T >::LIter(details::Node< T > *p) noexcept:
     ptr_(p)
   {}
 
-  template < class T >
+  template< class T >
   T &LIter< T >::operator*() const noexcept
   {
     return ptr_->val;
   }
 
-  template < class T >
+  template< class T >
   T *LIter< T >::operator->() const noexcept
   {
     return &(ptr_->data);
   }
 
-  template < class T >
+  template< class T >
   bool LIter< T >::operator!=(const LIter< T > &other) const noexcept
   {
     return ptr_ != other.ptr_;
   }
 
-  template < class T >
+  template< class T >
   bool LIter< T >::operator==(const LIter< T > &other) const noexcept
   {
     return ptr_ == other.ptr_;
   }
 
-  template < class T >
+  template< class T >
   LIter< T > &LIter< T >::operator++() noexcept
   {
     ptr_ = ptr_->next;
     return *this;
   }
 
-  template < class T >
+  template< class T >
   LIter< T > &LIter< T >::operator--() noexcept
   {
     ptr_ = ptr_->prev;
     return *this;
   }
 
-  template < class T >
+  template< class T >
   LIter< T > LIter< T >::operator++(int) noexcept
   {
     LIter tmp(*this);
@@ -93,7 +93,7 @@ namespace karpovich
     return tmp;
   }
 
-  template < class T >
+  template< class T >
   LIter< T > LIter< T >::operator--(int) noexcept
   {
     LIter tmp(*this);
@@ -101,50 +101,50 @@ namespace karpovich
     return tmp;
   }
 
-  template < class T >
+  template< class T >
   LCIter< T >::LCIter(const details::Node< T > *p) noexcept:
     ptr_(p)
   {}
 
-  template < class T >
+  template< class T >
   const T &LCIter< T >::operator*() const noexcept
   {
     return ptr_->val;
   }
 
-  template < class T >
+  template< class T >
   const T *LCIter< T >::operator->() const noexcept
   {
     return &(ptr_->data);
   }
 
-  template < class T >
+  template< class T >
   bool LCIter< T >::operator!=(const LCIter< T > &other) const noexcept
   {
     return ptr_ != other.ptr_;
   }
 
-  template < class T >
+  template< class T >
   bool LCIter< T >::operator==(const LCIter< T > &other) const noexcept
   {
     return ptr_ == other.ptr_;
   }
 
-  template < class T >
+  template< class T >
   LCIter< T > &LCIter< T >::operator++() noexcept
   {
     ptr_ = ptr_->next;
     return *this;
   }
 
-  template < class T >
+  template< class T >
   LCIter< T > &LCIter< T >::operator--() noexcept
   {
     ptr_ = ptr_->prev;
     return *this;
   }
 
-  template < class T >
+  template< class T >
   LCIter< T > LCIter< T >::operator++(int) noexcept
   {
     LCIter tmp(*this);
@@ -152,7 +152,7 @@ namespace karpovich
     return tmp;
   }
 
-  template < class T >
+  template< class T >
   LCIter< T > LCIter< T >::operator--(int) noexcept
   {
     LCIter tmp(*this);

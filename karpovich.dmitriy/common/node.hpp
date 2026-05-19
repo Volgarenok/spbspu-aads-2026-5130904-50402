@@ -5,7 +5,7 @@ namespace karpovich
 {
   namespace details
   {
-    template < class T >
+    template< class T >
     struct Node
     {
       T val;
