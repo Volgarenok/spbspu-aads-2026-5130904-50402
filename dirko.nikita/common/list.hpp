@@ -1,6 +1,7 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 #include <cstddef>
+#include <memory>
 #include <stdexcept>
 #include <utility>
 #include "node.hpp"
@@ -47,13 +48,10 @@ namespace dirko
 
   template < class T >
   List< T >::List():
-    fake_(static_cast< Node< T > * >(::operator new(sizeof(Node< T >)))),
+    fake_(new Node< T >{T(), nullptr, nullptr}),
     tail_(fake_),
     size_(0)
-  {
-    fake_->next = nullptr;
-    fake_->prev = nullptr;
-  }
+  {}
   template < class T >
   List< T >::List(List< T > &&other) noexcept:
     fake_(other.fake_),
@@ -65,12 +63,10 @@ namespace dirko
   }
   template < class T >
   List< T >::List(const List< T > &other):
-    fake_(static_cast< Node< T > * >(::operator new(sizeof(Node< T >)))),
+    fake_(new Node< T >{T(), nullptr, nullptr}),
     tail_(fake_),
     size_(0)
   {
-    fake_->next = nullptr;
-    fake_->prev = nullptr;
     Node< T > *head = other.fake_->next;
     while (head) {
       push_back(head->val);
@@ -80,27 +76,26 @@ namespace dirko
   template < class T >
   List< T > &List< T >::operator=(List< T > &&other) noexcept
   {
-    clear();
-    ::operator delete(fake_);
-    fake_ = other.fake_;
-    size_ = other.size_;
-    tail_ = other.tail_;
-    other.fake_ = nullptr;
-    other.size_ = 0;
+    if (this != std::addressof(other)) {
+      List< T > tmp(std::move(other));
+      swap(tmp);
+    }
     return *this;
   }
   template < class T >
   List< T > &List< T >::operator=(const List< T > &other)
   {
-    List< T > tmp = List< T >(other);
-    swap(tmp);
+    if (this != std::addressof(other)) {
+      List< T > tmp(other);
+      swap(tmp);
+    }
     return *this;
   }
   template < class T >
   List< T >::~List()
   {
     clear();
-    ::operator delete(fake_);
+    delete fake_;
   }
   template < class T >
   void List< T >::clear()
