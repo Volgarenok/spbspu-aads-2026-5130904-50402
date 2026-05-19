@@ -447,5 +447,28 @@ namespace karpovich
     other.fake_->prev = other.fake_;
     other.size_ = 0;
   }
+
+  template< class T >
+  template< class Predicate >
+  LIter< T > List< T >::partition(Predicate pred)
+  {
+    List< T > falseList;
+    LIter< T > it = begin();
+    while (it != end()) {
+      LIter< T > next = it;
+      ++next;
+      if (!pred(*it)) {
+        falseList.splice(falseList.end(), *this, it);
+      }
+      it = next;
+    }
+    size_t splitPos = size_ - falseList.size();
+    LIter< T > split = begin();
+    for (size_t i = 0; i < splitPos; ++i) {
+      ++split;
+    }
+    splice(end(), falseList);
+    return split;
+  }
 }
 #endif
