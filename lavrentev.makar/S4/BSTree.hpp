@@ -6,6 +6,19 @@
 #include <stdexcept>
 #include <utility>
 
+namespace
+{
+  template <class Key, class Value>
+  struct Node
+  {
+    std::pair<Key, Value&> data_;
+    Node *left_ = nullptr;
+    Node *right_ = nullptr;
+    size_t height_;
+    Node *parent_;
+  };
+}
+
 namespace lavrentev
 {
   template< class Key, class Value, class Compare >
@@ -13,31 +26,20 @@ namespace lavrentev
 }
 
 using BSTList = lavrentev::List<lavrentev::BSTree<size_t, std::string, std::less<size_t>>>;
-using cmd_t = void (*)(std::istream &in, BSTList);
+using cmd_t = void (*)(std::istream &in, std::ostream &out, BSTList bstl);
 
 namespace lavrentev
 {
-  template <class Key, class Value>
-  struct Node
-  {
-    Key key_;
-    Value value_;
-    Node *left_ = nullptr;
-    Node *right_ = nullptr;
-    size_t height_;
-    Node *parent_;
-  };
-
   template< class Key, class Value >
   class BSTIterator {
     using Node = Node<Key, Value>;
   public:
-    BSTIterator(Node *other);
+    explicit BSTIterator(Node *other);
 
     bool operator==(const BSTIterator<Key, Value > &other) const;
     bool operator!=(const BSTIterator<Key, Value > &other) const;
     BSTIterator<Key, Value > &operator++();
-    Node &operator*();
+    std::pair<Key, Value&> &operator*();
 
   private:
     Node *curr_;
@@ -47,12 +49,12 @@ namespace lavrentev
   class BSTConstIterator {
     using Node = Node<Key, Value>;
   public:
-    BSTConstIterator(const Node *other);
+    explicit BSTConstIterator(const Node *other);
 
     bool operator==(const BSTConstIterator<Key, Value > &other) const;
     bool operator!=(const BSTConstIterator<Key, Value > &other) const;
     BSTConstIterator<Key, Value > &operator++();
-    const Node &operator*();
+    const std::pair<Key, Value&> &operator*();
 
   private:
     const Node *curr_;
@@ -77,17 +79,18 @@ namespace lavrentev
     bool has(const Key &k) const;
 
     using const_iterator = BSTConstIterator< Key, Value >;
-    const_iterator rotateLeft(const_iterator it);
-    const_iterator rotateRight(const_iterator it);
-    const_iterator rotateLargeLeft(const_iterator it);
-    const_iterator rotateLargeRight(const_iterator it);
+    const_iterator rotateLeft(const_iterator it); //realize
+    const_iterator rotateRight(const_iterator it); //realize
+    const_iterator rotateLargeLeft(const_iterator it); //realize
+    const_iterator rotateLargeRight(const_iterator it); //realize
 
     size_t height(const_iterator it) const;
     size_t height() const;
-
     void setName(std::string name);
     std::string getName();
-    Node *begin();
+    BSTIterator<Key, Value> begin();
+    BSTIterator<Key, Value> end();
+
 
   private:
     Node *fakeroot_;
@@ -98,15 +101,17 @@ namespace lavrentev
     Node *copyNodes(Node *other);
     void swap(BSTree &other) noexcept;
     Value &insertNode(Node* &node, Key k, Value v, bool isOperator);
-    Node *fallLeft(Node *node);
     void updateHeight(Node *node);
     size_t getHeight(Node *node);
   };
 
-  void print(std::istream &in, BSTList);
-  void complement(std::istream &in, BSTList);
-  void intersect(std::istream &in, BSTList);
-  void unionn(std::istream &in, BSTList);
+  template< class Key, class Value >
+  Node<Key, Value> *fallLeft(Node<Key, Value> *node);
+
+  void print(std::istream &in, std::ostream &out, BSTList bstl); //realize
+  void complement(std::istream &in, std::ostream &out, BSTList bstl); //realize
+  void intersect(std::istream &in, std::ostream &out, BSTList bstl); //realize
+  void unionn(std::istream &in, std::ostream &out, BSTList bstl); //realize
 }
 
 template< class Key, class Value, class Compare >
@@ -149,19 +154,18 @@ Value &lavrentev::BSTree<Key, Value, Compare>::insertNode(Node* &node, Key k, Va
   if (node == nullptr)
   {
     node = new Node();
-    node->key_ = k;
-    node->value_ = v;
+    node->data_ = {k, v};
     node->height_ = 1;
     return node->value_;
   }
 
   Value* result = nullptr;
 
-  if (compare_(k, node->key_))
+  if (compare_(k, node->data_.first))
   {
     result = &insertNode(node->left_, k, v, isOperator);
   }
-  else if (compare_(node->key_, k))
+  else if (compare_(node->data_.first, k))
   {
     result = &insertNode(node->right_, k, v, isOperator);
   }
@@ -169,7 +173,7 @@ Value &lavrentev::BSTree<Key, Value, Compare>::insertNode(Node* &node, Key k, Va
   {
     if (isOperator)
     {
-      return node->value_;
+      return node->data_.second;
     }
     else
     {
@@ -210,8 +214,7 @@ typename lavrentev::BSTree<Key, Value, Compare>::Node
     return nullptr;
   }
   Node* newBST = new Node;
-  newBST->key_ = other->key_;
-  newBST->value_ = other->value_;
+  newBST->data_ = other->data_;
   newBST->left_ = copyNodes(other->left_);
   newBST->right_ = copyNodes(other->right_);
   return newBST;
@@ -237,17 +240,17 @@ const Value &lavrentev::BSTree<Key, Value, Compare>::get(const Key &k) const
   Node *curr = fakeroot_->left_;
   while (curr)
   {
-    if (compare_(k, curr->key_))
+    if (compare_(k, curr->data_.first))
     {
       curr = curr->left_;
     }
-    else if (compare_(curr->key_, k))
+    else if (compare_(curr->data_.first, k))
     {
       curr = curr->right_;
     }
     else
     {
-      return curr->value_;
+      return curr->data_.second;
     }
   }
   throw std::out_of_range("Key does not exist");
@@ -261,12 +264,12 @@ void lavrentev::BSTree<Key, Value, Compare>::drop(const Key &k)
 
   while (curr)
   {
-    if (compare_(k, curr->key_))
+    if (compare_(k, curr->data_.first))
     {
       parent = curr;
       curr = curr->left_;
     }
-    else if (compare_(curr->key_, k))
+    else if (compare_(curr->data_.first, k))
     {
       parent = curr;
       curr = curr->right_;
@@ -289,8 +292,7 @@ void lavrentev::BSTree<Key, Value, Compare>::drop(const Key &k)
       }
     }
 
-    curr->key_ = newCurr->key_;
-    curr->value_ = newCurr->value_;
+    curr->data_ = newCurr->data_;
     parent = newCurrParent;
     curr = newCurr;
   }
@@ -317,9 +319,9 @@ void lavrentev::BSTree<Key, Value, Compare>::drop(const Key &k)
   delete curr;
 }
 
-template< class Key, class Value, class Compare >
-typename lavrentev::BSTree<Key, Value, Compare>::Node
-  *lavrentev::BSTree<Key, Value, Compare>::fallLeft(Node *node)
+template< class Key, class Value >
+Node<Key, Value>
+  *lavrentev::fallLeft(Node<Key, Value> *node)
 {
   if (!node)
   {
@@ -425,9 +427,9 @@ lavrentev::BSTIterator<Key, Value> &lavrentev::BSTIterator<Key, Value>::operator
 }
 
 template< class Key, class Value >
-lavrentev::Node<Key, Value> &lavrentev::BSTIterator<Key, Value>::operator*() 
+std::pair<Key, Value&> &lavrentev::BSTIterator<Key, Value>::operator*() 
 {
-  return curr_;
+  return curr_->data_;
 }
 
 template< class Key, class Value >
@@ -467,10 +469,54 @@ lavrentev::BSTConstIterator<Key, Value> &lavrentev::BSTConstIterator<Key, Value>
   return *this;
 }
 
-template< class Key, class Value >
-const lavrentev::Node<Key, Value> &lavrentev::BSTConstIterator<Key, Value>::operator*() 
+template< class Key, class Value, class Compare >
+lavrentev::BSTIterator<Key, Value> lavrentev::BSTree<Key, Value, Compare>::begin()
 {
-  return curr_;
+  Node *min = fallLeft(fakeroot_->left_);
+  return BSTIterator<Key, Value>(min);
+}
+
+template< class Key, class Value, class Compare >
+lavrentev::BSTIterator<Key, Value> lavrentev::BSTree<Key, Value, Compare>::end()
+{
+  Node *min = fallLeft(fakeroot_->left_);
+  return BSTIterator<Key, Value>(min);
+}
+
+template< class Key, class Value >
+const std::pair<Key, Value&> &lavrentev::BSTConstIterator<Key, Value>::operator*() 
+{
+  return *curr_->data_;
+}
+
+inline void lavrentev::print(std::istream &in, std::ostream &out, BSTList bstl)
+{
+  std::string name;
+  in >> name;
+  LIter<BSTree<size_t, std::string, std::less<size_t>>> it = bstl.begin();
+  while (it != nullptr)
+  {
+    if ((*it).getName() == name)
+    {
+      break;
+    }
+    ++it;
+  }
+  if (it == nullptr)
+  {
+    throw std::out_of_range("");
+  }
+  BSTIterator<size_t, std::string> bstIt = (*it).begin();
+  if (bstIt == (*it).end())
+  {
+    out << "<EMPTY>" << "\n";
+    return;
+  }
+  for(; bstIt != (*it).end(); ++bstIt)
+  {
+    out << (*bstIt).first << " " << (*bstIt).second;
+  }
+  out << "\n";
 }
 
 #endif

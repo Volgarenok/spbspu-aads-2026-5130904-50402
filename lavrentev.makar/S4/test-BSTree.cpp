@@ -3,6 +3,7 @@
 #include <boost/test/included/unit_test.hpp>
 #include "BSTree.hpp"
 #include <functional>
+#include <sstream>
 
 BOOST_AUTO_TEST_CASE(push_test)
 {
@@ -45,4 +46,14 @@ BOOST_AUTO_TEST_CASE(height_test)
   bst.push("a", 1);
   BOOST_TEST(bst.height() == 1);
   BOOST_TEST(bst.height(it) == 1);
+}
+
+BOOST_AUTO_TEST_CASE(print_test)
+{
+  lavrentev::BSTree<std::string, size_t, std::less<std::string>> bst{};
+  bst.setName("graph");
+  bst.push("a", 1);
+  bst.push("b", 2);
+  bst.push("c", 3);
+  BOOST_TEST(bst.print() == );
 }
