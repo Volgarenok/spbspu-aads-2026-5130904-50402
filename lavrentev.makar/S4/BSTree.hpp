@@ -11,7 +11,7 @@ namespace
   template <class Key, class Value>
   struct Node
   {
-    std::pair<Key, Value&> data_;
+    std::pair<Key, Value> data_;
     Node *left_ = nullptr;
     Node *right_ = nullptr;
     size_t height_;
@@ -39,7 +39,7 @@ namespace lavrentev
     bool operator==(const BSTIterator<Key, Value > &other) const;
     bool operator!=(const BSTIterator<Key, Value > &other) const;
     BSTIterator<Key, Value > &operator++();
-    std::pair<Key, Value&> &operator*();
+    std::pair<Key, Value> &operator*();
 
   private:
     Node *curr_;
@@ -54,7 +54,7 @@ namespace lavrentev
     bool operator==(const BSTConstIterator<Key, Value > &other) const;
     bool operator!=(const BSTConstIterator<Key, Value > &other) const;
     BSTConstIterator<Key, Value > &operator++();
-    const std::pair<Key, Value&> &operator*();
+    const std::pair<Key, Value> &operator*();
 
   private:
     const Node *curr_;
@@ -108,15 +108,15 @@ namespace lavrentev
   template< class Key, class Value >
   Node<Key, Value> *fallLeft(Node<Key, Value> *node);
 
-  void print(std::istream &in, std::ostream &out, BSTList bstl); //realize
-  void complement(std::istream &in, std::ostream &out, BSTList bstl); //realize
-  void intersect(std::istream &in, std::ostream &out, BSTList bstl); //realize
-  void unionn(std::istream &in, std::ostream &out, BSTList bstl); //realize
+  void print(std::istream &in, std::ostream &out, BSTList &bstl);
+  void complement(std::istream &in, std::ostream &out, BSTList &bstl); //realize
+  void intersect(std::istream &in, std::ostream &out, BSTList &bstl); //realize
+  void unionn(std::istream &in, std::ostream &out, BSTList &bstl); //realize
 }
 
 template< class Key, class Value, class Compare >
 lavrentev::BSTree<Key, Value, Compare>::BSTree():
-  fakeroot_(new Node{Key(), Value()}),
+  fakeroot_(new Node{{Key(), Value()}}),
   compare_(Compare())
 {}
 
@@ -156,7 +156,7 @@ Value &lavrentev::BSTree<Key, Value, Compare>::insertNode(Node* &node, Key k, Va
     node = new Node();
     node->data_ = {k, v};
     node->height_ = 1;
-    return node->value_;
+    return node->data_.second;
   }
 
   Value* result = nullptr;
@@ -427,7 +427,7 @@ lavrentev::BSTIterator<Key, Value> &lavrentev::BSTIterator<Key, Value>::operator
 }
 
 template< class Key, class Value >
-std::pair<Key, Value&> &lavrentev::BSTIterator<Key, Value>::operator*() 
+std::pair<Key, Value> &lavrentev::BSTIterator<Key, Value>::operator*() 
 {
   return curr_->data_;
 }
@@ -484,12 +484,12 @@ lavrentev::BSTIterator<Key, Value> lavrentev::BSTree<Key, Value, Compare>::end()
 }
 
 template< class Key, class Value >
-const std::pair<Key, Value&> &lavrentev::BSTConstIterator<Key, Value>::operator*() 
+const std::pair<Key, Value> &lavrentev::BSTConstIterator<Key, Value>::operator*() 
 {
   return *curr_->data_;
 }
 
-inline void lavrentev::print(std::istream &in, std::ostream &out, BSTList bstl)
+inline void lavrentev::print(std::istream &in, std::ostream &out, BSTList &bstl)
 {
   std::string name;
   in >> name;
@@ -517,6 +517,54 @@ inline void lavrentev::print(std::istream &in, std::ostream &out, BSTList bstl)
     out << (*bstIt).first << " " << (*bstIt).second;
   }
   out << "\n";
+}
+
+inline void lavrentev::complement(std::istream &in, std::ostream &out, BSTList &bstl)
+{
+  std::string newBstName, BstName1, BstName2;
+  in >> newBstName >> BstName1 >> BstName2;
+  BSTree<size_t, std::string, std::less<size_t>> newBst;
+  newBst.setName(newBstName);
+  LIter<BSTree<size_t, std::string, std::less<size_t>>> it = bstl.begin();
+  BSTree<size_t, std::string, std::less<size_t>> *bst1 = nullptr;
+  BSTree<size_t, std::string, std::less<size_t>> *bst2 = nullptr;
+  bool is1 = false, is2 = false;
+  while (it != nullptr)
+  {
+    if ((*it).getName() == BstName1)
+    {
+      is1 = true;
+      bst1 = &(*it);
+    }
+    if ((*it).getName() == BstName2)
+    {
+      is2 = true;
+      bst2 = &(*it);
+    }
+    if (is1 && is2)
+    {
+      break;
+    }
+    ++it;
+  }
+  if (!is1 || !is2)
+  {
+    throw std::out_of_range("");
+  }
+  BSTIterator<size_t, std::string> bstIt = (*bst1).begin();
+  if (bstIt == (*bst1).end())
+  {
+    bstl.pushFront(std::move(newBst));
+    return;
+  }
+  for(; bstIt != (*bst1).end(); ++bstIt)
+  {
+    if (!(*bst2).has((*bstIt).first))
+    {
+      newBst[(*bstIt).first] = (*bstIt).second;
+    }
+  }
+  bstl.pushFront(std::move(newBst));
 }
 
 #endif
