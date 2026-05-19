@@ -315,5 +315,26 @@ namespace karpovich
   {
     return LCIter< T >{fake_};
   }
+
+  template< class T >
+  void List< T >::splice(LIter< T > position, List< T > &other) noexcept
+  {
+    if (other.empty()) {
+      return;
+    }
+    details::Node< T > *posNode = position.ptr_;
+    details::Node< T > *otherFirst = other.fake_->next;
+    details::Node< T > *otherLast = other.fake_->prev;
+
+    otherFirst->prev = posNode->prev;
+    posNode->prev->next = otherFirst;
+    otherLast->next = posNode;
+    posNode->prev = otherLast;
+
+    size_ += other.size_;
+    other.fake_->next = other.fake_;
+    other.fake_->prev = other.fake_;
+    other.size_ = 0;
+  }
 }
 #endif
