@@ -411,5 +411,41 @@ namespace karpovich
     sort(cmp);
     merge(left, cmp);
   }
+
+  template< class T >
+  template< class Comparator >
+  void List< T >::merge(List< T > &other, Comparator cmp) noexcept
+  {
+    assert(this != std::addressof(other));
+    if (other.empty()) {
+      return;
+    }
+    details::Node< T > *cur = fake_;
+    details::Node< T > *p1 = fake_->next;
+    details::Node< T > *p2 = other.fake_->next;
+    while (p1 != fake_ && p2 != other.fake_) {
+      if (cmp(p2->val, p1->val)) {
+        cur->next = p2;
+        p2->prev = cur;
+        cur = p2;
+        p2 = p2->next;
+      } else {
+        cur->next = p1;
+        p1->prev = cur;
+        cur = p1;
+        p1 = p1->next;
+      }
+    }
+    details::Node< T > *rest = (p1 != fake_) ? p1 : p2;
+    details::Node< T > *restEnd = (p1 != fake_) ? fake_->prev : other.fake_->prev;
+    cur->next = rest;
+    rest->prev = cur;
+    restEnd->next = fake_;
+    fake_->prev = restEnd;
+    size_ += other.size_;
+    other.fake_->next = other.fake_;
+    other.fake_->prev = other.fake_;
+    other.size_ = 0;
+  }
 }
 #endif
