@@ -213,40 +213,24 @@ void shirokov::BiList< T >::pushBack(const T& value)
 template< class T >
 T& shirokov::BiList< T >::front()
 {
-  if (!head)
-  {
-    return head;
-  }
   return head->value;
 }
 
 template< class T >
 const T& shirokov::BiList< T >::front() const
 {
-  if (!head)
-  {
-    return head;
-  }
   return head->value;
 }
 
 template< class T >
 T& shirokov::BiList< T >::back()
 {
-  if (!head)
-  {
-    return head;
-  }
   return tail->value;
 }
 
 template< class T >
 const T& shirokov::BiList< T >::back() const
 {
-  if (!head)
-  {
-    return head;
-  }
   return tail->value;
 }
 
