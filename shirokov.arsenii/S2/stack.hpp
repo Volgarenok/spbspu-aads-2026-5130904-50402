@@ -4,7 +4,7 @@
 
 namespace shirokov
 {
-  template < class T >
+  template< class T >
   class Stack
   {
   public:
@@ -20,31 +20,31 @@ namespace shirokov
   };
 }
 
-template < class T >
+template< class T >
 bool shirokov::Stack< T >::empty() const noexcept
 {
   return list_.empty();
 }
 
-template < class T >
+template< class T >
 void shirokov::Stack< T >::push(const T& value)
 {
   list_.pushBack(value);
 }
 
-template < class T >
+template< class T >
 void shirokov::Stack< T >::push(T&& value)
 {
   list_.pushBack(value);
 }
 
-template < class T >
+template< class T >
 const T& shirokov::Stack< T >::top() const
 {
   return list_.back();
 }
 
-template < class T >
+template< class T >
 T& shirokov::Stack< T >::top()
 {
   const Stack< T >* cthis = this;
@@ -52,7 +52,7 @@ T& shirokov::Stack< T >::top()
   return const_cast< T& >(ret);
 }
 
-template < class T >
+template< class T >
 void shirokov::Stack< T >::pop()
 {
   list_.popBack();

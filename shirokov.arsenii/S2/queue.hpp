@@ -4,7 +4,7 @@
 
 namespace shirokov
 {
-  template < typename T >
+  template< typename T >
   class Queue
   {
   public:
@@ -20,31 +20,31 @@ namespace shirokov
   };
 }
 
-template < class T >
+template< class T >
 bool shirokov::Queue< T >::empty() const noexcept
 {
   return list_.empty();
 }
 
-template < class T >
+template< class T >
 void shirokov::Queue< T >::push(const T& value)
 {
   list_.pushBack(value);
 }
 
-template < class T >
+template< class T >
 void shirokov::Queue< T >::push(T&& value)
 {
   list_.pushBack(value);
 }
 
-template < class T >
+template< class T >
 const T& shirokov::Queue< T >::front() const
 {
   return list_.front();
 }
 
-template < class T >
+template< class T >
 T& shirokov::Queue< T >::front()
 {
   const Queue< T >* cthis = this;
@@ -52,7 +52,7 @@ T& shirokov::Queue< T >::front()
   return const_cast< T& >(ret);
 }
 
-template < class T >
+template< class T >
 void shirokov::Queue< T >::pop()
 {
   list_.popFront();
