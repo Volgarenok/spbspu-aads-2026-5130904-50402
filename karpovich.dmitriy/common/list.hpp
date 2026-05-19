@@ -9,7 +9,7 @@ namespace karpovich
   template < class T >
   class List
   {
-    Node< T > *fake_;
+    details::Node< T > *fake_;
     size_t size_;
 
   public:
@@ -24,19 +24,19 @@ namespace karpovich
     T &back() noexcept;
     const T &front() const noexcept;
     const T &back() const noexcept;
-    LIter< T > begin();
-    LIter< T > end();
-    LCIter< T > begin() const;
-    LCIter< T > end() const;
-    LCIter< T > cbegin() const;
-    LCIter< T > cend() const;
+    LIter< T > begin() noexcept;
+    LIter< T > end() noexcept;
+    LCIter< T > begin() const noexcept;
+    LCIter< T > end() const noexcept;
+    LCIter< T > cbegin() const noexcept;
+    LCIter< T > cend() const noexcept;
     LIter< T > insert(LIter< T > pos, const T &value);
     LIter< T > erase(LIter< T > pos) noexcept;
     void pushFront(const T &val);
     void pushBack(const T &val);
-    void popFront();
-    void popBack();
-    void clear();
+    void popFront() noexcept;
+    void popBack() noexcept;
+    void clear() noexcept;
     void swap(List< T > &other) noexcept;
     size_t size() const noexcept;
     bool empty() const noexcept;
@@ -44,7 +44,7 @@ namespace karpovich
 
   template < class T >
   List< T >::List():
-    fake_(new Node< T >{T(), nullptr, nullptr}),
+    fake_(new details::Node< T >{T(), nullptr, nullptr}),
     size_(0)
   {
     fake_->next = fake_;
@@ -53,12 +53,12 @@ namespace karpovich
 
   template < class T >
   List< T >::List(const List< T > &other):
-    fake_(new Node< T >{T(), nullptr, nullptr}),
+    fake_(new details::Node< T >{T(), nullptr, nullptr}),
     size_(0)
   {
     fake_->next = fake_;
     fake_->prev = fake_;
-    Node< T > *cur = other.fake_->next;
+    details::Node< T > *cur = other.fake_->next;
     while (cur != other.fake_) {
       pushBack(cur->val);
       cur = cur->next;
@@ -70,7 +70,7 @@ namespace karpovich
     fake_(other.fake_),
     size_(other.size_)
   {
-    other.fake_ = new Node< T >{T(), nullptr, nullptr};
+    other.fake_ = new details::Node< T >{T(), nullptr, nullptr};
     other.fake_->next = other.fake_;
     other.fake_->prev = other.fake_;
     other.size_ = 0;
@@ -94,7 +94,7 @@ namespace karpovich
       delete fake_;
       fake_ = other.fake_;
       size_ = other.size_;
-      other.fake_ = new Node< T >{T(), nullptr, nullptr};
+      other.fake_ = new details::Node< T >{T(), nullptr, nullptr};
       other.fake_->next = other.fake_;
       other.fake_->prev = other.fake_;
       other.size_ = 0;
@@ -116,11 +116,11 @@ namespace karpovich
   }
 
   template < class T >
-  void List< T >::clear()
+  void List< T >::clear() noexcept
   {
-    Node< T > *cur = fake_->next;
+    details::Node< T > *cur = fake_->next;
     while (cur != fake_) {
-      Node< T > *temp = cur->next;
+      details::Node< T > *temp = cur->next;
       delete cur;
       cur = temp;
     }
@@ -132,7 +132,7 @@ namespace karpovich
   template < class T >
   void List< T >::pushBack(const T &val)
   {
-    Node< T > *node = new Node< T >{val, fake_, fake_->prev};
+    details::Node< T > *node = new details::Node< T >{val, fake_, fake_->prev};
     fake_->prev->next = node;
     fake_->prev = node;
     size_++;
@@ -141,19 +141,19 @@ namespace karpovich
   template < class T >
   void List< T >::pushFront(const T &val)
   {
-    Node< T > *node = new Node< T >{val, fake_->next, fake_};
+    details::Node< T > *node = new details::Node< T >{val, fake_->next, fake_};
     fake_->next->prev = node;
     fake_->next = node;
     size_++;
   }
 
   template < class T >
-  void List< T >::popBack()
+  void List< T >::popBack() noexcept
   {
     if (size_ == 0) {
       return;
     }
-    Node< T > *temp = fake_->prev;
+    details::Node< T > *temp = fake_->prev;
     temp->prev->next = fake_;
     fake_->prev = temp->prev;
     delete temp;
@@ -161,12 +161,12 @@ namespace karpovich
   }
 
   template < class T >
-  void List< T >::popFront()
+  void List< T >::popFront() noexcept
   {
     if (size_ == 0) {
       return;
     }
-    Node< T > *temp = fake_->next;
+    details::Node< T > *temp = fake_->next;
     temp->next->prev = fake_;
     fake_->next = temp->next;
     delete temp;
@@ -174,25 +174,25 @@ namespace karpovich
   }
 
   template < class T >
-  LIter< T > List< T >::begin()
+  LIter< T > List< T >::begin() noexcept
   {
     return LIter< T >{fake_->next};
   }
 
   template < class T >
-  LIter< T > List< T >::end()
+  LIter< T > List< T >::end() noexcept
   {
     return LIter< T >{fake_};
   }
 
   template < class T >
-  LCIter< T > List< T >::cbegin() const
+  LCIter< T > List< T >::cbegin() const noexcept
   {
     return LCIter< T >{fake_->next};
   }
 
   template < class T >
-  LCIter< T > List< T >::cend() const
+  LCIter< T > List< T >::cend() const noexcept
   {
     return LCIter< T >{fake_};
   }
@@ -213,8 +213,8 @@ namespace karpovich
   template < class T >
   LIter< T > List< T >::insert(LIter< T > pos, const T &value)
   {
-    Node< T > *posNode = pos.ptr_;
-    Node< T > *newNode = new Node< T >{value, posNode, posNode->prev};
+    details::Node< T > *posNode = pos.ptr_;
+    details::Node< T > *newNode = new details::Node< T >{value, posNode, posNode->prev};
 
     posNode->prev->next = newNode;
     posNode->prev = newNode;
@@ -228,16 +228,19 @@ namespace karpovich
   {
     return fake_->next->val;
   }
+
   template < class T >
   const T &List< T >::front() const noexcept
   {
     return fake_->next->val;
   }
+
   template < class T >
   T &List< T >::back() noexcept
   {
     return fake_->prev->val;
   }
+
   template < class T >
   const T &List< T >::back() const noexcept
   {
@@ -247,8 +250,8 @@ namespace karpovich
   template < class T >
   LIter< T > List< T >::erase(LIter< T > pos) noexcept
   {
-    Node< T > *node = pos.ptr_;
-    Node< T > *next = node->next;
+    details::Node< T > *node = pos.ptr_;
+    details::Node< T > *next = node->next;
     node->prev->next = next;
     next->prev = node->prev;
     delete node;
@@ -257,13 +260,13 @@ namespace karpovich
   }
 
   template < class T >
-  LCIter< T > List< T >::begin() const
+  LCIter< T > List< T >::begin() const noexcept
   {
     return LCIter< T >{fake_->next};
   }
 
   template < class T >
-  LCIter< T > List< T >::end() const
+  LCIter< T > List< T >::end() const noexcept
   {
     return LCIter< T >{fake_};
   }
