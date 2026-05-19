@@ -2,6 +2,7 @@
 #define MATVEEV_LIST_HPP
 
 #include <cstddef>
+#include <utility>
 
 namespace matveev
 {
@@ -10,29 +11,26 @@ template< class T >
 struct Node
 {
   T data;
-  Node* next;
+  Node< T >* next;
 
-  Node()
-    : data(),
-      next(nullptr)
-  {
-  }
+  Node():
+    data(),
+    next(nullptr)
+  {}
 
-  Node(const T& value)
-    : data(value),
-      next(nullptr)
-  {
-  }
+  Node(const T& value):
+    data(value),
+    next(nullptr)
+  {}
 };
 
 template< class T >
 class LIter
 {
 public:
-  LIter()
-    : node_(nullptr)
-  {
-  }
+  LIter():
+    node_(nullptr)
+  {}
 
   T& operator*() const
   {
@@ -71,10 +69,9 @@ template< class T >
 class LCIter
 {
 public:
-  LCIter()
-    : node_(nullptr)
-  {
-  }
+  LCIter():
+    node_(nullptr)
+  {}
 
   const T& operator*() const
   {
@@ -94,7 +91,7 @@ public:
 
   bool operator==(const LCIter& other) const
   {
-   return node_ == other.node_;
+    return node_ == other.node_;
   }
 
   bool operator!=(const LCIter& other) const
@@ -118,17 +115,18 @@ public:
     sentinel_ = new Node< T >();
     sentinel_->next = nullptr;
   }
+
   List(const List& other)
   {
-    sentinel_ = new Node<T>();
+    sentinel_ = new Node< T >();
     sentinel_->next = nullptr;
 
-    Node<T>* tail = sentinel_;
-    Node<T>* cur = other.sentinel_->next;
+    Node< T >* tail = sentinel_;
+    Node< T >* cur = other.sentinel_->next;
 
     while (cur != nullptr)
     {
-      Node<T>* node = new Node<T>(cur->data);
+      Node< T >* node = new Node< T >(cur->data);
       tail->next = node;
       tail = node;
       cur = cur->next;
@@ -138,13 +136,30 @@ public:
   List(List&& other)
   {
     sentinel_ = other.sentinel_;
-    other.sentinel_ = new Node<T>();
+    other.sentinel_ = new Node< T >();
     other.sentinel_->next = nullptr;
+  }
+
+  ~List()
+  {
+    clear();
+    delete sentinel_;
+  }
+
+  List& operator=(const List& other)
+  {
+    if (this != &other)
+    {
+      List temp(other);
+      swap(temp);
+    }
+
+    return *this;
   }
 
   List& operator=(List&& other)
   {
-    if(this == &other)
+    if (this == &other)
     {
       return *this;
     }
@@ -153,39 +168,15 @@ public:
     delete sentinel_;
 
     sentinel_ = other.sentinel_;
-    other.sentinel_ = new Node<T>();
+    other.sentinel_ = new Node< T >();
     other.sentinel_->next = nullptr;
 
     return *this;
   }
 
-  List& operator=(const List& other)
+  void swap(List& other) noexcept
   {
-    if (this == &other)
-    {
-      return *this;
-    }
-
-    clear();
-
-    Node<T>* tail = sentinel_;
-    Node<T>* cur = other.sentinel_->next;
-
-    while (cur != nullptr)
-    {
-      Node<T>* node = new Node<T>(cur->data);
-      tail->next = node;
-      tail = node;
-      cur = cur->next;
-    }
-
-    return *this;
-  }
-
-  ~List()
-  {
-    clear();
-    delete sentinel_;
+    std::swap(sentinel_, other.sentinel_);
   }
 
   void clear()
