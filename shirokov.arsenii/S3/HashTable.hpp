@@ -232,4 +232,11 @@ bool shirokov::HashTable< Key, Value, Hash, Equal >::erase(Key k)
   return false;
 }
 
+template < class Key, class Value, class Hash, class Equal >
+shirokov::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable& rhs):
+  size_(rhs.size_),
+  slotsCount_(rhs.slotsCount_),
+  slots_(new Slot[3])
+{}
+
 #endif

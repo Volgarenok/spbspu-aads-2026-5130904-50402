@@ -1,4 +1,3 @@
-#include <boost/test/unit_test_suite.hpp>
 #define BOOST_TEST_MODULE S3
 #include <functional>
 #include <stdexcept>
