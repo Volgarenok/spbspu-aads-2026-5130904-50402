@@ -16,7 +16,7 @@ namespace shirokov
     BiList< std::string > vertexes;
   };
 
-  using graphTable = HashTable< std::string, Graph, SHA1< std::string >, std::equal_to< std::string > >;
+  using graphTable = HashTable< std::string, Graph&, SHA1< std::string >, std::equal_to< std::string > >;
 
   void graphs(std::ostream&, std::istream&, graphTable&);
   void vertexes(std::ostream&, std::istream&, graphTable&);
