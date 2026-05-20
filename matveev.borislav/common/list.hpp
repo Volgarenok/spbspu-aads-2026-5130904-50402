@@ -400,10 +400,48 @@ public:
     sentinel_->next = sorted.next;
   }
 
-void sort()
-{
-  sort(std::less< T >());
-}
+  void sort()
+  {
+    sort(std::less< T >());
+  }
+
+  template< class Predicate >
+  LIter< T > partition(Predicate pred)
+  {
+    Node< T > beforeFalse;
+    beforeFalse.next = nullptr;
+
+    Node< T >* trueTail = sentinel_;
+    Node< T >* falseTail = &beforeFalse;
+    Node< T >* cur = sentinel_->next;
+
+    sentinel_->next = nullptr;
+
+    while (cur != nullptr)
+    {
+      Node< T >* next = cur->next;
+      cur->next = nullptr;
+
+      if (pred(cur->data))
+      {
+        trueTail->next = cur;
+        trueTail = cur;
+      }
+      else
+      {
+        falseTail->next = cur;
+        falseTail = cur;
+      }
+
+      cur = next;
+    }
+
+    trueTail->next = beforeFalse.next;
+
+    LIter< T > it;
+    it.node_ = trueTail;
+    return it;
+  }
 private:
   Node< T >* sentinel_;
 };
