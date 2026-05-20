@@ -3,28 +3,26 @@
 #include "Graph.hpp"
 #include "readfile.hpp"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[])
+{
   if (argc != 2)
   {
     std::cerr << "Input processing error" << "\n";
     return 1;
   }
-  lavrentev::List<std::pair<std::string, lavrentev::Graph>> grs;
+  lavrentev::List< std::pair< std::string, lavrentev::Graph > > grs;
   std::string name;
   try
   {
     lavrentev::readfile(argv[1], grs);
-  } catch (const std::runtime_error &) {
+  }
+  catch (const std::runtime_error&)
+  {
     std::cerr << "Input processing error" << "\n";
     return 2;
   }
 
-  lavrentev::HashTable<
-    std::string,
-    cmd_t,
-    Siphash< std::string >,
-    std::equal_to<std::string>
-  > commands;
+  lavrentev::HashTable< std::string, cmd_t, Siphash< std::string >, std::equal_to< std::string > > commands;
 
   commands["graphs"] = lavrentev::graphs;
   commands["vertexes"] = lavrentev::Graph::vertexes;
@@ -38,31 +36,28 @@ int main(int argc, char *argv[]) {
 
   std::string cmd;
   while (true)
-{
-  if (!(std::cin >> cmd))
   {
-    break;
-  }
-  try
-  {
-    if (!commands.has(cmd))
+    if (!(std::cin >> cmd))
     {
-      throw std::logic_error("Unknown command");
+      break;
     }
+    try
+    {
+      if (!commands.has(cmd))
+      {
+        throw std::logic_error("Unknown command");
+      }
 
-    commands[cmd](std::cin, grs);
-  }
-  catch (...)
-  {
-    std::cout << "<INVALID COMMAND>\n";
+      commands[cmd](std::cin, grs);
+    }
+    catch (...)
+    {
+      std::cout << "<INVALID COMMAND>\n";
 
-    std::cin.clear();
-    std::cin.ignore(
-      std::numeric_limits<std::streamsize>::max(),
-      '\n'
-    );
+      std::cin.clear();
+      std::cin.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
+    }
   }
-}
 
   if (!std::cin.eof())
   {

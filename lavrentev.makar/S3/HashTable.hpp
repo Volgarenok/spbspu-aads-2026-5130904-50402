@@ -1,18 +1,22 @@
 #ifndef HASHTABLE_HPP
 #define HASHTABLE_HPP
+#include <List.hpp>
 #include <cstddef>
 #include <stdexcept>
-#include <List.hpp>
 #include "siphash/hasher.hpp"
 
 namespace lavrentev
 {
-  template <class Key, class Value, class Hash, class Equal> class HashTable;
+  template< class Key, class Value, class Hash, class Equal >
+  class HashTable;
 
-  template <class Key, class Value, class Hash, class Equal> class HashIter;
-  template <class Key, class Value, class Hash, class Equal> class HashCIter;
+  template< class Key, class Value, class Hash, class Equal >
+  class HashIter;
+  template< class Key, class Value, class Hash, class Equal >
+  class HashCIter;
 
-  template <class Key, class Value, class Hash, class Equal> class HashTable
+  template< class Key, class Value, class Hash, class Equal >
+  class HashTable
   {
   private:
     struct Node
@@ -25,21 +29,20 @@ namespace lavrentev
     double loadFactor_;
     Hash hasher_;
     Equal equal_;
-    List<Node> *ht_;
-    void swap(HashTable<Key, Value, Hash, Equal>& other) noexcept;
+    List< Node >* ht_;
+    void swap(HashTable< Key, Value, Hash, Equal >& other) noexcept;
 
   public:
-    friend class HashIter<Key, Value, Hash, Equal>;
-    friend class HashCIter<Key, Value, Hash, Equal>;
+    friend class HashIter< Key, Value, Hash, Equal >;
+    friend class HashCIter< Key, Value, Hash, Equal >;
     friend struct Graph;
 
     HashTable();
-    HashTable(const HashTable &);
-    HashTable(HashTable &&) noexcept;
+    HashTable(const HashTable&);
+    HashTable(HashTable&&) noexcept;
     ~HashTable() noexcept;
-    HashTable<Key, Value, Hash, Equal> &
-    operator=(HashTable<Key, Value, Hash, Equal>);
-    Value &operator[](const Key &k);
+    HashTable< Key, Value, Hash, Equal >& operator=(HashTable< Key, Value, Hash, Equal >);
+    Value& operator[](const Key& k);
 
     void add(Key k, Value v);
     void drop(Key k);
@@ -49,61 +52,70 @@ namespace lavrentev
     size_t bucketCount() const;
   };
 
-  template <class Key, class Value, class Hash, class Equal> class HashIter
+  template< class Key, class Value, class Hash, class Equal >
+  class HashIter
   {
   private:
-    using Node = typename HashTable<Key, Value, Hash, Equal>::Node;
-    List<Node> *bucket_ptr_;
-    List<Node> *bucket_end_;
-    LIter<Node> list_iter_;
+    using Node = typename HashTable< Key, Value, Hash, Equal >::Node;
+    List< Node >* bucket_ptr_;
+    List< Node >* bucket_end_;
+    LIter< Node > list_iter_;
 
     void next();
 
   public:
-    HashIter(List<Node> *ptr, List<Node> *end, LIter<Node> lit);
+    HashIter(List< Node >* ptr, List< Node >* end, LIter< Node > lit);
 
-    bool operator==(const HashIter<Key, Value, Hash, Equal> &other) const;
-    bool operator!=(const HashIter<Key, Value, Hash, Equal> &other) const;
-    HashIter<Key, Value, Hash, Equal> &operator++();
-    Node &operator*();
+    bool operator==(const HashIter< Key, Value, Hash, Equal >& other) const;
+    bool operator!=(const HashIter< Key, Value, Hash, Equal >& other) const;
+    HashIter< Key, Value, Hash, Equal >& operator++();
+    Node& operator*();
   };
 
-  template <class Key, class Value, class Hash, class Equal> class HashCIter
+  template< class Key, class Value, class Hash, class Equal >
+  class HashCIter
   {
   private:
-    using Node = typename HashTable<Key, Value, Hash, Equal>::Node;
-    List<Node> *bucket_ptr_;
-    List<Node> *bucket_end_;
-    LCIter<Node> list_iter_;
+    using Node = typename HashTable< Key, Value, Hash, Equal >::Node;
+    List< Node >* bucket_ptr_;
+    List< Node >* bucket_end_;
+    LCIter< Node > list_iter_;
 
     void next();
 
   public:
-    HashCIter(List<Node> *ptr, List<Node> *end, LCIter<Node> lit);
+    HashCIter(List< Node >* ptr, List< Node >* end, LCIter< Node > lit);
 
-    bool operator==(const HashCIter<Key, Value, Hash, Equal> &other) const;
-    bool operator!=(const HashCIter<Key, Value, Hash, Equal> &other) const;
-    HashCIter<Key, Value, Hash, Equal> &operator++();
-    const Node &operator*() const;
+    bool operator==(const HashCIter< Key, Value, Hash, Equal >& other) const;
+    bool operator!=(const HashCIter< Key, Value, Hash, Equal >& other) const;
+    HashCIter< Key, Value, Hash, Equal >& operator++();
+    const Node& operator*() const;
   };
-} // namespace lavrentev
-
-template <class Key, class Value, class Hash, class Equal>
-lavrentev::HashTable<Key, Value, Hash, Equal>::HashTable()
-    : slots_(5), size_(0), loadFactor_(0.7), hasher_(Hash{}), equal_(Equal{}), ht_(new List<Node>[5])
-{
 }
 
-template <class Key, class Value, class Hash, class Equal>
-lavrentev::HashTable<Key, Value, Hash, Equal>::~HashTable() noexcept
+template< class Key, class Value, class Hash, class Equal >
+lavrentev::HashTable< Key, Value, Hash, Equal >::HashTable():
+  slots_(5),
+  size_(0),
+  loadFactor_(0.7),
+  hasher_(Hash{}),
+  equal_(Equal{}),
+  ht_(new List< Node >[5])
+{}
+
+template< class Key, class Value, class Hash, class Equal >
+lavrentev::HashTable< Key, Value, Hash, Equal >::~HashTable() noexcept
 {
   delete[] ht_;
 }
 
-template <class Key, class Value, class Hash, class Equal>
-lavrentev::HashTable<Key, Value, Hash, Equal>::HashTable(const HashTable &other)
-    : slots_(other.slots_), size_(other.size_), hasher_(other.hasher_),
-      equal_(other.equal_), ht_(new List<Node>[other.slots_])
+template< class Key, class Value, class Hash, class Equal >
+lavrentev::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable& other):
+  slots_(other.slots_),
+  size_(other.size_),
+  hasher_(other.hasher_),
+  equal_(other.equal_),
+  ht_(new List< Node >[other.slots_])
 {
   for (size_t i = 0; i < slots_; ++i)
   {
@@ -111,31 +123,33 @@ lavrentev::HashTable<Key, Value, Hash, Equal>::HashTable(const HashTable &other)
   }
 }
 
-template <class Key, class Value, class Hash, class Equal>
-lavrentev::HashTable<Key, Value, Hash, Equal>::HashTable(
-    HashTable &&other) noexcept
-    : slots_(other.slots_), size_(other.size_), hasher_(std::move(other.hasher_)),
-      equal_(std::move(other.equal_)), ht_(other.ht_)
+template< class Key, class Value, class Hash, class Equal >
+lavrentev::HashTable< Key, Value, Hash, Equal >::HashTable(HashTable&& other) noexcept:
+  slots_(other.slots_),
+  size_(other.size_),
+  hasher_(std::move(other.hasher_)),
+  equal_(std::move(other.equal_)),
+  ht_(other.ht_)
 {
   other.ht_ = nullptr;
   other.slots_ = 0;
   other.size_ = 0;
 }
 
-template <class Key, class Value, class Hash, class Equal>
-lavrentev::HashTable<Key, Value, Hash, Equal>&
-lavrentev::HashTable<Key, Value, Hash, Equal>::operator=(HashTable other)
+template< class Key, class Value, class Hash, class Equal >
+lavrentev::HashTable< Key, Value, Hash, Equal >&
+lavrentev::HashTable< Key, Value, Hash, Equal >::operator=(HashTable other)
 {
   swap(other);
   return *this;
 }
 
-template <class Key, class Value, class Hash, class Equal>
-Value &lavrentev::HashTable<Key, Value, Hash, Equal>::operator[](const Key &k)
+template< class Key, class Value, class Hash, class Equal >
+Value& lavrentev::HashTable< Key, Value, Hash, Equal >::operator[](const Key& k)
 {
   size_t idx = hasher_(k) % slots_;
-  List<Node> &bucket = ht_[idx];
-  for (LIter<Node> it = bucket.begin(); it != bucket.end(); ++it)
+  List< Node >& bucket = ht_[idx];
+  for (LIter< Node > it = bucket.begin(); it != bucket.end(); ++it)
   {
     if (equal_((*it).key, k))
     {
@@ -147,8 +161,8 @@ Value &lavrentev::HashTable<Key, Value, Hash, Equal>::operator[](const Key &k)
   return bucket.front().value;
 }
 
-template <class Key, class Value, class Hash, class Equal>
-void lavrentev::HashTable<Key, Value, Hash, Equal>::add(Key k, Value v)
+template< class Key, class Value, class Hash, class Equal >
+void lavrentev::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
 {
   if (slots_ == 0)
   {
@@ -160,8 +174,8 @@ void lavrentev::HashTable<Key, Value, Hash, Equal>::add(Key k, Value v)
   }
 
   size_t idx = hasher_(k) % slots_;
-  List<Node> &bucket = ht_[idx];
-  for (LIter<Node> it = bucket.begin(); it != bucket.end(); ++it)
+  List< Node >& bucket = ht_[idx];
+  for (LIter< Node > it = bucket.begin(); it != bucket.end(); ++it)
   {
     if (equal_((*it).key, k))
     {
@@ -172,12 +186,12 @@ void lavrentev::HashTable<Key, Value, Hash, Equal>::add(Key k, Value v)
   ++size_;
 }
 
-template <class Key, class Value, class Hash, class Equal>
-void lavrentev::HashTable<Key, Value, Hash, Equal>::drop(Key k)
+template< class Key, class Value, class Hash, class Equal >
+void lavrentev::HashTable< Key, Value, Hash, Equal >::drop(Key k)
 {
   size_t idx = hasher_(k) % slots_;
-  List<Node> &bucket = ht_[idx];
-  for (LIter<Node> it = bucket.begin(); it != bucket.end(); ++it)
+  List< Node >& bucket = ht_[idx];
+  for (LIter< Node > it = bucket.begin(); it != bucket.end(); ++it)
   {
     if (equal_((*it).key, k))
     {
@@ -189,12 +203,12 @@ void lavrentev::HashTable<Key, Value, Hash, Equal>::drop(Key k)
   throw std::invalid_argument("Key is not exists");
 }
 
-template <class Key, class Value, class Hash, class Equal>
-bool lavrentev::HashTable<Key, Value, Hash, Equal>::has(Key k) const
+template< class Key, class Value, class Hash, class Equal >
+bool lavrentev::HashTable< Key, Value, Hash, Equal >::has(Key k) const
 {
   size_t idx = hasher_(k) % slots_;
-  List<Node> &bucket = ht_[idx];
-  for (LIter<Node> it = bucket.begin(); it != bucket.end(); ++it)
+  List< Node >& bucket = ht_[idx];
+  for (LIter< Node > it = bucket.begin(); it != bucket.end(); ++it)
   {
     if (equal_((*it).key, k))
     {
@@ -204,17 +218,17 @@ bool lavrentev::HashTable<Key, Value, Hash, Equal>::has(Key k) const
   return false;
 }
 
-template <class Key, class Value, class Hash, class Equal>
-void lavrentev::HashTable<Key, Value, Hash, Equal>::rehash(size_t slots)
+template< class Key, class Value, class Hash, class Equal >
+void lavrentev::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
 {
   if (slots == 0)
   {
     throw std::invalid_argument("Amount of slots must be positive");
   }
-  List<Node> *new_ht = new List<Node>[slots];
+  List< Node >* new_ht = new List< Node >[slots];
   for (size_t i = 0; i < slots_; ++i)
   {
-    for (LIter<Node> it = ht_[i].begin(); it != ht_[i].end(); ++it)
+    for (LIter< Node > it = ht_[i].begin(); it != ht_[i].end(); ++it)
     {
       size_t new_idx = hasher_((*it).key) % slots;
       new_ht[new_idx].pushFront(Node{(*it).key, (*it).value});
@@ -225,24 +239,23 @@ void lavrentev::HashTable<Key, Value, Hash, Equal>::rehash(size_t slots)
   slots_ = slots;
 }
 
-template <class Key, class Value, class Hash, class Equal>
-size_t lavrentev::HashTable<Key, Value, Hash, Equal>::size() const
+template< class Key, class Value, class Hash, class Equal >
+size_t lavrentev::HashTable< Key, Value, Hash, Equal >::size() const
 {
   return size_;
 }
 
-template <class Key, class Value, class Hash, class Equal>
-size_t lavrentev::HashTable<Key, Value, Hash, Equal>::bucketCount() const
+template< class Key, class Value, class Hash, class Equal >
+size_t lavrentev::HashTable< Key, Value, Hash, Equal >::bucketCount() const
 {
   return slots_;
 }
 
-template <class Key, class Value, class Hash, class Equal>
-lavrentev::HashIter<Key, Value, Hash, Equal>::HashIter(
-  List<Node> *ptr,
-  List<Node> *end,
-  LIter<Node> lit)
-    : bucket_ptr_(ptr), bucket_end_(end), list_iter_(lit)
+template< class Key, class Value, class Hash, class Equal >
+lavrentev::HashIter< Key, Value, Hash, Equal >::HashIter(List< Node >* ptr, List< Node >* end, LIter< Node > lit):
+  bucket_ptr_(ptr),
+  bucket_end_(end),
+  list_iter_(lit)
 {
   if (bucket_ptr_ != bucket_end_ && list_iter_ == (*bucket_ptr_).end())
   {
@@ -250,53 +263,51 @@ lavrentev::HashIter<Key, Value, Hash, Equal>::HashIter(
   }
 }
 
-template <class Key, class Value, class Hash, class Equal>
-bool lavrentev::HashIter<Key, Value, Hash, Equal>::operator==(
-    const HashIter<Key, Value, Hash, Equal> &other) const
+template< class Key, class Value, class Hash, class Equal >
+bool lavrentev::HashIter< Key, Value, Hash, Equal >::operator==(const HashIter< Key, Value, Hash, Equal >& other) const
 {
   return list_iter_ == other.list_iter_ && bucket_ptr_ == other.bucket_ptr_;
 }
 
-template <class Key, class Value, class Hash, class Equal>
-bool lavrentev::HashIter<Key, Value, Hash, Equal>::operator!=(
-    const HashIter<Key, Value, Hash, Equal> &other) const
+template< class Key, class Value, class Hash, class Equal >
+bool lavrentev::HashIter< Key, Value, Hash, Equal >::operator!=(const HashIter< Key, Value, Hash, Equal >& other) const
 {
   return !(*this == other);
 }
 
-template <class Key, class Value, class Hash, class Equal>
-lavrentev::HashIter<Key, Value, Hash, Equal> &
-lavrentev::HashIter<Key, Value, Hash, Equal>::operator++()
+template< class Key, class Value, class Hash, class Equal >
+lavrentev::HashIter< Key, Value, Hash, Equal >& lavrentev::HashIter< Key, Value, Hash, Equal >::operator++()
 {
   ++list_iter_;
   next();
   return *this;
 }
 
-template <class Key, class Value, class Hash, class Equal>
-typename lavrentev::HashTable<Key, Value, Hash, Equal>::Node &lavrentev::HashIter<Key, Value, Hash, Equal>::operator*()
+template< class Key, class Value, class Hash, class Equal >
+typename lavrentev::HashTable< Key, Value, Hash, Equal >::Node&
+lavrentev::HashIter< Key, Value, Hash, Equal >::operator*()
 {
   return *list_iter_;
 }
 
-template <class Key, class Value, class Hash, class Equal>
-void lavrentev::HashIter<Key, Value, Hash, Equal>::next()
+template< class Key, class Value, class Hash, class Equal >
+void lavrentev::HashIter< Key, Value, Hash, Equal >::next()
 {
   while (bucket_ptr_ != bucket_end_ && list_iter_ == (*bucket_ptr_).end())
   {
     ++bucket_ptr_;
-    if (bucket_ptr_ != bucket_end_){
+    if (bucket_ptr_ != bucket_end_)
+    {
       list_iter_ = (*bucket_ptr_).begin();
     }
   }
 }
 
-template <class Key, class Value, class Hash, class Equal>
-lavrentev::HashCIter<Key, Value, Hash, Equal>::HashCIter(
-  List<Node> *ptr,
-  List<Node> *end,
-  LCIter<Node> lit)
-    : bucket_ptr_(ptr), bucket_end_(end), list_iter_(lit)
+template< class Key, class Value, class Hash, class Equal >
+lavrentev::HashCIter< Key, Value, Hash, Equal >::HashCIter(List< Node >* ptr, List< Node >* end, LCIter< Node > lit):
+  bucket_ptr_(ptr),
+  bucket_end_(end),
+  list_iter_(lit)
 {
   if (bucket_ptr_ != bucket_end_ && list_iter_ == (*bucket_ptr_).cend())
   {
@@ -304,50 +315,50 @@ lavrentev::HashCIter<Key, Value, Hash, Equal>::HashCIter(
   }
 }
 
-template <class Key, class Value, class Hash, class Equal>
-bool lavrentev::HashCIter<Key, Value, Hash, Equal>::operator==(
-    const HashCIter<Key, Value, Hash, Equal> &other) const
+template< class Key, class Value, class Hash, class Equal >
+bool lavrentev::HashCIter< Key, Value, Hash, Equal >::operator==(
+    const HashCIter< Key, Value, Hash, Equal >& other) const
 {
   return list_iter_ == other.list_iter_ && bucket_ptr_ == other.bucket_ptr_;
 }
 
-template <class Key, class Value, class Hash, class Equal>
-bool lavrentev::HashCIter<Key, Value, Hash, Equal>::operator!=(
-    const HashCIter<Key, Value, Hash, Equal> &other) const
+template< class Key, class Value, class Hash, class Equal >
+bool lavrentev::HashCIter< Key, Value, Hash, Equal >::operator!=(
+    const HashCIter< Key, Value, Hash, Equal >& other) const
 {
   return !(*this == other);
 }
 
-template <class Key, class Value, class Hash, class Equal>
-lavrentev::HashCIter<Key, Value, Hash, Equal> &
-lavrentev::HashCIter<Key, Value, Hash, Equal>::operator++()
+template< class Key, class Value, class Hash, class Equal >
+lavrentev::HashCIter< Key, Value, Hash, Equal >& lavrentev::HashCIter< Key, Value, Hash, Equal >::operator++()
 {
   ++list_iter_;
   next();
   return *this;
 }
 
-template <class Key, class Value, class Hash, class Equal>
-const typename lavrentev::HashTable<Key, Value, Hash, Equal>::Node &lavrentev::HashCIter<Key, Value, Hash, Equal>::operator*() const
+template< class Key, class Value, class Hash, class Equal >
+const typename lavrentev::HashTable< Key, Value, Hash, Equal >::Node&
+lavrentev::HashCIter< Key, Value, Hash, Equal >::operator*() const
 {
   return *list_iter_;
 }
 
-template <class Key, class Value, class Hash, class Equal>
-void lavrentev::HashCIter<Key, Value, Hash, Equal>::next()
+template< class Key, class Value, class Hash, class Equal >
+void lavrentev::HashCIter< Key, Value, Hash, Equal >::next()
 {
   while (bucket_ptr_ != bucket_end_ && list_iter_ == (*bucket_ptr_).cend())
   {
     ++bucket_ptr_;
-    if (bucket_ptr_ != bucket_end_){
+    if (bucket_ptr_ != bucket_end_)
+    {
       list_iter_ = (*bucket_ptr_).cbegin();
     }
   }
 }
 
-template <class Key, class Value, class Hash, class Equal>
-void lavrentev::HashTable<Key, Value, Hash, Equal>::swap(
-  HashTable<Key, Value, Hash, Equal>& other) noexcept
+template< class Key, class Value, class Hash, class Equal >
+void lavrentev::HashTable< Key, Value, Hash, Equal >::swap(HashTable< Key, Value, Hash, Equal >& other) noexcept
 {
   std::swap(ht_, other.ht_);
   std::swap(slots_, other.slots_);
