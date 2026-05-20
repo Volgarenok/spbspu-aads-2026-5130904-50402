@@ -288,4 +288,8 @@ shirokov::HashTable< Key, Value, Hash, Equal >::operator=(HashTable&& rhs)
   return *this;
 }
 
+template< class Key, class Value, class Hash, class Equal >
+void shirokov::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
+{}
+
 #endif
