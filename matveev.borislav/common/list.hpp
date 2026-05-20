@@ -370,6 +370,40 @@ public:
     merge(other, std::less< T >());
   }
 
+  template< class Compare >
+  void sort(Compare comp)
+  {
+    if (sentinel_->next == nullptr || sentinel_->next->next == nullptr)
+    {
+      return;
+    }
+
+    Node< T > sorted;
+    sorted.next = nullptr;
+
+    while (sentinel_->next != nullptr)
+    {
+      Node< T >* moved = sentinel_->next;
+      sentinel_->next = moved->next;
+
+      Node< T >* prev = &sorted;
+
+      while (prev->next != nullptr && !comp(moved->data, prev->next->data))
+      {
+        prev = prev->next;
+      }
+
+      moved->next = prev->next;
+      prev->next = moved;
+    }
+
+    sentinel_->next = sorted.next;
+  }
+
+void sort()
+{
+  sort(std::less< T >());
+}
 private:
   Node< T >* sentinel_;
 };
