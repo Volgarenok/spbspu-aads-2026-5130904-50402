@@ -155,7 +155,8 @@ karpovich::HashConstIter< Key, Value, Hash, Equal >::HashConstIter():
 {}
 
 template< class Key, class Value, class Hash, class Equal >
-karpovich::HashConstIter< Key, Value, Hash, Equal >::HashConstIter(const Vector< list_t > *data, size_t cap, size_t idx):
+karpovich::HashConstIter< Key, Value, Hash, Equal >::HashConstIter(const Vector< list_t > *data, size_t cap,
+                                                                   size_t idx):
   data_(data),
   capacity_(cap),
   idx_(idx),

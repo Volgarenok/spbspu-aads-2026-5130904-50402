@@ -10,6 +10,17 @@
 
 namespace karpovich
 {
+  namespace details
+  {
+    class ResizeSlots
+    {
+    public:
+      size_t operator()(size_t before) const noexcept
+      {
+        return before < 10 ? 20 : before * 2;
+      }
+    };
+  }
 
   template< class Key, class Value, class Hash = std::hash< Key >, class Equal = std::equal_to< Key > >
   class HashTable
@@ -47,12 +58,21 @@ namespace karpovich
     HCIter cbegin() const;
     HCIter cend() const;
 
+    double loadFactor() const noexcept;
+    size_t maxChainLength() const noexcept;
+    void setMaxLoadFactor(double maxLf) noexcept;
+    void setMaxChainLength(size_t maxLen) noexcept;
+    void setResizePolicy(std::function< size_t(size_t) > policy) noexcept;
+
   private:
     Vector< List< valType > > data_;
     size_t capacity_;
     size_t size_;
     Hash hasher_;
     Equal comparator_;
+    double maxLoadFactor_;
+    size_t maxChainLength_;
+    std::function< size_t(size_t) > resizePolicy_;
   };
 
 }
@@ -63,7 +83,10 @@ karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
   capacity_(slots),
   size_(0),
   hasher_(Hash{}),
-  comparator_(Equal{})
+  comparator_(Equal{}),
+  maxLoadFactor_(0.75),
+  maxChainLength_(10),
+  resizePolicy_(details::ResizeSlots{})
 {
   for (size_t i = 0; i < slots; ++i) {
     data_.pushBack(List< valType >());
