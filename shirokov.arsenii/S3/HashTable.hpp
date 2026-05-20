@@ -23,11 +23,11 @@ namespace shirokov
     bool operator==(const HTIter&) const noexcept;
     bool operator!=(const HTIter&) const noexcept;
     HTIter& operator++();
-    std::pair< Key, Value >& operator*();
+    std::pair< Key, Value& > operator*();
 
   private:
     size_t pos_;
-    HashTable< Key, Value, Hash, Equal >& table_;
+    HashTable< Key, Value, Hash, Equal >* table_;
   };
 
   template< class Key, class Value, class Hash, class Equal >
@@ -38,11 +38,11 @@ namespace shirokov
     bool operator==(const HTCIter&) const noexcept;
     bool operator!=(const HTCIter&) const noexcept;
     HTCIter& operator++();
-    const std::pair< Key, Value >& operator*();
+    const std::pair< Key, Value& > operator*();
 
   private:
     size_t pos_;
-    const HashTable< Key, Value, Hash, Equal >& table_;
+    const HashTable< Key, Value, Hash, Equal >* table_;
   };
 
   template< class Key, class Value, class Hash, class Equal >
@@ -93,7 +93,21 @@ namespace shirokov
 
 template< class Key, class Value, class Hash, class Equal >
 void shirokov::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
-{}
+{
+  if (slots <= size_)
+  {
+    return;
+  }
+  HashTable< Key, Value, Hash, Equal > cpy;
+  delete cpy.slots_;
+  cpy.slots_ = new Slot[slots];
+  cpy.size_ = slots;
+  for (auto it = begin(); it != end(); ++it)
+  {
+    cpy.insert((*it).first, (*it).second);
+  }
+  swap(cpy);
+}
 
 template< class Key, class Value, class Hash, class Equal >
 shirokov::HTIter< Key, Value, Hash, Equal > shirokov::HashTable< Key, Value, Hash, Equal >::end()
@@ -132,21 +146,22 @@ shirokov::HTCIter< Key, Value, Hash, Equal > shirokov::HashTable< Key, Value, Ha
 }
 
 template< class Key, class Value, class Hash, class Equal >
-std::pair< Key, Value >& shirokov::HTIter< Key, Value, Hash, Equal >::operator*()
+std::pair< Key, Value& > shirokov::HTIter< Key, Value, Hash, Equal >::operator*()
 {
-  return {table_.slots_[pos_].key, table_.slots_[pos_].value};
+  return {table_->slots_[pos_].key, table_->slots_[pos_].value};
 }
 
 template< class Key, class Value, class Hash, class Equal >
-const std::pair< Key, Value >& shirokov::HTCIter< Key, Value, Hash, Equal >::operator*()
+const std::pair< Key, Value& > shirokov::HTCIter< Key, Value, Hash, Equal >::operator*()
 {
-  return {table_.slots_[pos_].key, table_.slots_[pos_].value};
+  return {table_->slots_[pos_].key, table_->slots_[pos_].value};
 }
 
 template< class Key, class Value, class Hash, class Equal >
 shirokov::HTIter< Key, Value, Hash, Equal >& shirokov::HTIter< Key, Value, Hash, Equal >::operator++()
 {
-  while (pos_ < table_.size_ && table_.slots_[pos_].isEmpty)
+  ++pos_;
+  while (pos_ < table_->size_ && table_->slots_[pos_].isEmpty)
   {
     ++pos_;
   }
@@ -156,7 +171,8 @@ shirokov::HTIter< Key, Value, Hash, Equal >& shirokov::HTIter< Key, Value, Hash,
 template< class Key, class Value, class Hash, class Equal >
 shirokov::HTCIter< Key, Value, Hash, Equal >& shirokov::HTCIter< Key, Value, Hash, Equal >::operator++()
 {
-  while (pos_ < table_.size_ && table_.slots_[pos_].isEmpty)
+  ++pos_;
+  while (pos_ < table_->size_ && table_->slots_[pos_].isEmpty)
   {
     ++pos_;
   }
@@ -194,13 +210,13 @@ bool shirokov::HTIter< Key, Value, Hash, Equal >::operator==(
 template< class Key, class Value, class Hash, class Equal >
 shirokov::HTIter< Key, Value, Hash, Equal >::HTIter(HashTable< Key, Value, Hash, Equal >& ht, size_t pos):
   pos_(pos),
-  table_(ht)
+  table_(&ht)
 {}
 
 template< class Key, class Value, class Hash, class Equal >
 shirokov::HTCIter< Key, Value, Hash, Equal >::HTCIter(const HashTable< Key, Value, Hash, Equal >& ht, size_t pos):
   pos_(pos),
-  table_(ht)
+  table_(&ht)
 {}
 
 template< class Key, class Value, class Hash, class Equal >
