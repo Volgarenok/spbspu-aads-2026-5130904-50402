@@ -135,12 +135,12 @@ lavrentev::BSTree< Key, Value, Compare >::~BSTree()
 }
 
 template< class Key, class Value, class Compare >
-lavrentev::BSTree< Key, Value, Compare >::BSTree(const BSTree& other)
+lavrentev::BSTree< Key, Value, Compare >::BSTree(const BSTree& other):
+  fakeroot_(new Node{{Key(), Value()}}),
+  compare_(other.compare_),
+  name_(other.name_)
 {
-  fakeroot_ = new Node();
-  fakeroot_->left_ = copyNodes(other.fakeroot_->left_, nullptr);
-  compare_ = other.compare_;
-  name_ = other.name_;
+  fakeroot_->left_ = copyNodes(other.fakeroot_->left_, fakeroot_);
 }
 
 template< class Key, class Value, class Compare >
