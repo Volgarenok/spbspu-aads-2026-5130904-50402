@@ -257,6 +257,10 @@ shirokov::HashTable< Key, Value, Hash, Equal >::HashTable(HashTable&& rhs):
 
 template< class Key, class Value, class Hash, class Equal >
 void shirokov::HashTable< Key, Value, Hash, Equal >::swap(HashTable< Key, Value, Hash, Equal >& rhs)
-{}
+{
+  std::swap(size_, rhs.size_);
+  std::swap(slotsCount_, rhs.slotsCount_);
+  std::swap(slots_, rhs.slots_);
+}
 
 #endif
