@@ -25,16 +25,6 @@ int main(int argc, char* argv[])
     return 2;
   }
 
-  std::cerr << "DEBUG: number of trees = ";
-  size_t count = 0;
-  for (auto it = bsts.begin(); it != bsts.end(); ++it)
-    ++count;
-  std::cerr << count << std::endl;
-  for (auto it = bsts.begin(); it != bsts.end(); ++it)
-  {
-    std::cerr << "  tree name = '" << (*it).getName() << "'" << std::endl;
-  }
-
   lavrentev::BSTree< std::string, cmd_t, std::less< std::string > > commands{};
   commands["print"] = lavrentev::print;
   commands["complement"] = lavrentev::complement;
