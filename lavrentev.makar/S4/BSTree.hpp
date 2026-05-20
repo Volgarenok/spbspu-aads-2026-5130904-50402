@@ -145,9 +145,11 @@ lavrentev::BSTree< Key, Value, Compare >::BSTree(const BSTree& other)
 
 template< class Key, class Value, class Compare >
 lavrentev::BSTree< Key, Value, Compare >::BSTree(BSTree&& other) noexcept:
-  BSTree()
+  fakeroot_(other.fakeroot_),
+  compare_(std::move(other.compare_)),
+  name_(std::move(other.name_))
 {
-  swap(other);
+  other.fakeroot_ = nullptr;
 }
 
 template< class Key, class Value, class Compare >
@@ -592,7 +594,7 @@ inline void lavrentev::complement(std::istream& in, std::ostream&, BSTList& bstl
   BSTree< size_t, std::string, std::less< size_t > >* bst1 = nullptr;
   BSTree< size_t, std::string, std::less< size_t > >* bst2 = nullptr;
   bool is1 = false, is2 = false;
-  while (it != nullptr)
+  while (it != bstl.end())
   {
     if ((*it).getName() == BstName1)
     {
@@ -640,7 +642,7 @@ inline void lavrentev::intersect(std::istream& in, std::ostream&, BSTList& bstl)
   BSTree< size_t, std::string, std::less< size_t > >* bst1 = nullptr;
   BSTree< size_t, std::string, std::less< size_t > >* bst2 = nullptr;
   bool is1 = false, is2 = false;
-  while (it != nullptr)
+  while (it != bstl.end())
   {
     if ((*it).getName() == BstName1)
     {
@@ -687,7 +689,7 @@ inline void lavrentev::unionn(std::istream& in, std::ostream&, BSTList& bstl)
   BSTree< size_t, std::string, std::less< size_t > >* bst1 = nullptr;
   BSTree< size_t, std::string, std::less< size_t > >* bst2 = nullptr;
   bool is1 = false, is2 = false;
-  while (it != nullptr)
+  while (it != bstl.end())
   {
     if ((*it).getName() == BstName1)
     {
