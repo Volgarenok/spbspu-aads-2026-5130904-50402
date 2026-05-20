@@ -276,4 +276,10 @@ shirokov::HashTable< Key, Value, Hash, Equal >::operator=(const HashTable& rhs)
   return *this;
 }
 
+template< class Key, class Value, class Hash, class Equal >
+shirokov::HashTable< Key, Value, Hash, Equal >& shirokov::HashTable< Key, Value, Hash, Equal >::operator=(HashTable&&)
+{
+  return *this;
+}
+
 #endif
