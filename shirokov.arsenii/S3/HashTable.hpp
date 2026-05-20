@@ -255,4 +255,8 @@ shirokov::HashTable< Key, Value, Hash, Equal >::HashTable(HashTable&& rhs):
   rhs.slotsCount_ = 0;
 }
 
+template< class Key, class Value, class Hash, class Equal >
+void shirokov::HashTable< Key, Value, Hash, Equal >::swap(HashTable< Key, Value, Hash, Equal >& rhs)
+{}
+
 #endif
