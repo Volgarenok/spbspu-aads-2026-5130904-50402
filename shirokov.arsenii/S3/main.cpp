@@ -1,3 +1,4 @@
+#include <fstream>
 #include <functional>
 #include <iostream>
 #include <istream>
@@ -8,8 +9,27 @@
 #include "HashTable.hpp"
 #include "hasher.hpp"
 
-int main()
+namespace shirokov
 {
+  shirokov::graphTable parse(std::istream& in);
+}
+
+int main(int argc, char* argv[])
+{
+  if (argc < 2)
+  {
+    std::cerr << "Bad args\n";
+    return 1;
+  }
+
+  std::ifstream in(argv[1]);
+  if (!in.is_open())
+  {
+    std::cerr << "Couldn't open the file\n";
+    return 1;
+  }
+  shirokov::graphTable graphs = shirokov::parse(in);
+
   using cmd_t = void (*)(std::ostream&, std::istream&, shirokov::graphTable&);
   shirokov::HashTable< std::string, cmd_t, shirokov::SHA1< std::string >, std::equal_to< std::string > > cmds;
   cmds["graphs"] = shirokov::graphs;
@@ -21,8 +41,6 @@ int main()
   cmds["create"] = shirokov::create;
   cmds["merge"] = shirokov::merge;
   cmds["extract"] = shirokov::extract;
-
-  shirokov::graphTable graphs;
 
   std::string cmd;
   while (std::cin >> cmd)
