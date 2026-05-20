@@ -9,10 +9,10 @@
 
 namespace dirko
 {
-  template < class T >
+  template< class T >
   class Vector;
 
-  template < class T >
+  template< class T >
   struct VIter
   {
     explicit VIter(Vector< T > &v, size_t pos);
@@ -30,7 +30,7 @@ namespace dirko
     friend class Vector< T >;
   };
 
-  template < class T >
+  template< class T >
   struct VCIter
   {
     explicit VCIter(const Vector< T > &v, size_t pos);
@@ -47,7 +47,7 @@ namespace dirko
     size_t pos_;
     friend class Vector< T >;
   };
-  template < class T >
+  template< class T >
   class Vector
   {
   public:
@@ -103,18 +103,18 @@ namespace dirko
     void pushBackImpl(const T &);
     void reserve(size_t pos, size_t k);
   };
-  template < class T >
+  template< class T >
   void clear(T *data, size_t to_pos);
 }
 
-template < class T >
+template< class T >
 dirko::Vector< T >::Vector():
   data_(nullptr),
   size_(0),
   capasity_(0)
 {}
 
-template < class T >
+template< class T >
 dirko::Vector< T >::Vector(const Vector< T > &rhs):
   Vector(rhs.getSize())
 {
@@ -123,7 +123,7 @@ dirko::Vector< T >::Vector(const Vector< T > &rhs):
   }
 }
 
-template < class T >
+template< class T >
 dirko::Vector< T >::Vector(Vector< T > &&rhs) noexcept:
   data_(rhs.data_),
   size_(rhs.size_),
@@ -134,7 +134,7 @@ dirko::Vector< T >::Vector(Vector< T > &&rhs) noexcept:
   rhs.capasity_ = 0;
 }
 
-template < class T >
+template< class T >
 dirko::Vector< T > &dirko::Vector< T >::operator=(const Vector< T > &rhs)
 {
   if (this == std::addressof(rhs)) {
@@ -145,7 +145,7 @@ dirko::Vector< T > &dirko::Vector< T >::operator=(const Vector< T > &rhs)
   return *this;
 }
 
-template < class T >
+template< class T >
 dirko::Vector< T > &dirko::Vector< T >::operator=(Vector< T > &&rhs) noexcept
 {
   if (this == std::addressof(rhs)) {
@@ -156,51 +156,51 @@ dirko::Vector< T > &dirko::Vector< T >::operator=(Vector< T > &&rhs) noexcept
   return *this;
 }
 
-template < class T >
+template< class T >
 T &dirko::Vector< T >::operator[](size_t id) noexcept
 {
   assert(id < getSize());
   return data_[id];
 }
 
-template < class T >
+template< class T >
 const T &dirko::Vector< T >::operator[](size_t id) const noexcept
 {
   assert(id < getSize());
   return data_[id];
 }
-template < class T >
+template< class T >
 dirko::Vector< T >::Vector(size_t k):
   data_(static_cast< T * >(::operator new(sizeof(T) * k))),
   size_(0),
   capasity_(k)
 {}
 
-template < class T >
+template< class T >
 dirko::Vector< T >::~Vector()
 {
   clear(data_, size_);
 }
 
-template < class T >
+template< class T >
 bool dirko::Vector< T >::isEmpty() const noexcept
 {
   return !size_;
 }
 
-template < class T >
+template< class T >
 size_t dirko::Vector< T >::getSize() const noexcept
 {
   return size_;
 }
 
-template < class T >
+template< class T >
 size_t dirko::Vector< T >::getCapasity() const noexcept
 {
   return capasity_;
 }
 
-template < class T >
+template< class T >
 void dirko::Vector< T >::swap(Vector< T > &rhs) noexcept
 {
   std::swap(rhs.data_, data_);
@@ -208,7 +208,7 @@ void dirko::Vector< T >::swap(Vector< T > &rhs) noexcept
   std::swap(rhs.capasity_, capasity_);
 }
 
-template < class T >
+template< class T >
 void dirko::Vector< T >::pushFront(const T &val)
 {
   Vector< T > cpy(size_ + 1);
@@ -219,7 +219,7 @@ void dirko::Vector< T >::pushFront(const T &val)
   swap(cpy);
 }
 
-template < class T >
+template< class T >
 void dirko::Vector< T >::popFront()
 {
   if (size_ < 1) {
@@ -232,7 +232,7 @@ void dirko::Vector< T >::popFront()
   swap(cpy);
 }
 
-template < class T >
+template< class T >
 void dirko::Vector< T >::pushBack(const T &val)
 {
   if (size_ == capasity_) {
@@ -242,13 +242,13 @@ void dirko::Vector< T >::pushBack(const T &val)
   pushBackImpl(val);
 }
 
-template < class T >
+template< class T >
 void dirko::Vector< T >::pushBackImpl(const T &val)
 {
   new (data_ + size_++) T(val);
 }
 
-template < class T >
+template< class T >
 void dirko::Vector< T >::popBack()
 {
 
@@ -258,7 +258,7 @@ void dirko::Vector< T >::popBack()
   (data_ + --size_)->~T();
 }
 
-template < class T >
+template< class T >
 T &dirko::Vector< T >::at(size_t id)
 {
   if (id < getSize()) {
@@ -266,7 +266,7 @@ T &dirko::Vector< T >::at(size_t id)
   }
   throw std::out_of_range("bad id");
 }
-template < class T >
+template< class T >
 const T &dirko::Vector< T >::at(size_t id) const
 {
   if (id < getSize()) {
@@ -275,7 +275,7 @@ const T &dirko::Vector< T >::at(size_t id) const
   throw std::out_of_range("bad id");
 }
 
-template < class T >
+template< class T >
 void dirko::Vector< T >::insert(size_t i, const T &val)
 {
   if (i > size_) {
@@ -292,7 +292,7 @@ void dirko::Vector< T >::insert(size_t i, const T &val)
   swap(cpy);
 }
 
-template < class T >
+template< class T >
 void dirko::Vector< T >::erase(size_t i)
 {
   if (i >= size_) {
@@ -308,7 +308,7 @@ void dirko::Vector< T >::erase(size_t i)
   swap(cpy);
 }
 
-template < class T >
+template< class T >
 void dirko::Vector< T >::insert(size_t i, const Vector< T > &rhs, size_t beg, size_t end)
 {
   if (i > size_) {
@@ -333,7 +333,7 @@ void dirko::Vector< T >::insert(size_t i, const Vector< T > &rhs, size_t beg, si
   }
   swap(cpy);
 }
-template < class T >
+template< class T >
 void dirko::Vector< T >::erase(size_t beg, size_t end)
 {
   if (!size_) {
@@ -356,106 +356,106 @@ void dirko::Vector< T >::erase(size_t beg, size_t end)
   swap(cpy);
 }
 
-template < class T >
+template< class T >
 dirko::VCIter< T > &dirko::VCIter< T >::operator--() noexcept
 {
   --pos_;
   return *this;
 }
 
-template < class T >
+template< class T >
 dirko::VIter< T > &dirko::VIter< T >::operator--() noexcept
 {
   --pos_;
   return *this;
 }
 
-template < class T >
+template< class T >
 dirko::VCIter< T > &dirko::VCIter< T >::operator++() noexcept
 {
   ++pos_;
   return *this;
 }
 
-template < class T >
+template< class T >
 dirko::VIter< T > &dirko::VIter< T >::operator++() noexcept
 {
   ++pos_;
   return *this;
 }
 
-template < class T >
+template< class T >
 const T &dirko::VCIter< T >::operator*()
 {
   return v_.at(pos_);
 }
 
-template < class T >
+template< class T >
 T &dirko::VIter< T >::operator*()
 {
   return v_.at(pos_);
 }
 
-template < class T >
+template< class T >
 bool dirko::VCIter< T >::operator==(const VCIter< T > &rhs) const noexcept
 {
   return (std::addressof(this->v_) == std::addressof(rhs.v_)) && (this->pos_ == rhs.pos_);
 }
 
-template < class T >
+template< class T >
 bool dirko::VCIter< T >::operator!=(const VCIter< T > &rhs) const noexcept
 {
   return !(*this == rhs);
 }
 
-template < class T >
+template< class T >
 bool dirko::VIter< T >::operator==(const VIter< T > &rhs) const noexcept
 {
   return (std::addressof(this->v_) == std::addressof(rhs.v_)) && (this->pos_ == rhs.pos_);
 }
 
-template < class T >
+template< class T >
 bool dirko::VIter< T >::operator!=(const VIter< T > &rhs) const noexcept
 {
   return !(*this == rhs);
 }
 
-template < class T >
+template< class T >
 dirko::VCIter< T > dirko::Vector< T >::cbegin() const
 {
   return VCIter< T >(*this, 0);
 }
 
-template < class T >
+template< class T >
 dirko::VIter< T > dirko::Vector< T >::begin()
 {
   return VIter< T >(*this, 0);
 }
 
-template < class T >
+template< class T >
 dirko::VCIter< T > dirko::Vector< T >::cend() const
 {
   return VCIter< T >(*this, size_);
 }
 
-template < class T >
+template< class T >
 dirko::VIter< T > dirko::Vector< T >::end()
 {
   return VIter< T >(*this, size_);
 }
 
-template < class T >
+template< class T >
 dirko::VCIter< T >::VCIter(const Vector< T > &v, size_t pos):
   v_(v),
   pos_(pos)
 {}
 
-template < class T >
+template< class T >
 dirko::VIter< T >::VIter(Vector< T > &v, size_t pos):
   v_(v),
   pos_(pos)
 {}
-template < class T >
+template< class T >
 dirko::Vector< T >::Vector(std::initializer_list< T > il):
   Vector(il.size())
 {
@@ -464,7 +464,7 @@ dirko::Vector< T >::Vector(std::initializer_list< T > il):
   }
 }
 
-template < class T >
+template< class T >
 void dirko::Vector< T >::reserve(size_t cap)
 {
   if (capasity_ >= cap) {
@@ -480,7 +480,7 @@ void dirko::Vector< T >::reserve(size_t cap)
   capasity_ = cap;
 }
 
-template < class T >
+template< class T >
 void dirko::clear(T *data, size_t count)
 {
   for (size_t j = 0; j < count; ++j) {
@@ -488,13 +488,13 @@ void dirko::clear(T *data, size_t count)
   }
   ::operator delete(data);
 }
-template < class T >
+template< class T >
 void dirko::Vector< T >::shrinkToFit()
 {
   Vector< T > cpy(*this);
   swap(cpy);
 }
-template < class T >
+template< class T >
 void dirko::Vector< T >::reserve(size_t pos, size_t k)
 {
   if (pos > size_) {
@@ -509,51 +509,51 @@ void dirko::Vector< T >::reserve(size_t pos, size_t k)
   }
   swap(cpy);
 }
-template < class T >
+template< class T >
 dirko::VCIter< T > dirko::VCIter< T >::operator-(size_t i) noexcept
 {
   VCIter< T > iter(v_, pos_ - i);
   return iter;
 }
 
-template < class T >
+template< class T >
 dirko::VCIter< T > dirko::VCIter< T >::operator+(size_t i) noexcept
 {
   VCIter< T > iter(v_, pos_ + i);
   return iter;
 }
 
-template < class T >
+template< class T >
 dirko::VIter< T > dirko::VIter< T >::operator-(size_t i) noexcept
 {
   VIter< T > iter(v_, pos_ - i);
   return iter;
 }
 
-template < class T >
+template< class T >
 dirko::VIter< T > dirko::VIter< T >::operator+(size_t i) noexcept
 {
   VIter< T > iter(v_, pos_ + i);
   return iter;
 }
-template < class T >
+template< class T >
 void dirko::Vector< T >::erase(VIter< T > pos, size_t count)
 {
   erase(pos.pos_, pos.pos_ + count);
 }
 
-template < class T >
+template< class T >
 void dirko::Vector< T >::erase(VIter< T > pos)
 {
   erase(pos.pos_);
 }
 
-template < class T >
+template< class T >
 void dirko::Vector< T >::erase(VIter< T > beg, VIter< T > end)
 {
   erase(beg.pos_, end.pos_);
 }
-template < class T >
+template< class T >
 void dirko::Vector< T >::insert(const T &value, size_t count, VIter< T > pos)
 {
   Vector< T > cpy(size_ + count);
@@ -569,12 +569,12 @@ void dirko::Vector< T >::insert(const T &value, size_t count, VIter< T > pos)
   swap(cpy);
 }
 
-template < class T >
+template< class T >
 void dirko::Vector< T >::insert(VIter< T > pos, const T &val)
 {
   insert(pos.pos_, val);
 }
-template < class T >
+template< class T >
 void dirko::Vector< T >::insert(VIter< T > pos, VIter< T > beg, VIter< T > end)
 {
   size_t count = 0;
