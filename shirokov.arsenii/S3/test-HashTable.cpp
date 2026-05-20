@@ -1,3 +1,4 @@
+#include <boost/test/unit_test_suite.hpp>
 #define BOOST_TEST_MODULE S3
 #include <functional>
 #include <stdexcept>
@@ -162,4 +163,18 @@ BOOST_AUTO_TEST_CASE(move_assignment_operator_test)
   BOOST_TEST(ht2.at(0) == 1);
   BOOST_TEST(ht2.at(2) == 5);
   BOOST_TEST(ht2.at(35) == 2);
+}
+
+BOOST_AUTO_TEST_CASE(rehash_test)
+{
+  shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > ht1;
+  ht1.insert(0, 1);
+  ht1.insert(2, 5);
+  ht1.insert(35, 2);
+  size_t oldSize = ht1.size();
+  ht1.rehash(ht1.size() * 2);
+  BOOST_TEST(ht1.size() == oldSize * 2);
+  BOOST_TEST(ht1.at(0) == 1);
+  BOOST_TEST(ht1.at(2) == 5);
+  BOOST_TEST(ht1.at(35) == 2);
 }
