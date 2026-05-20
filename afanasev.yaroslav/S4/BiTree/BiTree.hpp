@@ -2,7 +2,6 @@
 #define BITREE_HPP
 
 #include <algorithm>
-#include <iostream>
 #include <stdexcept>
 #include <utility>
 #include "BiTreeNode.hpp"
@@ -71,6 +70,7 @@ namespace afanasev
     NodeBiTree< Key, Value > * findNode(const Key & k);
     const NodeBiTree< Key, Value > * findNode(const Key & k) const;
     NodeBiTree< Key, Value > * fallLeft(NodeBiTree< Key, Value > * node) const;
+    const NodeBiTree< Key, Value > * fallLeft(const NodeBiTree< Key, Value > * node) const;
     void clearTree(NodeBiTree< Key, Value > * node) noexcept;
     NodeBiTree< Key, Value > * clone(NodeBiTree< Key, Value > * src, NodeBiTree< Key, Value > * parent);
   };
@@ -80,7 +80,7 @@ template< class Key, class Value, class Compare >
 typename afanasev::NodeBiTree< Key, Value > * afanasev::BSTree< Key, Value, Compare >::
 clone(NodeBiTree< Key, Value > * src, NodeBiTree< Key, Value > * parent)
 {
-  if (src == &sentinel_)
+  if (!src || src->left_ == src)
   {
     return &sentinel_;
   }
@@ -389,6 +389,17 @@ drop(const Key & k)
 template< class Key, class Value, class Compare >
 afanasev::NodeBiTree< Key, Value > * afanasev::BSTree< Key, Value, Compare >::
 fallLeft(NodeBiTree< Key, Value > * node) const
+{
+  while (node->left_ != &sentinel_)
+  {
+    node = node->left_;
+  }
+  return node;
+}
+
+template< class Key, class Value, class Compare >
+const afanasev::NodeBiTree< Key, Value > *
+afanasev::BSTree< Key, Value, Compare >::fallLeft(const NodeBiTree< Key, Value > * node) const
 {
   while (node->left_ != &sentinel_)
   {

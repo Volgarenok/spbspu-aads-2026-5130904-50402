@@ -14,7 +14,7 @@ namespace afanasev
   {
   public:
     explicit BSTIterator(NodeBiTree< Key, Value > * node = nullptr,
-      const NodeBiTree< Key, Value > * sentinel = nullptr);
+      NodeBiTree< Key, Value > * sentinel = nullptr);
     std::pair< const Key, Value > operator*() const;
 
     BSTIterator & operator++();
@@ -30,12 +30,12 @@ namespace afanasev
 
   private:
     NodeBiTree< Key, Value > * node_;
-    const NodeBiTree< Key, Value > * sentinel_;
+    NodeBiTree< Key, Value > * sentinel_;
 
     NodeBiTree< Key, Value > * goLeftMost(NodeBiTree< Key, Value > * p,
-      const NodeBiTree< Key, Value > * sentinel);
+      NodeBiTree< Key, Value > * sentinel);
     NodeBiTree< Key, Value > * goRightMost(NodeBiTree< Key, Value > * p,
-      const NodeBiTree< Key, Value > * sentinel);
+      NodeBiTree< Key, Value > * sentinel);
   };
 
   template< class Key, class Value >
@@ -103,7 +103,7 @@ operator++()
       node_ = parent;
       parent = parent->parent_;
     }
-    node_ = parent;
+    node_ = parent ? parent : sentinel_;
   }
   return *this;
 }
@@ -138,7 +138,7 @@ operator--()
       node_ = parent;
       parent = parent->parent_;
     }
-    node_ = parent;
+    node_ = parent ? parent : sentinel_;
   }
   return *this;
 }
@@ -154,7 +154,7 @@ operator--(int)
 
 template< class Key, class Value >
 afanasev::NodeBiTree< Key, Value > * afanasev::BSTIterator< Key, Value >::
-goLeftMost(NodeBiTree< Key, Value > * p, const NodeBiTree< Key, Value > * sentinel)
+goLeftMost(NodeBiTree< Key, Value > * p, NodeBiTree< Key, Value > * sentinel)
 {
   if (!p)
   {
@@ -170,7 +170,7 @@ goLeftMost(NodeBiTree< Key, Value > * p, const NodeBiTree< Key, Value > * sentin
 
 template< class Key, class Value >
 afanasev::NodeBiTree< Key, Value > * afanasev::BSTIterator< Key, Value >::
-goRightMost(NodeBiTree< Key, Value > * p, const NodeBiTree< Key, Value > * sentinel)
+goRightMost(NodeBiTree< Key, Value > * p, NodeBiTree< Key, Value > * sentinel)
 {
   if (!p)
   {
@@ -193,7 +193,7 @@ operator*() const
 
 template< class Key, class Value >
 afanasev::BSTIterator< Key, Value >::
-BSTIterator(NodeBiTree< Key, Value > * node, const NodeBiTree< Key, Value > * sentinel):
+BSTIterator(NodeBiTree< Key, Value > * node, NodeBiTree< Key, Value > * sentinel):
   node_(node),
   sentinel_(sentinel)
 {}
@@ -234,7 +234,7 @@ operator++()
       node_ = parent;
       parent = parent->parent_;
     }
-    node_ = parent;
+    node_ = parent ? parent : sentinel_;
   }
   return *this;
 }
@@ -269,7 +269,7 @@ operator--()
       node_ = parent;
       parent = parent->parent_;
     }
-    node_ = parent;
+    node_ = parent ? parent : sentinel_;
   }
   return *this;
 }

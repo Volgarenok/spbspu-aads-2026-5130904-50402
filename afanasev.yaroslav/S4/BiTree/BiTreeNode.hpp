@@ -1,9 +1,6 @@
 #ifndef BITREE_NODE_HPP
 #define BITREE_NODE_HPP
 
-#include <algorithm>
-#include <iostream>
-#include <stdexcept>
 #include <utility>
 
 namespace afanasev
@@ -15,6 +12,14 @@ namespace afanasev
     Value val_;
     NodeBiTree * left_, * right_;
     NodeBiTree * parent_;
+
+    NodeBiTree(const Key & key, Value && val, NodeBiTree * parent):
+      key_(key),
+      val_(std::move(val)),
+      left_(nullptr),
+      right_(nullptr),
+      parent_(parent)
+    {}
 
     NodeBiTree(const Key & key, const Value & val, NodeBiTree * parent):
       key_(key),
