@@ -19,7 +19,7 @@ namespace shirokov
   class HTIter
   {
   public:
-    explicit HTIter(HashTable< Key, Value, Hash, Equal >&);
+    HTIter(HashTable< Key, Value, Hash, Equal >&, size_t);
     bool operator==(const HTIter&) const noexcept;
     bool operator!=(const HTIter&) const noexcept;
     HTIter& operator++();
@@ -27,7 +27,6 @@ namespace shirokov
     std::pair< Key, Value >& operator*();
 
   private:
-    friend class HashTable< Key, Value, Hash, Equal >;
     size_t pos_;
     HashTable< Key, Value, Hash, Equal >& table_;
   };
@@ -36,7 +35,7 @@ namespace shirokov
   class HTCIter
   {
   public:
-    explicit HTCIter(const HashTable< Key, Value, Hash, Equal >&);
+    HTCIter(const HashTable< Key, Value, Hash, Equal >&, size_t);
     bool operator==(const HTCIter&) const noexcept;
     bool operator!=(const HTCIter&) const noexcept;
     HTCIter& operator++();
@@ -44,7 +43,6 @@ namespace shirokov
     const std::pair< Key, Value >& operator*();
 
   private:
-    friend class HashTable< Key, Value, Hash, Equal >;
     size_t pos_;
     const HashTable< Key, Value, Hash, Equal >& table_;
   };
@@ -81,6 +79,8 @@ namespace shirokov
     void swap(HashTable< Key, Value, Hash, Equal >& rhs);
 
   private:
+    friend class HTIter< Key, Value, Hash, Equal >;
+    friend class HTCIter< Key, Value, Hash, Equal >;
     struct Slot
     {
       Key key;
