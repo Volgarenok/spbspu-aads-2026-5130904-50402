@@ -287,6 +287,51 @@ public:
     delete target;
   }
 
+  void spliceAfter(LIter< T > pos, List& other, LIter< T > before)
+  {
+    (void) other;
+
+    if (pos.node_ == nullptr  before.node_ == nullptr  before.node_->next == nullptr)
+    {
+      return;
+    }
+
+    Node< T >* moved = before.node_->next;
+    before.node_->next = moved->next;
+
+    moved->next = pos.node_->next;
+    pos.node_->next = moved;
+  }
+
+  void spliceAfter(LIter< T > pos, List& other, LIter< T > beforeFirst, LIter< T > beforeLast)
+  {
+    (void) other;
+
+    if (pos.node_ == nullptr  beforeFirst.node_ == nullptr  beforeFirst.node_ == beforeLast.node_)
+    {
+      return;
+    }
+
+    Node< T >* first = beforeFirst.node_->next;
+
+    if (first == beforeLast.node_)
+    {
+      return;
+    }
+
+    Node< T >* last = first;
+
+    while (last->next != beforeLast.node_)
+    {
+      last = last->next;
+    }
+
+    beforeFirst.node_->next = beforeLast.node_;
+
+    last->next = pos.node_->next;
+    pos.node_->next = first;
+  }
+
 private:
   Node< T >* sentinel_;
 };
