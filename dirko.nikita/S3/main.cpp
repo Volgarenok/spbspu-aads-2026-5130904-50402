@@ -29,10 +29,16 @@ int main(int argc, char *argv[])
 
   using cmd_t = void (*)(std::istream &, std::ostream &, dirko::GraphTable &);
   using hash_t = dirko::SipHasher< std::string >;
-  dirko::HashTable< std::string, cmd_t, hash_t, std::equal_to< std::string > > commands = {
-      {"graphs", dirko::cmdGraphs},   {"vertexes", dirko::cmdConections}, {"outbound", dirko::cmdOutbound},
-      {"inbound", dirko::cmdInbound}, {"bind", dirko::cmdBind},           {"cut", dirko::cmdCut},
-      {"create", dirko::cmdCreate},   {"merge", dirko::cmdMerge},         {"extract", dirko::cmdExtract}};
+  dirko::HashTable< std::string, cmd_t, hash_t, std::equal_to< std::string > > commands(8);
+  commands.add("graphs", dirko::cmdGraphs);
+  commands.add("vertexes", dirko::cmdConections);
+  commands.add("outbound", dirko::cmdOutbound);
+  commands.add("inbound", dirko::cmdInbound);
+  commands.add("bind", dirko::cmdBind);
+  commands.add("cut", dirko::cmdCut);
+  commands.add("create", dirko::cmdCreate);
+  commands.add("merge", dirko::cmdMerge);
+  commands.add("extract", dirko::cmdExtract);
   std::string cmd;
   while (std::cin >> cmd) {
     try {

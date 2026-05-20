@@ -11,11 +11,11 @@
 
 namespace dirko
 {
-  template < class Key, class Value, class Hash, class Equal >
+  template< class Key, class Value, class Hash, class Equal >
   class HTIter;
-  template < class Key, class Value, class Hash, class Equal >
+  template< class Key, class Value, class Hash, class Equal >
   class HTCIter;
-  template < class Key, class Value, class Hash = dirko::SipHasher< Key >, class Equal = std::equal_to< Key > >
+  template< class Key, class Value, class Hash = dirko::SipHasher< Key >, class Equal = std::equal_to< Key > >
   class HashTable
   {
   public:
@@ -50,7 +50,7 @@ namespace dirko
     friend class HTIter< Key, Value, Hash, Equal >;
     friend class HTCIter< Key, Value, Hash, Equal >;
   };
-  template < class Key, class Value, class Hash, class Equal >
+  template< class Key, class Value, class Hash, class Equal >
   class HTIter
   {
   public:
@@ -69,7 +69,7 @@ namespace dirko
     LIter< std::pair< Key, Value > > lit_, lend_;
     void next();
   };
-  template < class Key, class Value, class Hash, class Equal >
+  template< class Key, class Value, class Hash, class Equal >
   class HTCIter
   {
   public:
@@ -90,7 +90,7 @@ namespace dirko
   };
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 dirko::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
   data_(),
   hasher_(Hash{}),
@@ -104,7 +104,7 @@ dirko::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
   }
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 dirko::HashTable< Key, Value, Hash, Equal >::HashTable(std::initializer_list< std::pair< Key, Value > > il):
   HashTable(il.size())
 {
@@ -114,7 +114,7 @@ dirko::HashTable< Key, Value, Hash, Equal >::HashTable(std::initializer_list< st
   }
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 void dirko::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
 {
   size_t id = hasher_(k) % slots_;
@@ -128,7 +128,7 @@ void dirko::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
   ++elements_;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 void dirko::HashTable< Key, Value, Hash, Equal >::drop(Key k)
 {
   size_t id = hasher_(k) % slots_;
@@ -140,7 +140,7 @@ void dirko::HashTable< Key, Value, Hash, Equal >::drop(Key k)
     }
   }
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 Value &dirko::HashTable< Key, Value, Hash, Equal >::get(Key k)
 {
   size_t id = hasher_(k) % slots_;
@@ -151,12 +151,12 @@ Value &dirko::HashTable< Key, Value, Hash, Equal >::get(Key k)
   }
   throw std::out_of_range("No such element");
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 const Value dirko::HashTable< Key, Value, Hash, Equal >::get(Key k) const
 {
   return get(k);
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 bool dirko::HashTable< Key, Value, Hash, Equal >::has(Key k) const noexcept
 {
 
@@ -168,7 +168,7 @@ bool dirko::HashTable< Key, Value, Hash, Equal >::has(Key k) const noexcept
   }
   return false;
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 void dirko::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
 {
   HashTable< Key, Value, Hash, Equal > cpy(slots);
@@ -177,7 +177,7 @@ void dirko::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
   }
   swap(cpy);
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 
 void dirko::HashTable< Key, Value, Hash, Equal >::clear() noexcept
 {
@@ -186,17 +186,17 @@ void dirko::HashTable< Key, Value, Hash, Equal >::clear() noexcept
   }
   elements_ = 0;
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 size_t dirko::HashTable< Key, Value, Hash, Equal >::size() const noexcept
 {
   return elements_;
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 bool dirko::HashTable< Key, Value, Hash, Equal >::empty() const noexcept
 {
   return !elements_;
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 void dirko::HashTable< Key, Value, Hash, Equal >::swap(HashTable &other) noexcept
 {
   data_.swap(other.data_);
@@ -206,28 +206,28 @@ void dirko::HashTable< Key, Value, Hash, Equal >::swap(HashTable &other) noexcep
   std::swap(elements_, other.elements_);
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 dirko::HTIter< Key, Value, Hash, Equal > dirko::HashTable< Key, Value, Hash, Equal >::begin() noexcept
 {
   return {&data_, 0};
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 dirko::HTIter< Key, Value, Hash, Equal > dirko::HashTable< Key, Value, Hash, Equal >::end() noexcept
 {
   return HTIter< Key, Value, Hash, Equal >();
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 dirko::HTCIter< Key, Value, Hash, Equal > dirko::HashTable< Key, Value, Hash, Equal >::cbegin() const noexcept
 {
   return {&data_, 0};
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 dirko::HTCIter< Key, Value, Hash, Equal > dirko::HashTable< Key, Value, Hash, Equal >::cend() const noexcept
 {
   return HTCIter< Key, Value, Hash, Equal >();
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 void dirko::HTIter< Key, Value, Hash, Equal >::next()
 {
   while (slot_ < data_->getSize()) {
@@ -241,7 +241,7 @@ void dirko::HTIter< Key, Value, Hash, Equal >::next()
   data_ = nullptr;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 dirko::HTIter< Key, Value, Hash, Equal >::HTIter(Vector< List< std::pair< Key, Value > > > *data, size_t slot):
   data_(data),
   slot_(slot),
@@ -250,7 +250,7 @@ dirko::HTIter< Key, Value, Hash, Equal >::HTIter(Vector< List< std::pair< Key, V
 {
   next();
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 dirko::HTIter< Key, Value, Hash, Equal > &dirko::HTIter< Key, Value, Hash, Equal >::operator++()
 {
   ++lit_;
@@ -261,7 +261,7 @@ dirko::HTIter< Key, Value, Hash, Equal > &dirko::HTIter< Key, Value, Hash, Equal
   next();
   return *this;
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 dirko::HTIter< Key, Value, Hash, Equal > dirko::HTIter< Key, Value, Hash, Equal >::operator++(int)
 {
   HTIter< Key, Value, Hash, Equal > prev = *this;
@@ -273,7 +273,7 @@ dirko::HTIter< Key, Value, Hash, Equal > dirko::HTIter< Key, Value, Hash, Equal 
   next();
   return prev;
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 bool dirko::HTIter< Key, Value, Hash, Equal >::operator==(const HTIter &other) const noexcept
 {
   if (data_ == nullptr && other.data_ == nullptr) {
@@ -287,18 +287,18 @@ bool dirko::HTIter< Key, Value, Hash, Equal >::operator==(const HTIter &other) c
   }
   return lit_ == other.lit_ && slot_ == other.slot_;
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 bool dirko::HTIter< Key, Value, Hash, Equal >::operator!=(const HTIter &other) const noexcept
 {
   return !(*this == other);
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 std::pair< Key, Value > &dirko::HTIter< Key, Value, Hash, Equal >::operator*() noexcept
 {
   return *lit_;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 dirko::HTIter< Key, Value, Hash, Equal >::HTIter():
   data_(nullptr),
   slot_(0),
@@ -306,14 +306,14 @@ dirko::HTIter< Key, Value, Hash, Equal >::HTIter():
   lend_(nullptr)
 {}
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 dirko::HTCIter< Key, Value, Hash, Equal >::HTCIter():
   data_(nullptr),
   slot_(0),
   lit_(nullptr),
   lend_(nullptr)
 {}
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 void dirko::HTCIter< Key, Value, Hash, Equal >::next()
 {
   while (slot_ < data_->getSize()) {
@@ -327,7 +327,7 @@ void dirko::HTCIter< Key, Value, Hash, Equal >::next()
   data_ = nullptr;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 dirko::HTCIter< Key, Value, Hash, Equal >::HTCIter(Vector< List< std::pair< Key, Value > > > *data, size_t slot):
   data_(data),
   slot_(slot),
@@ -336,7 +336,7 @@ dirko::HTCIter< Key, Value, Hash, Equal >::HTCIter(Vector< List< std::pair< Key,
 {
   next();
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 dirko::HTCIter< Key, Value, Hash, Equal > &dirko::HTCIter< Key, Value, Hash, Equal >::operator++()
 {
   ++lit_;
@@ -347,7 +347,7 @@ dirko::HTCIter< Key, Value, Hash, Equal > &dirko::HTCIter< Key, Value, Hash, Equ
   next();
   return *this;
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 dirko::HTCIter< Key, Value, Hash, Equal > dirko::HTCIter< Key, Value, Hash, Equal >::operator++(int)
 {
   HTCIter< Key, Value, Hash, Equal > prev = *this;
@@ -359,7 +359,7 @@ dirko::HTCIter< Key, Value, Hash, Equal > dirko::HTCIter< Key, Value, Hash, Equa
   next();
   return prev;
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 bool dirko::HTCIter< Key, Value, Hash, Equal >::operator==(const HTCIter &other) const noexcept
 {
   if (data_ == nullptr && other.data_ == nullptr) {
@@ -373,12 +373,12 @@ bool dirko::HTCIter< Key, Value, Hash, Equal >::operator==(const HTCIter &other)
   }
   return lit_ == other.lit_ && slot_ == other.slot_;
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 bool dirko::HTCIter< Key, Value, Hash, Equal >::operator!=(const HTCIter &other) const noexcept
 {
   return !(*this == other);
 }
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 std::pair< Key, Value > &dirko::HTCIter< Key, Value, Hash, Equal >::operator*() noexcept
 {
   return *lit_;
