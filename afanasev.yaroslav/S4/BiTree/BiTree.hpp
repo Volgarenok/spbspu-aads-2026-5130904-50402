@@ -31,7 +31,7 @@ namespace afanasev
 
     ~BSTree();
     void clear() noexcept;
-    
+
     void push(Key && k, Value && v);
     void push(const Key & k, const Value & v);
 
@@ -411,7 +411,8 @@ fallLeft(NodeBiTree< Key, Value > * node) const
 
 template< class Key, class Value, class Compare >
 const afanasev::NodeBiTree< Key, Value > *
-afanasev::BSTree< Key, Value, Compare >::fallLeft(const NodeBiTree< Key, Value > * node) const
+afanasev::BSTree< Key, Value, Compare >::
+fallLeft(const NodeBiTree< Key, Value > * node) const
 {
   while (node->left_ != &sentinel_)
   {
