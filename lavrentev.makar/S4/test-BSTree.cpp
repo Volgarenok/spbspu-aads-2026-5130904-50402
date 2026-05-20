@@ -70,3 +70,19 @@ BOOST_AUTO_TEST_CASE(begin_end_test)
   BOOST_CHECK_EQUAL((*it).first, "b");
   BOOST_CHECK(it != bst.end());
 }
+
+BOOST_AUTO_TEST_CASE(rotate_left_test)
+{
+  lavrentev::BSTree< size_t, std::string, std::less< size_t > > bst{};
+  bst.push(10, "10");
+  bst.push(20, "20");
+
+  lavrentev::BSTIterator< size_t, std::string > it = bst.begin(); 
+  ++it;
+
+  bst.rotateLeft(it);
+
+  auto res = bst.begin();
+  BOOST_CHECK_EQUAL((*res).first, 10);
+  BOOST_CHECK_EQUAL((*++res).first, 20);
+}

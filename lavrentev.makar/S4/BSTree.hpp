@@ -85,11 +85,12 @@ namespace lavrentev
     void drop(const Key& k);
     bool has(const Key& k) const;
 
+    using iterator = BSTIterator< Key, Value >;
     using const_iterator = BSTConstIterator< Key, Value >;
-    const_iterator rotateLeft(const_iterator it);       // realize
-    const_iterator rotateRight(const_iterator it);      // realize
-    const_iterator rotateLargeLeft(const_iterator it);  // realize
-    const_iterator rotateLargeRight(const_iterator it); // realize
+    iterator rotateLeft(iterator it);
+    iterator rotateRight(iterator it);      // realize
+    iterator rotateLargeLeft(iterator it);  // realize
+    iterator rotateLargeRight(iterator it); // realize
 
     size_t height(const_iterator it) const;
     size_t height() const;
@@ -719,15 +720,40 @@ inline void lavrentev::unionn(std::istream& in, std::ostream&, BSTList& bstl)
   bstl.pushFront(std::move(newBst));
 }
 
-// template< class Key, class Value, class Compare >
-// lavrentev::BSTConstIterator< Key, Value > lavrentev::BSTree< Key, Value, Compare >::rotateLeft(const_iterator it)
-// {
-//   if (!it.curr_ || !it.curr_->parent_)
-//   {
-//     throw std::out_of_range("");
-//   }
-//   Node* buf = it.curr_.parent_;
-//   it.curr_->parent_ = it.curr;
-// }
+template< class Key, class Value, class Compare >
+lavrentev::BSTIterator< Key, Value > lavrentev::BSTree< Key, Value, Compare >::rotateLeft(iterator it)
+{
+  if (!it.curr_ || !it.curr_->parent_)
+  {
+    throw std::out_of_range("");
+  }
+  Node *buf = it.curr_->parent_;
+  it.curr_->parent_ = buf->parent_;
+  if (it.curr_->parent_->parent_)
+  {
+    if (it.curr_->parent_->parent_->right_ == it.curr_->parent_)
+    {
+      it.curr_->parent_->parent_->right_ = it.curr_;
+    }
+    else
+    {
+      it.curr_->parent_->parent_->left_ = it.curr_;
+    }
+  }
+  buf->right_ = it.curr_->left_;
+  if (buf->right_)
+  {
+    buf->right_->parent_ = buf;
+  }
+  it.curr_->left_ = buf;
+  if (it.curr_->left_)
+  {
+    it.curr_->left_->parent_ = it.curr_;
+  }
+  updateHeight(buf);
+  updateHeight(it.curr_);
+
+  return BSTIterator<Key, Value>(it.curr_->right_);
+}
 
 #endif
