@@ -30,7 +30,7 @@ namespace lavrentev
   template< class Key, class Value >
   class BSTIterator
   {
-    using Node = Node< Key, Value >;
+    using Node = lavrentev::Node< Key, Value >;
 
   public:
     explicit BSTIterator(Node* other);
@@ -49,7 +49,7 @@ namespace lavrentev
   template< class Key, class Value >
   class BSTConstIterator
   {
-    using Node = Node< Key, Value >;
+    using Node = lavrentev::Node< Key, Value >;
 
   public:
     explicit BSTConstIterator(const Node* other);
@@ -68,7 +68,7 @@ namespace lavrentev
   template< class Key, class Value, class Compare >
   struct BSTree
   {
-    using Node = Node< Key, Value >;
+    using Node = lavrentev::Node< Key, Value >;
     friend class BSTIterator< Key, Value >;
     friend class BSTConstIterator< Key, Value >;
 
