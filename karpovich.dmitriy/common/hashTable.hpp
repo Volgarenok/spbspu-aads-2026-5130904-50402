@@ -170,6 +170,18 @@ void karpovich::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
       return;
     }
   }
+  bool needRehash = false;
+  if (maxLoadFactor_ > 0.0 && capacity_ > 0) {
+    needRehash = (static_cast< double >(size_ + 1) / capacity_) >= maxLoadFactor_;
+  }
+  if (!needRehash && maxChainLength_ > 0) {
+    needRehash = (data_[idx].size() + 1) >= maxChainLength_;
+  }
+  if (needRehash) {
+    size_t newSlots = resizePolicy_(capacity_);
+    rehash(newSlots);
+    idx = hasher_(k) % capacity_;
+  }
   data_[idx].pushBack(valType(k, v));
   ++size_;
 }
