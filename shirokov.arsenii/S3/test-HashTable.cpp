@@ -121,3 +121,17 @@ BOOST_AUTO_TEST_CASE(move_constructor_test)
   BOOST_TEST(ht2.at(2) == 5);
   BOOST_TEST(ht2.at(35) == 2);
 }
+
+BOOST_AUTO_TEST_CASE(swap_test)
+{
+  shirokov::HashTable< int, int, shirokov::SHA1< int >, std::equal_to< int > > ht1, ht2;
+  ht1.insert(0, 1);
+  ht1.insert(2, 4);
+  ht2.insert(5, 7);
+  ht2.insert(12, 34);
+  ht1.swap(ht2);
+  BOOST_TEST(ht1[5] == 7);
+  BOOST_TEST(ht1[12] == 34);
+  BOOST_TEST(ht2[0] == 1);
+  BOOST_TEST(ht2[2] == 4);
+}
