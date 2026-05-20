@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(rotate_left_test)
   bst.push(2, "b");
   bst.push(3, "c");
 
-  lavrentev::BSTIterator< size_t, std::string > it = bst.begin(); 
+  lavrentev::BSTIterator< size_t, std::string > it = bst.begin();
   ++it;
   bst.rotateLeft(it);
 
@@ -92,9 +92,37 @@ BOOST_AUTO_TEST_CASE(rotate_right_test)
   bst.push(2, "b");
   bst.push(1, "c");
 
-  lavrentev::BSTIterator< size_t, std::string > it = bst.begin(); 
+  lavrentev::BSTIterator< size_t, std::string > it = bst.begin();
   ++it;
   bst.rotateRight(it);
+
+  BOOST_CHECK_EQUAL(bst.height(), 2);
+}
+
+BOOST_AUTO_TEST_CASE(rotate_large_left_test)
+{
+  lavrentev::BSTree< size_t, std::string, std::less< size_t > > bst{};
+  bst.push(1, "a");
+  bst.push(3, "b");
+  bst.push(2, "c");
+
+  lavrentev::BSTIterator< size_t, std::string > it = bst.begin();
+  ++it;
+  bst.rotateLargeLeft(it);
+
+  BOOST_CHECK_EQUAL(bst.height(), 2);
+}
+
+BOOST_AUTO_TEST_CASE(rotate_large_right_test)
+{
+  lavrentev::BSTree< size_t, std::string, std::less< size_t > > bst{};
+  bst.push(3, "a");
+  bst.push(1, "b");
+  bst.push(2, "c");
+
+  lavrentev::BSTIterator< size_t, std::string > it = bst.begin();
+  ++it;
+  bst.rotateLargeRight(it);
 
   BOOST_CHECK_EQUAL(bst.height(), 2);
 }

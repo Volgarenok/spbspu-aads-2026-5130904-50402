@@ -6,7 +6,6 @@
 #include <stdexcept>
 #include <utility>
 
-
 namespace lavrentev
 {
   template< class Key, class Value, class Compare >
@@ -725,7 +724,7 @@ lavrentev::BSTIterator< Key, Value > lavrentev::BSTree< Key, Value, Compare >::r
   {
     throw std::out_of_range("");
   }
-  Node *buf = it.curr_->parent_;
+  Node* buf = it.curr_->parent_;
   it.curr_->parent_ = buf->parent_;
   if (it.curr_->parent_)
   {
@@ -751,7 +750,7 @@ lavrentev::BSTIterator< Key, Value > lavrentev::BSTree< Key, Value, Compare >::r
   updateHeight(buf);
   updateHeight(it.curr_);
 
-  return BSTIterator<Key, Value>(buf);
+  return BSTIterator< Key, Value >(buf);
 }
 
 template< class Key, class Value, class Compare >
@@ -761,7 +760,7 @@ lavrentev::BSTIterator< Key, Value > lavrentev::BSTree< Key, Value, Compare >::r
   {
     throw std::out_of_range("");
   }
-  Node *buf = it.curr_->parent_;
+  Node* buf = it.curr_->parent_;
   it.curr_->parent_ = buf->parent_;
   if (it.curr_->parent_)
   {
@@ -784,7 +783,21 @@ lavrentev::BSTIterator< Key, Value > lavrentev::BSTree< Key, Value, Compare >::r
   updateHeight(buf);
   updateHeight(it.curr_);
 
-  return BSTIterator<Key, Value>(buf);
+  return BSTIterator< Key, Value >(buf);
+}
+
+template< class Key, class Value, class Compare >
+lavrentev::BSTIterator< Key, Value > lavrentev::BSTree< Key, Value, Compare >::rotateLargeLeft(iterator it)
+{
+  rotateRight(it);
+  return rotateLeft(it);
+}
+
+template< class Key, class Value, class Compare >
+lavrentev::BSTIterator< Key, Value > lavrentev::BSTree< Key, Value, Compare >::rotateLargeRight(iterator it)
+{
+  rotateLeft(it);
+  return rotateRight(it);
 }
 
 #endif
