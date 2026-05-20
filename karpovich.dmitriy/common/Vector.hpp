@@ -11,7 +11,7 @@
 
 namespace karpovich
 {
-  template < class T >
+  template< class T >
   struct Vector
   {
   private:
@@ -60,31 +60,31 @@ namespace karpovich
     VIter< T > erase(VCIter< T > pos);
     void insert(size_t i, const Vector< T > &rhs, size_t beg, size_t end);
     void insert(size_t i, const T &val);
-    template < class VecIt, class FwdIt >
+    template< class VecIt, class FwdIt >
     void insert(VecIt pos, FwdIt beg, FwdIt end);
     VIter< T > insert(VIter< T > pos, const T &val);
     VIter< T > insert(VIter< T > pos, const Vector< T > &other);
     VIter< T > insert(size_t i, const Vector< T > &other);
-    template < class IT >
+    template< class IT >
     size_t pushBackRange(IT begin, size_t k);
   };
 }
 
-template < class T >
+template< class T >
 karpovich::Vector< T >::Vector(size_t k):
   data_(static_cast< T * >(::operator new(sizeof(T) * k))),
   size_(0),
   capacity_(k)
 {}
 
-template < class T >
+template< class T >
 void karpovich::Vector< T >::pushBackImpl(const T &val)
 {
   new (data_ + size_) T(val);
   ++size_;
 }
 
-template < class T >
+template< class T >
 void karpovich::Vector< T >::reserve(size_t pos, size_t count)
 {
   assert(pos <= size_);
@@ -127,14 +127,14 @@ void karpovich::Vector< T >::reserve(size_t pos, size_t count)
   size_ += count;
 }
 
-template < class T >
+template< class T >
 karpovich::Vector< T >::Vector():
   data_(nullptr),
   size_(0),
   capacity_(0)
 {}
 
-template < class T >
+template< class T >
 karpovich::Vector< T >::Vector(Vector< T > &&rhs) noexcept:
   data_(rhs.data_),
   size_(rhs.size_),
@@ -145,7 +145,7 @@ karpovich::Vector< T >::Vector(Vector< T > &&rhs) noexcept:
   rhs.capacity_ = 0;
 }
 
-template < class T >
+template< class T >
 karpovich::Vector< T >::Vector(const Vector< T > &rhs):
   Vector(rhs.getSize())
 {
@@ -164,7 +164,7 @@ karpovich::Vector< T >::Vector(const Vector< T > &rhs):
   }
 }
 
-template < class T >
+template< class T >
 karpovich::Vector< T >::Vector(std::initializer_list< T > il):
   Vector< T >(il.size())
 {
@@ -183,7 +183,7 @@ karpovich::Vector< T >::Vector(std::initializer_list< T > il):
   }
 }
 
-template < class T >
+template< class T >
 karpovich::Vector< T > &karpovich::Vector< T >::operator=(const Vector< T > &rhs)
 {
   if (this == std::addressof(rhs)) {
@@ -194,7 +194,7 @@ karpovich::Vector< T > &karpovich::Vector< T >::operator=(const Vector< T > &rhs
   return *this;
 }
 
-template < class T >
+template< class T >
 karpovich::Vector< T > &karpovich::Vector< T >::operator=(Vector< T > &&rhs) noexcept
 {
   if (this == std::addressof(rhs)) {
@@ -204,7 +204,7 @@ karpovich::Vector< T > &karpovich::Vector< T >::operator=(Vector< T > &&rhs) noe
   return *this;
 }
 
-template < class T >
+template< class T >
 karpovich::Vector< T >::~Vector()
 {
   for (size_t i = 0; i < size_; ++i) {
@@ -213,7 +213,7 @@ karpovich::Vector< T >::~Vector()
   ::operator delete(data_);
 }
 
-template < class T >
+template< class T >
 T &karpovich::Vector< T >::operator[](size_t id) noexcept
 {
   const Vector< T > *cthis = this;
@@ -221,14 +221,14 @@ T &karpovich::Vector< T >::operator[](size_t id) noexcept
   return const_cast< T & >(ret);
 }
 
-template < class T >
+template< class T >
 const T &karpovich::Vector< T >::operator[](size_t id) const noexcept
 {
   assert(id < getSize());
   return data_[id];
 }
 
-template < class T >
+template< class T >
 T &karpovich::Vector< T >::at(size_t id)
 {
   const Vector< T > *cthis = this;
@@ -236,7 +236,7 @@ T &karpovich::Vector< T >::at(size_t id)
   return const_cast< T & >(ret);
 }
 
-template < class T >
+template< class T >
 const T &karpovich::Vector< T >::at(size_t id) const
 {
   if (id < getSize()) {
@@ -245,49 +245,49 @@ const T &karpovich::Vector< T >::at(size_t id) const
   throw std::out_of_range("bad id");
 }
 
-template < class T >
+template< class T >
 karpovich::VIter< T > karpovich::Vector< T >::begin() noexcept
 {
   return VIter< T >(this, 0);
 }
 
-template < class T >
+template< class T >
 karpovich::VIter< T > karpovich::Vector< T >::end() noexcept
 {
   return VIter< T >(this, size_);
 }
 
-template < class T >
+template< class T >
 karpovich::VCIter< T > karpovich::Vector< T >::begin() const noexcept
 {
   return VCIter< T >(this, 0);
 }
 
-template < class T >
+template< class T >
 karpovich::VCIter< T > karpovich::Vector< T >::end() const noexcept
 {
   return VCIter< T >(this, size_);
 }
 
-template < class T >
+template< class T >
 size_t karpovich::Vector< T >::getSize() const noexcept
 {
   return size_;
 }
 
-template < class T >
+template< class T >
 size_t karpovich::Vector< T >::getCapacity() const noexcept
 {
   return capacity_;
 }
 
-template < class T >
+template< class T >
 bool karpovich::Vector< T >::isEmpty() const noexcept
 {
   return !size_;
 }
 
-template < class T >
+template< class T >
 void karpovich::Vector< T >::pushBack(const T &val)
 {
   if (size_ == capacity_) {
@@ -315,7 +315,7 @@ void karpovich::Vector< T >::pushBack(const T &val)
   ++size_;
 }
 
-template < class T >
+template< class T >
 void karpovich::Vector< T >::pushFront(const T &val)
 {
   if (size_ == capacity_) {
@@ -353,14 +353,14 @@ void karpovich::Vector< T >::pushFront(const T &val)
   }
 }
 
-template < class T >
+template< class T >
 void karpovich::Vector< T >::popBack() noexcept
 {
   assert(size_ > 0);
   data_[--size_].~T();
 }
 
-template < class T >
+template< class T >
 void karpovich::Vector< T >::popFront()
 {
   assert(size_ > 0);
@@ -371,7 +371,7 @@ void karpovich::Vector< T >::popFront()
   --size_;
 }
 
-template < class T >
+template< class T >
 void karpovich::Vector< T >::swap(Vector< T > &rhs) noexcept
 {
   std::swap(rhs.data_, data_);
@@ -379,7 +379,7 @@ void karpovich::Vector< T >::swap(Vector< T > &rhs) noexcept
   std::swap(rhs.size_, size_);
 }
 
-template < class T >
+template< class T >
 void karpovich::Vector< T >::reserve(size_t cap)
 {
   if (capacity_ >= cap) {
@@ -407,7 +407,7 @@ void karpovich::Vector< T >::reserve(size_t cap)
   capacity_ = cap;
 }
 
-template < class T >
+template< class T >
 void karpovich::Vector< T >::shrinkToFit()
 {
   if (capacity_ > size_) {
@@ -442,13 +442,13 @@ void karpovich::Vector< T >::shrinkToFit()
   }
 }
 
-template < class T >
+template< class T >
 void karpovich::Vector< T >::erase(size_t i)
 {
   erase(i, i + 1);
 }
 
-template < class T >
+template< class T >
 void karpovich::Vector< T >::erase(size_t beg, size_t end)
 {
   assert(beg <= end && end <= size_);
@@ -464,7 +464,7 @@ void karpovich::Vector< T >::erase(size_t beg, size_t end)
   size_ -= (end - beg);
 }
 
-template < class T >
+template< class T >
 karpovich::VIter< T > karpovich::Vector< T >::erase(VIter< T > pos)
 {
   size_t idx = pos.idx_;
@@ -472,7 +472,7 @@ karpovich::VIter< T > karpovich::Vector< T >::erase(VIter< T > pos)
   return VIter< T >(this, idx);
 }
 
-template < class T >
+template< class T >
 karpovich::VIter< T > karpovich::Vector< T >::erase(VIter< T > first, VIter< T > last)
 {
   size_t beg = first.idx_;
@@ -480,7 +480,7 @@ karpovich::VIter< T > karpovich::Vector< T >::erase(VIter< T > first, VIter< T >
   return VIter< T >(this, beg);
 }
 
-template < class T >
+template< class T >
 karpovich::VIter< T > karpovich::Vector< T >::erase(VCIter< T > pos)
 {
   size_t idx = pos.idx_;
@@ -488,7 +488,7 @@ karpovich::VIter< T > karpovich::Vector< T >::erase(VCIter< T > pos)
   return VIter< T >(this, idx);
 }
 
-template < class T >
+template< class T >
 void karpovich::Vector< T >::insert(size_t i, const Vector< T > &rhs, size_t beg, size_t end)
 {
   assert(i <= size_ && beg <= end && end <= rhs.getSize());
@@ -527,7 +527,7 @@ void karpovich::Vector< T >::insert(size_t i, const Vector< T > &rhs, size_t beg
   newVec.capacity_ = 0;
 }
 
-template < class T >
+template< class T >
 void karpovich::Vector< T >::insert(size_t i, const T &val)
 {
   Vector< T > tmp;
@@ -535,8 +535,8 @@ void karpovich::Vector< T >::insert(size_t i, const T &val)
   insert(i, tmp, 0, 1);
 }
 
-template < class T >
-template < class VecIt, class FwdIt >
+template< class T >
+template< class VecIt, class FwdIt >
 void karpovich::Vector< T >::insert(VecIt pos, FwdIt beg, FwdIt end)
 {
   Vector< T > tmp;
@@ -546,7 +546,7 @@ void karpovich::Vector< T >::insert(VecIt pos, FwdIt beg, FwdIt end)
   insert(pos.idx_, tmp, 0, tmp.getSize());
 }
 
-template < class T >
+template< class T >
 karpovich::VIter< T > karpovich::Vector< T >::insert(VIter< T > pos, const T &val)
 {
   size_t idx = pos.idx_;
@@ -554,7 +554,7 @@ karpovich::VIter< T > karpovich::Vector< T >::insert(VIter< T > pos, const T &va
   return VIter< T >(this, idx);
 }
 
-template < class T >
+template< class T >
 karpovich::VIter< T > karpovich::Vector< T >::insert(VIter< T > pos, const Vector< T > &other)
 {
   size_t idx = pos.idx_;
@@ -562,15 +562,15 @@ karpovich::VIter< T > karpovich::Vector< T >::insert(VIter< T > pos, const Vecto
   return VIter< T >(this, idx);
 }
 
-template < class T >
+template< class T >
 karpovich::VIter< T > karpovich::Vector< T >::insert(size_t i, const Vector< T > &other)
 {
   insert(i, other, 0, other.getSize());
   return VIter< T >(this, i);
 }
 
-template < class T >
-template < class IT >
+template< class T >
+template< class IT >
 size_t karpovich::Vector< T >::pushBackRange(IT begin, size_t k)
 {
   if (k == 0) {

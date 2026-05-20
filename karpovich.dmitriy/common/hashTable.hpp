@@ -11,7 +11,7 @@
 namespace karpovich
 {
 
-  template < class Key, class Value, class Hash = std::hash< Key >, class Equal = std::equal_to< Key > >
+  template< class Key, class Value, class Hash = std::hash< Key >, class Equal = std::equal_to< Key > >
   class HashTable
   {
     friend class HashIter< Key, Value, Hash, Equal >;
@@ -57,7 +57,7 @@ namespace karpovich
 
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
   data_(),
   capacity_(slots),
@@ -70,13 +70,13 @@ karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(size_t slots):
   }
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 karpovich::HashTable< Key, Value, Hash, Equal >::~HashTable()
 {
   clear();
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable &other):
   data_(),
   capacity_(other.capacity_),
@@ -96,7 +96,7 @@ karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable &othe
   }
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(HashTable &&other) noexcept:
   data_(std::move(other.data_)),
   capacity_(other.capacity_),
@@ -108,7 +108,7 @@ karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(HashTable &&other) no
   other.size_ = 0;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 karpovich::HashTable< Key, Value, Hash, Equal > &
 karpovich::HashTable< Key, Value, Hash, Equal >::operator=(const HashTable &other)
 {
@@ -120,7 +120,7 @@ karpovich::HashTable< Key, Value, Hash, Equal >::operator=(const HashTable &othe
   return *this;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 karpovich::HashTable< Key, Value, Hash, Equal > &
 karpovich::HashTable< Key, Value, Hash, Equal >::operator=(HashTable &&other) noexcept
 {
@@ -131,7 +131,7 @@ karpovich::HashTable< Key, Value, Hash, Equal >::operator=(HashTable &&other) no
   return *this;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 void karpovich::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
 {
   size_t idx = hasher_(k) % capacity_;
@@ -145,7 +145,7 @@ void karpovich::HashTable< Key, Value, Hash, Equal >::add(Key k, Value v)
   ++size_;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 Value karpovich::HashTable< Key, Value, Hash, Equal >::drop(Key k)
 {
   size_t idx = hasher_(k) % capacity_;
@@ -160,7 +160,7 @@ Value karpovich::HashTable< Key, Value, Hash, Equal >::drop(Key k)
   throw std::out_of_range("Key not found");
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 Value &karpovich::HashTable< Key, Value, Hash, Equal >::get(Key k)
 {
   size_t idx = hasher_(k) % capacity_;
@@ -172,7 +172,7 @@ Value &karpovich::HashTable< Key, Value, Hash, Equal >::get(Key k)
   throw std::out_of_range("Key not found");
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 const Value &karpovich::HashTable< Key, Value, Hash, Equal >::get(Key k) const
 {
   size_t idx = hasher_(k) % capacity_;
@@ -185,7 +185,7 @@ const Value &karpovich::HashTable< Key, Value, Hash, Equal >::get(Key k) const
   throw std::out_of_range("Key not found");
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 bool karpovich::HashTable< Key, Value, Hash, Equal >::has(Key k) const noexcept
 {
   size_t idx = hasher_(k) % capacity_;
@@ -198,7 +198,7 @@ bool karpovich::HashTable< Key, Value, Hash, Equal >::has(Key k) const noexcept
   return false;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 void karpovich::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
 {
   if (slots <= capacity_) {
@@ -218,7 +218,7 @@ void karpovich::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
   capacity_ = slots;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 void karpovich::HashTable< Key, Value, Hash, Equal >::clear() noexcept
 {
   for (size_t i = 0; i < capacity_; ++i) {
@@ -227,19 +227,19 @@ void karpovich::HashTable< Key, Value, Hash, Equal >::clear() noexcept
   size_ = 0;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 size_t karpovich::HashTable< Key, Value, Hash, Equal >::size() const noexcept
 {
   return size_;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 bool karpovich::HashTable< Key, Value, Hash, Equal >::empty() const noexcept
 {
   return size_ == 0;
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 void karpovich::HashTable< Key, Value, Hash, Equal >::swap(HashTable &other) noexcept
 {
   data_.swap(other.data_);
@@ -249,25 +249,25 @@ void karpovich::HashTable< Key, Value, Hash, Equal >::swap(HashTable &other) noe
   std::swap(size_, other.size_);
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 karpovich::HashIter< Key, Value, Hash, Equal > karpovich::HashTable< Key, Value, Hash, Equal >::begin()
 {
   return HIter(&data_, capacity_, 0);
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 karpovich::HashIter< Key, Value, Hash, Equal > karpovich::HashTable< Key, Value, Hash, Equal >::end()
 {
   return HIter();
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 karpovich::HashConstIter< Key, Value, Hash, Equal > karpovich::HashTable< Key, Value, Hash, Equal >::cbegin() const
 {
   return HCIter(&data_, capacity_, 0);
 }
 
-template < class Key, class Value, class Hash, class Equal >
+template< class Key, class Value, class Hash, class Equal >
 karpovich::HashConstIter< Key, Value, Hash, Equal > karpovich::HashTable< Key, Value, Hash, Equal >::cend() const
 {
   return HCIter();
