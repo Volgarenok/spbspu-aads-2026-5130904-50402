@@ -1,0 +1,32 @@
+#include "commands.hpp"
+#include "graphCollection.hpp"
+#include "graphOutput.hpp"
+
+#include <iostream>
+
+namespace matveev
+{
+void printGraphs(std::ostream& out, const GraphCollection& graphs)
+{
+  List< std::string > names = collectGraphNames(graphs);
+  printStringList(out, names);
+}
+
+void printVertexes(std::ostream& out, const Graph& graph)
+{
+  List< std::string > names = collectVertexNames(graph);
+  printStringList(out, names);
+}
+
+void printOutbound(std::ostream& out, const Graph& graph, const std::string& vertex)
+{
+  List< EdgeOutput > rows = collectOutboundEdges(graph, vertex);
+  printEdgeRows(out, rows);
+}
+
+void printInbound(std::ostream& out, const Graph& graph, const std::string& vertex)
+{
+  List< EdgeOutput > rows = collectInboundEdges(graph, vertex);
+  printEdgeRows(out, rows);
+}
+}
