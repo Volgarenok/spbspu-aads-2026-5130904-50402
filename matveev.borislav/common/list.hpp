@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <utility>
+#include <functional>
 
 namespace matveev
 {
@@ -291,7 +292,7 @@ public:
   {
     (void) other;
 
-    if (pos.node_ == nullptr  before.node_ == nullptr  before.node_->next == nullptr)
+    if (pos.node_ == nullptr || before.node_ == nullptr || before.node_->next == nullptr)
     {
       return;
     }
@@ -307,7 +308,7 @@ public:
   {
     (void) other;
 
-    if (pos.node_ == nullptr  beforeFirst.node_ == nullptr  beforeFirst.node_ == beforeLast.node_)
+    if (pos.node_ == nullptr || beforeFirst.node_ == nullptr || beforeFirst.node_ == beforeLast.node_)
     {
       return;
     }
@@ -330,6 +331,43 @@ public:
 
     last->next = pos.node_->next;
     pos.node_->next = first;
+  }
+
+  template< class Compare >
+  void merge(List& other, Compare comp)
+  {
+    if (this == &other)
+    {
+      return;
+    }
+
+    Node< T >* thisPrev = sentinel_;
+    Node< T >* otherPrev = other.sentinel_;
+
+    while (thisPrev->next != nullptr && otherPrev->next != nullptr)
+    {
+      if (comp(otherPrev->next->data, thisPrev->next->data))
+      {
+        Node< T >* moved = otherPrev->next;
+        otherPrev->next = moved->next;
+
+        moved->next = thisPrev->next;
+        thisPrev->next = moved;
+      }
+
+      thisPrev = thisPrev->next;
+    }
+
+    if (otherPrev->next != nullptr)
+    {
+      thisPrev->next = otherPrev->next;
+      otherPrev->next = nullptr;
+    }
+  }
+
+  void merge(List& other)
+  {
+    merge(other, std::less< T >());
   }
 
 private:
