@@ -4,7 +4,7 @@
 
 namespace dirko
 {
-  template < class T >
+  template< class T >
   class Queue
   {
   public:
@@ -19,31 +19,31 @@ namespace dirko
   };
 }
 
-template < class T >
+template< class T >
 bool dirko::Queue< T >::empty() const noexcept
 {
   return !data_.size();
 }
 
-template < class T >
+template< class T >
 size_t dirko::Queue< T >::size() const noexcept
 {
   return data_.size();
 }
 
-template < class T >
+template< class T >
 void dirko::Queue< T >::push(const T &rhs)
 {
   data_.push_back(rhs);
 }
 
-template < class T >
+template< class T >
 T &dirko::Queue< T >::get() noexcept
 {
   return data_.head();
 }
 
-template < class T >
+template< class T >
 void dirko::Queue< T >::pop() noexcept
 {
   data_.pop_front();
