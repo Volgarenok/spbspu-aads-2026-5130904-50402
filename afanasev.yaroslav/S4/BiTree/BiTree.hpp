@@ -445,7 +445,6 @@ push(const Key & k, const Value & v)
         ++size_;
         return;
       }
-
       cur = cur->left_;
     }
     else if (comp_(cur->key_, k))
@@ -492,7 +491,6 @@ push(Key && k, Value && v)
         ++size_;
         return;
       }
-
       cur = cur->left_;
     }
     else if (comp_(cur->key_, k))
@@ -504,7 +502,6 @@ push(Key && k, Value && v)
         ++size_;
         return;
       }
-
       cur = cur->right_;
     }
     else
