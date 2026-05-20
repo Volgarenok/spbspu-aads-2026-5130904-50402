@@ -24,8 +24,8 @@ namespace lavrentev
     std::pair< Key, Value > data_;
     Node* left_ = nullptr;
     Node* right_ = nullptr;
-    size_t height_;
-    Node* parent_;
+    size_t height_ = 0;
+    Node* parent_ = nullptr;
   };
   template< class Key, class Value >
   class BSTIterator
@@ -88,7 +88,7 @@ namespace lavrentev
     using iterator = BSTIterator< Key, Value >;
     using const_iterator = BSTConstIterator< Key, Value >;
     iterator rotateLeft(iterator it);
-    iterator rotateRight(iterator it);      // realize
+    iterator rotateRight(iterator it);
     iterator rotateLargeLeft(iterator it);  // realize
     iterator rotateLargeRight(iterator it); // realize
 
@@ -175,10 +175,12 @@ Value& lavrentev::BSTree< Key, Value, Compare >::insertNode(Node*& node, Key k, 
   if (compare_(k, node->data_.first))
   {
     result = &insertNode(node->left_, k, v, isOperator, node);
+    node->left_->parent_ = node;
   }
   else if (compare_(node->data_.first, k))
   {
     result = &insertNode(node->right_, k, v, isOperator, node);
+    node->right_->parent_ = node;
   }
   else
   {
@@ -199,7 +201,7 @@ Value& lavrentev::BSTree< Key, Value, Compare >::insertNode(Node*& node, Key k, 
 template< class Key, class Value, class Compare >
 Value& lavrentev::BSTree< Key, Value, Compare >::operator[](const Key& k)
 {
-  Value& res = insertNode(fakeroot_->left_, k, Value(), true);
+  Value& res = insertNode(fakeroot_->left_, k, Value(), true, fakeroot_);
   updateHeight(fakeroot_);
   return res;
 }
@@ -244,7 +246,7 @@ void lavrentev::BSTree< Key, Value, Compare >::swap(BSTree& other) noexcept
 template< class Key, class Value, class Compare >
 void lavrentev::BSTree< Key, Value, Compare >::push(Key k, Value v)
 {
-  insertNode(fakeroot_->left_, k, v, false);
+  insertNode(fakeroot_->left_, k, v, false, fakeroot_);
   updateHeight(fakeroot_);
 }
 
@@ -529,17 +531,13 @@ lavrentev::BSTConstIterator< Key, Value > lavrentev::BSTree< Key, Value, Compare
 template< class Key, class Value, class Compare >
 lavrentev::BSTIterator< Key, Value > lavrentev::BSTree< Key, Value, Compare >::end()
 {
-  // Node *min = fallLeft(fakeroot_);
-  // return BSTIterator<Key, Value>(min);
-  return BSTIterator< Key, Value >(nullptr);
+  return BSTIterator< Key, Value >(fakeroot_);
 }
 
 template< class Key, class Value, class Compare >
 lavrentev::BSTConstIterator< Key, Value > lavrentev::BSTree< Key, Value, Compare >::cend()
 {
-  // Node *min = fallLeft(fakeroot_);
-  // return BSTConstIterator<Key, Value>(min);
-  return BSTConstIterator< Key, Value >(nullptr);
+  return BSTConstIterator< Key, Value >(fakeroot_);
 }
 
 template< class Key, class Value >
@@ -729,15 +727,15 @@ lavrentev::BSTIterator< Key, Value > lavrentev::BSTree< Key, Value, Compare >::r
   }
   Node *buf = it.curr_->parent_;
   it.curr_->parent_ = buf->parent_;
-  if (it.curr_->parent_->parent_)
+  if (it.curr_->parent_)
   {
-    if (it.curr_->parent_->parent_->right_ == it.curr_->parent_)
+    if (it.curr_->parent_->right_ == buf)
     {
-      it.curr_->parent_->parent_->right_ = it.curr_;
+      it.curr_->parent_->right_ = it.curr_;
     }
     else
     {
-      it.curr_->parent_->parent_->left_ = it.curr_;
+      it.curr_->parent_->left_ = it.curr_;
     }
   }
   buf->right_ = it.curr_->left_;
@@ -753,7 +751,40 @@ lavrentev::BSTIterator< Key, Value > lavrentev::BSTree< Key, Value, Compare >::r
   updateHeight(buf);
   updateHeight(it.curr_);
 
-  return BSTIterator<Key, Value>(it.curr_->right_);
+  return BSTIterator<Key, Value>(buf);
+}
+
+template< class Key, class Value, class Compare >
+lavrentev::BSTIterator< Key, Value > lavrentev::BSTree< Key, Value, Compare >::rotateRight(iterator it)
+{
+  if (!it.curr_ || !it.curr_->parent_)
+  {
+    throw std::out_of_range("");
+  }
+  Node *buf = it.curr_->parent_;
+  it.curr_->parent_ = buf->parent_;
+  if (it.curr_->parent_)
+  {
+    if (it.curr_->parent_->left_ == buf)
+    {
+      it.curr_->parent_->left_ = it.curr_;
+    }
+    else
+    {
+      it.curr_->parent_->right_ = it.curr_;
+    }
+  }
+  buf->left_ = it.curr_->right_;
+  if (buf->left_)
+  {
+    buf->left_->parent_ = buf;
+  }
+  it.curr_->right_ = buf;
+  it.curr_->right_->parent_ = it.curr_;
+  updateHeight(buf);
+  updateHeight(it.curr_);
+
+  return BSTIterator<Key, Value>(buf);
 }
 
 #endif

@@ -1,5 +1,5 @@
 #include <stdexcept>
-#define BOOST_TEST_MODULE StackQueueTest
+#define BOOST_TEST_MODULE BSTreeTest
 #include <functional>
 #include <boost/test/included/unit_test.hpp>
 #include "BSTree.hpp"
@@ -74,15 +74,27 @@ BOOST_AUTO_TEST_CASE(begin_end_test)
 BOOST_AUTO_TEST_CASE(rotate_left_test)
 {
   lavrentev::BSTree< size_t, std::string, std::less< size_t > > bst{};
-  bst.push(10, "10");
-  bst.push(20, "20");
+  bst.push(1, "a");
+  bst.push(2, "b");
+  bst.push(3, "c");
 
   lavrentev::BSTIterator< size_t, std::string > it = bst.begin(); 
   ++it;
-
   bst.rotateLeft(it);
 
-  auto res = bst.begin();
-  BOOST_CHECK_EQUAL((*res).first, 10);
-  BOOST_CHECK_EQUAL((*++res).first, 20);
+  BOOST_CHECK_EQUAL(bst.height(), 2);
+}
+
+BOOST_AUTO_TEST_CASE(rotate_right_test)
+{
+  lavrentev::BSTree< size_t, std::string, std::less< size_t > > bst{};
+  bst.push(3, "a");
+  bst.push(2, "b");
+  bst.push(1, "c");
+
+  lavrentev::BSTIterator< size_t, std::string > it = bst.begin(); 
+  ++it;
+  bst.rotateRight(it);
+
+  BOOST_CHECK_EQUAL(bst.height(), 2);
 }
