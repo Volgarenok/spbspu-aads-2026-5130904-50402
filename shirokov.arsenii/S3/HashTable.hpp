@@ -88,8 +88,25 @@ namespace shirokov
     size_t size_;
     size_t slotsCount_;
     Slot* slots_;
-    void expand();
   };
+}
+
+template< class Key, class Value, class Hash, class Equal >
+shirokov::HTIter< Key, Value, Hash, Equal > shirokov::HashTable< Key, Value, Hash, Equal >::begin()
+{
+  return HTIter< Key, Value, Hash, Equal >(*this, 0);
+}
+
+template< class Key, class Value, class Hash, class Equal >
+shirokov::HTCIter< Key, Value, Hash, Equal > shirokov::HashTable< Key, Value, Hash, Equal >::cbegin() const
+{
+  return HTCIter< Key, Value, Hash, Equal >(*this, 0);
+}
+
+template< class Key, class Value, class Hash, class Equal >
+shirokov::HTCIter< Key, Value, Hash, Equal > shirokov::HashTable< Key, Value, Hash, Equal >::begin() const
+{
+  return cbegin();
 }
 
 template< class Key, class Value, class Hash, class Equal >
