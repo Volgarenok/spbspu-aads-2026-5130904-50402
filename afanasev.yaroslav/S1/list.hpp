@@ -178,11 +178,9 @@ namespace afanasev
 
   template< class T >
   List< T >::List(List< T > && other) noexcept:
-    fake_(other.fake_),
-    size_(other.size_)
+    List()
   {
-    other.fake_ = new Node< T >{T(), nullptr};
-    other.size_ = 0;
+    swap(other);
   }
 
   template< class T >
@@ -201,8 +199,7 @@ namespace afanasev
   {
     if (this != std::addressof(other))
     {
-      List< T > tmp(other);
-      swap(tmp);
+      swap(other);
     }
     return *this;
   }
