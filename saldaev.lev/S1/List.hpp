@@ -26,7 +26,7 @@ namespace saldaev
       const T *operator->() const;
 
     private:
-      typename List::Node *curr;
+      typename List::Node *curr_;
 
       explicit LCIter(typename List::Node *node);
     };
@@ -49,7 +49,7 @@ namespace saldaev
       const T *operator->() const;
 
     private:
-      typename List::Node *curr;
+      typename List::Node *curr_;
 
       explicit LIter(typename List::Node *node);
     };
@@ -82,16 +82,16 @@ namespace saldaev
   private:
     struct Node
     {
-      T data;
-      Node *next;
-      Node *prev;
+      T data_;
+      Node *next_;
+      Node *prev_;
 
       Node(const T &d, Node *n, Node *p);
     };
 
-    Node *head;
-    Node *tail;
-    size_t length;
+    Node *head_;
+    Node *tail_;
+    size_t length_;
   };
 }
 
