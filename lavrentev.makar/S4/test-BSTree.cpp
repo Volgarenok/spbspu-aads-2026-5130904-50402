@@ -30,6 +30,14 @@ BOOST_AUTO_TEST_CASE(drop_test)
   BOOST_CHECK_THROW(bst.get("a"), std::out_of_range);
 }
 
+BOOST_AUTO_TEST_CASE(has_test)
+{
+  lavrentev::BSTree<std::string, size_t, std::less<std::string>> bst{};
+  BOOST_TEST(bst.has("a") == false);
+  bst.push("a", 1);
+  BOOST_TEST(bst.has("a") == true);
+}
+
 BOOST_AUTO_TEST_CASE(setGetName_test)
 {
   lavrentev::BSTree<std::string, size_t, std::less<std::string>> bst{};

@@ -321,6 +321,28 @@ void lavrentev::BSTree<Key, Value, Compare>::drop(const Key &k)
   delete curr;
 }
 
+template< class Key, class Value, class Compare >
+bool lavrentev::BSTree<Key, Value, Compare>::has(const Key &k) const
+{
+  Node *curr = fakeroot_->left_;
+  while (curr)
+  {
+    if (compare_(k, curr->data_.first))
+    {
+      curr = curr->left_;
+    }
+    else if (compare_(curr->data_.first, k))
+    {
+      curr = curr->right_;
+    }
+    else
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
 template< class Key, class Value >
 Node<Key, Value>
   *lavrentev::fallLeft(Node<Key, Value> *node)
