@@ -6,18 +6,6 @@
 #include <stdexcept>
 #include <utility>
 
-namespace
-{
-  template< class Key, class Value >
-  struct Node
-  {
-    std::pair< Key, Value > data_;
-    Node* left_ = nullptr;
-    Node* right_ = nullptr;
-    size_t height_;
-    Node* parent_;
-  };
-}
 
 namespace lavrentev
 {
@@ -30,6 +18,15 @@ using cmd_t = void (*)(std::istream& in, std::ostream& out, BSTList& bstl);
 
 namespace lavrentev
 {
+  template< class Key, class Value >
+  struct Node
+  {
+    std::pair< Key, Value > data_;
+    Node* left_ = nullptr;
+    Node* right_ = nullptr;
+    size_t height_;
+    Node* parent_;
+  };
   template< class Key, class Value >
   class BSTIterator
   {
@@ -176,11 +173,11 @@ Value& lavrentev::BSTree< Key, Value, Compare >::insertNode(Node*& node, Key k, 
 
   if (compare_(k, node->data_.first))
   {
-    result = &insertNode(node->left_, k, v, isOperator);
+    result = &insertNode(node->left_, k, v, isOperator, node);
   }
   else if (compare_(node->data_.first, k))
   {
-    result = &insertNode(node->right_, k, v, isOperator);
+    result = &insertNode(node->right_, k, v, isOperator, node);
   }
   else
   {
@@ -360,7 +357,7 @@ bool lavrentev::BSTree< Key, Value, Compare >::has(const Key& k) const
 }
 
 template< class Key, class Value >
-Node< Key, Value >* lavrentev::fallLeft(Node< Key, Value >* node)
+lavrentev::Node< Key, Value >* lavrentev::fallLeft(Node< Key, Value >* node)
 {
   if (!node)
   {
@@ -722,15 +719,15 @@ inline void lavrentev::unionn(std::istream& in, std::ostream&, BSTList& bstl)
   bstl.pushFront(std::move(newBst));
 }
 
-template< class Key, class Value, class Compare >
-lavrentev::BSTConstIterator< Key, Value > lavrentev::BSTree< Key, Value, Compare >::rotateLeft(const_iterator it)
-{
-  if (!it.curr_ || !it.curr_->parent_)
-  {
-    throw std::out_of_range("");
-  }
-  Node* buf = it.curr_.parent_;
-  it.curr_->parent_ = it.curr;
-}
+// template< class Key, class Value, class Compare >
+// lavrentev::BSTConstIterator< Key, Value > lavrentev::BSTree< Key, Value, Compare >::rotateLeft(const_iterator it)
+// {
+//   if (!it.curr_ || !it.curr_->parent_)
+//   {
+//     throw std::out_of_range("");
+//   }
+//   Node* buf = it.curr_.parent_;
+//   it.curr_->parent_ = it.curr;
+// }
 
 #endif
