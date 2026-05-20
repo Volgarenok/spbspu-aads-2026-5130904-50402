@@ -314,4 +314,35 @@ karpovich::HashConstIter< Key, Value, Hash, Equal > karpovich::HashTable< Key, V
   return HCIter();
 }
 
+template< class Key, class Value, class Hash, class Equal >
+size_t karpovich::HashTable< Key, Value, Hash, Equal >::maxChainLength() const noexcept
+{
+  size_t maxLen = 0;
+  for (size_t i = 0; i < capacity_; ++i) {
+    size_t current = data_[i].size();
+    if (current > maxLen) {
+      maxLen = current;
+    }
+  }
+  return maxLen;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+void karpovich::HashTable< Key, Value, Hash, Equal >::setMaxLoadFactor(double maxLf) noexcept
+{
+  maxLoadFactor_ = maxLf;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+void karpovich::HashTable< Key, Value, Hash, Equal >::setMaxChainLength(size_t maxLen) noexcept
+{
+  maxChainLength_ = maxLen;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+void karpovich::HashTable< Key, Value, Hash, Equal >::setResizePolicy(std::function< size_t(size_t) > policy) noexcept
+{
+  resizePolicy_ = policy;
+}
+
 #endif
