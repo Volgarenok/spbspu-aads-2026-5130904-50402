@@ -263,4 +263,11 @@ void shirokov::HashTable< Key, Value, Hash, Equal >::swap(HashTable< Key, Value,
   std::swap(slots_, rhs.slots_);
 }
 
+template< class Key, class Value, class Hash, class Equal >
+shirokov::HashTable< Key, Value, Hash, Equal >&
+shirokov::HashTable< Key, Value, Hash, Equal >::operator=(const HashTable& rhs)
+{
+  return *this;
+}
+
 #endif

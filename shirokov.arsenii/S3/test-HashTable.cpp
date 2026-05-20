@@ -1,4 +1,3 @@
-#include <boost/test/unit_test_suite.hpp>
 #define BOOST_TEST_MODULE S3
 #include <functional>
 #include <stdexcept>
@@ -131,10 +130,10 @@ BOOST_AUTO_TEST_CASE(swap_test)
   ht2.insert(5, 7);
   ht2.insert(12, 34);
   ht1.swap(ht2);
-  BOOST_TEST(ht1[5] == 7);
-  BOOST_TEST(ht1[12] == 34);
-  BOOST_TEST(ht2[0] == 1);
-  BOOST_TEST(ht2[2] == 4);
+  BOOST_TEST(ht1.at(5) == 7);
+  BOOST_TEST(ht1.at(12) == 34);
+  BOOST_TEST(ht2.at(0) == 1);
+  BOOST_TEST(ht2.at(2) == 4);
 }
 
 BOOST_AUTO_TEST_CASE(copy_assignment_operator_test)
