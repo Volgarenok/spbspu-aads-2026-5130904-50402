@@ -209,7 +209,6 @@ size_t saldaev::List< T >::size() const noexcept
   return length;
 }
 
-// ___ LCIter ___
 
 template < class T >
 saldaev::List< T >::LCIter::LCIter(typename List< T >::Node *node):
@@ -274,7 +273,6 @@ const T *saldaev::List< T >::LCIter::operator->() const
   return &(curr->data);
 }
 
-// ___ LIter ___
 
 template < class T >
 saldaev::List< T >::LIter::LIter(typename List::Node *node):
