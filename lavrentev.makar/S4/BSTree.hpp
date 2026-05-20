@@ -528,9 +528,11 @@ inline void lavrentev::print(std::istream &in, std::ostream &out, BSTList &bstl)
     out << "<EMPTY>" << "\n";
     return;
   }
+  out << name << " " << (*bstIt).first << " " << (*bstIt).second;
+  ++bstIt;
   for(; bstIt != (*it).end(); ++bstIt)
   {
-    out << (*bstIt).first << " " << (*bstIt).second;
+    out << " " << (*bstIt).first << " " << (*bstIt).second;
   }
   out << "\n";
 }
