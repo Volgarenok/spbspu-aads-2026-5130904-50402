@@ -267,6 +267,12 @@ template< class Key, class Value, class Hash, class Equal >
 shirokov::HashTable< Key, Value, Hash, Equal >&
 shirokov::HashTable< Key, Value, Hash, Equal >::operator=(const HashTable& rhs)
 {
+  if (this == &rhs)
+  {
+    return *this;
+  }
+  shirokov::HashTable< Key, Value, Hash, Equal > cpy(rhs);
+  swap(cpy);
   return *this;
 }
 
