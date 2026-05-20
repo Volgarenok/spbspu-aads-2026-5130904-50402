@@ -95,6 +95,34 @@ namespace shirokov
 }
 
 template< class Key, class Value, class Hash, class Equal >
+bool shirokov::HTCIter< Key, Value, Hash, Equal >::operator!=(
+    const HTCIter< Key, Value, Hash, Equal >& rhs) const noexcept
+{
+  return !(*this == rhs);
+}
+
+template< class Key, class Value, class Hash, class Equal >
+bool shirokov::HTIter< Key, Value, Hash, Equal >::operator!=(
+    const HTIter< Key, Value, Hash, Equal >& rhs) const noexcept
+{
+  return !(*this == rhs);
+}
+
+template< class Key, class Value, class Hash, class Equal >
+bool shirokov::HTCIter< Key, Value, Hash, Equal >::operator==(
+    const HTCIter< Key, Value, Hash, Equal >& rhs) const noexcept
+{
+  return (rhs.table_ == table_ && rhs.pos_ == pos_);
+}
+
+template< class Key, class Value, class Hash, class Equal >
+bool shirokov::HTIter< Key, Value, Hash, Equal >::operator==(
+    const HTIter< Key, Value, Hash, Equal >& rhs) const noexcept
+{
+  return (rhs.table_ == table_ && rhs.pos_ == pos_);
+}
+
+template< class Key, class Value, class Hash, class Equal >
 shirokov::HTIter< Key, Value, Hash, Equal >::HTIter(HashTable< Key, Value, Hash, Equal >& ht, size_t pos):
   pos_(pos),
   table_(ht)
