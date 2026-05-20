@@ -92,6 +92,10 @@ namespace shirokov
 }
 
 template< class Key, class Value, class Hash, class Equal >
+void shirokov::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
+{}
+
+template< class Key, class Value, class Hash, class Equal >
 shirokov::HTIter< Key, Value, Hash, Equal > shirokov::HashTable< Key, Value, Hash, Equal >::end()
 {
   return HTIter< Key, Value, Hash, Equal >(*this, size_);
