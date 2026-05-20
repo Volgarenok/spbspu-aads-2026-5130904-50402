@@ -123,6 +123,10 @@ BSTree(BSTree && other) noexcept:
   size_(other.size_),
   comp_(std::move(other.comp_))
 {
+  if (root_ != &sentinel_)
+  {
+    root_->parent_ = &sentinel_;
+  }
   other.root_ = &other.sentinel_;
   other.size_ = 0;
 }
@@ -133,8 +137,13 @@ operator=(const BSTree & other)
 {
   if (this != &other)
   {
-    BSTree temp(other);
-    swap(temp);
+    clear();
+    if (other.root_ != &other.sentinel_)
+    {
+      root_ = clone(other.root_, &sentinel_);
+      size_ = other.size_;
+      comp_ = other.comp_;
+    }
   }
   return *this;
 }
@@ -149,6 +158,10 @@ operator=(BSTree && other) noexcept
     root_ = other.root_;
     size_ = other.size_;
     comp_ = std::move(other.comp_);
+    if (root_ != &sentinel_)
+    {
+      root_->parent_ = &sentinel_;
+    }
     other.root_ = &other.sentinel_;
     other.size_ = 0;
   }
@@ -159,7 +172,7 @@ template< class Key, class Value, class Compare >
 void afanasev::BSTree< Key, Value, Compare >::
 clearTree(NodeBiTree< Key, Value > * node) noexcept
 {
-  if (node == &sentinel_)
+  if (node == &sentinel_ || node->left_ == node)
   {
     return;
   }
@@ -584,11 +597,10 @@ template< class Key, class Value, class Compare >
 void afanasev::BSTree< Key, Value, Compare >::
 clear() noexcept
 {
-  if (root_ == &sentinel_)
+  if (root_ != &sentinel_ && root_->left_ != root_)
   {
-    return;
+    clearTree(root_);
   }
-  clearTree(root_);
   root_ = &sentinel_;
   size_ = 0;
 }
