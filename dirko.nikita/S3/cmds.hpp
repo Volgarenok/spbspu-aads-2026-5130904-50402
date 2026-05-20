@@ -3,8 +3,6 @@
 
 #include <string>
 #include "graph.hpp"
-#include "hash-table.hpp"
-#include "hasher.hpp"
 namespace dirko
 {
   using GraphTable = HashTable< std::string, Graph, SipHasher< std::string >, std::equal_to< std::string > >;
