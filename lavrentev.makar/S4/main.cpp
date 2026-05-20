@@ -1,6 +1,5 @@
 #include <List.hpp>
 #include <cstddef>
-#include <exception>
 #include <limits>
 #include "BSTree.hpp"
 #include "readfile.cpp"
@@ -47,9 +46,9 @@ int main(int argc, char* argv[])
 
       commands[cmd](std::cin, std::cout, bsts);
     }
-    catch (const std::exception& e)
+    catch (...)
     {
-      std::cout << "<INVALID COMMAND> " << e.what() << "\n";
+      std::cout << "<INVALID COMMAND> " << "\n";
 
       std::cin.clear();
       std::cin.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
