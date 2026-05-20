@@ -51,6 +51,7 @@ BOOST_AUTO_TEST_CASE(height_test)
   BOOST_TEST(bst.height() == 0);
   BOOST_TEST(bst.height(it) == 0);
   bst.push("a", 1);
+  it = bst.cbegin();
   BOOST_TEST(bst.height() == 1);
   BOOST_TEST(bst.height(it) == 1);
 }

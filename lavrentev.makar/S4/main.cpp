@@ -1,6 +1,7 @@
 #include <cstddef>
 #include "BSTree.hpp"
 #include <List.hpp>
+#include <exception>
 #include "readfile.cpp"
 
 int main(int argc, char *argv[])
@@ -19,6 +20,14 @@ int main(int argc, char *argv[])
   } catch (const std::runtime_error &) {
     std::cerr << "Input processing error" << "\n";
     return 2;
+  }
+
+  std::cerr << "DEBUG: number of trees = ";
+  size_t count = 0;
+  for (auto it = bsts.begin(); it != bsts.end(); ++it) ++count;
+  std::cerr << count << std::endl;
+  for (auto it = bsts.begin(); it != bsts.end(); ++it) {
+      std::cerr << "  tree name = '" << (*it).getName() << "'" << std::endl;
   }
 
   lavrentev::BSTree<std::string, cmd_t, std::less<std::string>> commands{};
@@ -43,9 +52,9 @@ int main(int argc, char *argv[])
 
       commands[cmd](std::cin, std::cout, bsts);
     }
-    catch (...)
+    catch (const std::exception& e)
     {
-      std::cout << "<INVALID COMMAND>\n";
+      std::cout << "<INVALID COMMAND> " << e.what() << "\n";
 
       std::cin.clear();
       std::cin.ignore(

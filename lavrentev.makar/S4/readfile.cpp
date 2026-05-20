@@ -29,17 +29,19 @@ inline void lavrentev::readfile(std::string filename, List<BSTree<size_t, std::s
 
   while (file)
   {
-    if (file >> key)
+    if (file >> key >> value)
     {
-      if (file >> value)
-      {
+      //if (file >> value)
+      //{
         bst[key] = value;
-      }
+        std::cerr << "added key=" << key << " value=" << value << " to tree " << bst.getName() << std::endl;
+      //}
     }
     else
     {
       if (file.eof())
       {
+        std::cerr << "pushing tree " << bst.getName() << ", empty=" << (bst.begin() == bst.end()) << std::endl;
         bsts.pushFront(bst);
         break;
       }
