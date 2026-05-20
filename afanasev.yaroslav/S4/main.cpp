@@ -45,7 +45,7 @@ int main(int argc, char * argv[])
     std::cerr << "need two arg";
     return 1;
   }
-  
+
   std::ifstream file(argv[1]);
   if (!file.is_open())
   {

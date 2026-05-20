@@ -425,7 +425,7 @@ template< class Key, class Value, class Compare >
 void afanasev::BSTree< Key, Value, Compare >::
 push(const Key & k, const Value & v)
 {
-    if (root_ == &sentinel_)
+  if (root_ == &sentinel_)
   {
     root_ = new NodeBiTree< Key, Value >(k, v, &sentinel_);
     root_->left_ = root_->right_ = &sentinel_;
