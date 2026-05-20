@@ -1,13 +1,14 @@
-#include "BSTree.hpp"
 #include <List.hpp>
 #include <fstream>
 #include <stdexcept>
+#include "BSTree.hpp"
 
-namespace lavrentev {
-  void readfile(std::string name, List<BSTree<size_t, std::string, std::less<size_t>>> &bsts);
+namespace lavrentev
+{
+  void readfile(std::string name, List< BSTree< size_t, std::string, std::less< size_t > > >& bsts);
 }
 
-inline void lavrentev::readfile(std::string filename, List<BSTree<size_t, std::string, std::less<size_t>>> &bsts)
+inline void lavrentev::readfile(std::string filename, List< BSTree< size_t, std::string, std::less< size_t > > >& bsts)
 {
   std::ifstream file(filename);
   if (!file.is_open())
@@ -21,7 +22,7 @@ inline void lavrentev::readfile(std::string filename, List<BSTree<size_t, std::s
     return;
   }
 
-  BSTree<size_t, std::string, std::less<size_t>> bst;
+  BSTree< size_t, std::string, std::less< size_t > > bst;
   bst.setName(name);
 
   size_t key;
@@ -31,11 +32,8 @@ inline void lavrentev::readfile(std::string filename, List<BSTree<size_t, std::s
   {
     if (file >> key >> value)
     {
-      //if (file >> value)
-      //{
-        bst[key] = value;
-        std::cerr << "added key=" << key << " value=" << value << " to tree " << bst.getName() << std::endl;
-      //}
+      bst[key] = value;
+      std::cerr << "added key=" << key << " value=" << value << " to tree " << bst.getName() << std::endl;
     }
     else
     {
@@ -48,7 +46,7 @@ inline void lavrentev::readfile(std::string filename, List<BSTree<size_t, std::s
 
       file.clear();
       bsts.pushFront(bst);
-      bst = BSTree<size_t, std::string, std::less<size_t>>();
+      bst = BSTree< size_t, std::string, std::less< size_t > >();
 
       if (file >> name)
       {

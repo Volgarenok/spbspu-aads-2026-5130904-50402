@@ -1,10 +1,10 @@
-#include <cstddef>
-#include "BSTree.hpp"
 #include <List.hpp>
+#include <cstddef>
 #include <exception>
+#include "BSTree.hpp"
 #include "readfile.cpp"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   if (argc != 2)
   {
@@ -12,25 +12,29 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  lavrentev::List<lavrentev::BSTree<size_t, std::string, std::less<size_t>>> bsts{};
+  lavrentev::List< lavrentev::BSTree< size_t, std::string, std::less< size_t > > > bsts{};
 
   try
   {
     lavrentev::readfile(argv[1], bsts);
-  } catch (const std::runtime_error &) {
+  }
+  catch (const std::runtime_error&)
+  {
     std::cerr << "Input processing error" << "\n";
     return 2;
   }
 
   std::cerr << "DEBUG: number of trees = ";
   size_t count = 0;
-  for (auto it = bsts.begin(); it != bsts.end(); ++it) ++count;
+  for (auto it = bsts.begin(); it != bsts.end(); ++it)
+    ++count;
   std::cerr << count << std::endl;
-  for (auto it = bsts.begin(); it != bsts.end(); ++it) {
-      std::cerr << "  tree name = '" << (*it).getName() << "'" << std::endl;
+  for (auto it = bsts.begin(); it != bsts.end(); ++it)
+  {
+    std::cerr << "  tree name = '" << (*it).getName() << "'" << std::endl;
   }
 
-  lavrentev::BSTree<std::string, cmd_t, std::less<std::string>> commands{};
+  lavrentev::BSTree< std::string, cmd_t, std::less< std::string > > commands{};
   commands["print"] = lavrentev::print;
   commands["complement"] = lavrentev::complement;
   commands["intersect"] = lavrentev::intersect;
@@ -57,10 +61,7 @@ int main(int argc, char *argv[])
       std::cout << "<INVALID COMMAND> " << e.what() << "\n";
 
       std::cin.clear();
-      std::cin.ignore(
-        std::numeric_limits<std::streamsize>::max(),
-        '\n'
-      );
+      std::cin.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
     }
   }
 
