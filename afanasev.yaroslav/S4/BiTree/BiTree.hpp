@@ -19,7 +19,6 @@ namespace afanasev
   class BSTree
   {
   public:
-
     BSTree();
 
     BSTree(const BSTree & other);
@@ -448,7 +447,6 @@ push(const Key & k, const Value & v)
       }
 
       cur = cur->left_;
-
     }
     else if (comp_(cur->key_, k))
     {
@@ -459,7 +457,6 @@ push(const Key & k, const Value & v)
         ++size_;
         return;
       }
-
       cur = cur->right_;
     }
     else
@@ -497,7 +494,6 @@ push(Key && k, Value && v)
       }
 
       cur = cur->left_;
-
     }
     else if (comp_(cur->key_, k))
     {
