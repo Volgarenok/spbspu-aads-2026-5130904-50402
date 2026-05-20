@@ -19,7 +19,7 @@ namespace shirokov
   class HTIter
   {
   public:
-    HTIter(HashTable< Key, Value, Hash, Equal >&, size_t);
+    HTIter(HashTable< Key, Value, Hash, Equal >& ht, size_t pos);
     bool operator==(const HTIter&) const noexcept;
     bool operator!=(const HTIter&) const noexcept;
     HTIter& operator++();
@@ -35,7 +35,7 @@ namespace shirokov
   class HTCIter
   {
   public:
-    HTCIter(const HashTable< Key, Value, Hash, Equal >&, size_t);
+    HTCIter(const HashTable< Key, Value, Hash, Equal >& ht, size_t pos);
     bool operator==(const HTCIter&) const noexcept;
     bool operator!=(const HTCIter&) const noexcept;
     HTCIter& operator++();
@@ -93,6 +93,18 @@ namespace shirokov
     void expand();
   };
 }
+
+template< class Key, class Value, class Hash, class Equal >
+shirokov::HTIter< Key, Value, Hash, Equal >::HTIter(HashTable< Key, Value, Hash, Equal >& ht, size_t pos):
+  pos_(pos),
+  table_(ht)
+{}
+
+template< class Key, class Value, class Hash, class Equal >
+shirokov::HTCIter< Key, Value, Hash, Equal >::HTCIter(const HashTable< Key, Value, Hash, Equal >& ht, size_t pos):
+  pos_(pos),
+  table_(ht)
+{}
 
 template< class Key, class Value, class Hash, class Equal >
 shirokov::HashTable< Key, Value, Hash, Equal >::HashTable():
