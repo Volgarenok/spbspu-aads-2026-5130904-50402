@@ -8,11 +8,11 @@
 
 namespace dirko
 {
-  template < class T >
+  template< class T >
   class LIter;
-  template < class T >
+  template< class T >
   class LCIter;
-  template < class T >
+  template< class T >
   class List
   {
   public:
@@ -46,13 +46,13 @@ namespace dirko
     size_t size_;
   };
 
-  template < class T >
+  template< class T >
   List< T >::List():
     fake_(new Node< T >{T(), nullptr, nullptr}),
     tail_(fake_),
     size_(0)
   {}
-  template < class T >
+  template< class T >
   List< T >::List(List< T > &&other) noexcept:
     fake_(other.fake_),
     tail_(other.tail_),
@@ -61,7 +61,7 @@ namespace dirko
     other.fake_ = nullptr;
     other.size_ = 0;
   }
-  template < class T >
+  template< class T >
   List< T >::List(const List< T > &other):
     fake_(new Node< T >{T(), nullptr, nullptr}),
     tail_(fake_),
@@ -73,7 +73,7 @@ namespace dirko
       head = head->next;
     }
   }
-  template < class T >
+  template< class T >
   List< T > &List< T >::operator=(List< T > &&other) noexcept
   {
     if (this != std::addressof(other)) {
@@ -82,7 +82,7 @@ namespace dirko
     }
     return *this;
   }
-  template < class T >
+  template< class T >
   List< T > &List< T >::operator=(const List< T > &other)
   {
     if (this != std::addressof(other)) {
@@ -91,13 +91,13 @@ namespace dirko
     }
     return *this;
   }
-  template < class T >
+  template< class T >
   List< T >::~List()
   {
     clear();
     delete fake_;
   }
-  template < class T >
+  template< class T >
   void List< T >::clear()
   {
     if (fake_) {
@@ -113,19 +113,19 @@ namespace dirko
     size_ = 0;
     tail_ = fake_;
   }
-  template < class T >
+  template< class T >
   void List< T >::swap(List< T > &rhs) noexcept
   {
     std::swap(fake_, rhs.fake_);
     std::swap(tail_, rhs.tail_);
     std::swap(size_, rhs.size_);
   }
-  template < class T >
+  template< class T >
   size_t List< T >::size() const noexcept
   {
     return size_;
   }
-  template < class T >
+  template< class T >
   void List< T >::push_front(const T &val)
   {
     Node< T > *n = new Node< T >{val, fake_->next, nullptr};
@@ -138,7 +138,7 @@ namespace dirko
     }
     ++size_;
   }
-  template < class T >
+  template< class T >
   void List< T >::push_back(const T &val)
   {
     Node< T > *n = new Node< T >{val, nullptr, tail_};
@@ -150,7 +150,7 @@ namespace dirko
     tail_ = n;
     ++size_;
   }
-  template < class T >
+  template< class T >
   void List< T >::pop_front()
   {
     if (size_ == 0) {
@@ -164,7 +164,7 @@ namespace dirko
     }
     --size_;
   }
-  template < class T >
+  template< class T >
   void List< T >::pop_back()
   {
     if (size_ == 0) {
@@ -180,50 +180,50 @@ namespace dirko
     }
     --size_;
   }
-  template < class T >
+  template< class T >
   LIter< T > List< T >::begin() noexcept
   {
     return LIter< T >{fake_->next};
   }
 
-  template < class T >
+  template< class T >
   LIter< T > List< T >::end() noexcept
   {
     return LIter< T >{tail_->next};
   }
 
-  template < class T >
+  template< class T >
   LCIter< T > List< T >::cbegin() const noexcept
   {
     return LCIter< T >{fake_->next};
   }
 
-  template < class T >
+  template< class T >
   LCIter< T > List< T >::cend() const noexcept
   {
     return LCIter< T >{tail_->next};
   }
-  template < class T >
+  template< class T >
   T &List< T >::head() noexcept
   {
     return fake_->next->val;
   }
-  template < class T >
+  template< class T >
   T &List< T >::tail() noexcept
   {
     return tail_->val;
   }
-  template < class T >
+  template< class T >
   const T &List< T >::chead() const noexcept
   {
     return fake_->next->val;
   }
-  template < class T >
+  template< class T >
   const T &List< T >::ctail() const noexcept
   {
     return tail_->val;
   }
-  template < class T >
+  template< class T >
   class LIter
   {
   public:
@@ -240,7 +240,7 @@ namespace dirko
     Node< T > *curr_;
     friend class List< T >;
   };
-  template < class T >
+  template< class T >
   class LCIter
   {
   public:
@@ -257,97 +257,97 @@ namespace dirko
     const Node< T > *curr_;
     friend class List< T >;
   };
-  template < class T >
+  template< class T >
   LIter< T >::LIter(Node< T > *node):
     curr_(node)
   {}
-  template < class T >
+  template< class T >
   T &LIter< T >::operator*() const
   {
     return curr_->val;
   }
-  template < class T >
+  template< class T >
   bool LIter< T >::operator==(const LIter< T > &rhs) const
   {
     return curr_ == rhs.curr_;
   }
-  template < class T >
+  template< class T >
   bool LIter< T >::operator!=(const LIter< T > &rhs) const
   {
     return !(*this == rhs);
   }
-  template < class T >
+  template< class T >
   LIter< T > &LIter< T >::operator++()
   {
     curr_ = curr_->next;
     return *this;
   }
-  template < class T >
+  template< class T >
   LIter< T > LIter< T >::operator++(int)
   {
     LIter< T > prev = curr_;
     curr_ = curr_->next;
     return prev;
   }
-  template < class T >
+  template< class T >
   LIter< T > &LIter< T >::operator--()
   {
     curr_ = curr_->prev;
     return *this;
   }
-  template < class T >
+  template< class T >
   LIter< T > LIter< T >::operator--(int)
   {
     LIter< T > next = curr_;
     curr_ = curr_->prev;
     return next;
   }
-  template < class T >
+  template< class T >
   LCIter< T >::LCIter(Node< T > *node):
     curr_(node)
   {}
-  template < class T >
+  template< class T >
   const T &LCIter< T >::operator*() const
   {
     return curr_->val;
   }
-  template < class T >
+  template< class T >
   bool LCIter< T >::operator==(const LCIter< T > &rhs) const
   {
     return curr_ == rhs.curr_;
   }
-  template < class T >
+  template< class T >
   bool LCIter< T >::operator!=(const LCIter< T > &rhs) const
   {
     return !(*this == rhs);
   }
-  template < class T >
+  template< class T >
   LCIter< T > &LCIter< T >::operator++()
   {
     curr_ = curr_->next;
     return *this;
   }
-  template < class T >
+  template< class T >
   LCIter< T > LCIter< T >::operator++(int)
   {
     LCIter< T > prev = curr_;
     curr_ = curr_->next;
     return prev;
   }
-  template < class T >
+  template< class T >
   LCIter< T > &LCIter< T >::operator--()
   {
     curr_ = curr_->prev;
     return *this;
   }
-  template < class T >
+  template< class T >
   LCIter< T > LCIter< T >::operator--(int)
   {
     LCIter< T > next = curr_;
     curr_ = curr_->prev;
     return next;
   }
-  template < class T >
+  template< class T >
   LIter< T > List< T >::insert(LIter< T > pos, const T &value)
   {
     Node< T > *posNode = pos.curr_;
@@ -359,7 +359,7 @@ namespace dirko
     size_++;
     return LIter< T >{newNode};
   }
-  template < class T >
+  template< class T >
   LIter< T > List< T >::erase(LIter< T > pos)
   {
     if (size_ == 0) {
