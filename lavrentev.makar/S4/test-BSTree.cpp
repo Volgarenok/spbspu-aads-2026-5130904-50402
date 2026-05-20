@@ -3,7 +3,6 @@
 #include <boost/test/included/unit_test.hpp>
 #include "BSTree.hpp"
 #include <functional>
-#include <sstream>
 
 BOOST_AUTO_TEST_CASE(push_test)
 {
@@ -56,26 +55,17 @@ BOOST_AUTO_TEST_CASE(height_test)
   BOOST_TEST(bst.height(it) == 1);
 }
 
-BOOST_AUTO_TEST_CASE(print_test)
+BOOST_AUTO_TEST_CASE(begin_end_test)
 {
-  lavrentev::BSTree<size_t, std::string, std::less<size_t>> bst{};
-  bst.setName("graph");
-  bst.push(1, "a");
-  bst.push(2, "b");
-  bst.push(3, "c");
-
-  BSTList bstl;
-  bstl.pushFront(std::move(bst));
-  std::istringstream in("graph");
-  std::ostringstream out;
-  lavrentev::print(in, out, bstl);
-  BOOST_CHECK_EQUAL(out.str(), "graph 1 a 2 b 3 c\n");
-  out.clear();
-
-  lavrentev::BSTree<size_t, std::string, std::less<size_t>> bst2{};
-  bst2.setName("graph2");
-  bstl.pushFront(std::move(bst2));
-  in.str("graph2");
-  lavrentev::print(in, out, bstl);
-  BOOST_CHECK_EQUAL(out.str(), "<EMPTY>>\n");
+  lavrentev::BSTree<std::string, size_t, std::less<std::string>> bst{};
+  BOOST_CHECK(bst.begin() == bst.end());
+  bst.push("a", 1);
+  bst.push("b", 2);
+  bst.push("c", 3);
+  auto it = bst.begin();
+  BOOST_CHECK_EQUAL((*it).first, "a");
+  BOOST_CHECK_EQUAL((*it).second, 1);
+  ++it;
+  BOOST_CHECK_EQUAL((*it).first, "b");
+  BOOST_CHECK(it != bst.end());
 }
