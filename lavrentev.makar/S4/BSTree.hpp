@@ -333,6 +333,11 @@ void lavrentev::BSTree< Key, Value, Compare >::drop(const Key& k)
     parent->right_ = child;
   }
 
+  if (child)
+  {
+    child->parent_ = parent;
+  }
+
   delete curr;
 }
 
