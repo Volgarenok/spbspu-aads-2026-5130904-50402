@@ -92,6 +92,24 @@ namespace shirokov
 }
 
 template< class Key, class Value, class Hash, class Equal >
+shirokov::HTIter< Key, Value, Hash, Equal > shirokov::HashTable< Key, Value, Hash, Equal >::end()
+{
+  return HTIter< Key, Value, Hash, Equal >(*this, size_);
+}
+
+template< class Key, class Value, class Hash, class Equal >
+shirokov::HTCIter< Key, Value, Hash, Equal > shirokov::HashTable< Key, Value, Hash, Equal >::cend() const
+{
+  return HTCIter< Key, Value, Hash, Equal >(*this, size_);
+}
+
+template< class Key, class Value, class Hash, class Equal >
+shirokov::HTCIter< Key, Value, Hash, Equal > shirokov::HashTable< Key, Value, Hash, Equal >::end() const
+{
+  return cend();
+}
+
+template< class Key, class Value, class Hash, class Equal >
 shirokov::HTIter< Key, Value, Hash, Equal > shirokov::HashTable< Key, Value, Hash, Equal >::begin()
 {
   return HTIter< Key, Value, Hash, Equal >(*this, 0);
