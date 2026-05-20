@@ -3,7 +3,7 @@
 
 namespace dirko
 {
-  template < class T >
+  template< class T >
   struct Node
   {
     T val;
