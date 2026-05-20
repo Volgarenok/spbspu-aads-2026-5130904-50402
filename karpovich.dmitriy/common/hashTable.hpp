@@ -105,7 +105,10 @@ karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(const HashTable &othe
   capacity_(other.capacity_),
   size_(0),
   hasher_(other.hasher_),
-  comparator_(other.comparator_)
+  comparator_(other.comparator_),
+  maxLoadFactor_(other.maxLoadFactor_),
+  maxChainLength_(other.maxChainLength_),
+  resizePolicy_(other.resizePolicy_)
 {
   for (size_t i = 0; i < capacity_; ++i) {
     data_.pushBack(List< valType >());
@@ -125,7 +128,10 @@ karpovich::HashTable< Key, Value, Hash, Equal >::HashTable(HashTable &&other) no
   capacity_(other.capacity_),
   size_(other.size_),
   hasher_(std::move(other.hasher_)),
-  comparator_(std::move(other.comparator_))
+  comparator_(std::move(other.comparator_)),
+  maxLoadFactor_(other.maxLoadFactor_),
+  maxChainLength_(other.maxChainLength_),
+  resizePolicy_(std::move(other.resizePolicy_))
 {
   other.capacity_ = 0;
   other.size_ = 0;
