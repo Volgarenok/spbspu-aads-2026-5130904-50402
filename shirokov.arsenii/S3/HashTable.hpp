@@ -23,7 +23,6 @@ namespace shirokov
     bool operator==(const HTIter&) const noexcept;
     bool operator!=(const HTIter&) const noexcept;
     HTIter& operator++();
-    HTIter& operator--();
     std::pair< Key, Value >& operator*();
 
   private:
@@ -39,7 +38,6 @@ namespace shirokov
     bool operator==(const HTCIter&) const noexcept;
     bool operator!=(const HTCIter&) const noexcept;
     HTCIter& operator++();
-    HTCIter& operator--();
     const std::pair< Key, Value >& operator*();
 
   private:
@@ -92,6 +90,26 @@ namespace shirokov
     Slot* slots_;
     void expand();
   };
+}
+
+template< class Key, class Value, class Hash, class Equal >
+shirokov::HTIter< Key, Value, Hash, Equal >& shirokov::HTIter< Key, Value, Hash, Equal >::operator++()
+{
+  while (pos_ < table_.size_ && table_.slots_[pos_].isEmpty)
+  {
+    ++pos_;
+  }
+  return *this;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+shirokov::HTCIter< Key, Value, Hash, Equal >& shirokov::HTCIter< Key, Value, Hash, Equal >::operator++()
+{
+  while (pos_ < table_.size_ && table_.slots_[pos_].isEmpty)
+  {
+    ++pos_;
+  }
+  return *this;
 }
 
 template< class Key, class Value, class Hash, class Equal >
