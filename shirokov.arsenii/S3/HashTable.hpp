@@ -93,6 +93,18 @@ namespace shirokov
 }
 
 template< class Key, class Value, class Hash, class Equal >
+std::pair< Key, Value >& shirokov::HTIter< Key, Value, Hash, Equal >::operator*()
+{
+  return {table_.slots_[pos_].key, table_.slots_[pos_].value};
+}
+
+template< class Key, class Value, class Hash, class Equal >
+const std::pair< Key, Value >& shirokov::HTCIter< Key, Value, Hash, Equal >::operator*()
+{
+  return {table_.slots_[pos_].key, table_.slots_[pos_].value};
+}
+
+template< class Key, class Value, class Hash, class Equal >
 shirokov::HTIter< Key, Value, Hash, Equal >& shirokov::HTIter< Key, Value, Hash, Equal >::operator++()
 {
   while (pos_ < table_.size_ && table_.slots_[pos_].isEmpty)
