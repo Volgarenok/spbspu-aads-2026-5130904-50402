@@ -7,11 +7,15 @@
 #include <string>
 #include "Graph.hpp"
 #include "HashTable.hpp"
+#include "bilist.hpp"
 #include "hasher.hpp"
 
 namespace shirokov
 {
   shirokov::graphTable parse(std::istream& in);
+
+  template< class T >
+  bool has(const BiList< T >& list, const T& elem);
 }
 
 int main(int argc, char* argv[])
@@ -61,4 +65,32 @@ int main(int argc, char* argv[])
     std::cerr << "Bad input\n";
     return 1;
   }
+}
+
+shirokov::graphTable shirokov::parse(std::istream& in)
+{
+  shirokov::graphTable gt;
+  while (in)
+  {
+    std::string name;
+    size_t count;
+    in >> name >> count;
+    shirokov::Graph graph;
+    for (size_t i = 0; i < count; ++i)
+    {
+      std::string v1, v2;
+      size_t weight;
+      in >> v1 >> v2 >> weight;
+      graph.connections[{v1, v2}].pushBack(weight);
+      if (!has(graph.vertexes, v1))
+      {
+        graph.vertexes.pushBack(v1);
+      }
+      if (!has(graph.vertexes, v2))
+      {
+        graph.vertexes.pushBack(v2);
+      }
+    }
+  }
+  return gt;
 }
