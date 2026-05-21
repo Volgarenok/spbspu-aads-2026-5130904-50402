@@ -1,5 +1,5 @@
-#include <stdexcept>
 #define BOOST_TEST_MODULE S1
+#include <stdexcept>
 #include <boost/test/included/unit_test.hpp>
 #include "bilist.hpp"
 
@@ -132,4 +132,19 @@ BOOST_AUTO_TEST_CASE(comparing_iterators)
   BOOST_CHECK(it3 != it4);
   ++it4;
   BOOST_CHECK(it3 == it4);
+}
+
+BOOST_AUTO_TEST_CASE(insert_test)
+{
+  shirokov::BiList< int > A;
+  A.pushBack(1);
+  A.pushBack(2);
+  auto it = ++A.begin();
+  A.insert(it, 3);
+  it = A.begin();
+  BOOST_TEST(*it == 1);
+  ++it;
+  BOOST_TEST(*it == 3);
+  ++it;
+  BOOST_TEST(*it == 2);
 }

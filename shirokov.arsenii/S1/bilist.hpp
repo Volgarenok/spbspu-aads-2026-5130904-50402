@@ -81,6 +81,8 @@ namespace shirokov
     void popFront();
     void popBack();
 
+    BLIter< T > insert(BLIter< T > pos, const T& value);
+
     void clear() noexcept;
     bool empty() const noexcept;
 
