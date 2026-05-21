@@ -93,6 +93,20 @@ namespace shirokov
 }
 
 template< class T >
+shirokov::BLIter< T > shirokov::BiList< T >::insert(shirokov::BLIter< T > pos, const T& value)
+{
+  if (pos.curr == nullptr)
+  {
+    return pos;
+  }
+  BiList< T >::Node* curr = new Node{value, pos.curr, pos.curr->prev};
+  shirokov::BLIter< T > newElem(curr);
+  pos.curr->prev->next = newElem.curr;
+  pos.curr->prev = newElem.curr;
+  return newElem;
+}
+
+template< class T >
 shirokov::BLCIter< T > shirokov::BiList< T >::begin() const
 {
   return cbegin();
