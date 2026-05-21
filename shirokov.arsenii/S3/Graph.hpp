@@ -2,6 +2,8 @@
 #define GRAPH_HPP
 #include <bilist.hpp>
 #include <functional>
+#include <istream>
+#include <ostream>
 #include <string>
 #include <utility>
 #include "HashTable.hpp"
