@@ -61,9 +61,11 @@ namespace shirokov
     BiList< T >& operator=(BiList< T >&&);
 
     BLIter< T > begin();
+    BLCIter< T > begin() const;
     BLCIter< T > cbegin() const;
 
     BLIter< T > end();
+    BLCIter< T > end() const;
     BLCIter< T > cend() const;
 
     T& front();
@@ -86,6 +88,18 @@ namespace shirokov
     Node* head = nullptr;
     Node* tail = nullptr;
   };
+}
+
+template< class T >
+shirokov::BLCIter< T > shirokov::BiList< T >::begin() const
+{
+  return cbegin();
+}
+
+template< class T >
+shirokov::BLCIter< T > shirokov::BiList< T >::end() const
+{
+  return cend();
 }
 
 template< class T >
