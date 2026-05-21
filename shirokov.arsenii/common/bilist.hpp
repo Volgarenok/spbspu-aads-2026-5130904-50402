@@ -81,6 +81,8 @@ namespace shirokov
     void popFront();
     void popBack();
 
+    BLIter< T > insert(BLIter< T > pos, const T& value);
+
     void clear() noexcept;
     bool empty() const noexcept;
 
@@ -88,6 +90,20 @@ namespace shirokov
     Node* head = nullptr;
     Node* tail = nullptr;
   };
+}
+
+template< class T >
+shirokov::BLIter< T > shirokov::BiList< T >::insert(shirokov::BLIter< T > pos, const T& value)
+{
+  if (pos.curr == nullptr)
+  {
+    return pos;
+  }
+  BiList< T >::Node* curr = new Node{value, pos.curr, pos.curr->prev};
+  shirokov::BLIter< T > newElem(curr);
+  pos.curr->prev->next = newElem.curr;
+  pos.curr->prev = newElem.curr;
+  return newElem;
 }
 
 template< class T >
