@@ -95,3 +95,16 @@ shirokov::graphTable shirokov::parse(std::istream& in)
   }
   return gt;
 }
+
+template< class T >
+bool shirokov::has(const BiList< T >& list, const T& elem)
+{
+  for (auto it = list.begin(); it != list.end(); ++it)
+  {
+    if ((*it) == elem)
+    {
+      return true;
+    }
+  }
+  return false;
+}
