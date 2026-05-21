@@ -84,11 +84,37 @@ shirokov::graphTable shirokov::parse(std::istream& in)
       graph.connections[{v1, v2}].pushBack(weight);
       if (!has(graph.vertexes, v1))
       {
-        graph.vertexes.pushBack(v1);
+        bool isInserted = false;
+        for (auto it = graph.vertexes.begin(); it != graph.vertexes.end(); ++it)
+        {
+          if (*it < v1)
+          {
+            graph.vertexes.insert(it, v1);
+            isInserted = true;
+            break;
+          }
+        }
+        if (!isInserted)
+        {
+          graph.vertexes.pushBack(v1);
+        }
       }
       if (!has(graph.vertexes, v2))
       {
-        graph.vertexes.pushBack(v2);
+        bool isInserted = false;
+        for (auto it = graph.vertexes.begin(); it != graph.vertexes.end(); ++it)
+        {
+          if (*it < v2)
+          {
+            graph.vertexes.insert(it, v2);
+            isInserted = true;
+            break;
+          }
+        }
+        if (!isInserted)
+        {
+          graph.vertexes.pushBack(v2);
+        }
       }
     }
     gt.insert(name, &graph);
