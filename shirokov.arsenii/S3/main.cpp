@@ -12,7 +12,7 @@
 
 namespace shirokov
 {
-  shirokov::graphTable parse(std::istream& in);
+  std::pair< shirokov::graphTable, shirokov::BiList< std::string > > parse(std::istream& in);
 
   template< class T >
   bool has(const BiList< T >& list, const T& elem);
@@ -32,9 +32,11 @@ int main(int argc, char* argv[])
     std::cerr << "Couldn't open the file\n";
     return 1;
   }
-  shirokov::graphTable graphs = shirokov::parse(in);
+  std::pair< shirokov::graphTable, shirokov::BiList< std::string > > parseRes = shirokov::parse(in);
+  shirokov::graphTable graphs = parseRes.first;
+  shirokov::BiList< std::string > names = parseRes.second;
 
-  using cmd_t = void (*)(std::ostream&, std::istream&, shirokov::graphTable&);
+  using cmd_t = void (*)(std::ostream&, std::istream&, shirokov::graphTable&, shirokov::BiList< std::string >&);
   shirokov::HashTable< std::string, cmd_t, shirokov::SHA1< std::string >, std::equal_to< std::string > > cmds;
   cmds["graphs"] = shirokov::graphs;
   // cmds["vertexes"] = shirokov::vertexes;
@@ -51,7 +53,7 @@ int main(int argc, char* argv[])
   {
     try
     {
-      cmds.at(cmd)(std::cout, std::cin, graphs);
+      cmds.at(cmd)(std::cout, std::cin, graphs, names);
     }
     catch (...)
     {
@@ -67,14 +69,29 @@ int main(int argc, char* argv[])
   }
 }
 
-shirokov::graphTable shirokov::parse(std::istream& in)
+std::pair< shirokov::graphTable, shirokov::BiList< std::string > > shirokov::parse(std::istream& in)
 {
   shirokov::graphTable gt;
-  while (in)
+  shirokov::BiList< std::string > names;
+  std::string name;
+  while (in >> name)
   {
-    std::string name;
+    bool isInserted = false;
+    for (auto it = names.begin(); it != names.end(); ++it)
+    {
+      if (*it > name)
+      {
+        names.insert(it, name);
+        isInserted = true;
+        break;
+      }
+    }
+    if (!isInserted)
+    {
+      names.pushBack(name);
+    }
     size_t count;
-    in >> name >> count;
+    in >> count;
     shirokov::Graph graph;
     for (size_t i = 0; i < count; ++i)
     {
@@ -84,42 +101,16 @@ shirokov::graphTable shirokov::parse(std::istream& in)
       graph.connections[{v1, v2}].pushBack(weight);
       if (!has(graph.vertexes, v1))
       {
-        bool isInserted = false;
-        for (auto it = graph.vertexes.begin(); it != graph.vertexes.end(); ++it)
-        {
-          if (*it < v1)
-          {
-            graph.vertexes.insert(it, v1);
-            isInserted = true;
-            break;
-          }
-        }
-        if (!isInserted)
-        {
-          graph.vertexes.pushBack(v1);
-        }
+        graph.vertexes.pushBack(v1);
       }
       if (!has(graph.vertexes, v2))
       {
-        bool isInserted = false;
-        for (auto it = graph.vertexes.begin(); it != graph.vertexes.end(); ++it)
-        {
-          if (*it < v2)
-          {
-            graph.vertexes.insert(it, v2);
-            isInserted = true;
-            break;
-          }
-        }
-        if (!isInserted)
-        {
-          graph.vertexes.pushBack(v2);
-        }
+        graph.vertexes.pushBack(v2);
       }
     }
     gt.insert(name, &graph);
   }
-  return gt;
+  return {gt, names};
 }
 
 template< class T >

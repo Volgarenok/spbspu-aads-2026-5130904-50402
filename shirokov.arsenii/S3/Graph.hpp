@@ -20,15 +20,15 @@ namespace shirokov
 
   using graphTable = HashTable< std::string, Graph*, SHA1< std::string >, std::equal_to< std::string > >;
 
-  void graphs(std::ostream&, std::istream&, graphTable&);
-  void vertexes(std::ostream&, std::istream&, graphTable&);
-  void outbound(std::ostream&, std::istream&, graphTable&);
-  void inbound(std::ostream&, std::istream&, graphTable&);
-  void bind(std::ostream&, std::istream&, graphTable&);
-  void cut(std::ostream&, std::istream&, graphTable&);
-  void create(std::ostream&, std::istream&, graphTable&);
-  void merge(std::ostream&, std::istream&, graphTable&);
-  void extract(std::ostream&, std::istream&, graphTable&);
+  void graphs(std::ostream&, std::istream&, graphTable&, BiList< std::string >&);
+  void vertexes(std::ostream&, std::istream&, graphTable&, BiList< std::string >&);
+  void outbound(std::ostream&, std::istream&, graphTable&, BiList< std::string >&);
+  void inbound(std::ostream&, std::istream&, graphTable&, BiList< std::string >&);
+  void bind(std::ostream&, std::istream&, graphTable&, BiList< std::string >&);
+  void cut(std::ostream&, std::istream&, graphTable&, BiList< std::string >&);
+  void create(std::ostream&, std::istream&, graphTable&, BiList< std::string >&);
+  void merge(std::ostream&, std::istream&, graphTable&, BiList< std::string >&);
+  void extract(std::ostream&, std::istream&, graphTable&, BiList< std::string >&);
 }
 
 #endif

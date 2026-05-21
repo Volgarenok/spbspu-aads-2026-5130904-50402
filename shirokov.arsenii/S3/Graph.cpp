@@ -1,9 +1,10 @@
 #include "Graph.hpp"
+#include "bilist.hpp"
 
-void shirokov::graphs(std::ostream& out, std::istream&, graphTable& gt)
+void shirokov::graphs(std::ostream& out, std::istream&, graphTable&, BiList< std::string >& names)
 {
-  for (auto it = gt.begin(); it != gt.end(); ++it)
+  for (auto it = names.begin(); it != names.end(); ++it)
   {
-    out << (*it).first << '\n';
+    out << *it << '\n';
   }
 }
