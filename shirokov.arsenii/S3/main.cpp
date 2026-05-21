@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
   using cmd_t = void (*)(std::ostream&, std::istream&, shirokov::graphTable&, shirokov::BiList< std::string >&);
   shirokov::HashTable< std::string, cmd_t, shirokov::SHA1< std::string >, std::equal_to< std::string > > cmds;
   cmds["graphs"] = shirokov::graphs;
-  // cmds["vertexes"] = shirokov::vertexes;
+  cmds["vertexes"] = shirokov::vertexes;
   // cmds["outbound"] = shirokov::outbound;
   // cmds["inbound"] = shirokov::inbound;
   // cmds["bind"] = shirokov::bind;
