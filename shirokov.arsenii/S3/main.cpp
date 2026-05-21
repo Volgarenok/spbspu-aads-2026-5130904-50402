@@ -91,6 +91,7 @@ shirokov::graphTable shirokov::parse(std::istream& in)
         graph.vertexes.pushBack(v2);
       }
     }
+    gt.insert(name, &graph);
   }
   return gt;
 }
