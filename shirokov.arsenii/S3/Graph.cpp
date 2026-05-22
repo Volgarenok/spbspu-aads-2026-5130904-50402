@@ -10,6 +10,10 @@ void shirokov::graphs(std::ostream& out, std::istream&, graphTable&, BiList< std
   {
     out << *it << '\n';
   }
+  if (names.empty())
+  {
+    out << '\n';
+  }
 }
 
 void shirokov::vertexes(std::ostream& out, std::istream& in, graphTable& gt, BiList< std::string >&)
@@ -24,6 +28,10 @@ void shirokov::vertexes(std::ostream& out, std::istream& in, graphTable& gt, BiL
   {
     out << *it << '\n';
   }
+  if (gt.at(graphName).vertexes.empty())
+  {
+    out << '\n';
+  }
 }
 
 void shirokov::outbound(std::ostream& out, std::istream& in, graphTable& gt, BiList< std::string >&)
@@ -31,6 +39,10 @@ void shirokov::outbound(std::ostream& out, std::istream& in, graphTable& gt, BiL
   std::string graphName, vertexName;
   in >> graphName >> vertexName;
   const Graph& graph = gt.at(graphName);
+  if (!has(graph.vertexes, vertexName))
+  {
+    throw std::runtime_error("Undefined vertex");
+  }
   for (auto it = graph.pairs.begin(); it != graph.pairs.end(); ++it)
   {
     if ((*it).first == vertexName)
@@ -50,6 +62,10 @@ void shirokov::inbound(std::ostream& out, std::istream& in, graphTable& gt, BiLi
   std::string graphName, vertexName;
   in >> graphName >> vertexName;
   const Graph& graph = gt.at(graphName);
+  if (!has(graph.vertexes, vertexName))
+  {
+    throw std::runtime_error("Undefined vertex");
+  }
   for (auto it = graph.pairs.begin(); it != graph.pairs.end(); ++it)
   {
     if ((*it).second == vertexName)
