@@ -1,4 +1,5 @@
 #include "functions.hpp"
+#include <stdexcept>
 
 std::pair< shirokov::graphTable, shirokov::BiList< std::string > > shirokov::parse(std::istream& in)
 {
@@ -16,8 +17,19 @@ std::pair< shirokov::graphTable, shirokov::BiList< std::string > > shirokov::par
       std::string v1, v2;
       size_t weight;
       in >> v1 >> v2 >> weight;
-      sortSaveInsertion(graph.connections[{v1, v2}], weight);
-      sortSaveInsertion(graph.pairs, {v1, v2});
+      try
+      {
+        sortSaveInsertion(graph.connections[{v1, v2}], weight);
+      }
+      catch (const std::runtime_error&)
+      {
+        graph.connections.rehash(graph.connections.size() * 2);
+        sortSaveInsertion(graph.connections[{v1, v2}], weight);
+      }
+      if (!has(graph.pairs, {v1, v2}))
+      {
+        sortSaveInsertion(graph.pairs, {v1, v2});
+      }
       if (!has(graph.vertexes, v1))
       {
         sortSaveInsertion(graph.vertexes, v1);
@@ -27,7 +39,15 @@ std::pair< shirokov::graphTable, shirokov::BiList< std::string > > shirokov::par
         sortSaveInsertion(graph.vertexes, v2);
       }
     }
-    gt.insert(name, graph);
+    try
+    {
+      gt.insert(name, graph);
+    }
+    catch (const std::runtime_error&)
+    {
+      gt.rehash(gt.size() * 2);
+      gt.insert(name, graph);
+    }
   }
   return {gt, names};
 }

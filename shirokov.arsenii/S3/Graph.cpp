@@ -20,7 +20,7 @@ void shirokov::vertexes(std::ostream& out, std::istream& in, graphTable& gt, BiL
   {
     throw std::logic_error("Undefined graph name");
   }
-  for (auto it = gt[graphName].vertexes.begin(); it != gt[graphName].vertexes.end(); ++it)
+  for (auto it = gt.at(graphName).vertexes.begin(); it != gt.at(graphName).vertexes.end(); ++it)
   {
     out << *it << '\n';
   }
@@ -72,8 +72,19 @@ void shirokov::bind(std::ostream&, std::istream& in, graphTable& gt, BiList< std
   std::string v1, v2;
   size_t weight;
   in >> v1 >> v2 >> weight;
-  sortSaveInsertion(cpy.connections[{v1, v2}], weight);
-  sortSaveInsertion(cpy.pairs, {v1, v2});
+  try
+  {
+    sortSaveInsertion(cpy.connections[{v1, v2}], weight);
+  }
+  catch (const std::runtime_error&)
+  {
+    cpy.connections.rehash(cpy.connections.size() * 2);
+    sortSaveInsertion(cpy.connections[{v1, v2}], weight);
+  }
+  if (!has(cpy.pairs, {v1, v2}))
+  {
+    sortSaveInsertion(cpy.pairs, {v1, v2});
+  }
   if (!has(cpy.vertexes, v1))
   {
     sortSaveInsertion(cpy.vertexes, v1);
