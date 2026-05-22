@@ -102,6 +102,7 @@ void shirokov::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
   delete[] cpy.slots_;
   cpy.slots_ = new Slot[slots]{};
   cpy.size_ = slots;
+  cpy.slotsCount_ = slotsCount_;
   for (auto it = begin(); it != end(); ++it)
   {
     cpy.insert((*it).first, (*it).second);
@@ -130,13 +131,23 @@ shirokov::HTCIter< Key, Value, Hash, Equal > shirokov::HashTable< Key, Value, Ha
 template< class Key, class Value, class Hash, class Equal >
 shirokov::HTIter< Key, Value, Hash, Equal > shirokov::HashTable< Key, Value, Hash, Equal >::begin()
 {
-  return HTIter< Key, Value, Hash, Equal >(*this, 0);
+  size_t pos = 0;
+  while (pos < size_ && slots_[pos].isEmpty)
+  {
+    ++pos;
+  }
+  return HTIter< Key, Value, Hash, Equal >(*this, pos);
 }
 
 template< class Key, class Value, class Hash, class Equal >
 shirokov::HTCIter< Key, Value, Hash, Equal > shirokov::HashTable< Key, Value, Hash, Equal >::cbegin() const
 {
-  return HTCIter< Key, Value, Hash, Equal >(*this, 0);
+  size_t pos = 0;
+  while (pos < size_ && slots_[pos].isEmpty)
+  {
+    ++pos;
+  }
+  return HTCIter< Key, Value, Hash, Equal >(*this, pos);
 }
 
 template< class Key, class Value, class Hash, class Equal >
