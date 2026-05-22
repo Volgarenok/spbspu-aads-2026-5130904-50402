@@ -100,7 +100,7 @@ void shirokov::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
   }
   HashTable< Key, Value, Hash, Equal > cpy;
   delete[] cpy.slots_;
-  cpy.slots_ = new Slot[slots];
+  cpy.slots_ = new Slot[slots]{};
   cpy.size_ = slots;
   for (auto it = begin(); it != end(); ++it)
   {
@@ -223,7 +223,7 @@ template< class Key, class Value, class Hash, class Equal >
 shirokov::HashTable< Key, Value, Hash, Equal >::HashTable():
   size_(START_SIZE),
   slotsCount_(0),
-  slots_(new Slot[START_SIZE])
+  slots_(new Slot[START_SIZE]{})
 {}
 
 template< class Key, class Value, class Hash, class Equal >
