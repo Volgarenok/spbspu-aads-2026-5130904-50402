@@ -42,3 +42,22 @@ void shirokov::outbound(std::ostream& out, std::istream& in, graphTable& gt, BiL
     }
   }
 }
+
+void shirokov::inbound(std::ostream& out, std::istream& in, graphTable& gt, BiList< std::string >&)
+{
+  std::string graphName, vertexName;
+  in >> graphName >> vertexName;
+  const Graph& graph = gt.at(graphName);
+  for (auto it = graph.pairs.begin(); it != graph.pairs.end(); ++it)
+  {
+    if ((*it).second == vertexName)
+    {
+      out << (*it).first;
+      for (auto weightIt = graph.connections.at(*it).begin(); weightIt != graph.connections.at(*it).end(); ++weightIt)
+      {
+        out << ' ' << *weightIt;
+      }
+      out << '\n';
+    }
+  }
+}

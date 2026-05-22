@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
   cmds["graphs"] = shirokov::graphs;
   cmds["vertexes"] = shirokov::vertexes;
   cmds["outbound"] = shirokov::outbound;
-  // cmds["inbound"] = shirokov::inbound;
+  cmds["inbound"] = shirokov::inbound;
   // cmds["bind"] = shirokov::bind;
   // cmds["cut"] = shirokov::cut;
   // cmds["create"] = shirokov::create;
