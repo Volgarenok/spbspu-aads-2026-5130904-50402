@@ -99,7 +99,7 @@ void shirokov::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
     return;
   }
   HashTable< Key, Value, Hash, Equal > cpy;
-  delete cpy.slots_;
+  delete[] cpy.slots_;
   cpy.slots_ = new Slot[slots];
   cpy.size_ = slots;
   for (auto it = begin(); it != end(); ++it)
