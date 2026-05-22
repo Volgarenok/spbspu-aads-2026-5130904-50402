@@ -19,6 +19,8 @@ namespace shirokov
     BiList< pairOfVertexes > pairs;
   };
 
+  void swap(Graph& gr1, Graph& gr2);
+
   using graphTable = HashTable< std::string, Graph, SHA1< std::string >, std::equal_to< std::string > >;
 
   void graphs(std::ostream&, std::istream&, graphTable&, BiList< std::string >&);

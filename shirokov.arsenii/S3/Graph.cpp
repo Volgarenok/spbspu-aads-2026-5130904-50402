@@ -1,6 +1,8 @@
 #include "Graph.hpp"
+#include <bilist.hpp>
 #include <stdexcept>
-#include "bilist.hpp"
+#include <utility>
+#include "functions.hpp"
 
 void shirokov::graphs(std::ostream& out, std::istream&, graphTable&, BiList< std::string >& names)
 {
@@ -60,4 +62,25 @@ void shirokov::inbound(std::ostream& out, std::istream& in, graphTable& gt, BiLi
       out << '\n';
     }
   }
+}
+
+void shirokov::bind(std::ostream&, std::istream& in, graphTable& gt, BiList< std::string >&)
+{
+  std::string graphName;
+  in >> graphName;
+  Graph cpy = gt.at(graphName);
+  std::string v1, v2;
+  size_t weight;
+  in >> v1 >> v2 >> weight;
+  sortSaveInsertion(cpy.connections[{v1, v2}], weight);
+  sortSaveInsertion(cpy.pairs, {v1, v2});
+  if (!has(cpy.vertexes, v1))
+  {
+    sortSaveInsertion(cpy.vertexes, v1);
+  }
+  if (!has(cpy.vertexes, v2))
+  {
+    sortSaveInsertion(cpy.vertexes, v2);
+  }
+  std::swap(cpy, gt.at(graphName));
 }

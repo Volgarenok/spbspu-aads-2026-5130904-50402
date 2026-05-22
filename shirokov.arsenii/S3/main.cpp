@@ -1,3 +1,4 @@
+#include <bilist.hpp>
 #include <fstream>
 #include <functional>
 #include <iostream>
@@ -7,7 +8,6 @@
 #include <string>
 #include "Graph.hpp"
 #include "HashTable.hpp"
-#include "bilist.hpp"
 #include "functions.hpp"
 #include "hasher.hpp"
 
@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
   cmds["vertexes"] = shirokov::vertexes;
   cmds["outbound"] = shirokov::outbound;
   cmds["inbound"] = shirokov::inbound;
-  // cmds["bind"] = shirokov::bind;
+  cmds["bind"] = shirokov::bind;
   // cmds["cut"] = shirokov::cut;
   // cmds["create"] = shirokov::create;
   // cmds["merge"] = shirokov::merge;
