@@ -16,6 +16,7 @@ namespace shirokov
   {
     HashTable< pairOfVertexes, BiList< size_t >, SHA1< pairOfVertexes >, std::equal_to< pairOfVertexes > > connections;
     BiList< std::string > vertexes;
+    BiList< pairOfVertexes > pairs;
   };
 
   using graphTable = HashTable< std::string, Graph, SHA1< std::string >, std::equal_to< std::string > >;

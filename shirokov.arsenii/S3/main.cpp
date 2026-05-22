@@ -16,6 +16,9 @@ namespace shirokov
 
   template< class T >
   bool has(const BiList< T >& list, const T& elem);
+
+  template< class T >
+  void sortSaveInsertion(BiList< T >& list, const T& value);
 }
 
 int main(int argc, char* argv[])
@@ -40,7 +43,7 @@ int main(int argc, char* argv[])
   shirokov::HashTable< std::string, cmd_t, shirokov::SHA1< std::string >, std::equal_to< std::string > > cmds;
   cmds["graphs"] = shirokov::graphs;
   cmds["vertexes"] = shirokov::vertexes;
-  // cmds["outbound"] = shirokov::outbound;
+  cmds["outbound"] = shirokov::outbound;
   // cmds["inbound"] = shirokov::inbound;
   // cmds["bind"] = shirokov::bind;
   // cmds["cut"] = shirokov::cut;
@@ -76,20 +79,7 @@ std::pair< shirokov::graphTable, shirokov::BiList< std::string > > shirokov::par
   std::string name;
   while (in >> name)
   {
-    bool isInserted = false;
-    for (auto it = names.begin(); it != names.end(); ++it)
-    {
-      if (*it > name)
-      {
-        names.insert(it, name);
-        isInserted = true;
-        break;
-      }
-    }
-    if (!isInserted)
-    {
-      names.pushBack(name);
-    }
+    sortSaveInsertion(names, name);
     size_t count;
     in >> count;
     shirokov::Graph graph;
@@ -98,14 +88,15 @@ std::pair< shirokov::graphTable, shirokov::BiList< std::string > > shirokov::par
       std::string v1, v2;
       size_t weight;
       in >> v1 >> v2 >> weight;
-      graph.connections[{v1, v2}].pushBack(weight);
+      sortSaveInsertion(graph.connections[{v1, v2}], weight);
+      sortSaveInsertion(graph.pairs, {v1, v2});
       if (!has(graph.vertexes, v1))
       {
-        graph.vertexes.pushBack(v1);
+        sortSaveInsertion(graph.vertexes, v1);
       }
       if (!has(graph.vertexes, v2))
       {
-        graph.vertexes.pushBack(v2);
+        sortSaveInsertion(graph.vertexes, v2);
       }
     }
     gt.insert(name, graph);
@@ -124,4 +115,23 @@ bool shirokov::has(const BiList< T >& list, const T& elem)
     }
   }
   return false;
+}
+
+template< class T >
+void shirokov::sortSaveInsertion(BiList< T >& list, const T& value)
+{
+  bool isInserted = false;
+  for (auto it = list.begin(); it != list.end(); ++it)
+  {
+    if (*it > value)
+    {
+      list.insert(it, value);
+      isInserted = true;
+      break;
+    }
+  }
+  if (!isInserted)
+  {
+    list.pushBack(value);
+  }
 }
