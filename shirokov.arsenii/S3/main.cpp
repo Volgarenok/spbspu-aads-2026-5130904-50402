@@ -108,7 +108,7 @@ std::pair< shirokov::graphTable, shirokov::BiList< std::string > > shirokov::par
         graph.vertexes.pushBack(v2);
       }
     }
-    gt.insert(name, &graph);
+    gt.insert(name, graph);
   }
   return {gt, names};
 }

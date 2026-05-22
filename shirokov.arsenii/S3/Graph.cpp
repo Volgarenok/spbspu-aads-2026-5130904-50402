@@ -18,7 +18,7 @@ void shirokov::vertexes(std::ostream& out, std::istream& in, graphTable& gt, BiL
   {
     throw std::logic_error("Undefined graph name");
   }
-  for (auto it = gt[graphName]->vertexes.begin(); it != gt[graphName]->vertexes.end(); ++it)
+  for (auto it = gt[graphName].vertexes.begin(); it != gt[graphName].vertexes.end(); ++it)
   {
     out << *it << '\n';
   }
