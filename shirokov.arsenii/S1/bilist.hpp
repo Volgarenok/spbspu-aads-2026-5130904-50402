@@ -12,7 +12,7 @@ namespace shirokov
   class BLIter
   {
   public:
-    explicit BLIter(typename BiList< T >::Node*);
+    BLIter(typename BiList< T >::Node*, BiList< T >*);
     bool operator==(const BLIter< T >&) const noexcept;
     bool operator!=(const BLIter< T >&) const noexcept;
     BLIter< T >& operator++();
@@ -21,7 +21,8 @@ namespace shirokov
 
   private:
     friend class BiList< T >;
-    typename BiList< T >::Node* curr = nullptr;
+    typename BiList< T >::Node* curr_ = nullptr;
+    BiList< T >* list_;
   };
 
   template< class T >
@@ -37,7 +38,7 @@ namespace shirokov
 
   private:
     friend class BiList< T >;
-    const typename BiList< T >::Node* curr = nullptr;
+    const typename BiList< T >::Node* curr_ = nullptr;
   };
 
   template< class T >
@@ -87,25 +88,29 @@ namespace shirokov
     bool empty() const noexcept;
 
   private:
-    Node* head = nullptr;
-    Node* tail = nullptr;
+    Node* head_ = nullptr;
+    Node* tail_ = nullptr;
   };
 }
 
 template< class T >
 shirokov::BLIter< T > shirokov::BiList< T >::insert(shirokov::BLIter< T > pos, const T& value)
 {
-  if (!pos.curr)
+  if (!pos.curr_)
   {
     return pos;
   }
-  BiList< T >::Node* curr = new Node{value, pos.curr, pos.curr->prev};
-  shirokov::BLIter< T > newElem(curr);
-  if (pos.curr->prev)
+  BiList< T >::Node* curr = new Node{value, pos.curr_, pos.curr_->prev};
+  shirokov::BLIter< T > newElem(curr, pos.list_);
+  if (pos.curr_->prev)
   {
-    pos.curr->prev->next = newElem.curr;
+    pos.curr_->prev->next = newElem.curr_;
   }
-  pos.curr->prev = newElem.curr;
+  else
+  {
+    pos.list_->head_ = newElem.curr_;
+  }
+  pos.curr_->prev = newElem.curr_;
   return newElem;
 }
 
@@ -124,7 +129,7 @@ shirokov::BLCIter< T > shirokov::BiList< T >::end() const
 template< class T >
 bool shirokov::BiList< T >::empty() const noexcept
 {
-  return !head;
+  return !head_;
 }
 
 template< class T >
@@ -136,26 +141,26 @@ shirokov::BiList< T >::BiList::~BiList()
 template< class T >
 void shirokov::BiList< T >::clear() noexcept
 {
-  while (head)
+  while (head_)
   {
-    Node* next = head->next;
-    delete head;
-    head = next;
+    Node* next = head_->next;
+    delete head_;
+    head_ = next;
   }
-  head = nullptr;
-  tail = nullptr;
+  head_ = nullptr;
+  tail_ = nullptr;
 }
 
 template< class T >
 shirokov::BLIter< T > shirokov::BiList< T >::begin()
 {
-  return shirokov::BLIter< T >(head);
+  return shirokov::BLIter< T >(head_, this);
 }
 
 template< class T >
 shirokov::BLIter< T > shirokov::BiList< T >::end()
 {
-  return shirokov::BLIter< T >(nullptr);
+  return shirokov::BLIter< T >(nullptr, this);
 }
 
 template< class T >
@@ -167,28 +172,29 @@ shirokov::BLCIter< T > shirokov::BiList< T >::cend() const
 template< class T >
 bool shirokov::BLIter< T >::operator==(const shirokov::BLIter< T >& other) const noexcept
 {
-  return curr == other.curr;
+  return curr_ == other.curr_;
 }
 
 template< class T >
-shirokov::BLIter< T >::BLIter(typename BiList< T >::Node* node):
-  curr(node)
+shirokov::BLIter< T >::BLIter(typename BiList< T >::Node* node, BiList< T >* list):
+  curr_(node),
+  list_(list)
 {}
 
 template< class T >
 void shirokov::BiList< T >::pushBack(T&& value)
 {
-  if (!head)
+  if (!head_)
   {
-    head = nullptr;
+    head_ = nullptr;
     try
     {
-      head = new Node{std::move(value)};
-      tail = head;
+      head_ = new Node{std::move(value)};
+      tail_ = head_;
     }
     catch (...)
     {
-      delete head;
+      delete head_;
       throw;
     }
   }
@@ -197,9 +203,9 @@ void shirokov::BiList< T >::pushBack(T&& value)
     Node* next = nullptr;
     try
     {
-      next = new Node{std::move(value), nullptr, tail};
-      tail->next = next;
-      tail = next;
+      next = new Node{std::move(value), nullptr, tail_};
+      tail_->next = next;
+      tail_ = next;
     }
     catch (...)
     {
@@ -212,17 +218,17 @@ void shirokov::BiList< T >::pushBack(T&& value)
 template< class T >
 void shirokov::BiList< T >::pushBack(const T& value)
 {
-  if (!head)
+  if (!head_)
   {
-    head = nullptr;
+    head_ = nullptr;
     try
     {
-      head = new Node{value};
-      tail = head;
+      head_ = new Node{value};
+      tail_ = head_;
     }
     catch (...)
     {
-      delete head;
+      delete head_;
       throw;
     }
   }
@@ -231,9 +237,9 @@ void shirokov::BiList< T >::pushBack(const T& value)
     Node* next = nullptr;
     try
     {
-      next = new Node{value, nullptr, tail};
-      tail->next = next;
-      tail = next;
+      next = new Node{value, nullptr, tail_};
+      tail_->next = next;
+      tail_ = next;
     }
     catch (...)
     {
@@ -246,73 +252,73 @@ void shirokov::BiList< T >::pushBack(const T& value)
 template< class T >
 T& shirokov::BiList< T >::front()
 {
-  return head->value;
+  return head_->value;
 }
 
 template< class T >
 const T& shirokov::BiList< T >::front() const
 {
-  return head->value;
+  return head_->value;
 }
 
 template< class T >
 T& shirokov::BiList< T >::back()
 {
-  return tail->value;
+  return tail_->value;
 }
 
 template< class T >
 const T& shirokov::BiList< T >::back() const
 {
-  return tail->value;
+  return tail_->value;
 }
 
 template< class T >
 T& shirokov::BLIter< T >::operator*()
 {
-  if (!curr)
+  if (!curr_)
   {
     throw std::logic_error("Dereferencing null iterator");
   }
-  return curr->value;
+  return curr_->value;
 }
 
 template< class T >
 shirokov::BLIter< T >& shirokov::BLIter< T >::operator++()
 {
-  if (!curr)
+  if (!curr_)
   {
     throw std::logic_error("Incrementing invalid iterator");
   }
-  curr = curr->next;
+  curr_ = curr_->next;
   return *this;
 }
 
 template< class T >
 shirokov::BLIter< T >& shirokov::BLIter< T >::operator--()
 {
-  if (!curr)
+  if (!curr_)
   {
     throw std::logic_error("Decrementing invalid iterator");
   }
-  curr = curr->prev;
+  curr_ = curr_->prev;
   return *this;
 }
 
 template< class T >
 void shirokov::BiList< T >::pushFront(const T& value)
 {
-  if (!head)
+  if (!head_)
   {
-    head = nullptr;
+    head_ = nullptr;
     try
     {
-      head = new Node{value};
-      tail = head;
+      head_ = new Node{value};
+      tail_ = head_;
     }
     catch (...)
     {
-      delete head;
+      delete head_;
       throw;
     }
   }
@@ -321,9 +327,9 @@ void shirokov::BiList< T >::pushFront(const T& value)
     Node* prev = nullptr;
     try
     {
-      prev = new Node{value, head, nullptr};
-      head->prev = prev;
-      head = prev;
+      prev = new Node{value, head_, nullptr};
+      head_->prev = prev;
+      head_ = prev;
     }
     catch (...)
     {
@@ -336,17 +342,17 @@ void shirokov::BiList< T >::pushFront(const T& value)
 template< class T >
 void shirokov::BiList< T >::pushFront(T&& value)
 {
-  if (!head)
+  if (!head_)
   {
-    head = nullptr;
+    head_ = nullptr;
     try
     {
-      head = new Node{std::move(value)};
-      tail = head;
+      head_ = new Node{std::move(value)};
+      tail_ = head_;
     }
     catch (...)
     {
-      delete head;
+      delete head_;
       throw;
     }
   }
@@ -355,9 +361,9 @@ void shirokov::BiList< T >::pushFront(T&& value)
     Node* prev = nullptr;
     try
     {
-      prev = new Node{std::move(value), head, nullptr};
-      head->prev = prev;
-      head = prev;
+      prev = new Node{std::move(value), head_, nullptr};
+      head_->prev = prev;
+      head_ = prev;
     }
     catch (...)
     {
@@ -370,84 +376,84 @@ void shirokov::BiList< T >::pushFront(T&& value)
 template< class T >
 void shirokov::BiList< T >::popFront()
 {
-  if (!head)
+  if (!head_)
   {
     throw std::out_of_range("List is empty");
   }
-  Node* newHead = head->next;
-  delete head;
-  head = newHead;
-  if (head)
+  Node* newHead = head_->next;
+  delete head_;
+  head_ = newHead;
+  if (head_)
   {
-    head->prev = nullptr;
+    head_->prev = nullptr;
   }
   else
   {
-    tail = nullptr;
+    tail_ = nullptr;
   }
 }
 
 template< class T >
 void shirokov::BiList< T >::popBack()
 {
-  if (!tail)
+  if (!tail_)
   {
     throw std::out_of_range("List is empty");
   }
-  Node* newTail = tail->prev;
-  delete tail;
-  tail = newTail;
-  if (tail)
+  Node* newTail = tail_->prev;
+  delete tail_;
+  tail_ = newTail;
+  if (tail_)
   {
-    tail->next = nullptr;
+    tail_->next = nullptr;
   }
   else
   {
-    head = nullptr;
+    head_ = nullptr;
   }
 }
 
 template< class T >
 shirokov::BLCIter< T > shirokov::BiList< T >::cbegin() const
 {
-  return shirokov::BLCIter< T >(head);
+  return shirokov::BLCIter< T >(head_);
 }
 
 template< class T >
 const T& shirokov::BLCIter< T >::operator*()
 {
-  if (!curr)
+  if (!curr_)
   {
     throw std::logic_error("Dereferencing null iterator");
   }
-  return curr->value;
+  return curr_->value;
 }
 
 template< class T >
 shirokov::BLCIter< T >& shirokov::BLCIter< T >::operator++()
 {
-  if (!curr)
+  if (!curr_)
   {
     throw std::logic_error("Incrementing invalid iterator");
   }
-  curr = curr->next;
+  curr_ = curr_->next;
   return *this;
 }
 
 template< class T >
 shirokov::BLCIter< T >& shirokov::BLCIter< T >::operator--()
 {
-  if (!curr)
+  if (!curr_)
   {
     throw std::logic_error("Decrementing invalid iterator");
   }
-  curr = curr->prev;
+  curr_ = curr_->prev;
   return *this;
 }
 
 template< class T >
 shirokov::BLCIter< T >::BLCIter(const typename BiList< T >::Node* node):
-  curr(node)
+  curr_(node)
 {}
 
 template< class T >
@@ -456,13 +462,13 @@ shirokov::BiList< T >::BiList(const BiList< T >& other)
   try
   {
     Node* curr = nullptr;
-    Node* otherCurr = other.head;
+    Node* otherCurr = other.head_;
     while (otherCurr)
     {
       if (!curr)
       {
-        head = new Node{otherCurr->value};
-        curr = head;
+        head_ = new Node{otherCurr->value};
+        curr = head_;
         otherCurr = otherCurr->next;
         continue;
       }
@@ -471,7 +477,7 @@ shirokov::BiList< T >::BiList(const BiList< T >& other)
       curr = next;
       otherCurr = otherCurr->next;
     }
-    tail = curr;
+    tail_ = curr;
   }
   catch (...)
   {
@@ -490,13 +496,13 @@ shirokov::BiList< T >& shirokov::BiList< T >::operator=(const BiList< T >& other
   try
   {
     Node* curr = nullptr;
-    Node* otherCurr = other.head;
+    Node* otherCurr = other.head_;
     while (otherCurr)
     {
       if (!curr)
       {
-        head = new Node{otherCurr->value};
-        curr = head;
+        head_ = new Node{otherCurr->value};
+        curr = head_;
         otherCurr = otherCurr->next;
         continue;
       }
@@ -505,7 +511,7 @@ shirokov::BiList< T >& shirokov::BiList< T >::operator=(const BiList< T >& other
       curr = next;
       otherCurr = otherCurr->next;
     }
-    tail = curr;
+    tail_ = curr;
   }
   catch (...)
   {
@@ -517,11 +523,11 @@ shirokov::BiList< T >& shirokov::BiList< T >::operator=(const BiList< T >& other
 
 template< class T >
 shirokov::BiList< T >::BiList(BiList< T >&& other):
-  head(other.head),
-  tail(other.tail)
+  head_(other.head_),
+  tail_(other.tail_)
 {
-  other.head = nullptr;
-  other.tail = nullptr;
+  other.head_ = nullptr;
+  other.tail_ = nullptr;
 }
 
 template< class T >
@@ -532,10 +538,10 @@ shirokov::BiList< T >& shirokov::BiList< T >::operator=(BiList< T >&& other)
     return *this;
   }
   clear();
-  head = other.head;
-  tail = other.tail;
-  other.head = nullptr;
-  other.tail = nullptr;
+  head_ = other.head_;
+  tail_ = other.tail_;
+  other.head_ = nullptr;
+  other.tail_ = nullptr;
   return *this;
 }
 
@@ -548,7 +554,7 @@ bool shirokov::BLIter< T >::operator!=(const BLIter< T >& other) const noexcept
 template< class T >
 bool shirokov::BLCIter< T >::operator==(const BLCIter< T >& other)
 {
-  return curr == other.curr;
+  return curr_ == other.curr_;
 }
 
 template< class T >

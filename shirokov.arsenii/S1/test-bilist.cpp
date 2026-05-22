@@ -148,3 +148,18 @@ BOOST_AUTO_TEST_CASE(insert_test)
   ++it;
   BOOST_TEST(*it == 2);
 }
+
+BOOST_AUTO_TEST_CASE(insert_test_in_begin)
+{
+  shirokov::BiList< int > A;
+  A.pushBack(1);
+  A.pushBack(2);
+  auto it = A.begin();
+  A.insert(it, 3);
+  it = A.begin();
+  BOOST_TEST(*it == 3);
+  ++it;
+  BOOST_TEST(*it == 1);
+  ++it;
+  BOOST_TEST(*it == 2);
+}
