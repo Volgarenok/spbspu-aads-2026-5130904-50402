@@ -44,6 +44,7 @@ void shirokov::outbound(std::ostream& out, std::istream& in, graphTable& gt, BiL
   {
     throw std::runtime_error("Undefined vertex");
   }
+  bool isOutput = false;
   for (auto it = graph.pairs.begin(); it != graph.pairs.end(); ++it)
   {
     if ((*it).first == vertexName)
@@ -54,7 +55,12 @@ void shirokov::outbound(std::ostream& out, std::istream& in, graphTable& gt, BiL
         out << ' ' << *weightIt;
       }
       out << '\n';
+      isOutput = true;
     }
+  }
+  if (!isOutput)
+  {
+    out << '\n';
   }
 }
 
@@ -67,6 +73,7 @@ void shirokov::inbound(std::ostream& out, std::istream& in, graphTable& gt, BiLi
   {
     throw std::runtime_error("Undefined vertex");
   }
+  bool isOutput = false;
   for (auto it = graph.pairs.begin(); it != graph.pairs.end(); ++it)
   {
     if ((*it).second == vertexName)
@@ -77,7 +84,12 @@ void shirokov::inbound(std::ostream& out, std::istream& in, graphTable& gt, BiLi
         out << ' ' << *weightIt;
       }
       out << '\n';
+      isOutput = true;
     }
+  }
+  if (!isOutput)
+  {
+    out << '\n';
   }
 }
 
