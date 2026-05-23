@@ -111,3 +111,13 @@ void shirokov::bind(std::ostream&, std::istream& in, graphTable& gt, BiList< std
   }
   std::swap(cpy, gt.at(graphName));
 }
+
+void shirokov::cut(std::ostream& out, std::istream& in, graphTable& gt, BiList< std::string >&)
+{
+  std::string graphName;
+  in >> graphName;
+  Graph cpy = gt.at(graphName);
+  std::string v1, v2;
+  size_t weight;
+  in >> v1 >> v2 >> weight;
+}
