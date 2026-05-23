@@ -151,3 +151,27 @@ void shirokov::cut(std::ostream&, std::istream& in, graphTable& gt, BiList< std:
 
   std::swap(cpy, gt.at(graphName));
 }
+
+void shirokov::create(std::ostream&, std::istream& in, graphTable& gt, BiList< std::string >& names)
+{
+  std::string graphName;
+  in >> graphName;
+  if (gt.contains(graphName))
+  {
+    throw std::runtime_error("This graph already exists");
+  }
+  Graph graph;
+  size_t count;
+  in >> count;
+  for (size_t i = 0; i < count; ++i)
+  {
+    std::string vertex;
+    in >> vertex;
+    if (!has(graph.vertexes, vertex))
+    {
+      sortSaveInsertion(graph.vertexes, vertex);
+    }
+  }
+  gt.insert(graphName, graph);
+  sortSaveInsertion(names, graphName);
+}

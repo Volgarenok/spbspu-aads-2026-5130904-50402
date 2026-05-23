@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
   cmds["inbound"] = shirokov::inbound;
   cmds["bind"] = shirokov::bind;
   cmds["cut"] = shirokov::cut;
-  // cmds["create"] = shirokov::create;
+  cmds["create"] = shirokov::create;
   // cmds["merge"] = shirokov::merge;
   // cmds["extract"] = shirokov::extract;
 
