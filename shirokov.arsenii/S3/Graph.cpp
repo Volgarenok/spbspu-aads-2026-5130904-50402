@@ -164,21 +164,24 @@ void shirokov::cut(std::ostream&, std::istream& in, graphTable& gt, BiList< std:
       break;
     }
   }
-  if (!isContainsV1 || !isContainsV2)
+  if (!isContainsV1)
   {
-    bool isErasedV1 = isContainsV1, isErasedV2 = isContainsV2;
     for (auto it = cpy.vertexes.begin(); it != cpy.vertexes.end(); ++it)
     {
-      if (!isContainsV1 && *it == v1)
+      if (*it == v1)
       {
         cpy.vertexes.erase(it);
+        break;
       }
-      if (!isContainsV2 && *it == v2)
+    }
+  }
+  if (!isContainsV2)
+  {
+    for (auto it = cpy.vertexes.begin(); it != cpy.vertexes.end(); ++it)
+    {
+      if (*it == v2)
       {
         cpy.vertexes.erase(it);
-      }
-      if (isErasedV1 && isErasedV2)
-      {
         break;
       }
     }
