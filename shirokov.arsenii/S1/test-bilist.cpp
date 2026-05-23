@@ -163,3 +163,40 @@ BOOST_AUTO_TEST_CASE(insert_test_in_begin)
   ++it;
   BOOST_TEST(*it == 2);
 }
+
+BOOST_AUTO_TEST_CASE(erase_test)
+{
+  shirokov::BiList< int > A;
+  A.pushBack(1);
+  A.pushBack(2);
+  A.pushBack(3);
+  auto it = ++A.begin();
+  it = A.erase(it);
+  BOOST_TEST(*it == 3);
+  BOOST_TEST(*A.begin() == 1);
+}
+
+BOOST_AUTO_TEST_CASE(erase_test_begin)
+{
+  shirokov::BiList< int > A;
+  A.pushBack(1);
+  A.pushBack(2);
+  A.pushBack(3);
+  auto it = A.erase(A.begin());
+  BOOST_TEST(*it == 2);
+  BOOST_TEST(*(++it) == 3);
+}
+
+BOOST_AUTO_TEST_CASE(erase_test_before_end)
+{
+  shirokov::BiList< int > A;
+  A.pushBack(1);
+  A.pushBack(2);
+  A.pushBack(3);
+  auto it = A.erase(++(++A.begin()));
+  BOOST_CHECK(it == A.end());
+  it = A.begin();
+  BOOST_TEST(*it == 1);
+  ++it;
+  BOOST_TEST(*it == 2);
+}
