@@ -95,6 +95,41 @@ namespace shirokov
 }
 
 template< class T >
+shirokov::BLIter< T > shirokov::BiList< T >::erase(BLIter< T > pos)
+{
+  if (!pos.curr_)
+  {
+    return pos;
+  }
+  BiList< T >::Node *next, *prev;
+  prev = pos.curr_->prev;
+  next = pos.curr_->next;
+  delete pos.curr_;
+  if (next)
+  {
+    next->prev = prev;
+    if (!prev)
+    {
+      pos.list_->head_ = next;
+    }
+  }
+  if (prev)
+  {
+    prev->next = next;
+    if (!next)
+    {
+      pos.list_->tail_ = prev;
+    }
+  }
+  if (!prev && !next)
+  {
+    pos.list_->head_ = nullptr;
+    pos.list_->tail_ = nullptr;
+  }
+  return BLIter< T >(next, pos.list_);
+}
+
+template< class T >
 shirokov::BLIter< T > shirokov::BiList< T >::insert(shirokov::BLIter< T > pos, const T& value)
 {
   if (!pos.curr_)
