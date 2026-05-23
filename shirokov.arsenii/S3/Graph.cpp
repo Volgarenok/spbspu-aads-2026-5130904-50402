@@ -184,6 +184,90 @@ void shirokov::create(std::ostream&, std::istream& in, graphTable& gt, BiList< s
       sortSaveInsertion(graph.vertexes, vertex);
     }
   }
-  gt.insert(graphName, graph);
+  try
+  {
+    gt.insert(graphName, graph);
+  }
+  catch (const std::runtime_error&)
+  {
+    gt.rehash(gt.size() * 2);
+    gt.insert(graphName, graph);
+  }
+  sortSaveInsertion(names, graphName);
+}
+
+void shirokov::merge(std::ostream&, std::istream& in, graphTable& gt, BiList< std::string >& names)
+{
+  std::string graphName, grName1, grName2;
+  in >> graphName >> grName1 >> grName2;
+  if (gt.contains(graphName) || !gt.contains(grName1) || !gt.contains(grName2))
+  {
+    throw std::runtime_error("Invalid graph name(s)");
+  }
+
+  Graph graph, gr1 = gt.at(grName1), gr2 = gt.at(grName2);
+  graph.vertexes = gr1.vertexes;
+  for (auto it = gr2.vertexes.begin(); it != gr2.vertexes.end(); ++it)
+  {
+    if (!has(graph.vertexes, *it))
+    {
+      sortSaveInsertion(graph.vertexes, *it);
+    }
+  }
+
+  graph.pairs = gr1.pairs;
+  for (auto it = gr2.pairs.begin(); it != gr2.pairs.end(); ++it)
+  {
+    if (!has(graph.pairs, *it))
+    {
+      sortSaveInsertion(graph.pairs, *it);
+    }
+  }
+
+  for (auto it = gr1.connections.begin(); it != gr1.connections.end(); ++it)
+  {
+    BiList< size_t >* list = nullptr;
+    try
+    {
+      list = &graph.connections[(*it).first];
+    }
+    catch (const std::runtime_error&)
+    {
+      graph.connections.rehash(graph.connections.size() * 2);
+      list = &graph.connections[(*it).first];
+    }
+    for (auto wIt = (*it).second.begin(); wIt != (*it).second.end(); ++wIt)
+    {
+      sortSaveInsertion(*list, *wIt);
+    }
+  }
+
+  for (auto it = gr2.connections.begin(); it != gr2.connections.end(); ++it)
+  {
+    BiList< size_t >* list = nullptr;
+    try
+    {
+      list = &graph.connections[(*it).first];
+    }
+    catch (const std::runtime_error&)
+    {
+      graph.connections.rehash(graph.connections.size() * 2);
+      list = &graph.connections[(*it).first];
+    }
+    for (auto wIt = (*it).second.begin(); wIt != (*it).second.end(); ++wIt)
+    {
+      sortSaveInsertion(*list, *wIt);
+    }
+  }
+
+  try
+  {
+    gt.insert(graphName, graph);
+  }
+  catch (const std::runtime_error&)
+  {
+    gt.rehash(gt.size() * 2);
+    gt.insert(graphName, graph);
+  }
   sortSaveInsertion(names, graphName);
 }
