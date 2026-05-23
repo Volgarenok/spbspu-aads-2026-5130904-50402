@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
   cmds["cut"] = shirokov::cut;
   cmds["create"] = shirokov::create;
   cmds["merge"] = shirokov::merge;
-  // cmds["extract"] = shirokov::extract;
+  cmds["extract"] = shirokov::extract;
 
   std::string cmd;
   while (std::cin >> cmd)

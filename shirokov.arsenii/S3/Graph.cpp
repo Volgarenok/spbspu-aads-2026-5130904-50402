@@ -271,3 +271,50 @@ void shirokov::merge(std::ostream&, std::istream& in, graphTable& gt, BiList< st
   }
   sortSaveInsertion(names, graphName);
 }
+
+void shirokov::extract(std::ostream&, std::istream& in, graphTable& gt, BiList< std::string >& names)
+{
+  std::string newGraphName, oldGraphName;
+  in >> newGraphName >> oldGraphName;
+  if (gt.contains(newGraphName) || !gt.contains(oldGraphName))
+  {
+    throw std::runtime_error("Invalid graph name(s)");
+  }
+  Graph graph, oldGraph = gt.at(oldGraphName);
+  size_t count;
+  in >> count;
+  for (size_t i = 0; i < count; ++i)
+  {
+    std::string vertex;
+    in >> vertex;
+    if (!has(oldGraph.vertexes, vertex))
+    {
+      throw std::runtime_error("Invalid vertex");
+    }
+    sortSaveInsertion(graph.vertexes, vertex);
+  }
+
+  for (auto it = oldGraph.pairs.begin(); it != oldGraph.pairs.end(); ++it)
+  {
+    if (has(graph.vertexes, (*it).first) && has(graph.vertexes, (*it).second))
+    {
+      sortSaveInsertion(graph.pairs, (*it));
+    }
+  }
+
+  for (auto it = graph.pairs.begin(); it != graph.pairs.end(); ++it)
+  {
+    try
+    {
+      graph.connections[*it] = oldGraph.connections[*it];
+    }
+    catch (const std::runtime_error&)
+    {
+      graph.connections.rehash(graph.connections.size() * 2);
+      graph.connections[*it] = oldGraph.connections[*it];
+    }
+  }
+
+  gt.insert(newGraphName, graph);
+  sortSaveInsertion(names, newGraphName);
+}
