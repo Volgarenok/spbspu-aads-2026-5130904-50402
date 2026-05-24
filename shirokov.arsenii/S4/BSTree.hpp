@@ -82,6 +82,37 @@ namespace shirokov
       Value value;
       Node *lt, *rt, *parent;
     };
-    Node* root;
+    Node* root_;
+
+    void clear(Node* curr);
   };
+}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTree< Key, Value, Compare >::BSTree():
+  root_(nullptr)
+{}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTree< Key, Value, Compare >::BSTree::~BSTree()
+{
+  clear(root_);
+}
+
+template< class Key, class Value, class Compare >
+bool shirokov::BSTree< Key, Value, Compare >::empty() const noexcept
+{
+  return root_;
+}
+
+template< class Key, class Value, class Compare >
+void shirokov::BSTree< Key, Value, Compare >::clear(Node* curr)
+{
+  if (!curr)
+  {
+    return;
+  }
+  clear(curr->lt);
+  clear(curr->rt);
+  clear(curr);
 }
