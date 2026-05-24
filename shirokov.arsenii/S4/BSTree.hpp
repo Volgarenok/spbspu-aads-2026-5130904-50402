@@ -10,9 +10,9 @@ namespace shirokov
   class BSTIterator
   {
   public:
-    explicit BSTIterator(typename BSTree< Key, Value, Compare >::Node*);
-    bool operator==(const BSTIterator&) const noexcept;
-    bool operator!=(const BSTIterator&) const noexcept;
+    explicit BSTIterator(typename BSTree< Key, Value, Compare >::Node* curr);
+    bool operator==(const BSTIterator& rhs) const noexcept;
+    bool operator!=(const BSTIterator& rhs) const noexcept;
     BSTIterator& operator++();
     std::pair< Key, Value > operator*() const;
 
@@ -24,9 +24,9 @@ namespace shirokov
   class BSTConstIterator
   {
   public:
-    explicit BSTConstIterator(typename BSTree< Key, Value, Compare >::Node*);
-    bool operator==(const BSTConstIterator&) const noexcept;
-    bool operator!=(const BSTConstIterator&) const noexcept;
+    explicit BSTConstIterator(typename BSTree< Key, Value, Compare >::Node* curr);
+    bool operator==(const BSTConstIterator& rhs) const noexcept;
+    bool operator!=(const BSTConstIterator& rhs) const noexcept;
     BSTConstIterator& operator++();
     std::pair< Key, Value > operator*() const;
 
@@ -39,8 +39,8 @@ namespace shirokov
   {
   public:
     BSTree();
-    BSTree(const BSTree&);
-    BSTree(BSTree&&);
+    BSTree(const BSTree& rhs);
+    BSTree(BSTree&& rhs);
     ~BSTree();
     BSTree& operator=(const BSTree& rhs);
     BSTree& operator=(BSTree&& rhs);
@@ -59,6 +59,16 @@ namespace shirokov
 
     size_t height(const_iterator it);
     size_t height();
+
+    iterator begin();
+    const_iterator begin() const;
+    const_iterator cbegin() const;
+
+    iterator end();
+    const_iterator end() const;
+    const_iterator cend() const;
+
+    void swap(BSTree& rhs);
 
   private:
     friend iterator;
