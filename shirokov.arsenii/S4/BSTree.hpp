@@ -38,6 +38,13 @@ namespace shirokov
   class BSTree
   {
   public:
+    BSTree();
+    BSTree(const BSTree&);
+    BSTree(BSTree&&);
+    ~BSTree();
+    BSTree& operator=(const BSTree& rhs);
+    BSTree& operator=(BSTree&& rhs);
+
     void push(Key k, Value v);
     Value get(Key k);
     bool drop(Key k);
