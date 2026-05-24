@@ -7,18 +7,6 @@
 
 namespace
 {
-  bool isNumber(const std::string& line)
-  {
-    for (size_t i = 0; i < line.length(); ++i)
-    {
-      if (!('0' <= line[i] && line[i] <= '9'))
-      {
-        return false;
-      }
-    }
-    return true;
-  }
-
   int getPriority(const std::string& op)
   {
     if (op == "<<")
@@ -136,11 +124,11 @@ long long shirokov::eval(const std::string& line)
   {
     std::string val = postfix.front();
     postfix.pop();
-    if (isNumber(val))
+    try
     {
       results.push(std::stoll(val));
     }
-    else
+    catch (const std::invalid_argument&)
     {
       if (results.empty())
       {
