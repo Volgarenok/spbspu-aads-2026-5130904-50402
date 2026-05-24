@@ -4,7 +4,7 @@
 
 namespace shirokov
 {
-  long long eval(std::string line);
+  long long eval(const std::string& line);
 }
 
 #endif

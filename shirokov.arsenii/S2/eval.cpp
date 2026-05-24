@@ -125,7 +125,7 @@ namespace
   }
 }
 
-long long shirokov::eval(std::string line)
+long long shirokov::eval(const std::string& line)
 {
   Queue< std::string > infix = split(line);
   Queue< std::string > postfix = infixToPostfix(infix);
