@@ -102,7 +102,7 @@ shirokov::BSTree< Key, Value, Compare >::BSTree::~BSTree()
 template< class Key, class Value, class Compare >
 bool shirokov::BSTree< Key, Value, Compare >::empty() const noexcept
 {
-  return root_;
+  return !root_;
 }
 
 template< class Key, class Value, class Compare >
