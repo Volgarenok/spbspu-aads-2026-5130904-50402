@@ -44,10 +44,15 @@ namespace shirokov
     ~BSTree();
     BSTree& operator=(const BSTree& rhs);
     BSTree& operator=(BSTree&& rhs);
+    Value& operator[](Key key);
 
-    void push(Key k, Value v);
-    Value get(Key k);
-    bool drop(Key k);
+    void insert(Key k, Value v);
+    bool contains(Key k);
+    bool erase(Key k);
+    void swap(BSTree& rhs);
+    bool empty() const noexcept;
+    Value& at(Key key);
+    const Value& at(Key key) const;
 
     using const_iterator = BSTConstIterator< Key, Value, Compare >;
     using iterator = BSTIterator< Key, Value, Compare >;
@@ -67,8 +72,6 @@ namespace shirokov
     iterator end();
     const_iterator end() const;
     const_iterator cend() const;
-
-    void swap(BSTree& rhs);
 
   private:
     friend iterator;
