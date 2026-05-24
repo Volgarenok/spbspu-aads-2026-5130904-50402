@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
   {
     try
     {
-      cmds.get(cmd)(std::cout, std::cin);
+      cmds.at(cmd)(std::cout, std::cin);
     }
     catch (...)
     {
