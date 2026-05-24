@@ -1,10 +1,12 @@
 #ifndef COMMANDS_HPP
 #define COMMANDS_HPP
 #include <List.hpp>
-#include "Queue.hpp"
 #include "Stack.hpp"
+#include "Queue.hpp"
 #include <stdexcept>
+#include <sstream>
 #include <climits>
+#include <fstream>
 
 namespace lavrentev
 {
@@ -16,6 +18,72 @@ namespace lavrentev
   long long gcd(long long a, long long b);
   long long count(long long a, long long b, long long &res, std::string operation);
   long long priority(const std::string &s);
+}
+
+inline lavrentev::Stack<long long> lavrentev::readFile(char *name)
+{
+  lavrentev::Stack<long long> ans{};
+  std::ifstream file(name);
+  if (!file.is_open())
+  {
+    throw std::runtime_error("File open error");
+  }
+  std::string line;
+  while (std::getline(file, line))
+  {
+    lavrentev::Queue<std::string> exp{};
+    std::istringstream iss(line);
+    std::string symb;
+    while (iss >> symb)
+    {
+      exp.push(symb);
+    }
+    long long res = 0;
+    if (!exp.empty())
+    {
+      if (lavrentev::math(exp, res))
+      {
+        throw std::logic_error("");
+      }
+    }
+    else
+    {
+      continue;
+    }
+    ans.push(res);
+  }
+  file.close();
+  return ans;
+}
+
+inline lavrentev::Stack<long long> lavrentev::getline()
+{
+  lavrentev::Stack<long long> ans{};
+  std::string line;
+  while (std::getline(std::cin, line))
+  {
+    lavrentev::Queue<std::string> exp{};
+    std::istringstream iss(line);
+    std::string symb;
+    while (iss >> symb)
+    {
+      exp.push(symb);
+    }
+    long long res = 0;
+    if (!exp.empty())
+    {
+      if (lavrentev::math(exp, res))
+      {
+        throw std::logic_error("");
+      }
+    }
+    else
+    {
+      continue;
+    }
+    ans.push(res);
+  }
+  return ans;
 }
 
 inline long long lavrentev::math(lavrentev::Queue<std::string> exp, long long &res)
@@ -164,7 +232,8 @@ inline long long lavrentev::math(lavrentev::Queue<std::string> exp, long long &r
 
 inline bool lavrentev::operCond(std::string buf)
 {
-  return buf == "+" || buf == "-" || buf == "*" || buf == "/" || buf == "gcd" || buf == "%";
+  return buf == "+" || buf == "-" || buf == "*" || buf == "/" || buf == "gcd" ||
+         buf == "%";
 }
 
 inline long long lavrentev::gcd(long long a, long long b)
@@ -183,7 +252,8 @@ inline long long lavrentev::gcd(long long a, long long b)
   return a + b;
 }
 
-inline long long lavrentev::count(long long a, long long b, long long &res, std::string operation)
+inline long long lavrentev::count(long long a, long long b, long long &res,
+                                  std::string operation)
 {
   if (operation == "+")
   {
