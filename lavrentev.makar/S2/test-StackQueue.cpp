@@ -13,11 +13,12 @@ BOOST_AUTO_TEST_CASE(Stack_push_test)
 BOOST_AUTO_TEST_CASE(Stack_drop_test)
 {
   lavrentev::Stack<size_t> s{};
-  BOOST_CHECK_THROW(s.drop(), std::out_of_range);
+  s.drop();
+  BOOST_TEST(s.empty());
 
   s.push(1);
   s.push(2);
-  BOOST_TEST(s.drop() == 2);
+  s.drop();
   BOOST_TEST(s.top() == 1);
 }
 
@@ -47,11 +48,12 @@ BOOST_AUTO_TEST_CASE(Queue_push_test)
 BOOST_AUTO_TEST_CASE(Queue_drop_test)
 {
   lavrentev::Queue<size_t> s{};
-  BOOST_CHECK_THROW(s.drop(), std::out_of_range);
+  s.drop();
+  BOOST_TEST(s.empty());
 
   s.push(1);
   s.push(2);
-  BOOST_TEST(s.drop() == 1);
+  s.drop();
   BOOST_TEST(s.front() == 2);
 }
 

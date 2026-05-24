@@ -1,11 +1,12 @@
 #include <exception>
 #include <iostream>
-#include "StackQueue.hpp"
+#include "Stack.hpp"
+#include "Commands.hpp"
 
 int main(int argc, char *argv[])
 {
   std::string name;
-  lavrentev::Stack<long long> res;
+  lavrentev::Stack< long long > res;
   try
   {
     if (argc == 2)

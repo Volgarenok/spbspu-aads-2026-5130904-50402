@@ -1,41 +1,13 @@
-#ifndef STACKQUEUE_HPP
-#define STACKQUEUE_HPP
+#ifndef COMMANDS_HPP
+#define COMMANDS_HPP
 #include <List.hpp>
-#include <fstream>
-#include <sstream>
+#include "Queue.hpp"
+#include "Stack.hpp"
 #include <stdexcept>
 #include <climits>
 
 namespace lavrentev
 {
-  template <class T> class Queue
-  {
-  public:
-    void push(const T &rhs);
-    T drop();
-    const T &back() const;
-    T &back();
-    bool empty() const;
-    const T &front() const;
-    T &front();
-
-  private:
-    List<T> data;
-    LIter<T> tail;
-  };
-
-  template <class T> class Stack
-  {
-  public:
-    void push(const T &rhs);
-    T drop();
-    bool empty() const;
-    T &top();
-
-  private:
-    List<T> data;
-  };
-
   Stack<long long> readFile(char *name);
   Stack<long long> getline();
   long long math(Queue<std::string> exp, long long &res);
@@ -43,157 +15,7 @@ namespace lavrentev
   bool isNumber(std::string exp);
   long long gcd(long long a, long long b);
   long long count(long long a, long long b, long long &res, std::string operation);
-  long long priority(std::string s);
-}
-
-template <class T> void lavrentev::Queue<T>::push(const T &rhs)
-{
-  if (data.empty())
-  {
-    data.insert(data.begin(), rhs);
-    tail = data.begin();
-  }
-  else
-  {
-    LIter<T> next = tail;
-    tail = data.insert(next, rhs);
-  }
-}
-
-template <class T> T lavrentev::Queue<T>::drop()
-{
-  T b = data.front();
-  data.popFront();
-  if ((*this).empty())
-  {
-    tail = LIter<T>{};
-  }
-  return b;
-}
-
-template <class T> const T &lavrentev::Queue<T>::back() const
-{
-  if (!(*this).empty())
-  {
-    return *tail;
-  }
-  throw std::runtime_error("Queue is empty");
-}
-
-template <class T> T &lavrentev::Queue<T>::back()
-{
-  if (!(*this).empty())
-  {
-    return *tail;
-  }
-  throw std::runtime_error("Queue is empty");
-}
-
-template <class T> bool lavrentev::Queue<T>::empty() const
-{
-  return data.empty();
-}
-
-template <class T> T &lavrentev::Queue<T>::front()
-{
-  return data.front();
-}
-
-template <class T> const T &lavrentev::Queue<T>::front() const
-{
-  return data.front();
-}
-
-template <class T> void lavrentev::Stack<T>::push(const T &rhs)
-{
-  data.pushFront(rhs);
-}
-
-template <class T> T lavrentev::Stack<T>::drop()
-{
-  T f = data.front();
-  data.popFront();
-  return f;
-}
-
-template <class T> bool lavrentev::Stack<T>::empty() const
-{
-  return data.empty();
-}
-
-template <class T> T &lavrentev::Stack<T>::top()
-{
-  return data.front();
-}
-
-inline lavrentev::Stack<long long> lavrentev::readFile(char *name)
-{
-  lavrentev::Stack<long long> ans{};
-  std::ifstream file(name);
-  if (file.is_open())
-  {
-    std::string line;
-    while (std::getline(file, line))
-    {
-      lavrentev::Queue<std::string> exp{};
-      std::istringstream iss(line);
-      std::string symb;
-      while (iss >> symb)
-      {
-        exp.push(symb);
-      }
-      long long res = 0;
-      if (!exp.empty())
-      {
-        if (lavrentev::math(exp, res))
-        {
-          std::cerr << "Error";
-          throw;
-        }
-      }
-      else
-      {
-        continue;
-      }
-      ans.push(res);
-    }
-    file.close();
-  }
-  else
-  {
-    throw std::runtime_error("File open error");
-  }
-  return ans;
-}
-
-inline lavrentev::Stack<long long> lavrentev::getline()
-{
-  lavrentev::Stack<long long> ans{};
-  std::string line;
-  while (std::getline(std::cin, line))
-  {
-    lavrentev::Queue<std::string> exp{};
-    std::istringstream iss(line);
-    std::string symb;
-    while (iss >> symb)
-    {
-      exp.push(symb);
-    }
-    long long res = 0;
-    if (!exp.empty())
-    {
-      if (lavrentev::math(exp, res))
-      {
-        throw;
-      }
-    }
-    else
-    {
-      continue;
-    }
-    ans.push(res);
-  }
-  return ans;
+  long long priority(const std::string &s);
 }
 
 inline long long lavrentev::math(lavrentev::Queue<std::string> exp, long long &res)
@@ -203,7 +25,8 @@ inline long long lavrentev::math(lavrentev::Queue<std::string> exp, long long &r
   long long brackets = 0;
   while (!exp.empty())
   {
-    std::string buf = exp.drop();
+    std::string buf = exp.front();
+    exp.drop();
     if (buf == "(")
     {
       op.push(buf);
@@ -211,11 +34,15 @@ inline long long lavrentev::math(lavrentev::Queue<std::string> exp, long long &r
     }
     else if (operCond(buf))
     {
-      while (!op.empty() && op.top() != "(" && operCond(op.top()) && priority(op.top()) >= priority(buf))
+      while (!op.empty() && op.top() != "(" && operCond(op.top()) &&
+             priority(op.top()) >= priority(buf))
       {
-        std::string operation = op.drop();
-        long long oper2 = sRes.drop();
-        long long oper1 = sRes.drop();
+        std::string operation = op.top();
+        op.drop();
+        long long oper2 = sRes.top();
+        sRes.drop();
+        long long oper1 = sRes.top();
+        sRes.drop();
         long long bufAns = 0;
         if (!count(oper1, oper2, bufAns, operation))
         {
@@ -239,7 +66,8 @@ inline long long lavrentev::math(lavrentev::Queue<std::string> exp, long long &r
       try
       {
         operation = op.top();
-      } catch (...)
+      }
+      catch (...)
       {
         operation = "";
       }
@@ -269,7 +97,8 @@ inline long long lavrentev::math(lavrentev::Queue<std::string> exp, long long &r
         else
         {
           op.drop();
-          long long oper1 = sRes.drop();
+          long long oper1 = sRes.top();
+          sRes.drop();
           long long oper2;
           try
           {
@@ -305,12 +134,14 @@ inline long long lavrentev::math(lavrentev::Queue<std::string> exp, long long &r
   }
   while (!op.empty())
   {
-    std::string operation = op.drop();
-
+    std::string operation = op.top();
+    op.drop();
     if (operCond(operation))
     {
-      long long oper2 = sRes.drop();
-      long long oper1 = sRes.drop();
+      long long oper2 = sRes.top();
+      sRes.drop();
+      long long oper1 = sRes.top();
+      sRes.drop();
       long long bufAns = 0;
       if (!count(oper1, oper2, bufAns, operation))
       {
@@ -326,7 +157,8 @@ inline long long lavrentev::math(lavrentev::Queue<std::string> exp, long long &r
   {
     return 2;
   }
-  res = sRes.drop();
+  res = sRes.top();
+  sRes.drop();
   return 0;
 }
 
@@ -357,8 +189,7 @@ inline long long lavrentev::count(long long a, long long b, long long &res, std:
   {
     if ((b > 0 && a > LLONG_MAX - b) || (b < 0 && a < LLONG_MIN - b))
     {
-      std::cerr << "Overflow error" << "\n";
-      throw;
+      throw std::out_of_range("Overflow error");
     }
     res = a + b;
     return 0;
@@ -367,21 +198,20 @@ inline long long lavrentev::count(long long a, long long b, long long &res, std:
   {
     if ((b < 0 && a > LLONG_MAX + b) || (b > 0 && a < LLONG_MIN + b))
     {
-      std::cerr << "Overflow error" << "\n";
-      throw;
+      throw std::out_of_range("Overflow error");
     }
     res = a - b;
     return 0;
   }
   else if (operation == "*")
   {
-    if ((a > 0 && b > 0 && a > LLONG_MAX / b) ||
-        (a < 0 && b < 0 && a < LLONG_MAX / b) ||
-        (a > 0 && b < 0 && b < LLONG_MIN / a) ||
-        (a < 0 && b > 0 && a < LLONG_MIN / b))
+    bool c1 = a > 0 && b > 0 && a > LLONG_MAX / b;
+    bool c2 = a < 0 && b < 0 && a < LLONG_MAX / b;
+    bool c3 = a > 0 && b < 0 && b < LLONG_MIN / a;
+    bool c4 = a < 0 && b > 0 && a < LLONG_MIN / b;
+    if (c1 || c2 || c3 || c4)
     {
-      std::cerr << "Overflow error" << "\n";
-      throw;
+      throw std::out_of_range("Overflow error");
     }
     res = a * b;
     return 0;
@@ -392,8 +222,7 @@ inline long long lavrentev::count(long long a, long long b, long long &res, std:
     {
       if (a == LLONG_MIN && b == -1)
       {
-        std::cerr << "Overflow error" << "\n";
-        throw;
+        throw std::out_of_range("Overflow error");
       }
       res = a / b;
       return 0;
@@ -436,7 +265,7 @@ inline long long lavrentev::count(long long a, long long b, long long &res, std:
   }
 }
 
-inline long long lavrentev::priority(std::string s)
+inline long long lavrentev::priority(const std::string &s)
 {
   if (s == "+" || s == "-")
   {
