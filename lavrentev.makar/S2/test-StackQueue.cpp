@@ -1,7 +1,9 @@
 #include <stdexcept>
 #define BOOST_TEST_MODULE StackQueueTest
 #include <boost/test/included/unit_test.hpp>
-#include "StackQueue.hpp"
+#include "Stack.hpp"
+#include "Queue.hpp"
+#include "Commands.hpp"
 
 BOOST_AUTO_TEST_CASE(Stack_push_test)
 {
