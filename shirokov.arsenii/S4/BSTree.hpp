@@ -114,5 +114,5 @@ void shirokov::BSTree< Key, Value, Compare >::clear(Node* curr)
   }
   clear(curr->lt);
   clear(curr->rt);
-  clear(curr);
+  delete curr;
 }
