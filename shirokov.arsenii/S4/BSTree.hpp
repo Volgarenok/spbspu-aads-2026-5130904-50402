@@ -11,11 +11,11 @@ namespace shirokov
   class BSTIterator
   {
   public:
-    explicit BSTIterator(typename BSTree< Key, Value, Compare >::Node* curr);
-    bool operator==(const BSTIterator& rhs) const noexcept;
-    bool operator!=(const BSTIterator& rhs) const noexcept;
-    BSTIterator& operator++();
-    std::pair< Key, Value& > operator*() const;
+    explicit BSTIterator(typename BSTree< Key, Value, Compare >::Node* curr); // TODO
+    bool operator==(const BSTIterator& rhs) const noexcept;                   // TODO
+    bool operator!=(const BSTIterator& rhs) const noexcept;                   // TODO
+    BSTIterator& operator++();                                                // TODO
+    std::pair< Key, Value& > operator*() const;                               // TODO
 
   private:
     typename BSTree< Key, Value, Compare >::Node* curr;
@@ -25,11 +25,11 @@ namespace shirokov
   class BSTConstIterator
   {
   public:
-    explicit BSTConstIterator(typename BSTree< Key, Value, Compare >::Node* curr);
-    bool operator==(const BSTConstIterator& rhs) const noexcept;
-    bool operator!=(const BSTConstIterator& rhs) const noexcept;
-    BSTConstIterator& operator++();
-    std::pair< Key, Value > operator*() const;
+    explicit BSTConstIterator(typename BSTree< Key, Value, Compare >::Node* curr); // TODO
+    bool operator==(const BSTConstIterator& rhs) const noexcept;                   // TODO
+    bool operator!=(const BSTConstIterator& rhs) const noexcept;                   // TODO
+    BSTConstIterator& operator++();                                                // TODO
+    std::pair< Key, Value > operator*() const;                                     // TODO
 
   private:
     const typename BSTree< Key, Value, Compare >::Node* curr;
@@ -40,38 +40,38 @@ namespace shirokov
   {
   public:
     BSTree();
-    BSTree(const BSTree& rhs);
-    BSTree(BSTree&& rhs);
+    BSTree(const BSTree& rhs); // TODO
+    BSTree(BSTree&& rhs);      // TODO
     ~BSTree();
-    BSTree& operator=(const BSTree& rhs);
-    BSTree& operator=(BSTree&& rhs);
-    Value& operator[](Key key);
+    BSTree& operator=(const BSTree& rhs); // TODO
+    BSTree& operator=(BSTree&& rhs);      // TODO
+    Value& operator[](Key key);           // TODO
 
     bool insert(Key k, Value v);
     bool contains(Key k);
-    bool erase(Key k);
+    bool erase(Key k); // TODO
     bool empty() const noexcept;
     Value& at(Key key);
     const Value& at(Key key) const;
 
     using const_iterator = BSTConstIterator< Key, Value, Compare >;
     using iterator = BSTIterator< Key, Value, Compare >;
-    const_iterator rotateLeft(const_iterator it);
-    const_iterator rotateRight(const_iterator it);
+    const_iterator rotateLeft(const_iterator it);  // TODO
+    const_iterator rotateRight(const_iterator it); // TODO
 
-    const_iterator rotateLargeLeft(const_iterator it);
-    const_iterator rotateLargeRight(const_iterator it);
+    const_iterator rotateLargeLeft(const_iterator it);  // TODO
+    const_iterator rotateLargeRight(const_iterator it); // TODO
 
-    size_t height(const_iterator it);
-    size_t height();
+    size_t height(const_iterator it); // TODO
+    size_t height();                  // TODO
 
-    iterator begin();
-    const_iterator begin() const;
-    const_iterator cbegin() const;
+    iterator begin();              // TODO
+    const_iterator begin() const;  // TODO
+    const_iterator cbegin() const; // TODO
 
-    iterator end();
-    const_iterator end() const;
-    const_iterator cend() const;
+    iterator end();              // TODO
+    const_iterator end() const;  // TODO
+    const_iterator cend() const; // TODO
 
   private:
     friend iterator;
