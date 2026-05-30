@@ -105,10 +105,10 @@ bool shirokov::BSTree< Key, Value, Compare >::contains(Key key)
     }
     else
     {
-      return false;
+      return true;
     }
   }
-  return true;
+  return false;
 }
 
 template< class Key, class Value, class Compare >
