@@ -90,6 +90,28 @@ namespace shirokov
 }
 
 template< class Key, class Value, class Compare >
+bool shirokov::BSTree< Key, Value, Compare >::contains(Key key)
+{
+  Node* curr = root_;
+  while (curr)
+  {
+    if (cmp_(key, curr->key))
+    {
+      curr = curr->lt;
+    }
+    else if (cmp_(curr->key, key))
+    {
+      curr = curr->rt;
+    }
+    else
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+template< class Key, class Value, class Compare >
 Value& shirokov::BSTree< Key, Value, Compare >::at(Key key)
 {
   const BSTree< Key, Value, Compare >* cthis = this;
