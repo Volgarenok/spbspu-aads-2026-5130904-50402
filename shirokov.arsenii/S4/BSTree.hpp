@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <stdexcept>
 #include <utility>
 
 namespace shirokov
@@ -87,6 +88,36 @@ namespace shirokov
 
     void clear(Node* curr);
   };
+}
+
+template< class Key, class Value, class Compare >
+Value& shirokov::BSTree< Key, Value, Compare >::at(Key key)
+{
+  const BSTree< Key, Value, Compare >* cthis = this;
+  const Value& ret = cthis->at(key);
+  return const_cast< Value& >(ret);
+}
+
+template< class Key, class Value, class Compare >
+const Value& shirokov::BSTree< Key, Value, Compare >::at(Key key) const
+{
+  Node* curr = root_;
+  while (curr)
+  {
+    if (cmp_(key, curr->key))
+    {
+      curr = curr->lt;
+    }
+    else if (cmp_(curr->key, key))
+    {
+      curr = curr->rt;
+    }
+    else
+    {
+      return curr->value;
+    }
+  }
+  throw std::out_of_range("Undefined key");
 }
 
 template< class Key, class Value, class Compare >
