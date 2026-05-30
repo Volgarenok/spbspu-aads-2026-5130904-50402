@@ -89,6 +89,10 @@ namespace shirokov
 }
 
 template< class Key, class Value, class Compare >
+void shirokov::BSTree< Key, Value, Compare >::insert(Key, Value)
+{}
+
+template< class Key, class Value, class Compare >
 shirokov::BSTree< Key, Value, Compare >::BSTree():
   root_(nullptr)
 {}
