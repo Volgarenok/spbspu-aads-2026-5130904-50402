@@ -1,3 +1,5 @@
+#include <stdexcept>
+#include <boost/test/tools/old/interface.hpp>
 #define BOOST_TEST_MODULE S4
 #include <boost/test/included/unit_test.hpp>
 #include "BSTree.hpp"
@@ -21,4 +23,33 @@ BOOST_AUTO_TEST_CASE(insert_add_correct_elem)
   shirokov::BSTree< int, int, std::less< int > > tree;
   tree.insert(0, 1);
   BOOST_TEST(tree.at(0) == 1);
+}
+
+BOOST_AUTO_TEST_CASE(adding_an_existing_element_does_not_change_anything)
+{
+  shirokov::BSTree< int, int, std::less< int > > tree;
+  tree.insert(0, 1);
+  BOOST_REQUIRE(tree.at(0) == 1);
+  BOOST_TEST(!tree.insert(0, 2));
+  BOOST_TEST(tree.at(0) == 1);
+}
+
+BOOST_AUTO_TEST_CASE(insert_many_elems)
+{
+  shirokov::BSTree< int, int, std::less< int > > tree;
+  tree.insert(0, 1);
+  tree.insert(5, 10);
+  tree.insert(100, 50);
+  BOOST_TEST(tree.at(0) == 1);
+  BOOST_TEST(tree.at(5) == 10);
+  BOOST_TEST(tree.at(100) == 50);
+}
+
+BOOST_AUTO_TEST_CASE(at_undefined_key)
+{
+  shirokov::BSTree< int, int, std::less< int > > tree;
+  tree.insert(0, 1);
+  tree.insert(5, 10);
+  tree.insert(100, 50);
+  BOOST_CHECK_THROW(tree.at(3), std::out_of_range);
 }

@@ -152,7 +152,7 @@ bool shirokov::BSTree< Key, Value, Compare >::insert(Key key, Value value)
   {
     parent->lt = curr;
   }
-  else if (parent && cmp_(curr->key, key))
+  else if (parent && cmp_(parent->key, curr->key))
   {
     parent->rt = curr;
   }
