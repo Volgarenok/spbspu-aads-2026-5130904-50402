@@ -46,7 +46,7 @@ namespace shirokov
     BSTree& operator=(BSTree&& rhs);
     Value& operator[](Key key);
 
-    void insert(Key k, Value v);
+    bool insert(Key k, Value v);
     bool contains(Key k);
     bool erase(Key k);
     void swap(BSTree& rhs);
@@ -83,18 +83,55 @@ namespace shirokov
       Node *lt, *rt, *parent;
     };
     Node* root_;
+    Compare cmp_;
 
     void clear(Node* curr);
   };
 }
 
 template< class Key, class Value, class Compare >
-void shirokov::BSTree< Key, Value, Compare >::insert(Key, Value)
-{}
+bool shirokov::BSTree< Key, Value, Compare >::insert(Key key, Value value)
+{
+  Node* curr = root_;
+  Node* parent = nullptr;
+  while (curr)
+  {
+    if (cmp_(key, curr->key))
+    {
+      parent = curr;
+      curr = curr->lt;
+    }
+    else if (cmp_(curr->key, key))
+    {
+      parent = curr;
+      curr = curr->rt;
+    }
+    else
+    {
+      return false;
+    }
+  }
+  curr = new Node{key, value, nullptr, nullptr, parent};
+  if (!root_)
+  {
+    root_ = curr;
+    return true;
+  }
+  if (parent && cmp_(curr->key, parent->key))
+  {
+    parent->lt = curr;
+  }
+  else if (parent && cmp_(curr->key, key))
+  {
+    parent->rt = curr;
+  }
+  return true;
+}
 
 template< class Key, class Value, class Compare >
 shirokov::BSTree< Key, Value, Compare >::BSTree():
-  root_(nullptr)
+  root_(nullptr),
+  cmp_(Compare())
 {}
 
 template< class Key, class Value, class Compare >

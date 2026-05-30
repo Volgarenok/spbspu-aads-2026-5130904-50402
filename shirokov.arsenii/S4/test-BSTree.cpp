@@ -12,6 +12,6 @@ BOOST_AUTO_TEST_CASE(insert_value_make_tree_non_empty)
 {
   shirokov::BSTree< int, int, std::less< int > > tree;
   BOOST_REQUIRE(tree.empty());
-  tree.insert(0, 1);
+  BOOST_REQUIRE(tree.insert(0, 1));
   BOOST_TEST(!tree.empty());
 }
