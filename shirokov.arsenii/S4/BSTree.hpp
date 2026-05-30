@@ -15,7 +15,7 @@ namespace shirokov
     bool operator==(const BSTIterator& rhs) const noexcept;
     bool operator!=(const BSTIterator& rhs) const noexcept;
     BSTIterator& operator++();
-    std::pair< Key, Value > operator*() const;
+    std::pair< Key, Value& > operator*() const;
 
   private:
     typename BSTree< Key, Value, Compare >::Node* curr;
@@ -50,7 +50,6 @@ namespace shirokov
     bool insert(Key k, Value v);
     bool contains(Key k);
     bool erase(Key k);
-    void swap(BSTree& rhs);
     bool empty() const noexcept;
     Value& at(Key key);
     const Value& at(Key key) const;

@@ -1,6 +1,5 @@
-#include <stdexcept>
-#include <boost/test/tools/old/interface.hpp>
 #define BOOST_TEST_MODULE S4
+#include <stdexcept>
 #include <boost/test/included/unit_test.hpp>
 #include "BSTree.hpp"
 
@@ -52,4 +51,24 @@ BOOST_AUTO_TEST_CASE(at_undefined_key)
   tree.insert(5, 10);
   tree.insert(100, 50);
   BOOST_CHECK_THROW(tree.at(3), std::out_of_range);
+}
+
+BOOST_AUTO_TEST_CASE(contains_in_empty_table_return_false)
+{
+  shirokov::BSTree< int, int, std::less< int > > tree;
+  BOOST_TEST(!tree.contains(0));
+}
+
+BOOST_AUTO_TEST_CASE(contains_existing_key_return_true)
+{
+  shirokov::BSTree< int, int, std::less< int > > tree;
+  tree.insert(0, 1);
+  BOOST_TEST(tree.contains(0));
+}
+
+BOOST_AUTO_TEST_CASE(contains_not_existing_key_return_false)
+{
+  shirokov::BSTree< int, int, std::less< int > > tree;
+  tree.insert(1, 2);
+  BOOST_TEST(!tree.contains(0));
 }
