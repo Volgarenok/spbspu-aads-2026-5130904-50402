@@ -35,7 +35,7 @@ void shirokov::Stack< T >::push(const T& value)
 template< class T >
 void shirokov::Stack< T >::push(T&& value)
 {
-  list_.pushBack(value);
+  list_.pushBack(std::move(value));
 }
 
 template< class T >
