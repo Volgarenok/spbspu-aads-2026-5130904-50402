@@ -95,6 +95,18 @@ namespace shirokov
 }
 
 template< class Key, class Value, class Compare >
+std::pair< Key, Value& > shirokov::BSTIterator< Key, Value, Compare >::operator*()
+{
+  return {curr_->key, curr_->value};
+}
+
+template< class Key, class Value, class Compare >
+std::pair< Key, Value > shirokov::BSTConstIterator< Key, Value, Compare >::operator*() const
+{
+  return {curr_->key, curr_->value};
+}
+
+template< class Key, class Value, class Compare >
 bool shirokov::BSTConstIterator< Key, Value, Compare >::operator==(const BSTConstIterator& rhs) const noexcept
 {
   return this->curr_ == rhs.curr_;

@@ -87,4 +87,7 @@ BOOST_AUTO_TEST_CASE(begin_iter_in_tree_with_one_elem)
   BOOST_CHECK(tree.begin() != tree.end());
   auto it = tree.begin();
   BOOST_CHECK((*it).first == 0 && (*it).second == 1);
+  (*it).second = 2;
+  it = tree.begin();
+  BOOST_CHECK((*it).first == 0 && (*it).second == 2);
 }
