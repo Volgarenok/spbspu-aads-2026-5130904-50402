@@ -50,7 +50,7 @@ namespace shirokov
     ~BSTree();
     BSTree& operator=(const BSTree& rhs); // TODO
     BSTree& operator=(BSTree&& rhs);      // TODO
-    Value& operator[](Key key);           // TODO
+    Value& operator[](Key key);
 
     bool insert(Key k, Value v);
     bool contains(Key k);
