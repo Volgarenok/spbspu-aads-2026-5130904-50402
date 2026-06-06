@@ -46,7 +46,7 @@ namespace shirokov
   public:
     BSTree();
     BSTree(const BSTree& rhs); // TODO
-    BSTree(BSTree&& rhs);      // TODO
+    BSTree(BSTree&& rhs);
     ~BSTree();
     BSTree& operator=(const BSTree& rhs); // TODO
     BSTree& operator=(BSTree&& rhs);      // TODO
@@ -92,6 +92,29 @@ namespace shirokov
 
     void clear(Node* curr);
   };
+}
+
+template< class Key, class Value, class Compare >
+Value& shirokov::BSTree< Key, Value, Compare >::operator[](Key key)
+{
+  insert(key, Value());
+  Node* curr = root_;
+  while (curr)
+  {
+    if (cmp_(key, curr->key))
+    {
+      curr = curr->lt;
+    }
+    else if (cmp_(curr->key, key))
+    {
+      curr = curr->rt;
+    }
+    else
+    {
+      return curr->value;
+    }
+  }
+  return curr->value;
 }
 
 template< class Key, class Value, class Compare >
