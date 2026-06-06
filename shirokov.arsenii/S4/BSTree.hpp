@@ -14,30 +14,29 @@ namespace shirokov
   class BSTIterator
   {
   public:
-    explicit BSTIterator(typename BSTree< Key, Value, Compare >::Node* curr); // TODO
-    explicit BSTIterator(const BSTConstIterator< Key, Value, Compare >& rhs); // TODO
-    bool operator==(const BSTIterator& rhs) const noexcept;                   // TODO
-    bool operator!=(const BSTIterator& rhs) const noexcept;                   // TODO
-    BSTIterator& operator++();                                                // TODO
-    std::pair< Key, Value& > operator*() const;                               // TODO
+    explicit BSTIterator(typename BSTree< Key, Value, Compare >::Node* curr);
+    explicit BSTIterator(const BSTConstIterator< Key, Value, Compare >& rhs);
+    bool operator==(const BSTIterator& rhs) const noexcept;
+    bool operator!=(const BSTIterator& rhs) const noexcept;
+    BSTIterator& operator++();                  // TODO
+    std::pair< Key, Value& > operator*() const; // TODO
 
   private:
-    typename BSTree< Key, Value, Compare >::Node* curr;
+    typename BSTree< Key, Value, Compare >::Node* curr_;
   };
 
   template< class Key, class Value, class Compare >
   class BSTConstIterator
   {
   public:
-    explicit BSTConstIterator(typename BSTree< Key, Value, Compare >::Node* curr); // TODO
-    bool operator==(const BSTConstIterator& rhs) const noexcept;                   // TODO
-    bool operator!=(const BSTConstIterator& rhs) const noexcept;                   // TODO
-    BSTConstIterator& operator++();                                                // TODO
-    std::pair< Key, Value > operator*() const;                                     // TODO
+    explicit BSTConstIterator(const typename BSTree< Key, Value, Compare >::Node* curr);
+    bool operator==(const BSTConstIterator& rhs) const noexcept;
+    bool operator!=(const BSTConstIterator& rhs) const noexcept;
+    BSTConstIterator& operator++();            // TODO
+    std::pair< Key, Value > operator*() const; // TODO
 
   private:
-    const typename BSTree< Key, Value, Compare >::Node* curr;
-    explicit BSTConstIterator(const BSTIterator< Key, Value, Compare >& rhs); // TODO
+    const typename BSTree< Key, Value, Compare >::Node* curr_;
   };
 
   template< class Key, class Value, class Compare >
@@ -70,13 +69,13 @@ namespace shirokov
     size_t height(const_iterator it); // TODO
     size_t height();                  // TODO
 
-    iterator begin();              // TODO
-    const_iterator begin() const;  // TODO
-    const_iterator cbegin() const; // TODO
+    iterator begin();
+    const_iterator begin() const;
+    const_iterator cbegin() const;
 
-    iterator end();              // TODO
-    const_iterator end() const;  // TODO
-    const_iterator cend() const; // TODO
+    iterator end();
+    const_iterator end() const;
+    const_iterator cend() const;
 
   private:
     friend iterator;
@@ -93,6 +92,82 @@ namespace shirokov
     void clear(Node* curr);
   };
 }
+
+template< class Key, class Value, class Compare >
+bool shirokov::BSTConstIterator< Key, Value, Compare >::operator==(const BSTConstIterator& rhs) const noexcept
+{
+  return this->curr_ == rhs.curr_;
+}
+
+template< class Key, class Value, class Compare >
+bool shirokov::BSTConstIterator< Key, Value, Compare >::operator!=(const BSTConstIterator& rhs) const noexcept
+{
+  return !(*this == rhs);
+}
+
+template< class Key, class Value, class Compare >
+bool shirokov::BSTIterator< Key, Value, Compare >::operator==(const BSTIterator& rhs) const noexcept
+{
+  return this->curr_ == rhs.curr_;
+}
+
+template< class Key, class Value, class Compare >
+bool shirokov::BSTIterator< Key, Value, Compare >::operator!=(const BSTIterator& rhs) const noexcept
+{
+  return !(*this == rhs);
+}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTConstIterator< Key, Value, Compare >::BSTConstIterator(
+    const typename BSTree< Key, Value, Compare >::Node* curr):
+  curr_(curr)
+{}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTIterator< Key, Value, Compare >::BSTIterator(typename BSTree< Key, Value, Compare >::Node* curr):
+  curr_(curr)
+{}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTConstIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, Compare >::cbegin() const
+{
+  return BSTConstIterator< Key, Value, Compare >{root_};
+}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTConstIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, Compare >::cend() const
+{
+  return BSTConstIterator< Key, Value, Compare >{nullptr};
+}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTConstIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, Compare >::begin() const
+{
+  return cbegin();
+}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTConstIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, Compare >::end() const
+{
+  return cend();
+}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, Compare >::begin()
+{
+  return BSTIterator< Key, Value, Compare >(cbegin());
+}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, Compare >::end()
+{
+  return BSTIterator< Key, Value, Compare >(cend());
+}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTIterator< Key, Value, Compare >::BSTIterator(const BSTConstIterator< Key, Value, Compare >& rhs):
+  curr_(const_cast< typename BSTree< Key, Value, Compare >::Node* >(rhs.curr_))
+{}
 
 template< class Key, class Value, class Compare >
 bool shirokov::BSTree< Key, Value, Compare >::contains(Key key)
