@@ -95,6 +95,15 @@ namespace shirokov
 }
 
 template< class Key, class Value, class Compare >
+shirokov::BSTree< Key, Value, Compare >& shirokov::BSTree< Key, Value, Compare >::operator=(BSTree&& rhs)
+{
+  clear(root_);
+  root_ = rhs.root_;
+  rhs.root_ = nullptr;
+  return *this;
+}
+
+template< class Key, class Value, class Compare >
 Value& shirokov::BSTree< Key, Value, Compare >::operator[](Key key)
 {
   insert(key, Value());
