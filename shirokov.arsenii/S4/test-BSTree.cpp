@@ -1,4 +1,3 @@
-#include <boost/test/unit_test_suite.hpp>
 #define BOOST_TEST_MODULE S4
 #include <stdexcept>
 #include <boost/test/included/unit_test.hpp>
@@ -77,5 +76,5 @@ BOOST_AUTO_TEST_CASE(contains_not_existing_key_return_false)
 BOOST_AUTO_TEST_CASE(cbegin_iter_in_empty_tree_equal_cend_iter)
 {
   shirokov::BSTree< int, int, std::less< int > > tree;
-  BOOST_TEST(tree.cbegin() == tree.cend());
+  BOOST_CHECK(tree.cbegin() == tree.cend());
 }
