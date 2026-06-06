@@ -107,3 +107,15 @@ BOOST_AUTO_TEST_CASE(begin_iter_in_tree_with_many_elem)
   ++it;
   BOOST_CHECK(it == tree.end());
 }
+
+BOOST_AUTO_TEST_CASE(move_constructor)
+{
+  shirokov::BSTree< int, int, std::less< int > > t1;
+  t1.insert(10, 1);
+  t1.insert(5, 2);
+  t1.insert(15, 3);
+  shirokov::BSTree< int, int, std::less< int > > t2(std::move(t1));
+  BOOST_TEST(t1.at(10) == 1);
+  BOOST_TEST(t1.at(5) == 2);
+  BOOST_TEST(t1.at(15) == 3);
+}
