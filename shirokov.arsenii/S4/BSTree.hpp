@@ -95,6 +95,14 @@ namespace shirokov
 }
 
 template< class Key, class Value, class Compare >
+shirokov::BSTree< Key, Value, Compare >::BSTree(shirokov::BSTree< Key, Value, Compare >&& rhs):
+  root_(rhs.root_),
+  cmp_(rhs.cmp_)
+{
+  rhs.root_ = nullptr;
+}
+
+template< class Key, class Value, class Compare >
 shirokov::BSTIterator< Key, Value, Compare >& shirokov::BSTIterator< Key, Value, Compare >::operator++()
 {
   typename BSTree< Key, Value, Compare >::Node* next = nullptr;
