@@ -1,5 +1,6 @@
 #define BOOST_TEST_MODULE S4
 #include <stdexcept>
+#include <utility>
 #include <boost/test/included/unit_test.hpp>
 #include "BSTree.hpp"
 
@@ -73,8 +74,17 @@ BOOST_AUTO_TEST_CASE(contains_not_existing_key_return_false)
   BOOST_TEST(!tree.contains(0));
 }
 
-BOOST_AUTO_TEST_CASE(cbegin_iter_in_empty_tree_equal_cend_iter)
+BOOST_AUTO_TEST_CASE(begin_iter_in_empty_tree_equal_end_iter)
 {
   shirokov::BSTree< int, int, std::less< int > > tree;
-  BOOST_CHECK(tree.cbegin() == tree.cend());
+  BOOST_CHECK(tree.begin() == tree.end());
+}
+
+BOOST_AUTO_TEST_CASE(begin_iter_in_tree_with_one_elem)
+{
+  shirokov::BSTree< int, int, std::less< int > > tree;
+  tree.insert(0, 1);
+  BOOST_CHECK(tree.begin() != tree.end());
+  auto it = tree.begin();
+  BOOST_CHECK((*it).first == 0 && (*it).second == 1);
 }
