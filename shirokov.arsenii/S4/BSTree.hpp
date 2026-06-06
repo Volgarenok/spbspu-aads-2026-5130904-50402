@@ -69,8 +69,8 @@ namespace shirokov
     const_iterator rotateLargeLeft(const_iterator it);  // TODO
     const_iterator rotateLargeRight(const_iterator it); // TODO
 
-    size_t height(const_iterator it); // TODO
-    size_t height();                  // TODO
+    size_t height(const_iterator it);
+    size_t height();
 
     iterator begin();
     const_iterator begin() const;
