@@ -91,3 +91,19 @@ BOOST_AUTO_TEST_CASE(begin_iter_in_tree_with_one_elem)
   it = tree.begin();
   BOOST_CHECK((*it).first == 0 && (*it).second == 2);
 }
+
+BOOST_AUTO_TEST_CASE(begin_iter_in_tree_with_many_elem)
+{
+  shirokov::BSTree< int, int, std::less< int > > tree;
+  tree.insert(0, 1);
+  tree.insert(12, 34);
+  tree.insert(5, 10);
+  auto it = tree.begin();
+  BOOST_CHECK((*it).first == 0 && (*it).second == 1);
+  ++it;
+  BOOST_CHECK((*it).first == 5 && (*it).second == 10);
+  ++it;
+  BOOST_CHECK((*it).first == 12 && (*it).second == 34);
+  ++it;
+  BOOST_CHECK(it == tree.end());
+}
