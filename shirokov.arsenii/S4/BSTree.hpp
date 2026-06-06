@@ -96,7 +96,51 @@ namespace shirokov
 
 template< class Key, class Value, class Compare >
 shirokov::BSTIterator< Key, Value, Compare >& shirokov::BSTIterator< Key, Value, Compare >::operator++()
-{}
+{
+  typename BSTree< Key, Value, Compare >::Node* next = nullptr;
+  if (curr_->rt)
+  {
+    next = curr_->rt;
+    while (next->lt)
+    {
+      next = next->lt;
+    }
+  }
+  else if (curr_->parent && curr_->parent->lt == curr_)
+  {
+    next = curr_->parent;
+  }
+  else if (curr_->parent && curr_->parent->rt == curr_)
+  {
+    next = curr_->parent->parent;
+  }
+  this->curr_ = next;
+  return *this;
+}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTConstIterator< Key, Value, Compare >& shirokov::BSTConstIterator< Key, Value, Compare >::operator++()
+{
+  typename BSTree< Key, Value, Compare >::Node* next = nullptr;
+  if (curr_->rt)
+  {
+    next = curr_->rt;
+    while (next->lt)
+    {
+      next = next->lt;
+    }
+  }
+  else if (curr_->parent && curr_->parent->lt == curr_)
+  {
+    next = curr_->parent;
+  }
+  else if (curr_->parent && curr_->parent->rt == curr_)
+  {
+    next = curr_->parent->parent;
+  }
+  this->curr_ = next;
+  return *this;
+}
 
 template< class Key, class Value, class Compare >
 std::pair< Key, Value& > shirokov::BSTIterator< Key, Value, Compare >::operator*()
