@@ -23,6 +23,7 @@ namespace shirokov
 
   private:
     typename BSTree< Key, Value, Compare >::Node* curr_;
+    friend BSTree< Key, Value, Compare >;
   };
 
   template< class Key, class Value, class Compare >
@@ -38,6 +39,7 @@ namespace shirokov
   private:
     const typename BSTree< Key, Value, Compare >::Node* curr_;
     friend BSTIterator< Key, Value, Compare >;
+    friend BSTree< Key, Value, Compare >;
   };
 
   template< class Key, class Value, class Compare >
@@ -92,6 +94,22 @@ namespace shirokov
 
     void clear(Node* curr);
   };
+}
+
+template< class Key, class Value, class Compare >
+size_t shirokov::BSTree< Key, Value, Compare >::height(const_iterator it)
+{
+  if (!it.curr_)
+  {
+    return 0;
+  }
+  return std::max(height(const_iterator{it.curr_->lt}), height(const_iterator{it.curr_->rt})) + 1;
+}
+
+template< class Key, class Value, class Compare >
+size_t shirokov::BSTree< Key, Value, Compare >::height()
+{
+  return height(const_iterator{root_});
 }
 
 template< class Key, class Value, class Compare >
@@ -237,13 +255,13 @@ shirokov::BSTConstIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, 
   {
     curr = curr->lt;
   }
-  return BSTConstIterator< Key, Value, Compare >{curr};
+  return const_iterator{curr};
 }
 
 template< class Key, class Value, class Compare >
 shirokov::BSTConstIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, Compare >::cend() const
 {
-  return BSTConstIterator< Key, Value, Compare >{nullptr};
+  return const_iterator{nullptr};
 }
 
 template< class Key, class Value, class Compare >
@@ -261,13 +279,13 @@ shirokov::BSTConstIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, 
 template< class Key, class Value, class Compare >
 shirokov::BSTIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, Compare >::begin()
 {
-  return BSTIterator< Key, Value, Compare >(cbegin());
+  return iterator(cbegin());
 }
 
 template< class Key, class Value, class Compare >
 shirokov::BSTIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, Compare >::end()
 {
-  return BSTIterator< Key, Value, Compare >(cend());
+  return iterator(cend());
 }
 
 template< class Key, class Value, class Compare >
