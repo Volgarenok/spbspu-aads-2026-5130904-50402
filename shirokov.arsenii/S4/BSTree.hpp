@@ -8,10 +8,14 @@ namespace shirokov
   class BSTree;
 
   template< class Key, class Value, class Compare >
+  class BSTConstIterator;
+
+  template< class Key, class Value, class Compare >
   class BSTIterator
   {
   public:
     explicit BSTIterator(typename BSTree< Key, Value, Compare >::Node* curr); // TODO
+    explicit BSTIterator(const BSTConstIterator< Key, Value, Compare >& rhs); // TODO
     bool operator==(const BSTIterator& rhs) const noexcept;                   // TODO
     bool operator!=(const BSTIterator& rhs) const noexcept;                   // TODO
     BSTIterator& operator++();                                                // TODO
@@ -33,6 +37,7 @@ namespace shirokov
 
   private:
     const typename BSTree< Key, Value, Compare >::Node* curr;
+    explicit BSTConstIterator(const BSTIterator< Key, Value, Compare >& rhs); // TODO
   };
 
   template< class Key, class Value, class Compare >
