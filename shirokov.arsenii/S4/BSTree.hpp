@@ -49,7 +49,7 @@ namespace shirokov
     BSTree(BSTree&& rhs);
     ~BSTree();
     BSTree& operator=(const BSTree& rhs); // TODO
-    BSTree& operator=(BSTree&& rhs);      // TODO
+    BSTree& operator=(BSTree&& rhs);
     Value& operator[](Key key);
 
     bool insert(Key k, Value v);

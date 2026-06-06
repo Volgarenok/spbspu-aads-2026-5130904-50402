@@ -149,3 +149,17 @@ BOOST_AUTO_TEST_CASE(move_assignment_operator)
   BOOST_TEST(!t2.contains(6));
   BOOST_TEST(!t2.contains(16));
 }
+
+BOOST_AUTO_TEST_CASE(height_test)
+{
+  shirokov::BSTree< int, int, std::less< int > > tree;
+  tree.insert(10, 1);
+  tree.insert(5, 2);
+  tree.insert(6, 5);
+  auto it = tree.cbegin();
+  BOOST_CHECK((*it).first == 5 && tree.height(it) == 2);
+  ++it;
+  BOOST_CHECK((*it).first == 6 && tree.height(it) == 1);
+  ++it;
+  BOOST_CHECK((*it).first == 10 && tree.height(it) == 3);
+}
