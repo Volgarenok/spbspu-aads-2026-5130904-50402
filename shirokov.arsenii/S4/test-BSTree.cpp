@@ -119,3 +119,14 @@ BOOST_AUTO_TEST_CASE(move_constructor)
   BOOST_TEST(t2.at(5) == 2);
   BOOST_TEST(t2.at(15) == 3);
 }
+
+BOOST_AUTO_TEST_CASE(get_elem)
+{
+  shirokov::BSTree< int, int, std::less< int > > t1;
+  t1.insert(10, 1);
+  t1.insert(5, 2);
+  t1.insert(15, 3);
+  BOOST_TEST(t1[10] == 1);
+  BOOST_TEST(t1[5] == 2);
+  BOOST_TEST(t1[15] == 3);
+}
