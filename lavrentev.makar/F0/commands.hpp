@@ -20,10 +20,13 @@ namespace lavrentev
   void normalize(std::istream&, std::ostream&, CCHT &cht); //TODO
   void changeVolume(std::istream&, std::ostream&, CCHT &cht); //TODO
   void exportFile(std::istream&, std::ostream&, CCHT &cht); //TODO
-  void info(std::istream&, std::ostream&, CCHT &cht); //TODO
+  void info(std::istream&, std::ostream&, CCHT &cht);
 
   void viewFormats(std::istream&, std::ostream&);
   void help(std::istream&, std::ostream&);
+
+  std::string extractName(const std::string& filePath);
+  std::string extractFormat(const std::string& filePath);
 }
 
 #endif

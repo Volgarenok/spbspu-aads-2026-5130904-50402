@@ -17,3 +17,12 @@ void lavrentev::freeAudioMemory(Audio& audio)
   }
   audio.channelsSize = 0;
 }
+
+float lavrentev::getDuration(const Audio &audio)
+{
+  if (audio.channelsSize == 0 || audio.channels == nullptr || audio.sampleRate <= 0.0f) {
+    return 0.0f;
+  }
+
+  return static_cast<float>(audio.channels[0].samplesSize) / audio.sampleRate;
+}

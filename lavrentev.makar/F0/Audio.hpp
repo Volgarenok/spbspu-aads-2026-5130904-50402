@@ -19,9 +19,12 @@ namespace lavrentev
     size_t channelsSize = 0;
     float sampleRate = 0.0f;
     size_t bitDepth = 16;
+    std::string name;
+    std::string format;
   };
 
-  void freeAudioMemory(Audio& audio);
+  void freeAudioMemory(Audio &audio);
+  float getDuration(const Audio &audio);
 }
 
 #endif

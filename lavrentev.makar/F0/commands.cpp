@@ -1,4 +1,6 @@
+#include "Audio.hpp"
 #include <new>
+#include <stdexcept>
 #define MINIAUDIO_IMPLEMENTATION
 
 #include "miniaudio.h"
@@ -50,6 +52,8 @@ void lavrentev::importFile(std::istream& is, std::ostream&, CCHT &data)
   newFile.sampleRate = static_cast<float>(decoder.outputSampleRate);
   newFile.channelsSize = decoder.outputChannels;
   newFile.bitDepth = 16; 
+  newFile.name = extractName(filePath);
+  newFile.format = extractFormat(filePath);
 
   ma_uint64 totalFrames = 0;
   ma_decoder_get_length_in_pcm_frames(&decoder, &totalFrames);
@@ -88,4 +92,43 @@ void lavrentev::importFile(std::istream& is, std::ostream&, CCHT &data)
 void lavrentev::viewAll(std::istream&, std::ostream& os, CCHT &data)
 {
   data.print(os);
+}
+
+std::string extractName(const std::string& filePath) {
+  size_t last = filePath.find_last_of("/\\");
+
+  if (last == std::string::npos)
+  {
+    return filePath;
+  }
+
+  return filePath.substr(last + 1);
+}
+
+std::string extractFormat(const std::string& filePath) {
+  size_t last= filePath.find_last_of(".");
+
+  if (last == std::string::npos || last == filePath.length() - 1)
+  {
+    throw std::invalid_argument("Invalid data");
+  }
+
+  return filePath.substr(last + 1);
+}
+
+void lavrentev::info(std::istream &is, std::ostream &os, CCHT &cht)
+{
+  size_t id;
+  is >> id;
+  if (!cht.has(id))
+  {
+    throw std::out_of_range("No such file");
+  }
+  Audio curr = cht[id];
+  os << "Name: " << curr.name << '\n';
+  os << "Format: " << curr.format << '\n';
+  os << "Duration: " << getDuration(curr) << '\n';
+  os << "Channels: " << curr.channelsSize << '\n';
+  os << "Sample rate: " << curr.sampleRate << '\n';
+  os << "Bit depth: " << curr.bitDepth << '\n';
 }
