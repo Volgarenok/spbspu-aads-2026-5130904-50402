@@ -334,14 +334,6 @@ void lavrentev::convert(std::istream &is, std::ostream&, CCHT &cht)
   size_t id, newId;
   std::string format;
   is >> id >> newId >> format;
-  if (!cht.has(id))
-  {
-    throw std::out_of_range("No such file");
-  }
-  if (cht.has(newId))
-  {
-    throw std::out_of_range("ID already exists");
-  }
   bool c1 = format != "mp3" && format != "MP3";
   bool c2 = format != "wav" && format != "WAV";
   bool c3 = format != "aac" && format != "AAC";
@@ -350,6 +342,35 @@ void lavrentev::convert(std::istream &is, std::ostream&, CCHT &cht)
   if (c1 && c2 && c3 && c4 && c5)
   {
     throw std::out_of_range("Invalid format");
+  }
+  convertTo(id, newId, format, cht);
+}
+
+void lavrentev::convertToWav(std::istream &is, std::ostream&, CCHT &cht)
+{
+  size_t id, newId;
+  std::string format = "wav";
+  is >> id >> newId;
+  convertTo(id, newId, format, cht);
+}
+
+void lavrentev::convertToMp3(std::istream &is, std::ostream&, CCHT &cht)
+{
+  size_t id, newId;
+  std::string format = "mp3";
+  is >> id >> newId;
+  convertTo(id, newId, format, cht);
+}
+
+void lavrentev::convertTo(size_t id, size_t newId, std::string format, CCHT &cht)
+{
+  if (!cht.has(id))
+  {
+    throw std::out_of_range("No such file");
+  }
+  if (cht.has(newId))
+  {
+    throw std::out_of_range("ID already exists");
   }
 
   Audio &curr = cht[id];
