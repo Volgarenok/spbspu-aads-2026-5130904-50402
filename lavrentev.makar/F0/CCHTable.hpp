@@ -33,10 +33,10 @@ namespace lavrentev
       Value &operator[](const Key &k);
 
       void add(Key k, Value v);
-      void drop(Key k); //TODO
+      void drop(Key k);
       bool has(Key k) const;
-      void rehash(size_t slots); //TODO
-      size_t size() const; //TODO
+      void rehash(size_t slots);
+      size_t size() const;
 
     private:
       Node *ht1;
@@ -144,7 +144,7 @@ void lavrentev::CCHTable< Key, Value, Hash, Equal >::add(Key k, Value v)
     if (ht1[idx1].empty)
     {
       ht1[idx1].key = std::move(currK);
-      ht1[idx1].value = std::move(currV);
+      ht1[idx1].val = std::move(currV);
       ht1[idx1].empty = false;
       ++size1;
       return;
@@ -156,7 +156,7 @@ void lavrentev::CCHTable< Key, Value, Hash, Equal >::add(Key k, Value v)
     size_t idx2 = hasher.hash2(currK) % cap2;
     if (ht2[idx2].empty) {
       ht2[idx2].key = std::move(currK);
-      ht2[idx2].value = std::move(currV);
+      ht2[idx2].val = std::move(currV);
       ht2[idx2].empty = false;
       ++size2;
       return;
@@ -167,6 +167,30 @@ void lavrentev::CCHTable< Key, Value, Hash, Equal >::add(Key k, Value v)
   }
   rehash(cap1 * 2);
   add(std::move(currK), std::move(currV));
+}
+
+template< class Key, class Value, class Hash, class Equal >
+void lavrentev::CCHTable< Key, Value, Hash, Equal >::drop(Key k)
+{
+  size_t pos1 = hasher.hash1(k) % cap1;
+  if (!ht1[pos1].empty && comp(ht1[pos1].key, k))
+  {
+    ht1[pos1].key = Key();
+    ht1[pos1].val = Value();
+    ht1[pos1].empty = true;
+    --size1;
+    return;
+  }
+  size_t pos2 = hasher.hash2(k) % cap2;
+  if (!ht2[pos2].empty && comp(ht2[pos2].key, k))
+  {
+    ht2[pos2].key = Key();
+    ht2[pos2].val = Value();
+    ht2[pos2].empty = true;
+    --size2;
+    return;
+  }
+  throw std::out_of_range("Not such key");
 }
 
 template< class Key, class Value, class Hash, class Equal >
@@ -228,6 +252,12 @@ void lavrentev::CCHTable< Key, Value, Hash, Equal >::rehash(size_t slots)
 
   delete[] oldht1;
   delete[] oldht2;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+size_t lavrentev::CCHTable<Key, Value, Hash, Equal >::size() const
+{
+  return size1 + size2;
 }
 
 #endif
