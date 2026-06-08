@@ -270,3 +270,61 @@ void lavrentev::changeBitrate(std::istream &is, std::ostream&, CCHT &cht)
   }
   cht[id].bitDepth = newBR;
 }
+
+void lavrentev::cut(std::istream &is, std::ostream&, CCHT &cht)
+{
+  size_t id;
+  float start, duration;
+  is >> id >> start >> duration;
+  if (!cht.has(id))
+  {
+    throw std::out_of_range("No such file");
+  }
+
+  Audio &curr = cht[id];
+  float startBit = start * curr.sampleRate;
+  float durBit = duration * curr.sampleRate;
+
+  if (startBit + durBit >= curr.channels[0].samplesSize || startBit < 0.0f)
+  {
+    throw std::out_of_range("Invalid segment");
+  }
+
+  Audio newAudio;
+  AudioChannel* newChannels = new AudioChannel[curr.channelsSize];
+  newAudio.channels = newChannels;
+  newAudio.channelsSize = curr.channelsSize;
+  newAudio.bitDepth = curr.bitDepth;
+  newAudio.format = curr.format;
+  newAudio.name = curr.name;
+  newAudio.sampleRate = curr.sampleRate;
+
+  for (size_t i = 0; i < newAudio.channelsSize; ++i)
+  {
+    newChannels[i].samples = nullptr;
+    newChannels[i].samplesSize = 0;
+  }
+
+  try
+  {
+    for(size_t i = 0; i < curr.channelsSize; ++i)
+    {
+      float* newSample = new float[durBit];
+      size_t idx = 0;
+      for(size_t j = static_cast<size_t>(startBit); j < static_cast<size_t>(startBit + durBit); ++j)
+      {
+        newSample[idx] = curr.channels[i].samples[j];
+        ++idx;
+      }
+      newChannels[i].samples = newSample;
+      newChannels[i].samplesSize = durBit;
+    }
+  }
+  catch(...)
+  {
+    freeAudioMemory(newAudio);
+    throw std::bad_alloc();
+  }
+  std::swap(curr, newAudio);
+  freeAudioMemory(newAudio);
+}
