@@ -2,6 +2,7 @@
 #define CCHTABLE_HPP
 #include <cstddef>
 #include <algorithm>
+#include <new>
 #include <stdexcept>
 
 namespace lavrentev
@@ -131,6 +132,11 @@ void lavrentev::CCHTable< Key, Value, Hash, Equal >::add(Key k, Value v)
     return;
   }
 
+  if ((size1 + size2) > (cap1 + cap2) * loadFactor)
+  {
+    rehash(cap1 * 2);
+  }
+
   Key currK = std::move(k);
   Value currV = std::move(v);
   for (size_t i = 0; i < maxLoopCount; ++i) {
@@ -140,6 +146,7 @@ void lavrentev::CCHTable< Key, Value, Hash, Equal >::add(Key k, Value v)
       ht1[idx1].key = std::move(currK);
       ht1[idx1].value = std::move(currV);
       ht1[idx1].empty = false;
+      ++size1;
       return;
     }
 
@@ -151,13 +158,14 @@ void lavrentev::CCHTable< Key, Value, Hash, Equal >::add(Key k, Value v)
       ht2[idx2].key = std::move(currK);
       ht2[idx2].value = std::move(currV);
       ht2[idx2].empty = false;
+      ++size2;
       return;
     }
 
     std::swap(currK, ht2[idx2].key);
     std::swap(currV, ht2[idx2].value);
   }
-  rehash(size1 * 2);
+  rehash(cap1 * 2);
   add(std::move(currK), std::move(currV));
 }
 
@@ -177,6 +185,49 @@ bool lavrentev::CCHTable< Key, Value, Hash, Equal >::has(Key k) const
   }
 
   return false;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+void lavrentev::CCHTable< Key, Value, Hash, Equal >::rehash(size_t slots)
+{
+  if (slots < cap1)
+  {
+    throw std::invalid_argument("Not enough slots");
+  }
+
+  Node* oldht1 = ht1;
+  Node* oldht2 = ht2;
+  size_t oldcap1 = cap1;
+  size_t oldcap2 = cap2;
+
+  ht1 = new Node[slots];
+  try
+  {
+    ht2 = new Node[slots];
+  }
+  catch (...)
+  {
+    delete[] ht1;
+    ht1 = oldht1;
+    throw std::bad_alloc();
+  }
+
+  cap1 = slots;
+  cap2 = slots;
+  size1 = 0;
+  size2 = 0;
+
+  for (size_t i = 0; i < oldcap1; ++i)
+  {
+    add(std::move(oldht1[i].key), std::move(oldht1[i].val));
+  }
+  for (size_t i = 0; i < oldcap2; ++i)
+  {
+    add(std::move(oldht2[i].key), std::move(oldht2[i].val));
+  }
+
+  delete[] oldht1;
+  delete[] oldht2;
 }
 
 #endif
