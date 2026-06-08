@@ -209,3 +209,34 @@ BOOST_AUTO_TEST_CASE(copy_assignment_operator_test)
   BOOST_TEST(!t2.contains(6));
   BOOST_TEST(!t2.contains(16));
 }
+
+BOOST_AUTO_TEST_CASE(swapping_a_tree_does_not_do_anything_to_itself)
+{
+  shirokov::BSTree< int, int, std::less< int > > tree;
+  tree.insert(10, 1);
+  tree.insert(5, 2);
+  tree.insert(15, 3);
+  tree.swap(tree);
+  BOOST_TEST(tree.at(10) == 1);
+  BOOST_TEST(tree.at(5) == 2);
+  BOOST_TEST(tree.at(15) == 3);
+}
+
+BOOST_AUTO_TEST_CASE(swap_a_tree_with_another_tree)
+{
+  shirokov::BSTree< int, int, std::less< int > > t1;
+  t1.insert(10, 1);
+  t1.insert(5, 2);
+  t1.insert(15, 3);
+  shirokov::BSTree< int, int, std::less< int > > t2;
+  t2.insert(11, 4);
+  t2.insert(6, 5);
+  t2.insert(16, 6);
+  t1.swap(t2);
+  BOOST_TEST(t1.at(11) == 4);
+  BOOST_TEST(t1.at(6) == 5);
+  BOOST_TEST(t1.at(16) == 6);
+  BOOST_TEST(t2.at(10) == 1);
+  BOOST_TEST(t2.at(5) == 2);
+  BOOST_TEST(t2.at(15) == 3);
+}

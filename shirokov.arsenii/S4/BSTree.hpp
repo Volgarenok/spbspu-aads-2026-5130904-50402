@@ -61,6 +61,7 @@ namespace shirokov
     bool empty() const noexcept;
     Value& at(Key key);
     const Value& at(Key key) const;
+    void swap(BSTree< Key, Value, Compare >& rhs);
 
     using const_iterator = BSTConstIterator< Key, Value, Compare >;
     using iterator = BSTIterator< Key, Value, Compare >;
