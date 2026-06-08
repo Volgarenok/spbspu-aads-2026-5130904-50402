@@ -181,3 +181,36 @@ void lavrentev::exportFile(std::istream &is, std::ostream&, CCHT &cht)
   delete[] temp;
   ma_encoder_uninit(&encoder);
 }
+
+void lavrentev::changeVolume(std::istream &is, std::ostream&, CCHT &cht)
+{
+  size_t id;
+  float coef;
+  is >> id >> coef;
+
+  if (!cht.has(id))
+  {
+    throw std::out_of_range("No such file");
+  }
+  if (coef > 5.0 || coef < 0)
+  {
+    throw std::out_of_range("Invalid coefficient");
+  }
+
+  Audio &curr = cht[id];
+  for(size_t i = 0; i < curr.channelsSize; ++i)
+  {
+    for(size_t j = 0; j < curr.channels[i].samplesSize; ++j)
+    {
+      curr.channels[i].samples[j] *= coef;
+      if (curr.channels[i].samples[j] > 1.0f)
+      {
+        curr.channels[i].samples[j] = 1.0f;
+      }
+      else if (curr.channels[i].samples[j] < -1.0f)
+      {
+        curr.channels[i].samples[j] = -1.0f;
+      }
+    }
+  }
+}
