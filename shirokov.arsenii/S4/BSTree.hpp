@@ -100,6 +100,18 @@ namespace shirokov
 }
 
 template< class Key, class Value, class Compare >
+void shirokov::BSTree< Key, Value, Compare >::swap(BSTree< Key, Value, Compare >& rhs)
+{
+  if (this == &rhs)
+  {
+    return;
+  }
+  using std::swap;
+  swap(root_, rhs.root_);
+  swap(cmp_, rhs.cmp_);
+}
+
+template< class Key, class Value, class Compare >
 shirokov::BSTree< Key, Value, Compare >& shirokov::BSTree< Key, Value, Compare >::operator=(const BSTree& rhs)
 {
   if (this == &rhs)
