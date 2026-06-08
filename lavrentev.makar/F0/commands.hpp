@@ -19,7 +19,7 @@ namespace lavrentev
   void changeBitrate(std::istream&, std::ostream&, CCHT &cht); //TODO
   void normalize(std::istream&, std::ostream&, CCHT &cht); //TODO
   void changeVolume(std::istream&, std::ostream&, CCHT &cht); //TODO
-  void exportFile(std::istream&, std::ostream&, CCHT &cht); //TODO
+  void exportFile(std::istream&, std::ostream&, CCHT &cht);
   void info(std::istream&, std::ostream&, CCHT &cht);
 
   void viewFormats(std::istream&, std::ostream&);

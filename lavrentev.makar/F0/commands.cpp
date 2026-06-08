@@ -132,3 +132,52 @@ void lavrentev::info(std::istream &is, std::ostream &os, CCHT &cht)
   os << "Sample rate: " << curr.sampleRate << '\n';
   os << "Bit depth: " << curr.bitDepth << '\n';
 }
+
+void lavrentev::exportFile(std::istream &is, std::ostream&, CCHT &cht)
+{
+  size_t id;
+  std::string fileName, path;
+  is >> id >> fileName >> path;
+  if (!cht.has(id))
+  {
+    throw std::out_of_range("No such file");
+  }
+  path += (fileName + "." + cht[id].format);
+
+  size_t frames = cht[id].channels[0].samplesSize;
+  size_t totalChannels = cht[id].channelsSize;
+  ma_encoder_config config = ma_encoder_config_init(
+    ma_encoding_format_wav, 
+    ma_format_f32, 
+    static_cast<ma_uint32>(totalChannels), 
+    static_cast<ma_uint32>(cht[id].sampleRate)
+  );
+
+  ma_encoder encoder;
+  ma_result result = ma_encoder_init_file(path.c_str(), &config, &encoder);
+  if (result != MA_SUCCESS) {
+    throw std::runtime_error("Failed to initialize encoder for file: " + fileName);
+  }
+
+  float* temp = nullptr;
+  try
+  {
+    temp = new float[frames * totalChannels];
+  }
+  catch (const std::bad_alloc&)
+  {
+    ma_encoder_uninit(&encoder);
+    throw std::logic_error("Export error");
+  }
+
+  for (size_t frame = 0; frame < frames; ++frame) {
+    for (size_t chan = 0; chan < totalChannels; ++chan) {
+      temp[frame * totalChannels + chan] = cht[id].channels[chan].samples[frame];
+    }
+  }
+  ma_uint64 framesWritten = 0;
+  ma_encoder_write_pcm_frames(&encoder, temp, frames, &framesWritten);
+
+  delete[] temp;
+  ma_encoder_uninit(&encoder);
+}
