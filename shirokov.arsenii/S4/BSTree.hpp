@@ -412,16 +412,17 @@ const Value& shirokov::BSTree< Key, Value, Compare >::at(Key key) const
 template< class Key, class Value, class Compare >
 bool shirokov::BSTree< Key, Value, Compare >::insert(Key key, Value value)
 {
-  Node* curr = root_;
+  BSTree< Key, Value, Compare > cpy(*this);
+  Node* curr = cpy.root_;
   Node* parent = nullptr;
   while (curr)
   {
-    if (cmp_(key, curr->key))
+    if (cpy.cmp_(key, curr->key))
     {
       parent = curr;
       curr = curr->lt;
     }
-    else if (cmp_(curr->key, key))
+    else if (cpy.cmp_(curr->key, key))
     {
       parent = curr;
       curr = curr->rt;
@@ -432,12 +433,13 @@ bool shirokov::BSTree< Key, Value, Compare >::insert(Key key, Value value)
     }
   }
   curr = new Node{key, value, nullptr, nullptr, parent};
-  if (!root_)
+  if (!cpy.root_)
   {
-    root_ = curr;
+    cpy.root_ = curr;
+    swap(cpy);
     return true;
   }
-  if (parent && cmp_(curr->key, parent->key))
+  if (parent && cpy.cmp_(curr->key, parent->key))
   {
     parent->lt = curr;
   }
@@ -445,6 +447,7 @@ bool shirokov::BSTree< Key, Value, Compare >::insert(Key key, Value value)
   {
     parent->rt = curr;
   }
+  swap(cpy);
   return true;
 }
 
