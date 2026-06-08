@@ -11,7 +11,7 @@ namespace lavrentev
 
   void importFile(std::istream&, std::ostream&, CCHT &cht);
   void viewAll(std::istream&, std::ostream&, CCHT &cht);
-  void convert(std::istream&, std::ostream&, CCHT &cht); //TODO
+  void convert(std::istream&, std::ostream&, CCHT &cht);
   void convertToWav(std::istream&, std::ostream&, CCHT &cht); //TODO
   void convertToMp3(std::istream&, std::ostream&, CCHT &cht); //TODO
   void pitch(std::istream&, std::ostream&, CCHT &cht); //TODO

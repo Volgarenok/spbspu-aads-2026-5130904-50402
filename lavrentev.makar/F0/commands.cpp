@@ -328,3 +328,62 @@ void lavrentev::cut(std::istream &is, std::ostream&, CCHT &cht)
   std::swap(curr, newAudio);
   freeAudioMemory(newAudio);
 }
+
+void lavrentev::convert(std::istream &is, std::ostream&, CCHT &cht)
+{
+  size_t id, newId;
+  std::string format;
+  is >> id >> newId >> format;
+  if (!cht.has(id))
+  {
+    throw std::out_of_range("No such file");
+  }
+  if (cht.has(newId))
+  {
+    throw std::out_of_range("ID already exists");
+  }
+  bool c1 = format != "mp3" && format != "MP3";
+  bool c2 = format != "wav" && format != "WAV";
+  bool c3 = format != "aac" && format != "AAC";
+  bool c4 = format != "aiff" && format != "AIFF";
+  bool c5 = format != "flac" && format != "FLAC";
+  if (c1 && c2 && c3 && c4 && c5)
+  {
+    throw std::out_of_range("Invalid format");
+  }
+
+  Audio &curr = cht[id];
+  Audio newAudio;
+  newAudio.channelsSize = curr.channelsSize;
+  newAudio.bitDepth = curr.bitDepth;
+  newAudio.format = format;
+  newAudio.name = curr.name;
+  newAudio.sampleRate = curr.sampleRate;
+  newAudio.channels = new AudioChannel[curr.channelsSize];
+  for (size_t i = 0; i < curr.channelsSize; ++i)
+  {
+    newAudio.channels[i].samples = nullptr;
+    newAudio.channels[i].samplesSize = 0;
+  }
+
+  try
+  {
+    for(size_t i = 0; i < curr.channelsSize; ++i)
+    {
+      size_t samplesCount = curr.channels[i].samplesSize;
+      float *newSamples = new float[samplesCount];
+      for(size_t j = 0; j < samplesCount; ++j)
+      {
+        newSamples[j] = curr.channels[i].samples[j];
+      }
+      newAudio.channels[i].samples = newSamples;
+      newAudio.channels[i].samplesSize = samplesCount;
+    }
+  }
+  catch (...)
+  {
+    freeAudioMemory(newAudio); 
+    throw;
+  }
+  cht[newId] = std::move(newAudio);
+}
