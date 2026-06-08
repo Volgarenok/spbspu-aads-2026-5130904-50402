@@ -240,3 +240,22 @@ BOOST_AUTO_TEST_CASE(swap_a_tree_with_another_tree)
   BOOST_TEST(t2.at(5) == 2);
   BOOST_TEST(t2.at(15) == 3);
 }
+
+BOOST_AUTO_TEST_CASE(erase_existing_element)
+{
+  shirokov::BSTree< int, int, std::less< int > > t1;
+  t1.insert(10, 1);
+  t1.insert(5, 2);
+  t1.insert(15, 3);
+  BOOST_TEST(t1.erase(10));
+  BOOST_TEST(!t1.contains(10));
+}
+
+BOOST_AUTO_TEST_CASE(erase_non_existent_element)
+{
+  shirokov::BSTree< int, int, std::less< int > > t1;
+  t1.insert(10, 1);
+  t1.insert(5, 2);
+  t1.insert(15, 3);
+  BOOST_TEST(!t1.erase(11));
+}
