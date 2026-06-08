@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <new>
 #include <stdexcept>
 #include <utility>
 
@@ -93,7 +94,38 @@ namespace shirokov
     Compare cmp_;
 
     void clear(Node* curr);
+    void copyTree(Node* root, Node** result, Node* parent = nullptr);
   };
+}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTree< Key, Value, Compare >::BSTree(const BSTree& rhs):
+  cmp_(rhs.cmp_)
+{
+  copyTree(rhs.root_, &root_);
+}
+
+template< class Key, class Value, class Compare >
+void shirokov::BSTree< Key, Value, Compare >::copyTree(Node* root, Node** result, Node* parent)
+{
+  if (!root)
+  {
+    *result = nullptr;
+    return;
+  }
+  Node* newRoot = new Node{root->key, root->value, nullptr, nullptr, parent};
+  try
+  {
+    copyTree(root->lt, &(newRoot->lt), newRoot);
+    copyTree(root->rt, &(newRoot->rt), newRoot);
+  }
+  catch (const std::bad_alloc&)
+  {
+    clear(newRoot);
+    *result = nullptr;
+    throw;
+  }
+  *result = newRoot;
 }
 
 template< class Key, class Value, class Compare >
