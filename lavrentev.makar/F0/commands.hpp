@@ -17,7 +17,7 @@ namespace lavrentev
   void pitch(std::istream&, std::ostream&, CCHT &cht); //TODO
   void cut(std::istream&, std::ostream&, CCHT &cht); //TODO
   void changeBitrate(std::istream&, std::ostream&, CCHT &cht); //TODO
-  void normalize(std::istream&, std::ostream&, CCHT &cht); //TODO
+  void normalize(std::istream&, std::ostream&, CCHT &cht);
   void changeVolume(std::istream&, std::ostream&, CCHT &cht);
   void exportFile(std::istream&, std::ostream&, CCHT &cht);
   void info(std::istream&, std::ostream&, CCHT &cht);

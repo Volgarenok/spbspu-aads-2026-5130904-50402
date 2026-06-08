@@ -1,12 +1,13 @@
-#include "Audio.hpp"
 #include <new>
 #include <stdexcept>
+#include <cmath>
 #define MINIAUDIO_IMPLEMENTATION
 
 #include "miniaudio.h"
 #include <kfr/kfr.h>
 #include <kfr/dsp.hpp>
 #include "commands.hpp"
+#include "Audio.hpp"
 
 void lavrentev::viewFormats(std::istream&, std::ostream& os)
 {
@@ -203,6 +204,50 @@ void lavrentev::changeVolume(std::istream &is, std::ostream&, CCHT &cht)
     for(size_t j = 0; j < curr.channels[i].samplesSize; ++j)
     {
       curr.channels[i].samples[j] *= coef;
+      if (curr.channels[i].samples[j] > 1.0f)
+      {
+        curr.channels[i].samples[j] = 1.0f;
+      }
+      else if (curr.channels[i].samples[j] < -1.0f)
+      {
+        curr.channels[i].samples[j] = -1.0f;
+      }
+    }
+  }
+}
+
+void lavrentev::normalize(std::istream &is, std::ostream&, CCHT &cht)
+{
+  size_t id;
+  is >> id;
+  if (!cht.has(id))
+  {
+    throw std::out_of_range("No such file");
+  }
+
+  Audio &curr = cht[id];
+  float maxPeak = 0.0f;
+  for(size_t i = 0; i < curr.channelsSize; ++i)
+  {
+    for(size_t j = 0; j < curr.channels[i].samplesSize; ++j)
+    {
+      if (abs(curr.channels[i].samples[j]) > maxPeak)
+      {
+        maxPeak = curr.channels[i].samples[j];
+      }
+    }
+  }
+  if (maxPeak == 0)
+  {
+    return;
+  }
+  double targetMax = 1.0f;
+  float gain = targetMax / maxPeak;
+  for(size_t i = 0; i < curr.channelsSize; ++i)
+  {
+    for(size_t j = 0; j < curr.channels[i].samplesSize; ++j)
+    {
+      curr.channels[i].samples[j] *= gain;
       if (curr.channels[i].samples[j] > 1.0f)
       {
         curr.channels[i].samples[j] = 1.0f;
