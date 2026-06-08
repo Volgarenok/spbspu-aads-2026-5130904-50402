@@ -32,6 +32,7 @@ namespace lavrentev
       bool has(Key k) const;
       void rehash(size_t slots);
       size_t size() const;
+      void print(std::ostream &os) const;
 
     private:
       Node *ht1;
@@ -270,6 +271,26 @@ template< class Key, class Value, class Hash, class Equal >
 size_t lavrentev::CCHTable<Key, Value, Hash, Equal >::size() const
 {
   return size1 + size2;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+void lavrentev::CCHTable< Key, Value, Hash, Equal >::print(std::ostream &os) const
+{
+  for (size_t i = 0; i < size1; ++i)
+  {
+    if (!ht1[i].empty())
+    {
+      os << ht1[i].key << ": " << ht1[i].val << '\n';
+    }
+  }
+
+  for (size_t i = 0; i < size2; ++i)
+  {
+    if (!ht2[i].empty())
+    {
+      os << ht2[i].key << ": " << ht2[i].val << '\n';
+    }
+  }
 }
 
 #endif
