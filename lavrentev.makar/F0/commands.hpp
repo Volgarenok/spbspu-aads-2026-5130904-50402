@@ -16,7 +16,7 @@ namespace lavrentev
   void convertToMp3(std::istream&, std::ostream&, CCHT &cht); //TODO
   void pitch(std::istream&, std::ostream&, CCHT &cht); //TODO
   void cut(std::istream&, std::ostream&, CCHT &cht); //TODO
-  void changeBitrate(std::istream&, std::ostream&, CCHT &cht); //TODO
+  void changeBitrate(std::istream&, std::ostream&, CCHT &cht);
   void normalize(std::istream&, std::ostream&, CCHT &cht);
   void changeVolume(std::istream&, std::ostream&, CCHT &cht);
   void exportFile(std::istream&, std::ostream&, CCHT &cht);

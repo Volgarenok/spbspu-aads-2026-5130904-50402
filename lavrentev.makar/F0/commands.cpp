@@ -259,3 +259,14 @@ void lavrentev::normalize(std::istream &is, std::ostream&, CCHT &cht)
     }
   }
 }
+
+void lavrentev::changeBitrate(std::istream &is, std::ostream&, CCHT &cht)
+{
+  size_t id, newBR;
+  is >> id >> newBR;
+  if (!cht.has(id))
+  {
+    throw std::out_of_range("No such file");
+  }
+  cht[id].bitDepth = newBR;
+}
