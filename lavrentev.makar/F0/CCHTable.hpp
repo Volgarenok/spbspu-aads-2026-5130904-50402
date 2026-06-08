@@ -15,11 +15,6 @@ namespace lavrentev
     bool empty = true;
   };
 
-  struct Audio
-  {
-
-  };
-
   template< class Key, class Value, class Hash, class Equal >
   struct CCHTable
   {
@@ -121,7 +116,24 @@ lavrentev::CCHTable< Key, Value, Hash, Equal >
 template< class Key, class Value, class Hash, class Equal >
 Value &lavrentev::CCHTable< Key, Value, Hash, Equal >::operator[](const Key &k)
 {
-
+  size_t idx1 = hasher.hash1(k) % size1;
+  if (!ht1[idx1].empty && comp(ht1[idx1].key, k))
+  {
+    return ht1[idx1].val;
+  }
+  size_t idx2 = hasher.hash2(k) % size2;
+  if (!ht2[idx2].empty && comp(ht2[idx2].key, k))
+  {
+    return ht2[idx2].val;
+  }
+  add(k, Value());
+  size_t new_idx1 = hasher.hash1(k) % cap1;
+  if (!ht1[new_idx1].empty && comp(ht1[new_idx1].key, k))
+  {
+    return ht1[new_idx1].val;
+  }
+  size_t new_idx2 = hasher.hash2(k) % cap2;
+  return ht2[new_idx2].val;
 }
 
 template< class Key, class Value, class Hash, class Equal >

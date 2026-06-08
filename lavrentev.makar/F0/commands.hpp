@@ -1,23 +1,24 @@
 #ifndef COMMANDS_HPP
 #define COMMANDS_HPP
-#include <algorithm>
 #include <iostream>
+#include "Audio.hpp"
 #include "CCHTable.hpp"
 #include "../common/hasher.hpp"
 
 namespace lavrentev
 {
-  void importFile(std::istream&, std::ostream&, CCHTable< size_t, Audio, Siphash, std::equal> &cht);
-  void viewAll(std::istream&, std::ostream&);
-  void convert(std::istream&, std::ostream&);
-  void convertToWav(std::istream&, std::ostream&);
-  void convertToMp3(std::istream&, std::ostream&);
-  void pitch(std::istream&, std::ostream&);
-  void cut(std::istream&, std::ostream&);
-  void changeBitrate(std::istream&, std::ostream&);
-  void normalize(std::istream&, std::ostream&);
-  void changeVolume(std::istream&, std::ostream&);
-  void exportFile(std::istream&, std::ostream&);
+  using CCHT = CCHTable< size_t, Audio, Siphash<size_t>, std::equal_to<size_t>>;
+  void importFile(std::istream&, std::ostream&, CCHT &cht);
+  void viewAll(std::istream&, std::ostream&, CCHT &cht);
+  void convert(std::istream&, std::ostream&, CCHT &cht);
+  void convertToWav(std::istream&, std::ostream&, CCHT &cht);
+  void convertToMp3(std::istream&, std::ostream&, CCHT &cht);
+  void pitch(std::istream&, std::ostream&, CCHT &cht);
+  void cut(std::istream&, std::ostream&, CCHT &cht);
+  void changeBitrate(std::istream&, std::ostream&, CCHT &cht);
+  void normalize(std::istream&, std::ostream&, CCHT &cht);
+  void changeVolume(std::istream&, std::ostream&, CCHT &cht);
+  void exportFile(std::istream&, std::ostream&, CCHT &cht);
 
   void info(std::istream&, std::ostream&);
   void viewFormats(std::istream&, std::ostream&);
