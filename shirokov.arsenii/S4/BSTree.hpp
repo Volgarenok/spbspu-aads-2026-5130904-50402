@@ -51,7 +51,7 @@ namespace shirokov
     BSTree(const BSTree& rhs);
     BSTree(BSTree&& rhs);
     ~BSTree();
-    BSTree& operator=(const BSTree& rhs); // TODO
+    BSTree& operator=(const BSTree& rhs);
     BSTree& operator=(BSTree&& rhs);
     Value& operator[](Key key);
 
@@ -96,6 +96,21 @@ namespace shirokov
     void clear(Node* curr);
     void copyTree(Node* root, Node** result, Node* parent = nullptr);
   };
+}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTree< Key, Value, Compare >& shirokov::BSTree< Key, Value, Compare >::operator=(const BSTree& rhs)
+{
+  if (this == &rhs)
+  {
+    return *this;
+  }
+  Node* newRoot = nullptr;
+  copyTree(rhs.root_, &newRoot);
+  clear(root_);
+  root_ = newRoot;
+  cmp_ = rhs.cmp_;
+  return *this;
 }
 
 template< class Key, class Value, class Compare >
@@ -147,6 +162,10 @@ size_t shirokov::BSTree< Key, Value, Compare >::height()
 template< class Key, class Value, class Compare >
 shirokov::BSTree< Key, Value, Compare >& shirokov::BSTree< Key, Value, Compare >::operator=(BSTree&& rhs)
 {
+  if (this == &rhs)
+  {
+    return *this;
+  }
   clear(root_);
   root_ = rhs.root_;
   rhs.root_ = nullptr;
