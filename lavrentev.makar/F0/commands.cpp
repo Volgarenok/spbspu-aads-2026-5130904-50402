@@ -408,3 +408,80 @@ void lavrentev::convertTo(size_t id, size_t newId, std::string format, CCHT &cht
   }
   cht[newId] = std::move(newAudio);
 }
+
+void lavrentev::pitch(std::istream &is, std::ostream&, CCHT &cht)
+{
+  size_t id, newId;
+  float st;
+  is >> id >> newId >> st;
+  if (!cht.has(id))
+  {
+    throw std::out_of_range("No such file");
+  }
+  if (cht.has(newId))
+  {
+    throw std::out_of_range("ID already exists");
+  }
+  if (abs(st) > 120.0f)
+  {
+    throw std::out_of_range("Pitch overflow");
+  }
+
+  Audio& curr = cht[id];
+  float ratio = std::pow(2.0f, st / 12.0f);
+  size_t oldSize = curr.channels[0].samplesSize;
+  size_t newSize = static_cast<size_t>(std::floor(static_cast<float>(oldSize) / ratio));
+
+  if (newSize <= 1)
+  {
+    return;
+  }
+
+  Audio newAudio;
+  newAudio.channelsSize = curr.channelsSize;
+  newAudio.sampleRate = curr.sampleRate;
+  newAudio.bitDepth = curr.bitDepth;
+  newAudio.format = curr.format;
+  newAudio.channels = new AudioChannel[newAudio.channelsSize];
+  newAudio.name = curr.name;
+  for (size_t i = 0; i < curr.channelsSize; ++i)
+  {
+    newAudio.channels[i].samples = nullptr;
+    newAudio.channels[i].samplesSize = 0;
+  }
+
+  try
+  {
+    for (size_t c = 0; c < curr.channelsSize; ++c)
+    {
+      AudioChannel& channel = curr.channels[c];
+      float* oldSamples = channel.samples;
+      float* newSamples = new float[newSize];
+
+      for (size_t i = 0; i < newSize; ++i)
+      {
+        float pos = i * ratio;
+        size_t index = static_cast<size_t>(pos);
+        float frac = pos - index;
+        if (index + 1 < oldSize)
+        {
+          newSamples[i] = oldSamples[index] * (1.0f - frac) + oldSamples[index + 1] * frac;
+        }
+        else
+        {
+          newSamples[i] = oldSamples[index];
+        }
+      }
+      newAudio.channels[c].samples = newSamples;
+      newAudio.channels[c].samplesSize = newSize;
+    }
+  }
+  catch (...)
+  {
+    freeAudioMemory(newAudio); 
+    throw;
+  }
+
+  newAudio.name += "_pitched";
+  cht[newId] = std::move(newAudio);
+}
