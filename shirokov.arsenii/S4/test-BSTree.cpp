@@ -190,3 +190,22 @@ BOOST_AUTO_TEST_CASE(copy_constructor_tree_has_many_elem)
   BOOST_TEST(t2.at(6) == 5);
   BOOST_TEST(t2.at(16) == 6);
 }
+
+BOOST_AUTO_TEST_CASE(copy_assignment_operator_test)
+{
+  shirokov::BSTree< int, int, std::less< int > > t1;
+  t1.insert(10, 1);
+  t1.insert(5, 2);
+  t1.insert(15, 3);
+  shirokov::BSTree< int, int, std::less< int > > t2;
+  t2.insert(11, 4);
+  t2.insert(6, 5);
+  t2.insert(16, 6);
+  t2 = t1;
+  BOOST_TEST(t2.at(10) == 1);
+  BOOST_TEST(t2.at(5) == 2);
+  BOOST_TEST(t2.at(15) == 3);
+  BOOST_TEST(!t2.contains(11));
+  BOOST_TEST(!t2.contains(6));
+  BOOST_TEST(!t2.contains(16));
+}

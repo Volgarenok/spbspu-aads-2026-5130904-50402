@@ -48,7 +48,7 @@ namespace shirokov
   {
   public:
     BSTree();
-    BSTree(const BSTree& rhs); // TODO
+    BSTree(const BSTree& rhs);
     BSTree(BSTree&& rhs);
     ~BSTree();
     BSTree& operator=(const BSTree& rhs); // TODO
