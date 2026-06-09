@@ -269,9 +269,21 @@ BOOST_AUTO_TEST_CASE(rotate_left_test)
   tree.insert(13, 4);
   tree.insert(18, 5);
   auto it = tree.begin();
-  ++(++(++it));
-  size_t oldHeight = tree.height(it);
-  BOOST_REQUIRE((*it).first == 15);
+  size_t t1Height = tree.height(it);
+  size_t xHeight = tree.height(++it);
+  size_t t2Height = tree.height(++it);
+  size_t yHeight = tree.height(++it);
+  size_t t3Height = tree.height(++it);
+
+  it = ++tree.begin();
+  BOOST_REQUIRE((*it).first == 10);
   it = tree.rotateLeft(it);
-  BOOST_TEST(tree.height(it) - oldHeight == 1);
+  BOOST_TEST((*it).first == 15);
+
+  it = tree.begin();
+  BOOST_TEST(tree.height(it) == t1Height);
+  BOOST_TEST(xHeight - tree.height(++it) == 1);
+  BOOST_TEST(tree.height(++it) == t2Height);
+  BOOST_TEST(tree.height(++it) - yHeight == 1);
+  BOOST_TEST(tree.height(++it) == t3Height);
 }
