@@ -33,6 +33,7 @@ namespace lavrentev
       void rehash(size_t slots);
       size_t size() const;
       void print(std::ostream &os) const;
+      size_t getCapacity() const;
 
     private:
       Node *ht1;
@@ -50,10 +51,12 @@ namespace lavrentev
 
 template< class Key, class Value, class Hash, class Equal >
 lavrentev::CCHTable< Key, Value, Hash, Equal >::CCHTable():
-  ht1(new Node*[5]),
-  ht2(new Node*[5]),
-  size1(5),
-  size2(5),
+  ht1(new Node[5]),
+  ht2(new Node[5]),
+  size1(0),
+  cap1(5),
+  size2(0),
+  cap2(5),
   hasher(Hash{}),
   comp(Equal{}),
   loadFactor(0.5)
@@ -61,8 +64,8 @@ lavrentev::CCHTable< Key, Value, Hash, Equal >::CCHTable():
 
 template< class Key, class Value, class Hash, class Equal >
 lavrentev::CCHTable< Key, Value, Hash, Equal >::CCHTable(const CCHTable &other):
-  ht1(new Node*[other.size1]),
-  ht2(new Node*[other.size2]),
+  ht1(new Node[other.size1]),
+  ht2(new Node[other.size2]),
   size1(other.size1),
   size2(other.size2),
   hasher(other.hasher),
@@ -81,8 +84,8 @@ lavrentev::CCHTable< Key, Value, Hash, Equal >::CCHTable(const CCHTable &other):
 
 template< class Key, class Value, class Hash, class Equal >
 lavrentev::CCHTable< Key, Value, Hash, Equal >::CCHTable(CCHTable &&other) noexcept:
-  ht1(new Node*[other.size1]),
-  ht2(new Node*[other.size2]),
+  ht1(new Node[other.size1]),
+  ht2(new Node[other.size2]),
   size1(other.size1),
   size2(other.size2),
   hasher(other.hasher),
@@ -117,12 +120,12 @@ lavrentev::CCHTable< Key, Value, Hash, Equal >
 template< class Key, class Value, class Hash, class Equal >
 Value &lavrentev::CCHTable< Key, Value, Hash, Equal >::operator[](const Key &k)
 {
-  size_t idx1 = hasher.hash1(k) % size1;
+  size_t idx1 = hasher.hash1(k) % cap1;
   if (!ht1[idx1].empty && comp(ht1[idx1].key, k))
   {
     return ht1[idx1].val;
   }
-  size_t idx2 = hasher.hash2(k) % size2;
+  size_t idx2 = hasher.hash2(k) % cap2;
   if (!ht2[idx2].empty && comp(ht2[idx2].key, k))
   {
     return ht2[idx2].val;
@@ -164,7 +167,7 @@ void lavrentev::CCHTable< Key, Value, Hash, Equal >::add(Key k, Value v)
     }
 
     std::swap(currK, ht1[idx1].key);
-    std::swap(currV, ht1[idx1].value);
+    std::swap(currV, ht1[idx1].val);
 
     size_t idx2 = hasher.hash2(currK) % cap2;
     if (ht2[idx2].empty) {
@@ -176,7 +179,7 @@ void lavrentev::CCHTable< Key, Value, Hash, Equal >::add(Key k, Value v)
     }
 
     std::swap(currK, ht2[idx2].key);
-    std::swap(currV, ht2[idx2].value);
+    std::swap(currV, ht2[idx2].val);
   }
   rehash(cap1 * 2);
   add(std::move(currK), std::move(currV));
@@ -256,11 +259,17 @@ void lavrentev::CCHTable< Key, Value, Hash, Equal >::rehash(size_t slots)
 
   for (size_t i = 0; i < oldcap1; ++i)
   {
-    add(std::move(oldht1[i].key), std::move(oldht1[i].val));
+    if (!oldht1[i].empty)
+    {
+      add(std::move(oldht1[i].key), std::move(oldht1[i].val));
+    }
   }
   for (size_t i = 0; i < oldcap2; ++i)
   {
-    add(std::move(oldht2[i].key), std::move(oldht2[i].val));
+    if (!oldht2[i].empty)
+    {
+      add(std::move(oldht2[i].key), std::move(oldht2[i].val));
+    }
   }
 
   delete[] oldht1;
@@ -276,21 +285,27 @@ size_t lavrentev::CCHTable<Key, Value, Hash, Equal >::size() const
 template< class Key, class Value, class Hash, class Equal >
 void lavrentev::CCHTable< Key, Value, Hash, Equal >::print(std::ostream &os) const
 {
-  for (size_t i = 0; i < size1; ++i)
+  for (size_t i = 0; i < cap1; ++i)
   {
-    if (!ht1[i].empty())
+    if (!ht1[i].empty)
     {
       os << ht1[i].key << ": " << ht1[i].val << '\n';
     }
   }
 
-  for (size_t i = 0; i < size2; ++i)
+  for (size_t i = 0; i < cap2; ++i)
   {
-    if (!ht2[i].empty())
+    if (!ht2[i].empty)
     {
       os << ht2[i].key << ": " << ht2[i].val << '\n';
     }
   }
+}
+
+template< class Key, class Value, class Hash, class Equal >
+size_t lavrentev::CCHTable< Key, Value, Hash, Equal >::getCapacity() const
+{
+  return cap1 + cap2;
 }
 
 #endif

@@ -1,13 +1,46 @@
 #include <new>
 #include <stdexcept>
 #include <cmath>
-#define MINIAUDIO_IMPLEMENTATION
+#include <iostream>
 
-#include "miniaudio.h"
-#include <kfr/kfr.h>
-#include <kfr/dsp.hpp>
-#include "commands.hpp"
 #include "Audio.hpp"
+
+// 1. ОПРЕДЕЛЯЕМ ОПЕРАТОР ВЫВОДА ДЛЯ AUDIO
+// Это должно быть сделано ДО включения CCHTable.hpp, 
+// чтобы функция print "увидела" этот оператор.
+namespace lavrentev {
+    std::ostream& operator<<(std::ostream& os, const Audio& audio) {
+        os << "Name: " << audio.name << "\n"
+           << "Format: " << audio.format << "\n"
+           << "Sample Rate: " << audio.sampleRate << "\n"
+           << "Bit Depth: " << audio.bitDepth;
+        return os;
+    }
+}
+
+// 2. ОТКЛЮЧАЕМ ПРЕДУПРЕЖДЕНИЯ ДЛЯ C-БИБЛИОТЕК
+#if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wold-style-cast"
+    #pragma GCC diagnostic ignored "-Wunused-function"
+    #pragma GCC diagnostic ignored "-Wsign-conversion"
+    #pragma GCC diagnostic ignored "-Wconversion"
+#endif
+
+#define MINIAUDIO_IMPLEMENTATION
+#include "miniaudio.h"
+
+// 3. ПОДКЛЮЧАЕМ KFR ЧЕРЕЗ КАВЫЧКИ
+// Если компилятор ругается на <>, значит папка kfr лежит у вас в проекте
+//#include "kfr/kfr.h"
+//#include "kfr/dsp.hpp"
+
+#if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic pop
+#endif
+
+// 4. ОСТАЛЬНЫЕ ЗАГОЛОВКИ
+#include "commands.hpp"
 
 void lavrentev::viewFormats(std::istream&, std::ostream& os)
 {
@@ -95,7 +128,7 @@ void lavrentev::viewAll(std::istream&, std::ostream& os, CCHT &data)
   data.print(os);
 }
 
-std::string extractName(const std::string& filePath) {
+std::string lavrentev::extractName(const std::string& filePath) {
   size_t last = filePath.find_last_of("/\\");
 
   if (last == std::string::npos)
@@ -106,7 +139,7 @@ std::string extractName(const std::string& filePath) {
   return filePath.substr(last + 1);
 }
 
-std::string extractFormat(const std::string& filePath) {
+std::string lavrentev::extractFormat(const std::string& filePath) {
   size_t last= filePath.find_last_of(".");
 
   if (last == std::string::npos || last == filePath.length() - 1)
