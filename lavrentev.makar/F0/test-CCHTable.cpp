@@ -1,8 +1,8 @@
 #include <stdexcept>
 #define BOOST_TEST_MODULE CCHTableTest
 #include <boost/test/included/unit_test.hpp>
+#include <hasher.hpp>
 #include "CCHTable.hpp"
-#include "commands.hpp"
 
 BOOST_AUTO_TEST_CASE(add_test)
 {

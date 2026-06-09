@@ -1,12 +1,10 @@
 #ifndef AUDIO_HPP
 #define AUDIO_HPP
-#include <vector>
+#include <cstddef>
+#include <string>
 
 namespace lavrentev
 {
-  using AudioChnl = std::vector<float>;
-  using AudioBuf = std::vector<AudioChnl>;
-
   struct AudioChannel
   {
     float* samples = nullptr;

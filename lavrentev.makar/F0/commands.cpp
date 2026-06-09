@@ -6,22 +6,22 @@
 
 namespace lavrentev
 {
-  std::ostream& operator<<(std::ostream& os, const Audio& audio)
+  std::ostream &operator<<(std::ostream &os, const Audio &audio)
   {
     os << "Name: " << audio.name << "\n"
-      << "Format: " << audio.format << "\n"
-      << "Sample Rate: " << audio.sampleRate << "\n"
-      << "Bit Depth: " << audio.bitDepth;
+       << "Format: " << audio.format << "\n"
+       << "Sample Rate: " << audio.sampleRate << "\n"
+       << "Bit Depth: " << audio.bitDepth;
     return os;
   }
 }
 
 #if defined(__GNUC__) || defined(__clang__)
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Wold-style-cast"
-  #pragma GCC diagnostic ignored "-Wunused-function"
-  #pragma GCC diagnostic ignored "-Wsign-conversion"
-  #pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma GCC diagnostic ignored "-Wunused-function"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wconversion"
 #endif
 
 #define MINIAUDIO_IMPLEMENTATION
@@ -32,7 +32,7 @@ namespace lavrentev
 #endif
 #include "commands.hpp"
 
-void lavrentev::viewFormats(std::istream&, std::ostream& os, CCHT&)
+void lavrentev::viewFormats(std::istream &, std::ostream &os, CCHT &)
 {
   os << "1: WAV" << '\n';
   os << "2: MP3" << '\n';
@@ -41,11 +41,13 @@ void lavrentev::viewFormats(std::istream&, std::ostream& os, CCHT&)
   os << "5: FLAC" << '\n';
 }
 
-void lavrentev::help(std::istream&, std::ostream& os, CCHT&)
+void lavrentev::help(std::istream &, std::ostream &os, CCHT &)
 {
   os << "1: import - импортирует аудиофайл внутрь программы" << '\n';
-  os << "2: view_all - выводит все файлы, находящиеся в оперативной памяти программы c их id" << '\n';
-  os << "3: convert - конвертирует аудиофайл в другой формат, указанный пользователем" << '\n';
+  os << "2: view_all - выводит все файлы, находящиеся в оперативной памяти "
+    "программы c их id" << '\n';
+  os << "3: convert - конвертирует аудиофайл в другой формат, указанный "
+    "пользователем" << '\n';
   os << "4: convert_to_wav - конвертирует аудиофайл в формат WAV" << '\n';
   os << "5: convert_to_mp3 - конвертирует аудиофайл в формат MP3" << '\n';
   os << "6: pitch - питчинг файла на <semitones> полутонов вверх/вниз" << '\n';
@@ -53,20 +55,25 @@ void lavrentev::help(std::istream&, std::ostream& os, CCHT&)
   os << "8: change_bitrate - меняет уровень сжатия файла на <new_bitrate>" << '\n';
   os << "9: normalize - нормализация аудиофайла" << '\n';
   os << "10: change_volume - изменяет громкость аудиофайла на <coefficient>" << '\n';
-  os << "11: export - экспортирует аудиофайл c именем <name> в указанную папку <dir>" << '\n';
+  os << "11: export - экспортирует аудиофайл c именем <name> в указанную папку "
+    "<dir>" << '\n';
   os << "12: info - выводит техническую информацию o файле <file>" << '\n';
   os << "13: view_formats - выводит форматы, доступные для конвертации" << '\n';
   os << "14: help - выводит справку по доступным командам" << '\n';
 }
 
-void lavrentev::importFile(std::istream& is, std::ostream&, CCHT &data)
+void lavrentev::importFile(std::istream &is, std::ostream &, CCHT &data)
 {
   std::string filePath;
   size_t id;
   is >> filePath >> id;
 
   ma_decoder decoder;
-  ma_result result = ma_decoder_init_file(filePath.c_str(), nullptr, &decoder);
+  ma_result result = ma_decoder_init_file(
+    filePath.c_str(),
+    nullptr,
+    &decoder
+  );
   if (result != MA_SUCCESS)
   {
     throw std::runtime_error("Failed to initialize decoder for file: " + filePath);
@@ -75,7 +82,7 @@ void lavrentev::importFile(std::istream& is, std::ostream&, CCHT &data)
   Audio newFile;
   newFile.sampleRate = static_cast<float>(decoder.outputSampleRate);
   newFile.channelsSize = decoder.outputChannels;
-  newFile.bitDepth = 16; 
+  newFile.bitDepth = 16;
   newFile.name = extractName(filePath);
   newFile.format = extractFormat(filePath);
 
@@ -83,28 +90,35 @@ void lavrentev::importFile(std::istream& is, std::ostream&, CCHT &data)
   ma_decoder_get_length_in_pcm_frames(&decoder, &totalFrames);
 
   size_t bufSize = totalFrames * newFile.channelsSize;
-  float* temp = new float[bufSize];
-  
+  float *temp = new float[bufSize];
+
   ma_uint64 framesRead = 0;
-  ma_decoder_read_pcm_frames(&decoder, temp, totalFrames, &framesRead);
+  ma_decoder_read_pcm_frames(
+    &decoder,
+    temp,
+    totalFrames,
+    &framesRead
+  );
   ma_decoder_uninit(&decoder);
 
   try
   {
     newFile.channels = new AudioChannel[newFile.channelsSize];
 
-    for (size_t i = 0; i < newFile.channelsSize; ++i) {
+    for (size_t i = 0; i < newFile.channelsSize; ++i)
+    {
       newFile.channels[i].samples = new float[framesRead];
       newFile.channels[i].samplesSize = framesRead;
     }
-  }
-  catch (...)
+  } catch (...)
   {
-    freeAudioMemory(newFile); 
+    freeAudioMemory(newFile);
     throw std::bad_alloc();
   }
-  for (ma_uint64 frame = 0; frame < framesRead; ++frame) {
-    for (size_t chan = 0; chan < newFile.channelsSize; ++chan) {
+  for (ma_uint64 frame = 0; frame < framesRead; ++frame)
+  {
+    for (size_t chan = 0; chan < newFile.channelsSize; ++chan)
+    {
       float sample = temp[frame * newFile.channelsSize + chan];
       newFile.channels[chan].samples[frame] = sample;
     }
@@ -113,12 +127,13 @@ void lavrentev::importFile(std::istream& is, std::ostream&, CCHT &data)
   data[id] = newFile;
 }
 
-void lavrentev::viewAll(std::istream&, std::ostream& os, CCHT &data)
+void lavrentev::viewAll(std::istream &, std::ostream &os, CCHT &data)
 {
   data.print(os);
 }
 
-std::string lavrentev::extractName(const std::string& filePath) {
+std::string lavrentev::extractName(const std::string &filePath)
+{
   size_t last = filePath.find_last_of("/\\");
 
   if (last == std::string::npos)
@@ -129,8 +144,9 @@ std::string lavrentev::extractName(const std::string& filePath) {
   return filePath.substr(last + 1);
 }
 
-std::string lavrentev::extractFormat(const std::string& filePath) {
-  size_t last= filePath.find_last_of(".");
+std::string lavrentev::extractFormat(const std::string &filePath)
+{
+  size_t last = filePath.find_last_of(".");
 
   if (last == std::string::npos || last == filePath.length() - 1)
   {
@@ -157,7 +173,7 @@ void lavrentev::info(std::istream &is, std::ostream &os, CCHT &cht)
   os << "Bit depth: " << curr.bitDepth << '\n';
 }
 
-void lavrentev::exportFile(std::istream &is, std::ostream&, CCHT &cht)
+void lavrentev::exportFile(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id;
   std::string fileName, path;
@@ -171,42 +187,50 @@ void lavrentev::exportFile(std::istream &is, std::ostream&, CCHT &cht)
   size_t frames = cht[id].channels[0].samplesSize;
   size_t totalChannels = cht[id].channelsSize;
   ma_encoder_config config = ma_encoder_config_init(
-    ma_encoding_format_wav, 
-    ma_format_f32, 
-    static_cast<ma_uint32>(totalChannels), 
+    ma_encoding_format_wav,
+    ma_format_f32,
+    static_cast<ma_uint32>(totalChannels),
     static_cast<ma_uint32>(cht[id].sampleRate)
   );
 
   ma_encoder encoder;
   ma_result result = ma_encoder_init_file(path.c_str(), &config, &encoder);
-  if (result != MA_SUCCESS) {
+  if (result != MA_SUCCESS)
+  {
     throw std::runtime_error("Failed to initialize encoder for file: " + fileName);
   }
 
-  float* temp = nullptr;
+  float *temp = nullptr;
   try
   {
     temp = new float[frames * totalChannels];
   }
-  catch (const std::bad_alloc&)
+  catch (const std::bad_alloc &)
   {
     ma_encoder_uninit(&encoder);
     throw std::logic_error("Export error");
   }
 
-  for (size_t frame = 0; frame < frames; ++frame) {
-    for (size_t chan = 0; chan < totalChannels; ++chan) {
+  for (size_t frame = 0; frame < frames; ++frame)
+  {
+    for (size_t chan = 0; chan < totalChannels; ++chan)
+    {
       temp[frame * totalChannels + chan] = cht[id].channels[chan].samples[frame];
     }
   }
   ma_uint64 framesWritten = 0;
-  ma_encoder_write_pcm_frames(&encoder, temp, frames, &framesWritten);
+  ma_encoder_write_pcm_frames(
+    &encoder,
+    temp,
+    frames,
+    &framesWritten
+  );
 
   delete[] temp;
   ma_encoder_uninit(&encoder);
 }
 
-void lavrentev::changeVolume(std::istream &is, std::ostream&, CCHT &cht)
+void lavrentev::changeVolume(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id;
   float coef;
@@ -222,9 +246,9 @@ void lavrentev::changeVolume(std::istream &is, std::ostream&, CCHT &cht)
   }
 
   Audio &curr = cht[id];
-  for(size_t i = 0; i < curr.channelsSize; ++i)
+  for (size_t i = 0; i < curr.channelsSize; ++i)
   {
-    for(size_t j = 0; j < curr.channels[i].samplesSize; ++j)
+    for (size_t j = 0; j < curr.channels[i].samplesSize; ++j)
     {
       curr.channels[i].samples[j] *= coef;
       if (curr.channels[i].samples[j] > 1.0f)
@@ -239,7 +263,7 @@ void lavrentev::changeVolume(std::istream &is, std::ostream&, CCHT &cht)
   }
 }
 
-void lavrentev::normalize(std::istream &is, std::ostream&, CCHT &cht)
+void lavrentev::normalize(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id;
   is >> id;
@@ -250,9 +274,9 @@ void lavrentev::normalize(std::istream &is, std::ostream&, CCHT &cht)
 
   Audio &curr = cht[id];
   float maxPeak = 0.0f;
-  for(size_t i = 0; i < curr.channelsSize; ++i)
+  for (size_t i = 0; i < curr.channelsSize; ++i)
   {
-    for(size_t j = 0; j < curr.channels[i].samplesSize; ++j)
+    for (size_t j = 0; j < curr.channels[i].samplesSize; ++j)
     {
       if (abs(curr.channels[i].samples[j]) > maxPeak)
       {
@@ -266,9 +290,9 @@ void lavrentev::normalize(std::istream &is, std::ostream&, CCHT &cht)
   }
   double targetMax = 1.0f;
   float gain = targetMax / maxPeak;
-  for(size_t i = 0; i < curr.channelsSize; ++i)
+  for (size_t i = 0; i < curr.channelsSize; ++i)
   {
-    for(size_t j = 0; j < curr.channels[i].samplesSize; ++j)
+    for (size_t j = 0; j < curr.channels[i].samplesSize; ++j)
     {
       curr.channels[i].samples[j] *= gain;
       if (curr.channels[i].samples[j] > 1.0f)
@@ -283,7 +307,7 @@ void lavrentev::normalize(std::istream &is, std::ostream&, CCHT &cht)
   }
 }
 
-void lavrentev::changeBitrate(std::istream &is, std::ostream&, CCHT &cht)
+void lavrentev::changeBitrate(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id, newBR;
   is >> id >> newBR;
@@ -294,7 +318,7 @@ void lavrentev::changeBitrate(std::istream &is, std::ostream&, CCHT &cht)
   cht[id].bitDepth = newBR;
 }
 
-void lavrentev::cut(std::istream &is, std::ostream&, CCHT &cht)
+void lavrentev::cut(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id;
   float start, duration;
@@ -314,7 +338,7 @@ void lavrentev::cut(std::istream &is, std::ostream&, CCHT &cht)
   }
 
   Audio newAudio;
-  AudioChannel* newChannels = new AudioChannel[curr.channelsSize];
+  AudioChannel *newChannels = new AudioChannel[curr.channelsSize];
   newAudio.channels = newChannels;
   newAudio.channelsSize = curr.channelsSize;
   newAudio.bitDepth = curr.bitDepth;
@@ -330,11 +354,11 @@ void lavrentev::cut(std::istream &is, std::ostream&, CCHT &cht)
 
   try
   {
-    for(size_t i = 0; i < curr.channelsSize; ++i)
+    for (size_t i = 0; i < curr.channelsSize; ++i)
     {
-      float* newSample = new float[durBit];
+      float *newSample = new float[durBit];
       size_t idx = 0;
-      for(size_t j = static_cast<size_t>(startBit); j < static_cast<size_t>(startBit + durBit); ++j)
+      for (size_t j = static_cast<size_t>(startBit); j < static_cast<size_t>(startBit + durBit); ++j)
       {
         newSample[idx] = curr.channels[i].samples[j];
         ++idx;
@@ -343,7 +367,7 @@ void lavrentev::cut(std::istream &is, std::ostream&, CCHT &cht)
       newChannels[i].samplesSize = durBit;
     }
   }
-  catch(...)
+  catch (...)
   {
     freeAudioMemory(newAudio);
     throw std::bad_alloc();
@@ -352,7 +376,7 @@ void lavrentev::cut(std::istream &is, std::ostream&, CCHT &cht)
   freeAudioMemory(newAudio);
 }
 
-void lavrentev::convert(std::istream &is, std::ostream&, CCHT &cht)
+void lavrentev::convert(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id, newId;
   std::string format;
@@ -369,7 +393,7 @@ void lavrentev::convert(std::istream &is, std::ostream&, CCHT &cht)
   convertTo(id, newId, format, cht);
 }
 
-void lavrentev::convertToWav(std::istream &is, std::ostream&, CCHT &cht)
+void lavrentev::convertToWav(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id, newId;
   std::string format = "wav";
@@ -377,7 +401,7 @@ void lavrentev::convertToWav(std::istream &is, std::ostream&, CCHT &cht)
   convertTo(id, newId, format, cht);
 }
 
-void lavrentev::convertToMp3(std::istream &is, std::ostream&, CCHT &cht)
+void lavrentev::convertToMp3(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id, newId;
   std::string format = "mp3";
@@ -412,27 +436,26 @@ void lavrentev::convertTo(size_t id, size_t newId, std::string format, CCHT &cht
 
   try
   {
-    for(size_t i = 0; i < curr.channelsSize; ++i)
+    for (size_t i = 0; i < curr.channelsSize; ++i)
     {
       size_t samplesCount = curr.channels[i].samplesSize;
       float *newSamples = new float[samplesCount];
-      for(size_t j = 0; j < samplesCount; ++j)
+      for (size_t j = 0; j < samplesCount; ++j)
       {
         newSamples[j] = curr.channels[i].samples[j];
       }
       newAudio.channels[i].samples = newSamples;
       newAudio.channels[i].samplesSize = samplesCount;
     }
-  }
-  catch (...)
+  } catch (...)
   {
-    freeAudioMemory(newAudio); 
+    freeAudioMemory(newAudio);
     throw;
   }
   cht[newId] = std::move(newAudio);
 }
 
-void lavrentev::pitch(std::istream &is, std::ostream&, CCHT &cht)
+void lavrentev::pitch(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id, newId;
   float st;
@@ -450,7 +473,7 @@ void lavrentev::pitch(std::istream &is, std::ostream&, CCHT &cht)
     throw std::out_of_range("Pitch overflow");
   }
 
-  Audio& curr = cht[id];
+  Audio &curr = cht[id];
   float ratio = std::pow(2.0f, st / 12.0f);
   size_t oldSize = curr.channels[0].samplesSize;
   size_t newSize = static_cast<size_t>(std::floor(static_cast<float>(oldSize) / ratio));
@@ -477,9 +500,9 @@ void lavrentev::pitch(std::istream &is, std::ostream&, CCHT &cht)
   {
     for (size_t c = 0; c < curr.channelsSize; ++c)
     {
-      AudioChannel& channel = curr.channels[c];
-      float* oldSamples = channel.samples;
-      float* newSamples = new float[newSize];
+      AudioChannel &channel = curr.channels[c];
+      float *oldSamples = channel.samples;
+      float *newSamples = new float[newSize];
 
       for (size_t i = 0; i < newSize; ++i)
       {
@@ -501,7 +524,7 @@ void lavrentev::pitch(std::istream &is, std::ostream&, CCHT &cht)
   }
   catch (...)
   {
-    freeAudioMemory(newAudio); 
+    freeAudioMemory(newAudio);
     throw;
   }
 
