@@ -22,8 +22,8 @@ namespace lavrentev
   void exportFile(std::istream&, std::ostream&, CCHT &cht);
   void info(std::istream&, std::ostream&, CCHT &cht);
 
-  void viewFormats(std::istream&, std::ostream&);
-  void help(std::istream&, std::ostream&);
+  void viewFormats(std::istream&, std::ostream&, CCHT&);
+  void help(std::istream&, std::ostream&, CCHT&);
 
   std::string extractName(const std::string& filePath);
   std::string extractFormat(const std::string& filePath);

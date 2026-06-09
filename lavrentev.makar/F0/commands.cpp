@@ -2,47 +2,37 @@
 #include <stdexcept>
 #include <cmath>
 #include <iostream>
-
 #include "Audio.hpp"
 
-// 1. ОПРЕДЕЛЯЕМ ОПЕРАТОР ВЫВОДА ДЛЯ AUDIO
-// Это должно быть сделано ДО включения CCHTable.hpp, 
-// чтобы функция print "увидела" этот оператор.
-namespace lavrentev {
-    std::ostream& operator<<(std::ostream& os, const Audio& audio) {
-        os << "Name: " << audio.name << "\n"
-           << "Format: " << audio.format << "\n"
-           << "Sample Rate: " << audio.sampleRate << "\n"
-           << "Bit Depth: " << audio.bitDepth;
-        return os;
-    }
+namespace lavrentev
+{
+  std::ostream& operator<<(std::ostream& os, const Audio& audio)
+  {
+    os << "Name: " << audio.name << "\n"
+      << "Format: " << audio.format << "\n"
+      << "Sample Rate: " << audio.sampleRate << "\n"
+      << "Bit Depth: " << audio.bitDepth;
+    return os;
+  }
 }
 
-// 2. ОТКЛЮЧАЕМ ПРЕДУПРЕЖДЕНИЯ ДЛЯ C-БИБЛИОТЕК
 #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wold-style-cast"
-    #pragma GCC diagnostic ignored "-Wunused-function"
-    #pragma GCC diagnostic ignored "-Wsign-conversion"
-    #pragma GCC diagnostic ignored "-Wconversion"
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wold-style-cast"
+  #pragma GCC diagnostic ignored "-Wunused-function"
+  #pragma GCC diagnostic ignored "-Wsign-conversion"
+  #pragma GCC diagnostic ignored "-Wconversion"
 #endif
 
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
 
-// 3. ПОДКЛЮЧАЕМ KFR ЧЕРЕЗ КАВЫЧКИ
-// Если компилятор ругается на <>, значит папка kfr лежит у вас в проекте
-//#include "kfr/kfr.h"
-//#include "kfr/dsp.hpp"
-
 #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
 #endif
-
-// 4. ОСТАЛЬНЫЕ ЗАГОЛОВКИ
 #include "commands.hpp"
 
-void lavrentev::viewFormats(std::istream&, std::ostream& os)
+void lavrentev::viewFormats(std::istream&, std::ostream& os, CCHT&)
 {
   os << "1: WAV" << '\n';
   os << "2: MP3" << '\n';
@@ -51,7 +41,7 @@ void lavrentev::viewFormats(std::istream&, std::ostream& os)
   os << "5: FLAC" << '\n';
 }
 
-void lavrentev::help(std::istream&, std::ostream& os)
+void lavrentev::help(std::istream&, std::ostream& os, CCHT&)
 {
   os << "1: import - импортирует аудиофайл внутрь программы" << '\n';
   os << "2: view_all - выводит все файлы, находящиеся в оперативной памяти программы c их id" << '\n';

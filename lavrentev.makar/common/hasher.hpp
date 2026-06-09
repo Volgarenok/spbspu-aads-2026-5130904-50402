@@ -1,3 +1,6 @@
+#ifndef HASHER_HPP
+#define HASHER_HPP
+
 #include <array>
 #include <cstddef>
 #include <random>
@@ -46,3 +49,5 @@ public:
     return hash1(key);
   }
 };
+
+#endif
