@@ -105,14 +105,29 @@ namespace shirokov
 
 template< class Key, class Value, class Compare >
 shirokov::BSTConstIterator< Key, Value, Compare >
+shirokov::BSTree< Key, Value, Compare >::rotateLargeLeft(const_iterator it)
+{
+  Node* x = const_cast< Node* >(it.curr_);
+  if (!x || !x->rt)
+  {
+    throw std::logic_error("Rotate Large Left impossible for this tree");
+  }
+  Node* z = x->rt;
+  rotateRight(const_iterator{z});
+  rotateLeft(const_iterator{x});
+  return const_iterator{x->parent};
+}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTConstIterator< Key, Value, Compare >
 shirokov::BSTree< Key, Value, Compare >::rotateRight(const_iterator it)
 {
-  Node *y = const_cast< Node* >(it.curr_), *x = y->lt;
-  if (!x)
+  Node* y = const_cast< Node* >(it.curr_);
+  if (!y || !y->lt)
   {
-    throw std::logic_error("The left descendant is missing");
+    throw std::logic_error("Rotate Right impossible for this tree");
   }
-  Node* t2 = x->rt;
+  Node *x = y->lt, *t2 = x->rt;
   x->parent = y->parent;
   if (!x->parent)
   {
@@ -144,12 +159,12 @@ shirokov::BSTConstIterator< Key, Value, Compare >::BSTConstIterator(const BSTIte
 template< class Key, class Value, class Compare >
 shirokov::BSTConstIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, Compare >::rotateLeft(const_iterator it)
 {
-  Node *x = const_cast< Node* >(it.curr_), *y = x->rt;
-  if (!y)
+  Node* x = const_cast< Node* >(it.curr_);
+  if (!x || !x->rt)
   {
-    throw std::logic_error("The right descendant is missing");
+    throw std::logic_error("Rotate Left impossible for this tree");
   }
-  Node* t2 = y->lt;
+  Node *y = x->rt, *t2 = y->lt;
   y->parent = x->parent;
   if (!y->parent)
   {
