@@ -16,7 +16,7 @@ namespace shirokov
   {
   public:
     explicit BSTIterator(typename BSTree< Key, Value, Compare >::Node* curr);
-    explicit BSTIterator(const BSTConstIterator< Key, Value, Compare >& rhs);
+    BSTIterator(const BSTConstIterator< Key, Value, Compare >& rhs);
     bool operator==(const BSTIterator& rhs) const noexcept;
     bool operator!=(const BSTIterator& rhs) const noexcept;
     BSTIterator& operator++();
@@ -32,6 +32,7 @@ namespace shirokov
   {
   public:
     explicit BSTConstIterator(const typename BSTree< Key, Value, Compare >::Node* curr);
+    BSTConstIterator(const BSTIterator< Key, Value, Compare >& rhs);
     bool operator==(const BSTConstIterator& rhs) const noexcept;
     bool operator!=(const BSTConstIterator& rhs) const noexcept;
     BSTConstIterator& operator++();

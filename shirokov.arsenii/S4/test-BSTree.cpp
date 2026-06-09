@@ -259,3 +259,19 @@ BOOST_AUTO_TEST_CASE(erase_non_existent_element)
   t1.insert(15, 3);
   BOOST_TEST(!t1.erase(11));
 }
+
+BOOST_AUTO_TEST_CASE(rotate_left_test)
+{
+  shirokov::BSTree< int, int, std::less< int > > tree;
+  tree.insert(10, 1);
+  tree.insert(5, 2);
+  tree.insert(15, 3);
+  tree.insert(13, 4);
+  tree.insert(18, 5);
+  auto it = tree.begin();
+  ++(++(++it));
+  size_t oldHeight = tree.height(it);
+  BOOST_REQUIRE((*it).first == 15);
+  it = tree.rotateLeft(it);
+  BOOST_TEST(tree.height(it) - oldHeight == 1);
+}
