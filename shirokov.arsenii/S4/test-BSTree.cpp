@@ -287,3 +287,31 @@ BOOST_AUTO_TEST_CASE(rotate_left_test)
   BOOST_TEST(tree.height(++it) - yHeight == 1);
   BOOST_TEST(tree.height(++it) == t3Height);
 }
+
+BOOST_AUTO_TEST_CASE(rotate_right_test)
+{
+  shirokov::BSTree< int, int, std::less< int > > tree;
+  tree.insert(10, 1);
+  tree.insert(5, 2);
+  tree.insert(15, 3);
+  tree.insert(3, 4);
+  tree.insert(8, 5);
+  auto it = tree.begin();
+  size_t t1Height = tree.height(it);
+  size_t xHeight = tree.height(++it);
+  size_t t2Height = tree.height(++it);
+  size_t yHeight = tree.height(++it);
+  size_t t3Height = tree.height(++it);
+
+  it = ++(++(++tree.begin()));
+  BOOST_REQUIRE((*it).first == 10);
+  it = tree.rotateRight(it);
+  BOOST_TEST((*it).first == 5);
+
+  it = tree.begin();
+  BOOST_TEST(tree.height(it) == t1Height);
+  BOOST_TEST(tree.height(++it) - xHeight == 1);
+  BOOST_TEST(tree.height(++it) == t2Height);
+  BOOST_TEST(yHeight - tree.height(++it) == 1);
+  BOOST_TEST(tree.height(++it) == t3Height);
+}
