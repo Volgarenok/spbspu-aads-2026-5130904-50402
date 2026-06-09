@@ -68,7 +68,7 @@ namespace shirokov
     using const_iterator = BSTConstIterator< Key, Value, Compare >;
     using iterator = BSTIterator< Key, Value, Compare >;
     const_iterator rotateLeft(const_iterator it);
-    const_iterator rotateRight(const_iterator it); // TODO
+    const_iterator rotateRight(const_iterator it);
 
     const_iterator rotateLargeLeft(const_iterator it);  // TODO
     const_iterator rotateLargeRight(const_iterator it); // TODO
