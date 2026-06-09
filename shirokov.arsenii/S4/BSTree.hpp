@@ -70,8 +70,8 @@ namespace shirokov
     const_iterator rotateLeft(const_iterator it);
     const_iterator rotateRight(const_iterator it);
 
-    const_iterator rotateLargeLeft(const_iterator it);  // TODO
-    const_iterator rotateLargeRight(const_iterator it); // TODO
+    const_iterator rotateLargeLeft(const_iterator it);
+    const_iterator rotateLargeRight(const_iterator it);
 
     size_t height(const_iterator it);
     size_t height();
@@ -101,6 +101,21 @@ namespace shirokov
     Node* findNode(Key key) const;
     void eraseNode(Node* node);
   };
+}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTConstIterator< Key, Value, Compare >
+shirokov::BSTree< Key, Value, Compare >::rotateLargeRight(const_iterator it)
+{
+  Node* z = const_cast< Node* >(it.curr_);
+  if (!z || !z->lt)
+  {
+    throw std::logic_error("Rotate Large Right impossible for this tree");
+  }
+  Node* x = z->lt;
+  rotateLeft(const_iterator{x});
+  rotateRight(const_iterator{z});
+  return const_iterator{x->parent};
 }
 
 template< class Key, class Value, class Compare >
