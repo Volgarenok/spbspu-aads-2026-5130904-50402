@@ -114,6 +114,18 @@ shirokov::BSTree< Key, Value, Compare >::rotateRight(const_iterator it)
   }
   Node* t2 = x->rt;
   x->parent = y->parent;
+  if (!x->parent)
+  {
+    root_ = x;
+  }
+  else if (x->parent->lt == y)
+  {
+    x->parent->lt = x;
+  }
+  else
+  {
+    x->parent->rt = x;
+  }
   x->rt = y;
   if (t2)
   {
@@ -139,6 +151,18 @@ shirokov::BSTConstIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, 
   }
   Node* t2 = y->lt;
   y->parent = x->parent;
+  if (!y->parent)
+  {
+    root_ = y;
+  }
+  else if (y->parent->lt == x)
+  {
+    y->parent->lt = y;
+  }
+  else
+  {
+    y->parent->rt = y;
+  }
   y->lt = x;
   x->rt = t2;
   x->parent = y;
