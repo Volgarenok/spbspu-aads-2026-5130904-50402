@@ -67,7 +67,7 @@ namespace shirokov
 
     using const_iterator = BSTConstIterator< Key, Value, Compare >;
     using iterator = BSTIterator< Key, Value, Compare >;
-    const_iterator rotateLeft(const_iterator it);  // TODO
+    const_iterator rotateLeft(const_iterator it);
     const_iterator rotateRight(const_iterator it); // TODO
 
     const_iterator rotateLargeLeft(const_iterator it);  // TODO
@@ -101,6 +101,27 @@ namespace shirokov
     Node* findNode(Key key) const;
     void eraseNode(Node* node);
   };
+}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTConstIterator< Key, Value, Compare >
+shirokov::BSTree< Key, Value, Compare >::rotateRight(const_iterator it)
+{
+  Node *y = const_cast< Node* >(it.curr_), *x = y->lt;
+  if (!x)
+  {
+    throw std::logic_error("The left descendant is missing");
+  }
+  Node* t2 = x->rt;
+  x->parent = y->parent;
+  x->rt = y;
+  if (t2)
+  {
+    t2->parent = y;
+  }
+  y->parent = x;
+  y->lt = t2;
+  return const_iterator{x};
 }
 
 template< class Key, class Value, class Compare >
