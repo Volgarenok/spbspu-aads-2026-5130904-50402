@@ -307,7 +307,11 @@ BOOST_AUTO_TEST_CASE(rotate_right_test)
   size_t yHeight = tree.height(++it);
   size_t t3Height = tree.height(++it);
 
-  it = ++(++(++tree.begin()));
+  it = tree.begin();
+  for (size_t i = 0; i < 3; ++i)
+  {
+    ++it;
+  }
   BOOST_REQUIRE((*it).first == 10);
   it = tree.rotateRight(it);
   BOOST_TEST((*it).first == 5);
@@ -328,12 +332,12 @@ BOOST_AUTO_TEST_CASE(rotate_large_left_test)
 {
   shirokov::BSTree< int, int, std::less< int > > tree;
   tree[10] = 1;
-  tree[5] = 1;
-  tree[15] = 1;
-  tree[13] = 1;
-  tree[18] = 1;
-  tree[12] = 1;
-  tree[14] = 1;
+  tree[5] = 2;
+  tree[15] = 3;
+  tree[13] = 4;
+  tree[18] = 5;
+  tree[12] = 6;
+  tree[14] = 7;
 
   auto it = tree.begin();
   size_t t1Height = tree.height(it);
@@ -361,6 +365,51 @@ BOOST_AUTO_TEST_CASE(rotate_large_left_test)
   BOOST_TEST(tree.height(it) == t3Height);
   ++it;
   BOOST_TEST(zHeight - tree.height(it) == 1);
+  ++it;
+  BOOST_TEST(tree.height(it) == t4Height);
+}
+
+BOOST_AUTO_TEST_CASE(rotate_large_right_test)
+{
+  shirokov::BSTree< int, int, std::less< int > > tree;
+  tree[10] = 1;
+  tree[5] = 2;
+  tree[15] = 3;
+  tree[3] = 4;
+  tree[8] = 5;
+  tree[7] = 6;
+  tree[9] = 7;
+
+  auto it = tree.begin();
+  size_t t1Height = tree.height(it);
+  size_t xHeight = tree.height(++it);
+  size_t t2Height = tree.height(++it);
+  size_t yHeight = tree.height(++it);
+  size_t t3Height = tree.height(++it);
+  size_t zHeight = tree.height(++it);
+  size_t t4Height = tree.height(++it);
+
+  it = tree.begin();
+  for (size_t i = 0; i < 5; ++i)
+  {
+    ++it;
+  }
+  BOOST_REQUIRE((*it).first == 10);
+  it = tree.rotateLargeRight(it);
+  BOOST_TEST((*it).first == 8);
+
+  it = tree.begin();
+  BOOST_TEST(tree.height(it) == t1Height);
+  ++it;
+  BOOST_TEST(xHeight - tree.height(it) == 1);
+  ++it;
+  BOOST_TEST(tree.height(it) == t2Height);
+  ++it;
+  BOOST_TEST(tree.height(it) - yHeight == 1);
+  ++it;
+  BOOST_TEST(tree.height(it) == t3Height);
+  ++it;
+  BOOST_TEST(zHeight - tree.height(it) == 2);
   ++it;
   BOOST_TEST(tree.height(it) == t4Height);
 }

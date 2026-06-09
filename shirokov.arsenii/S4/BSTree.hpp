@@ -398,7 +398,8 @@ shirokov::BSTree< Key, Value, Compare >::BSTree(shirokov::BSTree< Key, Value, Co
 template< class Key, class Value, class Compare >
 shirokov::BSTIterator< Key, Value, Compare >& shirokov::BSTIterator< Key, Value, Compare >::operator++()
 {
-  typename BSTree< Key, Value, Compare >::Node* next = nullptr;
+  using node_t = typename BSTree< Key, Value, Compare >::Node*;
+  node_t next = nullptr;
   if (curr_->rt)
   {
     next = curr_->rt;
@@ -407,13 +408,16 @@ shirokov::BSTIterator< Key, Value, Compare >& shirokov::BSTIterator< Key, Value,
       next = next->lt;
     }
   }
-  else if (curr_->parent && curr_->parent->lt == curr_)
+  else
   {
-    next = curr_->parent;
-  }
-  else if (curr_->parent && curr_->parent->rt == curr_)
-  {
-    next = curr_->parent->parent;
+    node_t parent = curr_->parent;
+    node_t c = curr_;
+    while (parent && c == parent->rt)
+    {
+      c = parent;
+      parent = parent->parent;
+    }
+    next = parent;
   }
   this->curr_ = next;
   return *this;
@@ -422,7 +426,8 @@ shirokov::BSTIterator< Key, Value, Compare >& shirokov::BSTIterator< Key, Value,
 template< class Key, class Value, class Compare >
 shirokov::BSTConstIterator< Key, Value, Compare >& shirokov::BSTConstIterator< Key, Value, Compare >::operator++()
 {
-  typename BSTree< Key, Value, Compare >::Node* next = nullptr;
+  using node_t = typename BSTree< Key, Value, Compare >::Node*;
+  node_t next = nullptr;
   if (curr_->rt)
   {
     next = curr_->rt;
@@ -431,13 +436,16 @@ shirokov::BSTConstIterator< Key, Value, Compare >& shirokov::BSTConstIterator< K
       next = next->lt;
     }
   }
-  else if (curr_->parent && curr_->parent->lt == curr_)
+  else
   {
-    next = curr_->parent;
-  }
-  else if (curr_->parent && curr_->parent->rt == curr_)
-  {
-    next = curr_->parent->parent;
+    node_t parent = curr_->parent;
+    node_t c = const_cast< node_t >(curr_);
+    while (parent && c == parent->rt)
+    {
+      c = parent;
+      parent = parent->parent;
+    }
+    next = parent;
   }
   this->curr_ = next;
   return *this;
