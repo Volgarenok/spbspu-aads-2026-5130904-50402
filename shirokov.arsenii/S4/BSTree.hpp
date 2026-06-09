@@ -57,7 +57,7 @@ namespace shirokov
 
     bool insert(Key k, Value v);
     bool contains(Key k);
-    bool erase(Key k); // TODO
+    bool erase(Key k);
     bool empty() const noexcept;
     Value& at(Key key);
     const Value& at(Key key) const;
@@ -97,7 +97,92 @@ namespace shirokov
     void clear(Node* curr);
     void copyTree(Node* root, Node** result, Node* parent = nullptr);
     Node* findNode(Key key) const;
+    void eraseNode(Node* node);
   };
+}
+
+template< class Key, class Value, class Compare >
+void shirokov::BSTree< Key, Value, Compare >::eraseNode(Node* target)
+{
+  if (!target->lt && !target->rt)
+  {
+    if (target == root_)
+    {
+      root_ = nullptr;
+    }
+    else if (target->parent->lt == target)
+    {
+      target->parent->lt = nullptr;
+    }
+    else
+    {
+      target->parent->rt = nullptr;
+    }
+    delete target;
+  }
+  else if (target->lt && !target->rt)
+  {
+    if (target == root_)
+    {
+      root_ = target->lt;
+      target->lt->parent = nullptr;
+    }
+    else if (target->parent->lt == target)
+    {
+      target->parent->lt = target->lt;
+      target->lt->parent = target->parent;
+    }
+    else
+    {
+      target->parent->rt = target->lt;
+      target->lt->parent = target->parent;
+    }
+    delete target;
+  }
+  else if (!target->lt && target->rt)
+  {
+    if (target == root_)
+    {
+      root_ = target->rt;
+      target->rt->parent = nullptr;
+    }
+    else if (target->parent->lt == target)
+    {
+      target->parent->lt = target->rt;
+      target->rt->parent = target->parent;
+    }
+    else
+    {
+      target->parent->rt = target->rt;
+      target->rt->parent = target->parent;
+    }
+    delete target;
+  }
+  else
+  {
+    Node* curr = target->rt;
+    while (curr->lt)
+    {
+      curr = curr->lt;
+    }
+    Key key = curr->key;
+    Value value = curr->value;
+    eraseNode(curr);
+    target->key = key;
+    target->value = value;
+  }
+}
+
+template< class Key, class Value, class Compare >
+bool shirokov::BSTree< Key, Value, Compare >::erase(Key k)
+{
+  Node* target = findNode(k);
+  if (!target)
+  {
+    return false;
+  }
+  eraseNode(target);
+  return true;
 }
 
 template< class Key, class Value, class Compare >
