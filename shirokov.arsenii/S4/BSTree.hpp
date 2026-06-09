@@ -96,7 +96,30 @@ namespace shirokov
 
     void clear(Node* curr);
     void copyTree(Node* root, Node** result, Node* parent = nullptr);
+    Node* findNode(Key key) const;
   };
+}
+
+template< class Key, class Value, class Compare >
+typename shirokov::BSTree< Key, Value, Compare >::Node* shirokov::BSTree< Key, Value, Compare >::findNode(Key key) const
+{
+  Node* curr = root_;
+  while (curr)
+  {
+    if (cmp_(key, curr->key))
+    {
+      curr = curr->lt;
+    }
+    else if (cmp_(curr->key, key))
+    {
+      curr = curr->rt;
+    }
+    else
+    {
+      return curr;
+    }
+  }
+  return curr;
 }
 
 template< class Key, class Value, class Compare >
@@ -189,23 +212,7 @@ template< class Key, class Value, class Compare >
 Value& shirokov::BSTree< Key, Value, Compare >::operator[](Key key)
 {
   insert(key, Value());
-  Node* curr = root_;
-  while (curr)
-  {
-    if (cmp_(key, curr->key))
-    {
-      curr = curr->lt;
-    }
-    else if (cmp_(curr->key, key))
-    {
-      curr = curr->rt;
-    }
-    else
-    {
-      return curr->value;
-    }
-  }
-  return curr->value;
+  return findNode(key)->value;
 }
 
 template< class Key, class Value, class Compare >
@@ -360,23 +367,7 @@ shirokov::BSTIterator< Key, Value, Compare >::BSTIterator(const BSTConstIterator
 template< class Key, class Value, class Compare >
 bool shirokov::BSTree< Key, Value, Compare >::contains(Key key)
 {
-  Node* curr = root_;
-  while (curr)
-  {
-    if (cmp_(key, curr->key))
-    {
-      curr = curr->lt;
-    }
-    else if (cmp_(curr->key, key))
-    {
-      curr = curr->rt;
-    }
-    else
-    {
-      return true;
-    }
-  }
-  return false;
+  return findNode(key);
 }
 
 template< class Key, class Value, class Compare >
@@ -390,23 +381,12 @@ Value& shirokov::BSTree< Key, Value, Compare >::at(Key key)
 template< class Key, class Value, class Compare >
 const Value& shirokov::BSTree< Key, Value, Compare >::at(Key key) const
 {
-  Node* curr = root_;
-  while (curr)
+  Node* curr = findNode(key);
+  if (!curr)
   {
-    if (cmp_(key, curr->key))
-    {
-      curr = curr->lt;
-    }
-    else if (cmp_(curr->key, key))
-    {
-      curr = curr->rt;
-    }
-    else
-    {
-      return curr->value;
-    }
+    throw std::out_of_range("Undefined key");
   }
-  throw std::out_of_range("Undefined key");
+  return curr->value;
 }
 
 template< class Key, class Value, class Compare >
