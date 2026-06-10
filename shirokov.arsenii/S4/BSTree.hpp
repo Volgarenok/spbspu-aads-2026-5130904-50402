@@ -1,3 +1,7 @@
+#ifndef BSTREE_HPP
+#define BSTREE_HPP
+
+#include <algorithm>
 #include <cstddef>
 #include <new>
 #include <stdexcept>
@@ -93,9 +97,12 @@ namespace shirokov
       Value value;
       Node *lt, *rt, *parent;
     };
+
+    Node fake_root_;
     Node* root_;
     Compare cmp_;
 
+    static Node* nilNode();
     void clear(Node* curr);
     void copyTree(Node* root, Node** result, Node* parent = nullptr);
     Node* findNode(Key key) const;
@@ -104,11 +111,53 @@ namespace shirokov
 }
 
 template< class Key, class Value, class Compare >
+Value& shirokov::BSTree< Key, Value, Compare >::operator[](Key key)
+{
+  Node* node = findNode(key);
+
+  if (node != nilNode())
+  {
+    return node->value;
+  }
+
+  insert(key, Value());
+  return findNode(key)->value;
+}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTree< Key, Value, Compare >::BSTree(BSTree&& rhs):
+  fake_root_{Key(), Value(), nullptr, nullptr, nullptr},
+  root_(&fake_root_),
+  cmp_(std::move(rhs.cmp_))
+{
+  root_->lt = rhs.root_->lt;
+  root_->rt = nilNode();
+  root_->parent = nullptr;
+
+  if (root_->lt != nilNode())
+  {
+    root_->lt->parent = root_;
+  }
+
+  rhs.root_->lt = nilNode();
+}
+
+template< class Key, class Value, class Compare >
+typename shirokov::BSTree< Key, Value, Compare >::Node* shirokov::BSTree< Key, Value, Compare >::nilNode()
+{
+  static Node node{Key(), Value(), nullptr, nullptr, nullptr};
+  node.lt = &node;
+  node.rt = &node;
+  node.parent = &node;
+  return &node;
+}
+
+template< class Key, class Value, class Compare >
 shirokov::BSTConstIterator< Key, Value, Compare >
 shirokov::BSTree< Key, Value, Compare >::rotateLargeRight(const_iterator it)
 {
   Node* z = const_cast< Node* >(it.curr_);
-  if (!z || !z->lt)
+  if (!z || z == root_ || z->parent == z || z->lt == nilNode())
   {
     throw std::logic_error("Rotate Large Right impossible for this tree");
   }
@@ -123,7 +172,7 @@ shirokov::BSTConstIterator< Key, Value, Compare >
 shirokov::BSTree< Key, Value, Compare >::rotateLargeLeft(const_iterator it)
 {
   Node* x = const_cast< Node* >(it.curr_);
-  if (!x || !x->rt)
+  if (!x || x == root_ || x->parent == x || x->rt == nilNode())
   {
     throw std::logic_error("Rotate Large Left impossible for this tree");
   }
@@ -138,32 +187,56 @@ shirokov::BSTConstIterator< Key, Value, Compare >
 shirokov::BSTree< Key, Value, Compare >::rotateRight(const_iterator it)
 {
   Node* y = const_cast< Node* >(it.curr_);
-  if (!y || !y->lt)
+  if (!y || y == root_ || y->parent == y || y->lt == nilNode())
   {
     throw std::logic_error("Rotate Right impossible for this tree");
   }
   Node *x = y->lt, *t2 = x->rt;
   x->parent = y->parent;
-  if (!x->parent)
+  if (y->parent->lt == y)
   {
-    root_ = x;
-  }
-  else if (x->parent->lt == y)
-  {
-    x->parent->lt = x;
+    y->parent->lt = x;
   }
   else
   {
-    x->parent->rt = x;
+    y->parent->rt = x;
   }
   x->rt = y;
-  if (t2)
+  y->parent = x;
+  y->lt = t2;
+  if (t2 != nilNode())
   {
     t2->parent = y;
   }
-  y->parent = x;
-  y->lt = t2;
   return const_iterator{x};
+}
+
+template< class Key, class Value, class Compare >
+shirokov::BSTConstIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, Compare >::rotateLeft(const_iterator it)
+{
+  Node* x = const_cast< Node* >(it.curr_);
+  if (!x || x == root_ || x->parent == x || x->rt == nilNode())
+  {
+    throw std::logic_error("Rotate Left impossible for this tree");
+  }
+  Node *y = x->rt, *t2 = y->lt;
+  y->parent = x->parent;
+  if (x->parent->lt == x)
+  {
+    x->parent->lt = y;
+  }
+  else
+  {
+    x->parent->rt = y;
+  }
+  y->lt = x;
+  x->parent = y;
+  x->rt = t2;
+  if (t2 != nilNode())
+  {
+    t2->parent = x;
+  }
+  return const_iterator{y};
 }
 
 template< class Key, class Value, class Compare >
@@ -172,98 +245,52 @@ shirokov::BSTConstIterator< Key, Value, Compare >::BSTConstIterator(const BSTIte
 {}
 
 template< class Key, class Value, class Compare >
-shirokov::BSTConstIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, Compare >::rotateLeft(const_iterator it)
-{
-  Node* x = const_cast< Node* >(it.curr_);
-  if (!x || !x->rt)
-  {
-    throw std::logic_error("Rotate Left impossible for this tree");
-  }
-  Node *y = x->rt, *t2 = y->lt;
-  y->parent = x->parent;
-  if (!y->parent)
-  {
-    root_ = y;
-  }
-  else if (y->parent->lt == x)
-  {
-    y->parent->lt = y;
-  }
-  else
-  {
-    y->parent->rt = y;
-  }
-  y->lt = x;
-  x->rt = t2;
-  x->parent = y;
-  if (t2)
-  {
-    t2->parent = x;
-  }
-  return const_iterator{y};
-}
-
-template< class Key, class Value, class Compare >
 void shirokov::BSTree< Key, Value, Compare >::eraseNode(Node* target)
 {
-  if (!target->lt && !target->rt)
+  if (target->lt == nilNode() && target->rt == nilNode())
   {
-    if (target == root_)
+    if (target->parent->lt == target)
     {
-      root_ = nullptr;
-    }
-    else if (target->parent->lt == target)
-    {
-      target->parent->lt = nullptr;
+      target->parent->lt = nilNode();
     }
     else
     {
-      target->parent->rt = nullptr;
+      target->parent->rt = nilNode();
     }
     delete target;
   }
-  else if (target->lt && !target->rt)
+  else if (target->lt != nilNode() && target->rt == nilNode())
   {
-    if (target == root_)
+    Node* child = target->lt;
+    child->parent = target->parent;
+    if (target->parent->lt == target)
     {
-      root_ = target->lt;
-      target->lt->parent = nullptr;
-    }
-    else if (target->parent->lt == target)
-    {
-      target->parent->lt = target->lt;
-      target->lt->parent = target->parent;
+      target->parent->lt = child;
     }
     else
     {
-      target->parent->rt = target->lt;
-      target->lt->parent = target->parent;
+      target->parent->rt = child;
     }
     delete target;
   }
-  else if (!target->lt && target->rt)
+  else if (target->lt == nilNode() && target->rt != nilNode())
   {
-    if (target == root_)
+    Node* child = target->rt;
+    child->parent = target->parent;
+    if (target->parent->lt == target)
     {
-      root_ = target->rt;
-      target->rt->parent = nullptr;
-    }
-    else if (target->parent->lt == target)
-    {
-      target->parent->lt = target->rt;
-      target->rt->parent = target->parent;
+      target->parent->lt = child;
     }
     else
     {
-      target->parent->rt = target->rt;
-      target->rt->parent = target->parent;
+      target->parent->rt = child;
     }
     delete target;
   }
   else
   {
     Node* curr = target->rt;
-    while (curr->lt)
+    while (curr->lt != nilNode())
     {
       curr = curr->lt;
     }
@@ -279,7 +306,7 @@ template< class Key, class Value, class Compare >
 bool shirokov::BSTree< Key, Value, Compare >::erase(Key k)
 {
   Node* target = findNode(k);
-  if (!target)
+  if (target == nilNode())
   {
     return false;
   }
@@ -290,8 +317,8 @@ bool shirokov::BSTree< Key, Value, Compare >::erase(Key k)
 template< class Key, class Value, class Compare >
 typename shirokov::BSTree< Key, Value, Compare >::Node* shirokov::BSTree< Key, Value, Compare >::findNode(Key key) const
 {
-  Node* curr = root_;
-  while (curr)
+  Node* curr = root_->lt;
+  while (curr != nilNode())
   {
     if (cmp_(key, curr->key))
     {
@@ -306,7 +333,7 @@ typename shirokov::BSTree< Key, Value, Compare >::Node* shirokov::BSTree< Key, V
       return curr;
     }
   }
-  return curr;
+  return nilNode();
 }
 
 template< class Key, class Value, class Compare >
@@ -317,8 +344,16 @@ void shirokov::BSTree< Key, Value, Compare >::swap(BSTree< Key, Value, Compare >
     return;
   }
   using std::swap;
-  swap(root_, rhs.root_);
+  swap(root_->lt, rhs.root_->lt);
   swap(cmp_, rhs.cmp_);
+  if (root_->lt != nilNode())
+  {
+    root_->lt->parent = root_;
+  }
+  if (rhs.root_->lt != nilNode())
+  {
+    rhs.root_->lt->parent = rhs.root_;
+  }
 }
 
 template< class Key, class Value, class Compare >
@@ -328,30 +363,32 @@ shirokov::BSTree< Key, Value, Compare >& shirokov::BSTree< Key, Value, Compare >
   {
     return *this;
   }
-  Node* newRoot = nullptr;
-  copyTree(rhs.root_, &newRoot);
-  clear(root_);
-  root_ = newRoot;
-  cmp_ = rhs.cmp_;
+  BSTree tmp(rhs);
+  swap(tmp);
   return *this;
 }
 
 template< class Key, class Value, class Compare >
 shirokov::BSTree< Key, Value, Compare >::BSTree(const BSTree& rhs):
+  fake_root_{Key(), Value(), nullptr, nullptr, nullptr},
+  root_(&fake_root_),
   cmp_(rhs.cmp_)
 {
-  copyTree(rhs.root_, &root_);
+  root_->lt = nilNode();
+  root_->rt = nilNode();
+  root_->parent = nullptr;
+  copyTree(rhs.root_->lt, &(root_->lt), root_);
 }
 
 template< class Key, class Value, class Compare >
 void shirokov::BSTree< Key, Value, Compare >::copyTree(Node* root, Node** result, Node* parent)
 {
-  if (!root)
+  if (root == nilNode())
   {
-    *result = nullptr;
+    *result = nilNode();
     return;
   }
-  Node* newRoot = new Node{root->key, root->value, nullptr, nullptr, parent};
+  Node* newRoot = new Node{root->key, root->value, nilNode(), nilNode(), parent};
   try
   {
     copyTree(root->lt, &(newRoot->lt), newRoot);
@@ -360,7 +397,7 @@ void shirokov::BSTree< Key, Value, Compare >::copyTree(Node* root, Node** result
   catch (const std::bad_alloc&)
   {
     clear(newRoot);
-    *result = nullptr;
+    *result = nilNode();
     throw;
   }
   *result = newRoot;
@@ -369,7 +406,7 @@ void shirokov::BSTree< Key, Value, Compare >::copyTree(Node* root, Node** result
 template< class Key, class Value, class Compare >
 size_t shirokov::BSTree< Key, Value, Compare >::height(const_iterator it)
 {
-  if (!it.curr_)
+  if (!it.curr_ || it.curr_ == root_ || it.curr_->parent == it.curr_)
   {
     return 0;
   }
@@ -379,7 +416,7 @@ size_t shirokov::BSTree< Key, Value, Compare >::height(const_iterator it)
 template< class Key, class Value, class Compare >
 size_t shirokov::BSTree< Key, Value, Compare >::height()
 {
-  return height(const_iterator{root_});
+  return height(const_iterator{root_->lt});
 }
 
 template< class Key, class Value, class Compare >
@@ -389,36 +426,23 @@ shirokov::BSTree< Key, Value, Compare >& shirokov::BSTree< Key, Value, Compare >
   {
     return *this;
   }
-  clear(root_);
-  root_ = rhs.root_;
-  rhs.root_ = nullptr;
+  swap(rhs);
   return *this;
-}
-
-template< class Key, class Value, class Compare >
-Value& shirokov::BSTree< Key, Value, Compare >::operator[](Key key)
-{
-  insert(key, Value());
-  return findNode(key)->value;
-}
-
-template< class Key, class Value, class Compare >
-shirokov::BSTree< Key, Value, Compare >::BSTree(shirokov::BSTree< Key, Value, Compare >&& rhs):
-  root_(rhs.root_),
-  cmp_(rhs.cmp_)
-{
-  rhs.root_ = nullptr;
 }
 
 template< class Key, class Value, class Compare >
 shirokov::BSTIterator< Key, Value, Compare >& shirokov::BSTIterator< Key, Value, Compare >::operator++()
 {
   using node_t = typename BSTree< Key, Value, Compare >::Node*;
+  if (!curr_ || curr_->parent == nullptr || curr_->parent == curr_)
+  {
+    return *this;
+  }
   node_t next = nullptr;
-  if (curr_->rt)
+  if (curr_->rt->parent != curr_->rt)
   {
     next = curr_->rt;
-    while (next->lt)
+    while (next->lt->parent != next->lt)
     {
       next = next->lt;
     }
@@ -442,11 +466,15 @@ template< class Key, class Value, class Compare >
 shirokov::BSTConstIterator< Key, Value, Compare >& shirokov::BSTConstIterator< Key, Value, Compare >::operator++()
 {
   using node_t = typename BSTree< Key, Value, Compare >::Node*;
+  if (!curr_ || curr_->parent == nullptr || curr_->parent == curr_)
+  {
+    return *this;
+  }
   node_t next = nullptr;
-  if (curr_->rt)
+  if (curr_->rt->parent != curr_->rt)
   {
     next = curr_->rt;
-    while (next->lt)
+    while (next->lt->parent != next->lt)
     {
       next = next->lt;
     }
@@ -516,8 +544,12 @@ shirokov::BSTIterator< Key, Value, Compare >::BSTIterator(typename BSTree< Key, 
 template< class Key, class Value, class Compare >
 shirokov::BSTConstIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, Compare >::cbegin() const
 {
-  typename BSTree< Key, Value, Compare >::Node* curr = root_;
-  while (curr && curr->lt)
+  if (empty())
+  {
+    return cend();
+  }
+  typename BSTree< Key, Value, Compare >::Node* curr = root_->lt;
+  while (curr->lt != nilNode())
   {
     curr = curr->lt;
   }
@@ -527,7 +559,7 @@ shirokov::BSTConstIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, 
 template< class Key, class Value, class Compare >
 shirokov::BSTConstIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, Compare >::cend() const
 {
-  return const_iterator{nullptr};
+  return const_iterator{root_};
 }
 
 template< class Key, class Value, class Compare >
@@ -562,7 +594,7 @@ shirokov::BSTIterator< Key, Value, Compare >::BSTIterator(const BSTConstIterator
 template< class Key, class Value, class Compare >
 bool shirokov::BSTree< Key, Value, Compare >::contains(Key key)
 {
-  return findNode(key);
+  return findNode(key) != nilNode();
 }
 
 template< class Key, class Value, class Compare >
@@ -577,7 +609,7 @@ template< class Key, class Value, class Compare >
 const Value& shirokov::BSTree< Key, Value, Compare >::at(Key key) const
 {
   Node* curr = findNode(key);
-  if (!curr)
+  if (curr == nilNode())
   {
     throw std::out_of_range("Undefined key");
   }
@@ -587,19 +619,17 @@ const Value& shirokov::BSTree< Key, Value, Compare >::at(Key key) const
 template< class Key, class Value, class Compare >
 bool shirokov::BSTree< Key, Value, Compare >::insert(Key key, Value value)
 {
-  BSTree< Key, Value, Compare > cpy(*this);
-  Node* curr = cpy.root_;
-  Node* parent = nullptr;
-  while (curr)
+  Node* parent = root_;
+  Node* curr = root_->lt;
+  while (curr != nilNode())
   {
-    if (cpy.cmp_(key, curr->key))
+    parent = curr;
+    if (cmp_(key, curr->key))
     {
-      parent = curr;
       curr = curr->lt;
     }
-    else if (cpy.cmp_(curr->key, key))
+    else if (cmp_(curr->key, key))
     {
-      parent = curr;
       curr = curr->rt;
     }
     else
@@ -607,47 +637,50 @@ bool shirokov::BSTree< Key, Value, Compare >::insert(Key key, Value value)
       return false;
     }
   }
-  curr = new Node{key, value, nullptr, nullptr, parent};
-  if (!cpy.root_)
+  Node* node = new Node{key, value, nilNode(), nilNode(), parent};
+  if (parent == root_)
   {
-    cpy.root_ = curr;
-    swap(cpy);
-    return true;
+    root_->lt = node;
   }
-  if (parent && cpy.cmp_(curr->key, parent->key))
+  else if (cmp_(key, parent->key))
   {
-    parent->lt = curr;
+    parent->lt = node;
   }
-  else if (parent && cmp_(parent->key, curr->key))
+  else
   {
-    parent->rt = curr;
+    parent->rt = node;
   }
-  swap(cpy);
   return true;
 }
 
 template< class Key, class Value, class Compare >
 shirokov::BSTree< Key, Value, Compare >::BSTree():
-  root_(nullptr),
+  fake_root_{Key(), Value(), nullptr, nullptr, nullptr},
+  root_(&fake_root_),
   cmp_(Compare())
-{}
+{
+  root_->lt = nilNode();
+  root_->rt = nilNode();
+  root_->parent = nullptr;
+}
 
 template< class Key, class Value, class Compare >
 shirokov::BSTree< Key, Value, Compare >::BSTree::~BSTree()
 {
-  clear(root_);
+  clear(root_->lt);
+  root_->lt = nilNode();
 }
 
 template< class Key, class Value, class Compare >
 bool shirokov::BSTree< Key, Value, Compare >::empty() const noexcept
 {
-  return !root_;
+  return root_->lt == nilNode();
 }
 
 template< class Key, class Value, class Compare >
 void shirokov::BSTree< Key, Value, Compare >::clear(Node* curr)
 {
-  if (!curr)
+  if (!curr || curr == root_ || curr == nilNode())
   {
     return;
   }
@@ -655,3 +688,5 @@ void shirokov::BSTree< Key, Value, Compare >::clear(Node* curr)
   clear(curr->rt);
   delete curr;
 }
+
+#endif
