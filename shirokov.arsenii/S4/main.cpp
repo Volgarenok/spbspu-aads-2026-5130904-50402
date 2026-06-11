@@ -3,6 +3,12 @@
 #include <iostream>
 #include <limits>
 #include "BSTree.hpp"
+#include "commands.hpp"
+
+namespace shirokov
+{
+  datasets_t parse(std::istream& in);
+}
 
 int main(int argc, char* argv[])
 {
@@ -19,15 +25,20 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  using cmd_t = void (*)(std::ostream&, std::istream&);
+  shirokov::datasets_t datasets = shirokov::parse(in);
+  using cmd_t = void (*)(std::ostream&, std::istream&, shirokov::datasets_t&);
   shirokov::BSTree< std::string, cmd_t, std::less< std::string > > cmds;
+  // cmds["print"] = shirokov::print;
+  // cmds["complement"] = shirokov::complement;
+  // cmds["intersect"] = shirokov::intersect;
+  // cmds["union"] = shirokov::union_;
 
   std::string cmd;
   while (std::cin >> cmd)
   {
     try
     {
-      cmds.at(cmd)(std::cout, std::cin);
+      cmds.at(cmd)(std::cout, std::cin, datasets);
     }
     catch (...)
     {
@@ -41,4 +52,27 @@ int main(int argc, char* argv[])
     std::cerr << "Bad input" << '\n';
     return 1;
   }
+}
+
+shirokov::datasets_t shirokov::parse(std::istream& in)
+{
+  datasets_t datasets;
+  std::string name;
+  while (in >> name)
+  {
+    BSTree< int, std::string, std::less< int > > ds;
+    int key;
+    std::string value;
+    while (in >> key >> value)
+    {
+      ds.insert(key, value);
+    }
+    datasets.insert(name, ds);
+    if (in.eof())
+    {
+      break;
+    }
+    in.clear();
+  }
+  return datasets;
 }
