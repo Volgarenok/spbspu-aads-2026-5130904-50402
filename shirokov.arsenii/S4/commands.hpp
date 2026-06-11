@@ -11,7 +11,7 @@ namespace shirokov
   using datasets_t = BSTree< std::string, ds_t, std::less< std::string > >;
 
   void print(std::ostream& out, std::istream& in, shirokov::datasets_t& datasets);
-  void complement(std::ostream&, std::istream&, shirokov::datasets_t&);
+  void complement(std::ostream&, std::istream& in, shirokov::datasets_t& datasets);
   void intersect(std::ostream&, std::istream&, shirokov::datasets_t&);
   void union_(std::ostream&, std::istream&, shirokov::datasets_t&);
 }
