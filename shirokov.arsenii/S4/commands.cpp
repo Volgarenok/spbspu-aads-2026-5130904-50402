@@ -24,10 +24,6 @@ void shirokov::complement(std::ostream&, std::istream& in, shirokov::datasets_t&
   std::string newName, name1, name2;
   ds_t newDataset;
   in >> newName >> name1 >> name2;
-  if (datasets.contains(newName))
-  {
-    throw std::logic_error("A dataset with that name already exists");
-  }
   ds_t src1 = datasets.at(name1), src2 = datasets.at(name2);
   for (auto it = src1.begin(); it != src1.end(); ++it)
   {
@@ -36,7 +32,7 @@ void shirokov::complement(std::ostream&, std::istream& in, shirokov::datasets_t&
       newDataset.insert((*it).first, (*it).second);
     }
   }
-  datasets.insert(newName, newDataset);
+  datasets[newName] = newDataset;
 }
 
 void shirokov::intersect(std::ostream&, std::istream& in, shirokov::datasets_t& datasets)
@@ -44,10 +40,6 @@ void shirokov::intersect(std::ostream&, std::istream& in, shirokov::datasets_t& 
   std::string newName, name1, name2;
   ds_t newDataset;
   in >> newName >> name1 >> name2;
-  if (datasets.contains(newName))
-  {
-    throw std::logic_error("A dataset with that name already exists");
-  }
   ds_t src1 = datasets.at(name1), src2 = datasets.at(name2);
   for (auto it = src1.begin(); it != src1.end(); ++it)
   {
@@ -56,7 +48,7 @@ void shirokov::intersect(std::ostream&, std::istream& in, shirokov::datasets_t& 
       newDataset.insert((*it).first, (*it).second);
     }
   }
-  datasets.insert(newName, newDataset);
+  datasets[newName] = newDataset;
 }
 
 void shirokov::union_(std::ostream&, std::istream& in, shirokov::datasets_t& datasets)
@@ -64,10 +56,6 @@ void shirokov::union_(std::ostream&, std::istream& in, shirokov::datasets_t& dat
   std::string newName, name1, name2;
   ds_t newDataset;
   in >> newName >> name1 >> name2;
-  if (datasets.contains(newName))
-  {
-    throw std::logic_error("A dataset with that name already exists");
-  }
   ds_t src1 = datasets.at(name1), src2 = datasets.at(name2);
   for (auto it = src1.begin(); it != src1.end(); ++it)
   {
@@ -80,5 +68,5 @@ void shirokov::union_(std::ostream&, std::istream& in, shirokov::datasets_t& dat
       newDataset.insert((*it).first, (*it).second);
     }
   }
-  datasets.insert(newName, newDataset);
+  datasets[newName] = newDataset;
 }
