@@ -275,10 +275,13 @@ BOOST_AUTO_TEST_CASE(rotate_left_test)
   size_t yHeight = tree.height(++it);
   size_t t3Height = tree.height(++it);
 
-  it = ++tree.begin();
-  BOOST_REQUIRE((*it).first == 10);
+  it = tree.begin();
+  ++it;
+  ++it;
+  ++it;
+  BOOST_REQUIRE((*it).first == 15);
   it = tree.rotateLeft(it);
-  BOOST_TEST((*it).first == 15);
+  BOOST_TEST((*it).first == 13);
 
   it = tree.begin();
   BOOST_TEST(tree.height(it) == t1Height);
@@ -308,13 +311,10 @@ BOOST_AUTO_TEST_CASE(rotate_right_test)
   size_t t3Height = tree.height(++it);
 
   it = tree.begin();
-  for (size_t i = 0; i < 3; ++i)
-  {
-    ++it;
-  }
-  BOOST_REQUIRE((*it).first == 10);
+  ++it;
+  BOOST_REQUIRE((*it).first == 5);
   it = tree.rotateRight(it);
-  BOOST_TEST((*it).first == 5);
+  BOOST_TEST((*it).first == 8);
 
   it = tree.begin();
   BOOST_TEST(tree.height(it) == t1Height);
@@ -348,10 +348,13 @@ BOOST_AUTO_TEST_CASE(rotate_large_left_test)
   size_t zHeight = tree.height(++it);
   size_t t4Height = tree.height(++it);
 
-  it = ++tree.begin();
-  BOOST_REQUIRE((*it).first == 10);
+  it = tree.begin();
+  ++it;
+  ++it;
+  ++it;
+  BOOST_REQUIRE((*it).first == 13);
   it = tree.rotateLargeLeft(it);
-  BOOST_TEST((*it).first == 13);
+  BOOST_TEST((*it).first == 14);
 
   it = tree.begin();
   BOOST_TEST(tree.height(it) == t1Height);
@@ -390,13 +393,12 @@ BOOST_AUTO_TEST_CASE(rotate_large_right_test)
   size_t t4Height = tree.height(++it);
 
   it = tree.begin();
-  for (size_t i = 0; i < 5; ++i)
-  {
-    ++it;
-  }
-  BOOST_REQUIRE((*it).first == 10);
+  ++it;
+  ++it;
+  ++it;
+  BOOST_REQUIRE((*it).first == 8);
   it = tree.rotateLargeRight(it);
-  BOOST_TEST((*it).first == 8);
+  BOOST_TEST((*it).first == 7);
 
   it = tree.begin();
   BOOST_TEST(tree.height(it) == t1Height);

@@ -156,42 +156,44 @@ template< class Key, class Value, class Compare >
 shirokov::BSTConstIterator< Key, Value, Compare >
 shirokov::BSTree< Key, Value, Compare >::rotateLargeRight(const_iterator it)
 {
-  Node* z = const_cast< Node* >(it.curr_);
-  if (!z || z == root_ || z->parent == z || z->lt == nilNode())
+  Node* y = const_cast< Node* >(it.curr_);
+  if (!y || y == nilNode() || y->parent == root_ || y->parent->parent == root_
+      || y->parent->parent->parent == y->parent->parent || y->parent->rt != y || y->parent->parent->lt != y->parent)
   {
     throw std::logic_error("Rotate Large Right impossible for this tree");
   }
-  Node* x = z->lt;
-  rotateLeft(const_iterator{x});
-  rotateRight(const_iterator{z});
-  return const_iterator{x->parent};
+  const_iterator ret = rotateLeft(it);
+  rotateRight(it);
+  return ret;
 }
 
 template< class Key, class Value, class Compare >
 shirokov::BSTConstIterator< Key, Value, Compare >
 shirokov::BSTree< Key, Value, Compare >::rotateLargeLeft(const_iterator it)
 {
-  Node* x = const_cast< Node* >(it.curr_);
-  if (!x || x == root_ || x->parent == x || x->rt == nilNode())
+  Node* y = const_cast< Node* >(it.curr_);
+  if (!y || y == nilNode() || y->parent == root_ || y->parent->parent == root_
+      || y->parent->parent->parent == y->parent->parent || y->parent->lt != y || y->parent->parent->rt != y->parent)
   {
     throw std::logic_error("Rotate Large Left impossible for this tree");
   }
-  Node* z = x->rt;
-  rotateRight(const_iterator{z});
-  rotateLeft(const_iterator{x});
-  return const_iterator{x->parent};
+  const_iterator ret = rotateRight(it);
+  rotateLeft(it);
+  return ret;
 }
 
 template< class Key, class Value, class Compare >
 shirokov::BSTConstIterator< Key, Value, Compare >
 shirokov::BSTree< Key, Value, Compare >::rotateRight(const_iterator it)
 {
-  Node* y = const_cast< Node* >(it.curr_);
-  if (!y || y == root_ || y->parent == y || y->lt == nilNode())
+  Node* x = const_cast< Node* >(it.curr_);
+  if (!x || x == nilNode() || x->parent == root_ || x->parent->parent == x->parent || x->parent->lt != x)
   {
     throw std::logic_error("Rotate Right impossible for this tree");
   }
-  Node *x = y->lt, *t2 = x->rt;
+  Node* y = x->parent;
+  Node* t2 = x->rt;
+
   x->parent = y->parent;
   if (y->parent->lt == y)
   {
@@ -208,18 +210,20 @@ shirokov::BSTree< Key, Value, Compare >::rotateRight(const_iterator it)
   {
     t2->parent = y;
   }
-  return const_iterator{x};
+  return const_iterator{t2};
 }
 
 template< class Key, class Value, class Compare >
 shirokov::BSTConstIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, Compare >::rotateLeft(const_iterator it)
 {
-  Node* x = const_cast< Node* >(it.curr_);
-  if (!x || x == root_ || x->parent == x || x->rt == nilNode())
+  Node* y = const_cast< Node* >(it.curr_);
+  if (!y || y == nilNode() || y->parent == root_ || y->parent->parent == y->parent || y->parent->rt != y)
   {
     throw std::logic_error("Rotate Left impossible for this tree");
   }
-  Node *y = x->rt, *t2 = y->lt;
+  Node* x = y->parent;
+  Node* t2 = y->lt;
+
   y->parent = x->parent;
   if (x->parent->lt == x)
   {
@@ -236,7 +240,7 @@ shirokov::BSTConstIterator< Key, Value, Compare > shirokov::BSTree< Key, Value, 
   {
     t2->parent = x;
   }
-  return const_iterator{y};
+  return const_iterator{t2};
 }
 
 template< class Key, class Value, class Compare >
