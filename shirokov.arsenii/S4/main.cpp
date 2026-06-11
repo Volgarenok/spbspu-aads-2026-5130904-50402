@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
   cmds["print"] = shirokov::print;
   cmds["complement"] = shirokov::complement;
   cmds["intersect"] = shirokov::intersect;
-  // cmds["union"] = shirokov::union_;
+  cmds["union"] = shirokov::union_;
 
   std::string cmd;
   while (std::cin >> cmd)
