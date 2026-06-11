@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
   shirokov::datasets_t datasets = shirokov::parse(in);
   using cmd_t = void (*)(std::ostream&, std::istream&, shirokov::datasets_t&);
   shirokov::BSTree< std::string, cmd_t, std::less< std::string > > cmds;
-  // cmds["print"] = shirokov::print;
+  cmds["print"] = shirokov::print;
   // cmds["complement"] = shirokov::complement;
   // cmds["intersect"] = shirokov::intersect;
   // cmds["union"] = shirokov::union_;
@@ -39,6 +39,7 @@ int main(int argc, char* argv[])
     try
     {
       cmds.at(cmd)(std::cout, std::cin, datasets);
+      std::cout << '\n';
     }
     catch (...)
     {
