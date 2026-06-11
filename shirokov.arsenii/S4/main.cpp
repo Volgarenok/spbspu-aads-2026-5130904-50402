@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
   shirokov::BSTree< std::string, cmd_t, std::less< std::string > > cmds;
   cmds["print"] = shirokov::print;
   cmds["complement"] = shirokov::complement;
-  // cmds["intersect"] = shirokov::intersect;
+  cmds["intersect"] = shirokov::intersect;
   // cmds["union"] = shirokov::union_;
 
   std::string cmd;

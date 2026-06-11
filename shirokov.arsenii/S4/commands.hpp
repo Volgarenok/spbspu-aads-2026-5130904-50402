@@ -12,7 +12,7 @@ namespace shirokov
 
   void print(std::ostream& out, std::istream& in, shirokov::datasets_t& datasets);
   void complement(std::ostream&, std::istream& in, shirokov::datasets_t& datasets);
-  void intersect(std::ostream&, std::istream&, shirokov::datasets_t&);
+  void intersect(std::ostream&, std::istream& in, shirokov::datasets_t& datasets);
   void union_(std::ostream&, std::istream&, shirokov::datasets_t&);
 }
 
