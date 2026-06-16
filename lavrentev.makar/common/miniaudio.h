@@ -7998,7 +7998,7 @@ static MA_INLINE ma_int32 ma_lcg_rand_range_s32(ma_lcg *pLCG, ma_int32 lo, ma_in
   return lo + ma_lcg_rand_u32(pLCG) / (0xFFFFFFFF / (hi - lo + 1) + 1);
 }
 
-#if 0   
+#if 0
 static MA_INLINE void ma_seed(ma_int32 seed)
 {
     ma_lcg_seed(&g_maLCG, seed);
@@ -12878,7 +12878,7 @@ static MA_INLINE ma_uint16 ma_job_extract_slot(ma_uint64 toc)
   return (ma_uint16)(toc & 0x0000FFFF);
 }
 
-#if 0   
+#if 0
 static MA_INLINE ma_uint16 ma_job_extract_code(ma_uint64 toc)
 {
     return (ma_uint16)((toc & 0xFFFF0000) >> 16);
@@ -14170,7 +14170,7 @@ static ma_uint32 ma_get_closest_standard_sample_rate(ma_uint32 sampleRateIn)
         }
 
         if (diff == 0) {
-            return standardRate;    
+            return standardRate;
         }
 
         if (closestDiff > diff) {
@@ -17153,7 +17153,7 @@ static ma_result ma_device_create_IAudioClient_service__wasapi(ma_context *pCont
   return *cmd.data.createAudioClient.pResult;
 }
 
-#if 0   
+#if 0
 static ma_result ma_device_release_IAudioClient_service__wasapi(ma_device* pDevice, ma_device_type deviceType)
 {
     ma_result result;
@@ -17161,7 +17161,7 @@ static ma_result ma_device_release_IAudioClient_service__wasapi(ma_device* pDevi
     cmd.data.releaseAudioClient.pDevice    = pDevice;
     cmd.data.releaseAudioClient.deviceType = deviceType;
 
-    result = ma_context_post_command__wasapi(pDevice->pContext, &cmd);  
+    result = ma_context_post_command__wasapi(pDevice->pContext, &cmd);
     if (result != MA_SUCCESS) {
         return result;
     }
@@ -23715,8 +23715,8 @@ static ma_result ma_device_init_by_type__alsa(ma_device *pDevice, const ma_devic
   }
 
   isUsingMMap = MA_FALSE;
-#if 0   
-    if (deviceType != ma_device_type_capture) {    
+#if 0
+    if (deviceType != ma_device_type_capture) {
         if (!pConfig->alsa.noMMap) {
             if (((ma_snd_pcm_hw_params_set_access_proc)pDevice->pContext->alsa.snd_pcm_hw_params_set_access)
             (pPCM, pHWParams, MA_SND_PCM_ACCESS_MMAP_INTERLEAVED) == 0) {
@@ -25361,7 +25361,6 @@ static ma_pa_sample_format_t ma_format_to_pulse(ma_format format)
         }
     }
 
-    
     switch (format) {
         case ma_format_u8: return MA_PA_SAMPLE_U8;
         default: return MA_PA_SAMPLE_INVALID;
@@ -25759,7 +25758,7 @@ static void ma_device_sink_name_callback(
 
     ma_strncpy_s(pDevice->playback.name, sizeof(pDevice->playback.name), pInfo->description, (size_t)-1);
 
-    (void)pPulseContext; 
+    (void)pPulseContext;
 }
 
 static void ma_device_source_name_callback(
@@ -25776,7 +25775,7 @@ static void ma_device_source_name_callback(
 
     ma_strncpy_s(pDevice->capture.name, sizeof(pDevice->capture.name), pInfo->description, (size_t)-1);
 
-    (void)pPulseContext; 
+    (void)pPulseContext;
 }
 #endif
 
@@ -28351,7 +28350,7 @@ static ma_channel ma_channel_from_AudioChannelLabel(AudioChannelLabel label)
   case kAudioChannelLabel_Discrete_65535:
     return MA_CHANNEL_NONE;
 
-#if 0   
+#if 0
         case kAudioChannelLabel_HOA_ACN:              return MA_CHANNEL_NONE;
         case kAudioChannelLabel_HOA_ACN_0:            return MA_CHANNEL_AUX_0;
         case kAudioChannelLabel_HOA_ACN_1:            return MA_CHANNEL_AUX_1;
@@ -28391,7 +28390,6 @@ static ma_result ma_get_channel_map_from_AudioChannelLayout(AudioChannelLayout *
   } else
 #if 0
     if (pChannelLayout->mChannelLayoutTag == kAudioChannelLayoutTag_UseChannelBitmap) {
-        
         UInt32 iChannel = 0;
         UInt32 iBit;
         AudioChannelBitmap bitmap = pChannelLayout->mChannelBitmap;
@@ -28758,7 +28756,7 @@ static ma_result ma_get_AudioObject_channel_map(
 
     result = ma_get_AudioObject_channel_layout(pContext, deviceObjectID, deviceType, &pChannelLayout);
     if (result != MA_SUCCESS) {
-        return result;  
+        return result;
     }
 
     result = ma_get_channel_map_from_AudioChannelLayout(pChannelLayout, pChannelMap, channelMapCap);
@@ -28828,7 +28826,7 @@ static ma_result ma_get_AudioObject_get_closest_sample_rate(
     MA_ASSERT(pContext != NULL);
     MA_ASSERT(pSampleRateOut != NULL);
 
-    *pSampleRateOut = 0;    
+    *pSampleRateOut = 0;
 
     result = ma_get_AudioObject_sample_rates(
       pContext, deviceObjectID, deviceType, &sampleRateRangeCount, &pSampleRateRanges);
@@ -28838,11 +28836,10 @@ static ma_result ma_get_AudioObject_get_closest_sample_rate(
 
     if (sampleRateRangeCount == 0) {
         ma_free(pSampleRateRanges, &pContext->allocationCallbacks);
-        return MA_ERROR;   
+        return MA_ERROR;
     }
 
     if (sampleRateIn == 0) {
-        
         UInt32 iMALSampleRate;
         for (iMALSampleRate = 0; iMALSampleRate < ma_countof(g_maStandardSampleRatePriorities); ++iMALSampleRate) {
             ma_uint32 malSampleRate = g_maStandardSampleRatePriorities[iMALSampleRate];
@@ -28857,14 +28854,12 @@ static ma_result ma_get_AudioObject_get_closest_sample_rate(
             }
         }
 
-        
         MA_ASSERT(sampleRateRangeCount > 0);
 
         *pSampleRateOut = pSampleRateRanges[0].mMinimum;
         ma_free(pSampleRateRanges, &pContext->allocationCallbacks);
         return MA_SUCCESS;
     } else {
-        
         UInt32 currentAbsoluteDifference = INT32_MAX;
         UInt32 iCurrentClosestRange = (UInt32)-1;
         UInt32 iRange;
@@ -28895,10 +28890,6 @@ static ma_result ma_get_AudioObject_get_closest_sample_rate(
         ma_free(pSampleRateRanges, &pContext->allocationCallbacks);
         return MA_SUCCESS;
     }
-
-    
-    
-    
 }
 #endif
 
@@ -30473,8 +30464,7 @@ static ma_result ma_device_init_internal__coreaudio(ma_context *pContext, ma_dev
 
 #if 0
             if (deviceType == ma_device_type_capture) {
-                
-                bestFormat.mChannelsPerFrame = (UInt32)pAudioSession.inputNumberOfChannels;
+              bestFormat.mChannelsPerFrame = (UInt32)pAudioSession.inputNumberOfChannels;
             }
 #endif
     }
@@ -34967,11 +34957,8 @@ static ma_result ma_context_enumerate_devices__opensl(ma_context *pContext, ma_e
       *g_maEngineObjectSL)->GetInterface(g_maEngineObjectSL,
         (SLInterfaceID)pContext->opensl.SL_IID_AUDIOIODEVICECAPABILITIES, &deviceCaps);
     if (resultSL != SL_RESULT_SUCCESS) {
-        
         goto return_default_device;
     }
-
-    
     if (!isTerminated) {
         resultSL = (*deviceCaps)->GetAvailableAudioOutputs(deviceCaps, &deviceCount, pDeviceIDs);
         if (resultSL != SL_RESULT_SUCCESS) {
@@ -34996,8 +34983,6 @@ static ma_result ma_context_enumerate_devices__opensl(ma_context *pContext, ma_e
             }
         }
     }
-
-    
     if (!isTerminated) {
         resultSL = (*deviceCaps)->GetAvailableAudioInputs(deviceCaps, &deviceCount, pDeviceIDs);
         if (resultSL != SL_RESULT_SUCCESS) {
@@ -35101,7 +35086,6 @@ static ma_result ma_context_get_device_info__opensl(ma_context *pContext, ma_dev
     (*g_maEngineObjectSL)->GetInterface(g_maEngineObjectSL,
       (SLInterfaceID)pContext->opensl.SL_IID_AUDIOIODEVICECAPABILITIES, &deviceCaps);
     if (resultSL != SL_RESULT_SUCCESS) {
-        
         goto return_default_device;
     }
 
@@ -38234,7 +38218,6 @@ MA_API ma_result ma_device_init(ma_context* pContext, const ma_device_config* pC
             if (result == MA_SUCCESS) {
                 ma_strncpy_s(pDevice->capture.name, sizeof(pDevice->capture.name), deviceInfo.name, (size_t)-1);
             } else {
-                
                 if (descriptorCapture.pDeviceID == NULL) {
                     ma_strncpy_s(pDevice->capture.name,
                       sizeof(pDevice->capture.name), MA_DEFAULT_CAPTURE_DEVICE_NAME,
@@ -38250,7 +38233,6 @@ MA_API ma_result ma_device_init(ma_context* pContext, const ma_device_config* pC
             if (result == MA_SUCCESS) {
                 ma_strncpy_s(pDevice->playback.name, sizeof(pDevice->playback.name), deviceInfo.name, (size_t)-1);
             } else {
-                
                 if (descriptorPlayback.pDeviceID == NULL) {
                     ma_strncpy_s(pDevice->playback.name,
                       sizeof(pDevice->playback.name), MA_DEFAULT_PLAYBACK_DEVICE_NAME,
@@ -38587,7 +38569,6 @@ MA_API void ma_device_uninit(ma_device* pDevice)
 
 #if 0
     {
-        
         if (ma_device_is_started(pDevice)) {
             ma_device_stop(pDevice);
         }
@@ -40270,9 +40251,8 @@ static MA_INLINE void ma_pcm_s16_to_f32__reference(void* dst, const void* src, m
     float x = (float)src_s16[i];
 
 #if 0
-        
-        x = x + 32768.0f;                   
-        x = x * 0.00003051804379339284f;    
+        x = x + 32768.0f;
+        x = x * 0.00003051804379339284f;
         x = x - 1;
 #else
 
@@ -40637,9 +40617,8 @@ static MA_INLINE void ma_pcm_s24_to_f32__reference(void* dst, const void* src, m
                       >> 8);
 
 #if 0
-        
-        x = x + 8388608.0f;                 
-        x = x * 0.00000011920929665621f;    
+        x = x + 8388608.0f;
+        x = x * 0.00000011920929665621f;
         x = x - 1;
 #else
 
@@ -41224,9 +41203,8 @@ static MA_INLINE void ma_pcm_f32_to_s16__reference(void* dst, const void* src, m
     x = ((x < -1) ? -1 : ((x > 1) ? 1 : x));
 
 #if 0
-        
-        x = x + 1;                                  
-        x = x * 32767.5f;                           
+        x = x + 1;
+        x = x * 32767.5f;
         x = x - 32768.0f;
 #else
 
@@ -41540,9 +41518,8 @@ static MA_INLINE void ma_pcm_f32_to_s24__reference(void* dst, const void* src, m
     x = ((x < -1) ? -1 : ((x > 1) ? 1 : x));
 
 #if 0
-        
-        x = x + 1;                                  
-        x = x * 8388607.5f;                         
+        x = x + 1;
+        x = x * 8388607.5f;
         x = x - 8388608.0f;
 #else
 
@@ -41614,9 +41591,8 @@ static MA_INLINE void ma_pcm_f32_to_s32__reference(void* dst, const void* src, m
     x = ((x < -1) ? -1 : ((x > 1) ? 1 : x));
 
 #if 0
-        
-        x = x + 1;                                  
-        x = x * 2147483647.5;                       
+        x = x + 1;
+        x = x * 2147483647.5;
         x = x - 2147483648.0;
 #else
 
@@ -45704,20 +45680,15 @@ static ma_result ma_gainer_process_pcm_frames_internal(ma_gainer *pGainer, void 
 
 #if 0
     if (pGainer->t >= pGainer->config.smoothTimeInFrames) {
-        
         ma_copy_and_apply_volume_factor_per_channel_f32(
           pFramesOutF32, pFramesInF32, frameCount,
           pGainer->config.channels, pGainer->pNewGains);
         ma_apply_volume_factor_f32(pFramesOutF32, frameCount * pGainer->config.channels, pGainer->masterVolume);
 
-        
         if (pGainer->t == (ma_uint32)-1) {
             pGainer->t = pGainer->config.smoothTimeInFrames;
         }
     } else {
-        
-
-        
         if (pFramesOut != NULL && pFramesIn != NULL) {
             float a = (float)pGainer->t / pGainer->config.smoothTimeInFrames;
             float d = 1.0f / pGainer->config.smoothTimeInFrames;
@@ -45743,9 +45714,8 @@ static ma_result ma_gainer_process_pcm_frames_internal(ma_gainer *pGainer, void 
 
         pGainer->t = (ma_uint32)ma_min(pGainer->t + frameCount, pGainer->config.smoothTimeInFrames);
 
-#if 0   
+#if 0
         for (iFrame = 0; iFrame < frameCount; iFrame += 1) {
-            
             if (pFramesOut != NULL && pFramesIn != NULL) {
                 for (iChannel = 0; iChannel < pGainer->config.channels; iChannel += 1) {
                     pFramesOutF32[iFrame * pGainer->config.channels + iChannel] =
@@ -45755,7 +45725,6 @@ static ma_result ma_gainer_process_pcm_frames_internal(ma_gainer *pGainer, void 
                 }
             }
 
-            
             pGainer->t = ma_min(pGainer->t + 1, pGainer->config.smoothTimeInFrames);
         }
 #endif
@@ -64291,7 +64260,7 @@ static ma_result ma_resource_manager_data_buffer_node_insert_at(ma_resource_mana
   return MA_SUCCESS;
 }
 
-#if 0   
+#if 0
 static ma_result ma_resource_manager_data_buffer_node_insert(
   ma_resource_manager* pResourceManager, ma_resource_manager_data_buffer_node* pDataBufferNode)
 {
@@ -64350,7 +64319,7 @@ ma_resource_manager_data_buffer_node_find_inorder_successor(ma_resource_manager_
   return ma_resource_manager_data_buffer_node_find_min(pDataBufferNode->pChildHi);
 }
 
-#if 0   
+#if 0
 static MA_INLINE ma_resource_manager_data_buffer_node*
 ma_resource_manager_data_buffer_node_find_inorder_predecessor(
   ma_resource_manager_data_buffer_node* pDataBufferNode)
@@ -64464,7 +64433,7 @@ static ma_result ma_resource_manager_data_buffer_node_remove(ma_resource_manager
   return MA_SUCCESS;
 }
 
-#if 0   
+#if 0
 static ma_result ma_resource_manager_data_buffer_node_remove_by_key(
   ma_resource_manager* pResourceManager, ma_uint32 hashedName32)
 {
@@ -64473,7 +64442,7 @@ static ma_result ma_resource_manager_data_buffer_node_remove_by_key(
 
     result = ma_resource_manager_data_buffer_search(pResourceManager, hashedName32, &pDataBufferNode);
     if (result != MA_SUCCESS) {
-        return result;  
+        return result;
     }
 
     return ma_resource_manager_data_buffer_remove(pResourceManager, pDataBufferNode);
@@ -68143,7 +68112,6 @@ static void ma_node_graph_endpoint_process_pcm_frames(ma_node *pNode, const floa
   (void)pFrameCountOut;
 
 #if 0
-    
     if (ppFramesIn != NULL) {
         ma_copy_pcm_frames(ppFramesOut[0], ppFramesIn[0],
           *pFrameCountOut, ma_format_f32, ma_node_get_output_channels(pNode, 0));
@@ -68545,7 +68513,7 @@ static void ma_node_input_bus_detach__no_output_bus_lock(ma_node_input_bus *pInp
   }
 }
 
-#if 0   
+#if 0
 static void ma_node_input_bus_detach(ma_node_input_bus* pInputBus, ma_node_output_bus* pOutputBus)
 {
     MA_ASSERT(pInputBus  != NULL);
@@ -70686,7 +70654,6 @@ static void ma_sound_set_at_end(ma_sound *pSound, ma_bool32 atEnd)
   ma_atomic_exchange_32(&pSound->atEnd, atEnd);
 
 #if 0
-    
     if (atEnd) {
         if (pSound->endCallback != NULL) {
             pSound->endCallback(pSound->pEndCallbackUserData, pSound);
