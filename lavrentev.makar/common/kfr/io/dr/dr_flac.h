@@ -737,7 +737,6 @@ static DRFLAC_INLINE drflac_uint8 drflac_crc8(drflac_uint8 crc, drflac_uint32 da
   return 0;
 #else
 #if 0
-    
     drflac_uint8 p = 0x07;
     for (int i = count-1; i >= 0; --i) {
         drflac_uint8 bit = (data & (1 << i)) >> i;
@@ -815,7 +814,6 @@ static DRFLAC_INLINE drflac_uint16 drflac_crc16__32bit(drflac_uint16 crc, drflac
   return 0;
 #else
 #if 0
-    
     drflac_uint16 p = 0x8005;
     for (int i = count-1; i >= 0; --i) {
         drflac_uint16 bit = (data & (1ULL << i)) >> i;
@@ -3993,7 +3991,6 @@ static drflac_uint8 drflac_oggbs__get_current_segment_index(drflac_oggbs* oggbs,
 
 static drflac_bool32 drflac_oggbs__seek_to_next_packet(drflac_oggbs* oggbs)
 {
-    
     for (;;) {
         drflac_bool32 atEndOfPage = DRFLAC_FALSE;
 
@@ -4014,24 +4011,18 @@ static drflac_bool32 drflac_oggbs__seek_to_next_packet(drflac_oggbs* oggbs)
             bytesToEndOfPacketOrPage += segmentSize;
         }
 
-        
-        
         drflac_oggbs__seek_physical(oggbs, bytesToEndOfPacketOrPage, drflac_seek_origin_current);
         oggbs->bytesRemainingInPage -= bytesToEndOfPacketOrPage;
 
         if (atEndOfPage) {
-            
-            
             if (!drflac_oggbs__goto_next_page(oggbs)) {
                 return DRFLAC_FALSE;
             }
 
-            
             if ((oggbs->currentPageHeader.headerType & 0x01) == 0) {
                 return DRFLAC_TRUE;
             }
         } else {
-            
             return DRFLAC_TRUE;
         }
     }
@@ -4039,9 +4030,6 @@ static drflac_bool32 drflac_oggbs__seek_to_next_packet(drflac_oggbs* oggbs)
 
 static drflac_bool32 drflac_oggbs__seek_to_next_frame(drflac_oggbs* oggbs)
 {
-    
-
-    
     return drflac_oggbs__seek_to_next_packet(oggbs);
 }
 #endif
