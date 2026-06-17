@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <cmath>
 #include <iostream>
+#include <sstream>
 #include "Audio.hpp"
 
 namespace lavrentev
@@ -25,12 +26,106 @@ namespace lavrentev
 #endif
 
 #define MINIAUDIO_IMPLEMENTATION
-#include "miniaudio.h"
+#include "miniaudio.inc"
 
 #if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic pop
 #endif
 #include "commands.hpp"
+
+namespace
+{
+  std::string trim(const std::string &text)
+  {
+    const std::string spaces = " \t\r\n";
+    size_t first = text.find_first_not_of(spaces);
+    if (first == std::string::npos)
+    {
+      return "";
+    }
+    size_t last = text.find_last_not_of(spaces);
+    return text.substr(first, last - first + 1);
+  }
+
+  bool parseId(const std::string &text, size_t &id)
+  {
+    if (text.empty())
+    {
+      return false;
+    }
+    for (char c: text)
+    {
+      if (c < '0' || c > '9')
+      {
+        return false;
+      }
+    }
+    std::istringstream input(text);
+    input >> id;
+    return !input.fail();
+  }
+
+  size_t findFreeId(const lavrentev::CCHT &data)
+  {
+    size_t id = 1;
+    while (data.has(id))
+    {
+      ++id;
+    }
+    return id;
+  }
+
+  void parseImportArgs(const std::string &line, std::string &filePath, size_t &id, lavrentev::CCHT &data)
+  {
+    std::string args = trim(line);
+    if (args.empty())
+    {
+      throw std::invalid_argument("No import arguments");
+    }
+
+    id = findFreeId(data);
+    if (args[0] == '"' || args[0] == '\'')
+    {
+      char quote = args[0];
+      size_t end = args.find(quote, 1);
+      if (end == std::string::npos)
+      {
+        throw std::invalid_argument("Invalid file path");
+      }
+      filePath = args.substr(1, end - 1);
+      std::string rest = trim(args.substr(end + 1));
+      if (!rest.empty() && !parseId(rest, id))
+      {
+        throw std::invalid_argument("Invalid file id");
+      }
+    }
+    else
+    {
+      filePath = args;
+      size_t lastSpace = args.find_last_of(" \t");
+      if (lastSpace != std::string::npos)
+      {
+        size_t parsedId = 0;
+        std::string lastToken = trim(args.substr(lastSpace + 1));
+        if (parseId(lastToken, parsedId))
+        {
+          id = parsedId;
+          filePath = trim(args.substr(0, lastSpace));
+        }
+      }
+    }
+
+    filePath = trim(filePath);
+    if (filePath.empty())
+    {
+      throw std::invalid_argument("Invalid file path");
+    }
+    if (data.has(id))
+    {
+      throw std::out_of_range("ID already exists");
+    }
+  }
+}
 
 void lavrentev::viewFormats(std::istream &, std::ostream &os, CCHT &)
 {
@@ -43,30 +138,32 @@ void lavrentev::viewFormats(std::istream &, std::ostream &os, CCHT &)
 
 void lavrentev::help(std::istream &, std::ostream &os, CCHT &)
 {
-  os << "1: import - импортирует аудиофайл внутрь программы" << '\n';
+  os << "1: import <path> [id] - импортирует аудиофайл внутрь программы" << '\n';
   os << "2: view_all - выводит все файлы, находящиеся в оперативной памяти "
     "программы c их id" << '\n';
-  os << "3: convert - конвертирует аудиофайл в другой формат, указанный "
+  os << "3: convert <id> <new_id> <format> - конвертирует аудиофайл в другой формат, указанный "
     "пользователем" << '\n';
-  os << "4: convert_to_wav - конвертирует аудиофайл в формат WAV" << '\n';
-  os << "5: convert_to_mp3 - конвертирует аудиофайл в формат MP3" << '\n';
-  os << "6: pitch - питчинг файла на <semitones> полутонов вверх/вниз" << '\n';
-  os << "7: cut - обрезка файла c момента <start> длительностью <duration>" << '\n';
-  os << "8: change_bitrate - меняет уровень сжатия файла на <new_bitrate>" << '\n';
-  os << "9: normalize - нормализация аудиофайла" << '\n';
-  os << "10: change_volume - изменяет громкость аудиофайла на <coefficient>" << '\n';
-  os << "11: export - экспортирует аудиофайл c именем <name> в указанную папку "
+  os << "4: convert_to_wav <id> <new_id> - конвертирует аудиофайл в формат WAV" << '\n';
+  os << "5: convert_to_mp3 <id> <new_id> - конвертирует аудиофайл в формат MP3" << '\n';
+  os << "6: pitch <id> <new_id> <semitones> - питчинг файла на <semitones> полутонов вверх/вниз" << '\n';
+  os << "7: cut <id> <start> <duration> - обрезка файла c момента <start> длительностью <duration>" << '\n';
+  os << "8: change_bitrate <id> <new_bitrate> - меняет уровень сжатия файла на <new_bitrate>" << '\n';
+  os << "9: normalize <id> - нормализация аудиофайла" << '\n';
+  os << "10: change_volume <id> <coefficient> - изменяет громкость аудиофайла на <coefficient>" << '\n';
+  os << "11: export <id> <name> <dir> - экспортирует аудиофайл c именем <name> в указанную папку "
     "<dir>" << '\n';
-  os << "12: info - выводит техническую информацию o файле <file>" << '\n';
+  os << "12: info <id> - выводит техническую информацию o файле" << '\n';
   os << "13: view_formats - выводит форматы, доступные для конвертации" << '\n';
   os << "14: help - выводит справку по доступным командам" << '\n';
 }
 
-void lavrentev::importFile(std::istream &is, std::ostream &, CCHT &data)
+void lavrentev::importFile(std::istream &is, std::ostream &os, CCHT &data)
 {
+  std::string args;
   std::string filePath;
-  size_t id;
-  is >> filePath >> id;
+  size_t id = 0;
+  std::getline(is >> std::ws, args);
+  parseImportArgs(args, filePath, id, data);
 
   ma_decoder decoder;
   ma_result result = ma_decoder_init_file(
@@ -125,6 +222,7 @@ void lavrentev::importFile(std::istream &is, std::ostream &, CCHT &data)
   }
   delete[] temp;
   data[id] = newFile;
+  os << "Imported: " << id << '\n';
 }
 
 void lavrentev::viewAll(std::istream &, std::ostream &os, CCHT &data)
@@ -159,7 +257,10 @@ std::string lavrentev::extractFormat(const std::string &filePath)
 void lavrentev::info(std::istream &is, std::ostream &os, CCHT &cht)
 {
   size_t id;
-  is >> id;
+  if (!(is >> id))
+  {
+    throw std::invalid_argument("Invalid arguments");
+  }
   if (!cht.has(id))
   {
     throw std::out_of_range("No such file");
@@ -177,7 +278,10 @@ void lavrentev::exportFile(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id;
   std::string fileName, path;
-  is >> id >> fileName >> path;
+  if (!(is >> id >> fileName >> path))
+  {
+    throw std::invalid_argument("Invalid arguments");
+  }
   if (!cht.has(id))
   {
     throw std::out_of_range("No such file");
@@ -234,7 +338,10 @@ void lavrentev::changeVolume(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id;
   float coef;
-  is >> id >> coef;
+  if (!(is >> id >> coef))
+  {
+    throw std::invalid_argument("Invalid arguments");
+  }
 
   if (!cht.has(id))
   {
@@ -266,7 +373,10 @@ void lavrentev::changeVolume(std::istream &is, std::ostream &, CCHT &cht)
 void lavrentev::normalize(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id;
-  is >> id;
+  if (!(is >> id))
+  {
+    throw std::invalid_argument("Invalid arguments");
+  }
   if (!cht.has(id))
   {
     throw std::out_of_range("No such file");
@@ -310,7 +420,10 @@ void lavrentev::normalize(std::istream &is, std::ostream &, CCHT &cht)
 void lavrentev::changeBitrate(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id, newBR;
-  is >> id >> newBR;
+  if (!(is >> id >> newBR))
+  {
+    throw std::invalid_argument("Invalid arguments");
+  }
   if (!cht.has(id))
   {
     throw std::out_of_range("No such file");
@@ -322,17 +435,20 @@ void lavrentev::cut(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id;
   float start, duration;
-  is >> id >> start >> duration;
+  if (!(is >> id >> start >> duration))
+  {
+    throw std::invalid_argument("Invalid arguments");
+  }
   if (!cht.has(id))
   {
     throw std::out_of_range("No such file");
   }
 
   Audio &curr = cht[id];
-  float startBit = start * curr.sampleRate;
-  float durBit = duration * curr.sampleRate;
+  size_t startBit = static_cast<size_t>(start * curr.sampleRate);
+  size_t durBit = static_cast<size_t>(duration * curr.sampleRate);
 
-  if (startBit + durBit >= curr.channels[0].samplesSize || startBit < 0.0f)
+  if (start < 0.0f || duration <= 0.0f || startBit + durBit >= curr.channels[0].samplesSize)
   {
     throw std::out_of_range("Invalid segment");
   }
@@ -380,7 +496,10 @@ void lavrentev::convert(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id, newId;
   std::string format;
-  is >> id >> newId >> format;
+  if (!(is >> id >> newId >> format))
+  {
+    throw std::invalid_argument("Invalid arguments");
+  }
   bool c1 = format != "mp3" && format != "MP3";
   bool c2 = format != "wav" && format != "WAV";
   bool c3 = format != "aac" && format != "AAC";
@@ -397,7 +516,10 @@ void lavrentev::convertToWav(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id, newId;
   std::string format = "wav";
-  is >> id >> newId;
+  if (!(is >> id >> newId))
+  {
+    throw std::invalid_argument("Invalid arguments");
+  }
   convertTo(id, newId, format, cht);
 }
 
@@ -405,7 +527,10 @@ void lavrentev::convertToMp3(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id, newId;
   std::string format = "mp3";
-  is >> id >> newId;
+  if (!(is >> id >> newId))
+  {
+    throw std::invalid_argument("Invalid arguments");
+  }
   convertTo(id, newId, format, cht);
 }
 
@@ -459,7 +584,10 @@ void lavrentev::pitch(std::istream &is, std::ostream &, CCHT &cht)
 {
   size_t id, newId;
   float st;
-  is >> id >> newId >> st;
+  if (!(is >> id >> newId >> st))
+  {
+    throw std::invalid_argument("Invalid arguments");
+  }
   if (!cht.has(id))
   {
     throw std::out_of_range("No such file");

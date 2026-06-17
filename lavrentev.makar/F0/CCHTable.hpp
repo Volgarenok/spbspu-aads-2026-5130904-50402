@@ -3,7 +3,9 @@
 #include <cstddef>
 #include <algorithm>
 #include <new>
+#include <ostream>
 #include <stdexcept>
+#include <utility>
 
 namespace lavrentev
 {
@@ -25,6 +27,7 @@ namespace lavrentev
       CCHTable(CCHTable &&other) noexcept;
       ~CCHTable() noexcept;
       CCHTable< Key, Value, Hash, Equal > &operator=(CCHTable other);
+      void swap(CCHTable &other) noexcept;
       Value &operator[](const Key &k);
 
       void add(Key k, Value v);
@@ -64,19 +67,21 @@ lavrentev::CCHTable< Key, Value, Hash, Equal >::CCHTable():
 
 template< class Key, class Value, class Hash, class Equal >
 lavrentev::CCHTable< Key, Value, Hash, Equal >::CCHTable(const CCHTable &other):
-  ht1(new Node[other.size1]),
-  ht2(new Node[other.size2]),
+  ht1(new Node[other.cap1]),
+  ht2(new Node[other.cap2]),
   size1(other.size1),
+  cap1(other.cap1),
   size2(other.size2),
+  cap2(other.cap2),
   hasher(other.hasher),
   comp(other.comp),
   loadFactor(other.loadFactor)
 {
-  for (size_t i = 0; i < size1; ++i)
+  for (size_t i = 0; i < cap1; ++i)
   {
     ht1[i] = other.ht1[i];
   }
-  for (size_t i = 0; i < size2; ++i)
+  for (size_t i = 0; i < cap2; ++i)
   {
     ht2[i] = other.ht2[i];
   }
@@ -84,10 +89,12 @@ lavrentev::CCHTable< Key, Value, Hash, Equal >::CCHTable(const CCHTable &other):
 
 template< class Key, class Value, class Hash, class Equal >
 lavrentev::CCHTable< Key, Value, Hash, Equal >::CCHTable(CCHTable &&other) noexcept:
-  ht1(new Node[other.size1]),
-  ht2(new Node[other.size2]),
+  ht1(other.ht1),
+  ht2(other.ht2),
   size1(other.size1),
+  cap1(other.cap1),
   size2(other.size2),
+  cap2(other.cap2),
   hasher(other.hasher),
   comp(other.comp),
   loadFactor(other.loadFactor)
@@ -95,11 +102,13 @@ lavrentev::CCHTable< Key, Value, Hash, Equal >::CCHTable(CCHTable &&other) noexc
   other.ht1 = nullptr;
   other.ht2 = nullptr;
   other.size1 = 0;
+  other.cap1 = 0;
   other.size2 = 0;
+  other.cap2 = 0;
 }
 
 template< class Key, class Value, class Hash, class Equal >
-lavrentev::CCHTable< Key, Value, Hash, Equal >::~CCHTable() noexcept
+lavrentev::CCHTable< Key, Value, Hash, Equal >::~CCHTable< Key, Value, Hash, Equal >() noexcept
 {
   delete[] ht1;
   delete[] ht2;
@@ -109,12 +118,23 @@ template< class Key, class Value, class Hash, class Equal >
 lavrentev::CCHTable< Key, Value, Hash, Equal >
 &lavrentev::CCHTable< Key, Value, Hash, Equal >::operator=(CCHTable other)
 {
-  if (other.ht1 == ht1 && other.ht2 == ht2)
-  {
-    return *this;
-  }
   swap(other);
   return *this;
+}
+
+template< class Key, class Value, class Hash, class Equal >
+void lavrentev::CCHTable< Key, Value, Hash, Equal >::swap(CCHTable &other) noexcept
+{
+  using std::swap;
+  swap(ht1, other.ht1);
+  swap(ht2, other.ht2);
+  swap(size1, other.size1);
+  swap(cap1, other.cap1);
+  swap(size2, other.size2);
+  swap(cap2, other.cap2);
+  swap(hasher, other.hasher);
+  swap(comp, other.comp);
+  swap(loadFactor, other.loadFactor);
 }
 
 template< class Key, class Value, class Hash, class Equal >
