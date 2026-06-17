@@ -28,7 +28,7 @@ namespace lavrentev
       ~CCHTable() noexcept;
       CCHTable< Key, Value, Hash, Equal > &operator=(CCHTable other);
       void swap(CCHTable &other) noexcept;
-      Value &operator[](const Key &k);
+      Value &operator[](const Key &k) noexcept;
 
       void add(Key k, Value v);
       void drop(Key k);
@@ -108,7 +108,7 @@ lavrentev::CCHTable< Key, Value, Hash, Equal >::CCHTable(CCHTable &&other) noexc
 }
 
 template< class Key, class Value, class Hash, class Equal >
-lavrentev::CCHTable< Key, Value, Hash, Equal >::~CCHTable< Key, Value, Hash, Equal >() noexcept
+lavrentev::CCHTable< Key, Value, Hash, Equal >::~CCHTable() noexcept
 {
   delete[] ht1;
   delete[] ht2;
@@ -138,7 +138,7 @@ void lavrentev::CCHTable< Key, Value, Hash, Equal >::swap(CCHTable &other) noexc
 }
 
 template< class Key, class Value, class Hash, class Equal >
-Value &lavrentev::CCHTable< Key, Value, Hash, Equal >::operator[](const Key &k)
+Value &lavrentev::CCHTable< Key, Value, Hash, Equal >::operator[](const Key &k) noexcept
 {
   size_t idx1 = hasher.hash1(k) % cap1;
   if (!ht1[idx1].empty && comp(ht1[idx1].key, k))
