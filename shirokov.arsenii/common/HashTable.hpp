@@ -280,7 +280,9 @@ bool shirokov::HashTable< Key, Value, Hash, Equal >::insert(Key k, Value v)
     }
     pos = (pos + i) & (size_ - 1);
   }
-  throw std::runtime_error("Hash table is full or cluster limit exceeded");
+  // throw std::runtime_error("Hash table is full or cluster limit exceeded");
+  rehash(size_ * 2);
+  return insert(k, v);
 }
 
 template< class Key, class Value, class Hash, class Equal >
@@ -348,7 +350,9 @@ Value& shirokov::HashTable< Key, Value, Hash, Equal >::operator[](Key k)
     }
     pos = (pos + i) & (size_ - 1);
   }
-  throw std::runtime_error("Hash table is full or cluster limit exceeded");
+  // throw std::runtime_error("Hash table is full or cluster limit exceeded");
+  rehash(size_ * 2);
+  return (*this)[k];
 }
 
 template< class Key, class Value, class Hash, class Equal >
