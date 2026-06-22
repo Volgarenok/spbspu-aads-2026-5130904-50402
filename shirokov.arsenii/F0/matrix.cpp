@@ -24,11 +24,12 @@ bool shirokov::Matrix::empty() const
 
 shirokov::Matrix shirokov::operator+(const Matrix& lhs, const Matrix& rhs)
 {
-  if (lhs.getCols() != rhs.getCols() || lhs.getRows() != rhs.getRows())
+  if (lhs.getRows() != rhs.getRows() || lhs.getCols() != rhs.getCols())
   {
     throw std::invalid_argument("Matrix error: matrix dimensions must match for addition");
   }
-  Matrix res = zeros(lhs.getCols(), lhs.getRows());
+
+  Matrix res = zeros(lhs.getRows(), lhs.getCols());
   for (size_t i = 1; i <= lhs.getRows(); ++i)
   {
     for (size_t j = 1; j <= lhs.getCols(); ++j)
@@ -387,24 +388,27 @@ void shirokov::Matrix::resize(size_t n, size_t m, int k)
 std::istream& shirokov::operator>>(std::istream& in, Matrix& matrix)
 {
   char ch = 0;
+  in >> std::ws;
   if (!(in >> ch) || ch != '[')
   {
     in.setstate(std::ios::failbit);
     return in;
   }
 
+  in >> std::ws;
+  if (in.peek() == ']')
+  {
+    in.get();
+    matrix = Matrix();
+    return in;
+  }
+
   Vector< Vector< int > > mat;
   Vector< int > currentRow;
   size_t expectedCols = 0;
-  bool matrixDone = false;
-  while (!matrixDone && in >> std::ws)
+
+  while (true)
   {
-    if (in.peek() == ']')
-    {
-      in >> ch;
-      matrixDone = true;
-      break;
-    }
     int val = 0;
     if (!(in >> val))
     {
@@ -412,15 +416,19 @@ std::istream& shirokov::operator>>(std::istream& in, Matrix& matrix)
       return in;
     }
     currentRow.pushBack(val);
+
     in >> std::ws;
     int nextChar = in.peek();
+
     if (nextChar == ',')
     {
-      in >> ch;
+      in.get();
+      in >> std::ws;
+      continue;
     }
-    else if (nextChar == ';')
+
+    if (nextChar == ';' || nextChar == ']')
     {
-      in >> ch;
       if (expectedCols == 0)
       {
         expectedCols = currentRow.getSize();
@@ -430,43 +438,26 @@ std::istream& shirokov::operator>>(std::istream& in, Matrix& matrix)
         in.setstate(std::ios::failbit);
         return in;
       }
+
       mat.pushBack(currentRow);
       currentRow = Vector< int >();
-    }
-    else if (nextChar == ']')
-    {
-      in >> ch;
-      matrixDone = true;
-      if (expectedCols == 0)
+
+      if (nextChar == ';')
       {
-        expectedCols = currentRow.getSize();
+        in.get();
+        in >> std::ws;
+        continue;
       }
-      else if (currentRow.getSize() != expectedCols)
-      {
-        in.setstate(std::ios::failbit);
-        return in;
-      }
-      mat.pushBack(currentRow);
+
+      in.get();
+      break;
     }
-    else
-    {
-      in.setstate(std::ios::failbit);
-      return in;
-    }
-  }
-  if (!matrixDone || mat.isEmpty() || expectedCols == 0)
-  {
+
     in.setstate(std::ios::failbit);
     return in;
   }
-  matrix.resize(mat.getSize(), expectedCols);
-  for (size_t i = 0; i < mat.getSize(); ++i)
-  {
-    for (size_t j = 0; j < expectedCols; ++j)
-    {
-      matrix.at(i + 1, j + 1) = mat[i][j];
-    }
-  }
+
+  matrix = Matrix(mat);
   return in;
 }
 
@@ -495,9 +486,13 @@ std::ostream& shirokov::operator<<(std::ostream& out, const Matrix& matrix)
 
 shirokov::Matrix shirokov::concatH(const Matrix& lhs, const Matrix& rhs)
 {
-  if (lhs.empty() || rhs.empty())
+  if (lhs.empty())
   {
-    throw std::invalid_argument("Matrix error: cannot concatenate empty matrices");
+    return rhs;
+  }
+  if (rhs.empty())
+  {
+    return lhs;
   }
   if (lhs.getRows() != rhs.getRows())
   {
@@ -529,9 +524,13 @@ shirokov::Matrix shirokov::concatH(const Matrix& lhs, const Matrix& rhs)
 
 shirokov::Matrix shirokov::concatV(const Matrix& lhs, const Matrix& rhs)
 {
-  if (lhs.empty() || rhs.empty())
+  if (lhs.empty())
   {
-    throw std::invalid_argument("Matrix error: cannot concatenate empty matrices");
+    return rhs;
+  }
+  if (rhs.empty())
+  {
+    return lhs;
   }
   if (lhs.getCols() != rhs.getCols())
   {
@@ -569,9 +568,13 @@ shirokov::Matrix shirokov::concatV(const Matrix& lhs, const Matrix& rhs)
 
 shirokov::Matrix shirokov::concatDiag(const Matrix& lhs, const Matrix& rhs)
 {
-  if (lhs.empty() || rhs.empty())
+  if (lhs.empty())
   {
-    throw std::invalid_argument("Matrix error: cannot concatenate empty matrices");
+    return rhs;
+  }
+  if (rhs.empty())
+  {
+    return lhs;
   }
 
   size_t lRows = lhs.getRows();
