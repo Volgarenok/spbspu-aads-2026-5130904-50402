@@ -271,3 +271,17 @@ shirokov::Matrix shirokov::fill(size_t n, size_t m, int k)
   }
   return Matrix(mat);
 }
+
+const int& shirokov::Matrix::at(size_t r, size_t c) const
+{
+  if (r == 0 || r > getRows() || c == 0 || c > getCols() || empty())
+  {
+    throw std::out_of_range("Matrix index out of bounds");
+  }
+  return matrix_[r - 1][c - 1];
+}
+
+int& shirokov::Matrix::at(size_t r, size_t c)
+{
+  return const_cast< int& >(static_cast< const Matrix* >(this)->at(r, c));
+}

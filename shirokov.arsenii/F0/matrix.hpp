@@ -16,7 +16,7 @@ namespace shirokov
     int tr() const;
 
     int& at(size_t, size_t);
-    int at(size_t, size_t) const;
+    const int& at(size_t, size_t) const;
 
     size_t getRows() const;
     size_t getCols() const;
