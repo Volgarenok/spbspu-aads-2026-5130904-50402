@@ -221,44 +221,12 @@ int shirokov::Matrix::tr() const
 
 shirokov::Matrix shirokov::zeros(size_t n, size_t m)
 {
-  if (n == 0 || m == 0)
-  {
-    throw std::invalid_argument("Matrix dimensions must be greater than zero");
-  }
-  Vector< Vector< int > > mat;
-  mat.reserve(n);
-  for (size_t i = 0; i < n; ++i)
-  {
-    Vector< int > row;
-    row.reserve(m);
-    for (size_t j = 0; j < m; ++j)
-    {
-      row.pushBack(0);
-    }
-    mat.pushBack(row);
-  }
-  return Matrix(mat);
+  return fill(n, m, 0);
 }
 
 shirokov::Matrix shirokov::ones(size_t n, size_t m)
 {
-  if (n == 0 || m == 0)
-  {
-    throw std::invalid_argument("Matrix dimensions must be greater than zero");
-  }
-  Vector< Vector< int > > mat;
-  mat.reserve(n);
-  for (size_t i = 0; i < n; ++i)
-  {
-    Vector< int > row;
-    row.reserve(m);
-    for (size_t j = 0; j < m; ++j)
-    {
-      row.pushBack(1);
-    }
-    mat.pushBack(row);
-  }
-  return Matrix(mat);
+  return fill(n, m, 1);
 }
 
 shirokov::Matrix shirokov::eye(size_t n)
@@ -278,6 +246,27 @@ shirokov::Matrix shirokov::eye(size_t n)
       row.pushBack(i == j ? 1 : 0);
     }
 
+    mat.pushBack(row);
+  }
+  return Matrix(mat);
+}
+
+shirokov::Matrix shirokov::fill(size_t n, size_t m, int k)
+{
+  if (n == 0 || m == 0)
+  {
+    throw std::invalid_argument("Matrix dimensions must be greater than zero");
+  }
+  Vector< Vector< int > > mat;
+  mat.reserve(n);
+  for (size_t i = 0; i < n; ++i)
+  {
+    Vector< int > row;
+    row.reserve(m);
+    for (size_t j = 0; j < m; ++j)
+    {
+      row.pushBack(k);
+    }
     mat.pushBack(row);
   }
   return Matrix(mat);
