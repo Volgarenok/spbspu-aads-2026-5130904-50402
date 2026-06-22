@@ -31,7 +31,7 @@ namespace shirokov
     std::string value;
   };
 
-  Vector< Token > tokenize(const std::string& source);
+  Vector< Token > tokenize(const std::string&);
 }
 
 #endif
