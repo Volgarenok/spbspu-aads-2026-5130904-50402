@@ -26,7 +26,7 @@ shirokov::Matrix shirokov::operator+(const Matrix& lhs, const Matrix& rhs)
 {
   if (lhs.getCols() != rhs.getCols() || lhs.getRows() != rhs.getRows())
   {
-    throw std::invalid_argument("Matrix dimensions must match for addition");
+    throw std::invalid_argument("Matrix error: matrix dimensions must match for addition");
   }
   Matrix res = zeros(lhs.getCols(), lhs.getRows());
   for (size_t i = 1; i <= lhs.getRows(); ++i)
@@ -43,7 +43,7 @@ shirokov::Matrix shirokov::operator-(const Matrix& lhs, const Matrix& rhs)
 {
   if (lhs.getCols() != rhs.getCols() || lhs.getRows() != rhs.getRows())
   {
-    throw std::invalid_argument("Matrix dimensions must match for subtraction");
+    throw std::invalid_argument("Matrix error: matrix dimensions must match for subtraction");
   }
   Matrix res(lhs);
   for (size_t i = 1; i <= lhs.getRows(); ++i)
@@ -60,11 +60,11 @@ shirokov::Matrix shirokov::pow(const Matrix& matrix, int k)
 {
   if (matrix.empty() || matrix.getRows() != matrix.getCols())
   {
-    throw std::invalid_argument("Matrix must be square and non-empty for exponentiation");
+    throw std::invalid_argument("Matrix error: matrix must be square and non-empty for exponentiation");
   }
   if (k < 0)
   {
-    throw std::invalid_argument("Exponent must be non-negative");
+    throw std::invalid_argument("Matrix error: exponent must be non-negative");
   }
   if (k == 0)
   {
@@ -111,7 +111,7 @@ shirokov::Matrix shirokov::operator*(const Matrix& lhs, const Matrix& rhs)
 {
   if (lhs.getCols() != rhs.getRows())
   {
-    throw std::invalid_argument("Matrix dimensions mismatch for multiplication");
+    throw std::invalid_argument("Matrix error: matrix dimensions mismatch for multiplication");
   }
 
   Matrix res = zeros(lhs.getRows(), rhs.getCols());
@@ -145,7 +145,7 @@ int shirokov::Matrix::det() const
 {
   if (empty() || getRows() != getCols())
   {
-    throw std::invalid_argument("Matrix must be square and non-empty for determinant calculation");
+    throw std::invalid_argument("Matrix error: matrix must be square and non-empty for determinant calculation");
   }
 
   size_t n = getRows();
@@ -208,7 +208,7 @@ int shirokov::Matrix::tr() const
 {
   if (empty() || getRows() != getCols())
   {
-    throw std::invalid_argument("Matrix must be square and non-empty for trace calculation");
+    throw std::invalid_argument("Matrix error: matrix must be square and non-empty for trace calculation");
   }
   int traceVal = 0;
   size_t n = getRows();
@@ -233,7 +233,7 @@ shirokov::Matrix shirokov::eye(size_t n)
 {
   if (n == 0)
   {
-    throw std::invalid_argument("Identity matrix size must be greater than zero");
+    throw std::invalid_argument("Matrix error: identity matrix size must be greater than zero");
   }
   Vector< Vector< int > > mat;
   mat.reserve(n);
@@ -255,7 +255,7 @@ shirokov::Matrix shirokov::fill(size_t n, size_t m, int k)
 {
   if (n == 0 || m == 0)
   {
-    throw std::invalid_argument("Matrix dimensions must be greater than zero");
+    throw std::invalid_argument("Matrix error: matrix dimensions must be greater than zero");
   }
   Vector< Vector< int > > mat;
   mat.reserve(n);
@@ -276,7 +276,7 @@ const int& shirokov::Matrix::at(size_t r, size_t c) const
 {
   if (r == 0 || r > getRows() || c == 0 || c > getCols() || empty())
   {
-    throw std::out_of_range("Matrix index out of bounds");
+    throw std::out_of_range("Matrix error: matrix index out of bounds");
   }
   return matrix_[r - 1][c - 1];
 }
@@ -290,7 +290,7 @@ void shirokov::Matrix::addRow(const Vector< int >& row)
 {
   if (!empty() && row.getSize() != getCols())
   {
-    throw std::invalid_argument("Row size does not match matrix column count");
+    throw std::invalid_argument("Matrix error: row size does not match matrix column count");
   }
   matrix_.pushBack(row);
 }
@@ -311,7 +311,7 @@ void shirokov::Matrix::addCol(const Vector< int >& col)
   {
     if (col.getSize() != getRows())
     {
-      throw std::invalid_argument("Column size does not match matrix row count");
+      throw std::invalid_argument("Matrix error: column size does not match matrix row count");
     }
     for (size_t i = 0; i < getRows(); ++i)
     {
@@ -324,7 +324,7 @@ void shirokov::Matrix::delRow(size_t pos)
 {
   if (pos == 0 || pos > getRows() || empty())
   {
-    throw std::out_of_range("Row index out of bounds");
+    throw std::out_of_range("Matrix error: row index out of bounds");
   }
   matrix_.erase(pos - 1);
 }
@@ -333,7 +333,7 @@ void shirokov::Matrix::delCol(size_t pos)
 {
   if (pos == 0 || pos > getCols() || empty())
   {
-    throw std::out_of_range("Column index out of bounds");
+    throw std::out_of_range("Matrix error: column index out of bounds");
   }
   size_t rows = getRows();
   for (size_t i = 0; i < rows; ++i)
@@ -350,7 +350,7 @@ void shirokov::Matrix::resize(size_t n, size_t m, int k)
 {
   if (n == 0 || m == 0)
   {
-    throw std::invalid_argument("Invalid resize dimensions");
+    throw std::invalid_argument("Matrix error: invalid resize dimensions");
   }
   size_t currentRows = matrix_.getSize();
   for (size_t i = 0; i < currentRows; ++i)
@@ -497,11 +497,12 @@ shirokov::Matrix shirokov::concatH(const Matrix& lhs, const Matrix& rhs)
 {
   if (lhs.empty() || rhs.empty())
   {
-    throw std::invalid_argument("Cannot concatenate empty matrices");
+    throw std::invalid_argument("Matrix error: cannot concatenate empty matrices");
   }
   if (lhs.getRows() != rhs.getRows())
   {
-    throw std::invalid_argument("Horizontal concatenation requires matrices to have the same number of rows");
+    throw std::invalid_argument(
+        "Matrix error: horizontal concatenation requires matrices to have the same number of rows");
   }
 
   size_t rows = lhs.getRows();
@@ -530,11 +531,12 @@ shirokov::Matrix shirokov::concatV(const Matrix& lhs, const Matrix& rhs)
 {
   if (lhs.empty() || rhs.empty())
   {
-    throw std::invalid_argument("Cannot concatenate empty matrices");
+    throw std::invalid_argument("Matrix error: cannot concatenate empty matrices");
   }
   if (lhs.getCols() != rhs.getCols())
   {
-    throw std::invalid_argument("Vertical concatenation requires matrices to have the same number of columns");
+    throw std::invalid_argument(
+        "Matrix error: vertical concatenation requires matrices to have the same number of columns");
   }
 
   size_t lRows = lhs.getRows();
@@ -569,7 +571,7 @@ shirokov::Matrix shirokov::concatDiag(const Matrix& lhs, const Matrix& rhs)
 {
   if (lhs.empty() || rhs.empty())
   {
-    throw std::invalid_argument("Cannot concatenate empty matrices");
+    throw std::invalid_argument("Matrix error: cannot concatenate empty matrices");
   }
 
   size_t lRows = lhs.getRows();
