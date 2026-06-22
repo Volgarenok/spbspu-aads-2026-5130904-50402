@@ -149,7 +149,6 @@ int shirokov::Matrix::det() const
   }
 
   size_t n = getRows();
-
   if (n == 1)
   {
     return matrix_[0][0];
@@ -172,8 +171,7 @@ int shirokov::Matrix::det() const
     temp.pushBack(row);
   }
 
-  double detVal = 1.0;
-
+  double detVal = 1;
   for (size_t i = 0; i < n; ++i)
   {
     size_t pivot = i;
@@ -184,20 +182,16 @@ int shirokov::Matrix::det() const
         pivot = j;
       }
     }
-
     if (std::abs(temp[pivot][i]) < 1e-9)
     {
       return 0;
     }
-
     if (pivot != i)
     {
       temp[i].swap(temp[pivot]);
       detVal = -detVal;
     }
-
     detVal *= temp[i][i];
-
     for (size_t j = i + 1; j < n; ++j)
     {
       double factor = temp[j][i] / temp[i][i];
@@ -208,4 +202,19 @@ int shirokov::Matrix::det() const
     }
   }
   return static_cast< int >(std::round(detVal));
+}
+
+int shirokov::Matrix::tr() const
+{
+  if (empty() || getRows() != getCols())
+  {
+    throw std::invalid_argument("Matrix must be square and non-empty for trace calculation");
+  }
+  int trace_val = 0;
+  size_t n = getRows();
+  for (size_t i = 0; i < n; ++i)
+  {
+    trace_val += matrix_[i][i];
+  }
+  return trace_val;
 }
