@@ -383,3 +383,112 @@ void shirokov::Matrix::resize(size_t n, size_t m, int k)
     }
   }
 }
+
+std::istream& shirokov::operator>>(std::istream& in, Matrix& matrix)
+{
+  char ch = 0;
+  if (!(in >> ch) || ch != '[')
+  {
+    in.setstate(std::ios::failbit);
+    return in;
+  }
+
+  Vector< Vector< int > > mat;
+  Vector< int > currentRow;
+  size_t expectedCols = 0;
+  bool matrixDone = false;
+  while (!matrixDone && in >> std::ws)
+  {
+    if (in.peek() == ']')
+    {
+      in >> ch;
+      matrixDone = true;
+      break;
+    }
+    int val = 0;
+    if (!(in >> val))
+    {
+      in.setstate(std::ios::failbit);
+      return in;
+    }
+    currentRow.pushBack(val);
+    in >> std::ws;
+    int nextChar = in.peek();
+    if (nextChar == ',')
+    {
+      in >> ch;
+    }
+    else if (nextChar == ';')
+    {
+      in >> ch;
+      if (expectedCols == 0)
+      {
+        expectedCols = currentRow.getSize();
+      }
+      else if (currentRow.getSize() != expectedCols)
+      {
+        in.setstate(std::ios::failbit);
+        return in;
+      }
+      mat.pushBack(currentRow);
+      currentRow = Vector< int >();
+    }
+    else if (nextChar == ']')
+    {
+      in >> ch;
+      matrixDone = true;
+      if (expectedCols == 0)
+      {
+        expectedCols = currentRow.getSize();
+      }
+      else if (currentRow.getSize() != expectedCols)
+      {
+        in.setstate(std::ios::failbit);
+        return in;
+      }
+      mat.pushBack(currentRow);
+    }
+    else
+    {
+      in.setstate(std::ios::failbit);
+      return in;
+    }
+  }
+  if (!matrixDone || mat.isEmpty() || expectedCols == 0)
+  {
+    in.setstate(std::ios::failbit);
+    return in;
+  }
+  matrix.resize(mat.getSize(), expectedCols);
+  for (size_t i = 0; i < mat.getSize(); ++i)
+  {
+    for (size_t j = 0; j < expectedCols; ++j)
+    {
+      matrix.at(i + 1, j + 1) = mat[i][j];
+    }
+  }
+  return in;
+}
+
+std::ostream& shirokov::operator<<(std::ostream& out, const Matrix& matrix)
+{
+  if (matrix.empty())
+  {
+    return out;
+  }
+  size_t rows = matrix.getRows();
+  size_t cols = matrix.getCols();
+  for (size_t i = 1; i <= rows; ++i)
+  {
+    for (size_t j = 1; j <= cols; ++j)
+    {
+      out << matrix.at(i, j);
+      if (j < cols)
+      {
+        out << " ";
+      }
+    }
+    out << "\n";
+  }
+  return out;
+}
