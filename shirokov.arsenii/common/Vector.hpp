@@ -762,6 +762,7 @@ template< class T >
 shirokov::Vector< T >::Vector::~Vector()
 {
   clear(data_, size_);
+  ::operator delete(data_);
 }
 
 template< class T >
