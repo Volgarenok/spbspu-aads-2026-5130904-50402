@@ -345,3 +345,41 @@ void shirokov::Matrix::delCol(size_t pos)
     matrix_ = Vector< Vector< int > >();
   }
 }
+
+void shirokov::Matrix::resize(size_t n, size_t m, int k)
+{
+  if (n == 0 || m == 0)
+  {
+    throw std::invalid_argument("Invalid resize dimensions");
+  }
+  size_t currentRows = matrix_.getSize();
+  for (size_t i = 0; i < currentRows; ++i)
+  {
+    while (matrix_[i].getSize() > m)
+    {
+      matrix_[i].popBack();
+    }
+    while (matrix_[i].getSize() < m)
+    {
+      matrix_[i].pushBack(k);
+    }
+  }
+  while (matrix_.getSize() > n)
+  {
+    matrix_.popBack();
+  }
+  if (matrix_.getSize() < n)
+  {
+    matrix_.reserve(n);
+    while (matrix_.getSize() < n)
+    {
+      Vector< int > newRow;
+      newRow.reserve(m);
+      for (size_t j = 0; j < m; ++j)
+      {
+        newRow.pushBack(k);
+      }
+      matrix_.pushBack(newRow);
+    }
+  }
+}
