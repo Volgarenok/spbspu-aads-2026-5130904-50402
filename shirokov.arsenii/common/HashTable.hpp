@@ -38,7 +38,7 @@ namespace shirokov
     bool operator==(const HTCIter&) const noexcept;
     bool operator!=(const HTCIter&) const noexcept;
     HTCIter& operator++();
-    const std::pair< Key, Value& > operator*();
+    std::pair< Key, const Value& > operator*();
 
   private:
     size_t pos_;
@@ -102,7 +102,6 @@ void shirokov::HashTable< Key, Value, Hash, Equal >::rehash(size_t slots)
   delete[] cpy.slots_;
   cpy.slots_ = new Slot[slots]{};
   cpy.size_ = slots;
-  cpy.slotsCount_ = slotsCount_;
   for (auto it = begin(); it != end(); ++it)
   {
     cpy.insert((*it).first, (*it).second);
@@ -163,7 +162,7 @@ std::pair< Key, Value& > shirokov::HTIter< Key, Value, Hash, Equal >::operator*(
 }
 
 template< class Key, class Value, class Hash, class Equal >
-const std::pair< Key, Value& > shirokov::HTCIter< Key, Value, Hash, Equal >::operator*()
+std::pair< Key, const Value& > shirokov::HTCIter< Key, Value, Hash, Equal >::operator*()
 {
   return {table_->slots_[pos_].key, table_->slots_[pos_].value};
 }
@@ -350,7 +349,7 @@ Value& shirokov::HashTable< Key, Value, Hash, Equal >::operator[](Key k)
     }
     pos = (pos + i) & (size_ - 1);
   }
-  // throw std::runtime_error("Hash table is full or cluster limit exceeded");
+  // throw std::runtime_error("Hash table is full or cluster limit exceeded");const std::pair
   rehash(size_ * 2);
   return (*this)[k];
 }
