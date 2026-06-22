@@ -319,3 +319,29 @@ void shirokov::Matrix::addCol(const Vector< int >& col)
     }
   }
 }
+
+void shirokov::Matrix::delRow(size_t pos)
+{
+  if (pos == 0 || pos > getRows() || empty())
+  {
+    throw std::out_of_range("Row index out of bounds");
+  }
+  matrix_.erase(pos - 1);
+}
+
+void shirokov::Matrix::delCol(size_t pos)
+{
+  if (pos == 0 || pos > getCols() || empty())
+  {
+    throw std::out_of_range("Column index out of bounds");
+  }
+  size_t rows = getRows();
+  for (size_t i = 0; i < rows; ++i)
+  {
+    matrix_[i].erase(pos - 1);
+  }
+  if (matrix_[0].isEmpty())
+  {
+    matrix_ = Vector< Vector< int > >();
+  }
+}
