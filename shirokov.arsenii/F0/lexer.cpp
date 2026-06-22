@@ -11,12 +11,24 @@ shirokov::Vector< shirokov::Token > shirokov::tokenize(const std::string& source
   while (i < length)
   {
     char c = source[i];
-    switch (c)
+
+    if (c == '=')
     {
-    case '=':
+      if (i == 0 || source[i - 1] != ' ' || (i > 1 && source[i - 2] == ' '))
+      {
+        throw std::runtime_error("Lexer error: missing or extra space before '='");
+      }
+      if (i + 1 >= length || source[i + 1] != ' ' || (i + 2 < length && source[i + 2] == ' '))
+      {
+        throw std::runtime_error("Lexer error: missing or extra space after '='");
+      }
       tokens.pushBack({TokenType::ASSIGN, "="});
       ++i;
-      break;
+      continue;
+    }
+
+    switch (c)
+    {
     case '[':
       tokens.pushBack({TokenType::LBRACKET, "["});
       ++i;
@@ -61,34 +73,33 @@ shirokov::Vector< shirokov::Token > shirokov::tokenize(const std::string& source
       tokens.pushBack({TokenType::POW, "^"});
       ++i;
       break;
+    case '|':
+      tokens.pushBack({TokenType::BAR, "|"});
+      ++i;
+      break;
+    case '\'':
+      tokens.pushBack({TokenType::APOSTROPHE, "'"});
+      ++i;
+      break;
     default:
-      if (std::isspace(c))
+      if (std::isspace(static_cast< unsigned char >(c)))
       {
         ++i;
       }
-      else if (std::isdigit(c) || c == '.')
+      else if (std::isdigit(static_cast< unsigned char >(c)))
       {
         std::string numStr;
-        bool hasDot = false;
-        while (i < length && (std::isdigit(source[i]) || source[i] == '.'))
+        while (i < length && std::isdigit(static_cast< unsigned char >(source[i])))
         {
-          if (source[i] == '.')
-          {
-            if (hasDot)
-            {
-              throw std::runtime_error("Lexer error: invalid number format with multiple dots");
-            }
-            hasDot = true;
-          }
           numStr += source[i];
           ++i;
         }
         tokens.pushBack({TokenType::NUMBER, numStr});
       }
-      else if (std::isalpha(c) || c == '_')
+      else if (std::isalpha(static_cast< unsigned char >(c)) || c == '_')
       {
         std::string identStr;
-        while (i < length && (std::isalnum(source[i]) || source[i] == '_'))
+        while (i < length && (std::isalnum(static_cast< unsigned char >(source[i])) || source[i] == '_'))
         {
           identStr += source[i];
           ++i;

@@ -1,11 +1,11 @@
 #ifndef LEXER_HPP
 #define LEXER_HPP
+#include <Vector.hpp>
 #include <string>
-#include "Vector.hpp"
 
 namespace shirokov
 {
-  enum TokenType
+  enum class TokenType
   {
     IDENTIFIER,
     NUMBER,
@@ -20,7 +20,9 @@ namespace shirokov
     MINUS,
     MUL,
     DIV,
-    POW
+    POW,
+    BAR,
+    APOSTROPHE
   };
 
   struct Token
@@ -29,7 +31,7 @@ namespace shirokov
     std::string value;
   };
 
-  Vector< Token > tokenize(const std::string&);
+  Vector< Token > tokenize(const std::string& source);
 }
 
 #endif
