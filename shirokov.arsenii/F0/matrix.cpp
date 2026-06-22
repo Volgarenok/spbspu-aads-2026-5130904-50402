@@ -158,11 +158,11 @@ int shirokov::Matrix::det() const
     return matrix_[0][0] * matrix_[1][1] - matrix_[0][1] * matrix_[1][0];
   }
 
-  shirokov::Vector< shirokov::Vector< double > > temp;
+  Vector< Vector< double > > temp;
   temp.reserve(n);
   for (size_t i = 0; i < n; ++i)
   {
-    shirokov::Vector< double > row;
+    Vector< double > row;
     row.reserve(n);
     for (size_t j = 0; j < n; ++j)
     {
@@ -217,4 +217,25 @@ int shirokov::Matrix::tr() const
     trace_val += matrix_[i][i];
   }
   return trace_val;
+}
+
+shirokov::Matrix shirokov::zeros(size_t n, size_t m)
+{
+  if (n == 0 || m == 0)
+  {
+    throw std::invalid_argument("Matrix dimensions must be greater than zero");
+  }
+  Vector< Vector< int > > mat;
+  mat.reserve(n);
+  for (size_t i = 0; i < n; ++i)
+  {
+    Vector< int > row;
+    row.reserve(m);
+    for (size_t j = 0; j < m; ++j)
+    {
+      row.pushBack(0);
+    }
+    mat.pushBack(row);
+  }
+  return Matrix(mat);
 }
