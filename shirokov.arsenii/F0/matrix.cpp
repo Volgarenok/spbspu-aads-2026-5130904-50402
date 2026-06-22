@@ -285,3 +285,37 @@ int& shirokov::Matrix::at(size_t r, size_t c)
 {
   return const_cast< int& >(static_cast< const Matrix* >(this)->at(r, c));
 }
+
+void shirokov::Matrix::addRow(const Vector< int >& row)
+{
+  if (!empty() && row.getSize() != getCols())
+  {
+    throw std::invalid_argument("Row size does not match matrix column count");
+  }
+  matrix_.pushBack(row);
+}
+
+void shirokov::Matrix::addCol(const Vector< int >& col)
+{
+  if (empty())
+  {
+    matrix_.reserve(col.getSize());
+    for (size_t i = 0; i < col.getSize(); ++i)
+    {
+      Vector< int > newRow;
+      newRow.pushBack(col[i]);
+      matrix_.pushBack(newRow);
+    }
+  }
+  else
+  {
+    if (col.getSize() != getRows())
+    {
+      throw std::invalid_argument("Column size does not match matrix row count");
+    }
+    for (size_t i = 0; i < getRows(); ++i)
+    {
+      matrix_[i].pushBack(col[i]);
+    }
+  }
+}
