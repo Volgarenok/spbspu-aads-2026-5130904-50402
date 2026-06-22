@@ -260,3 +260,25 @@ shirokov::Matrix shirokov::ones(size_t n, size_t m)
   }
   return Matrix(mat);
 }
+
+shirokov::Matrix shirokov::eye(size_t n)
+{
+  if (n == 0)
+  {
+    throw std::invalid_argument("Identity matrix size must be greater than zero");
+  }
+  Vector< Vector< int > > mat;
+  mat.reserve(n);
+  for (size_t i = 0; i < n; ++i)
+  {
+    Vector< int > row;
+    row.reserve(n);
+    for (size_t j = 0; j < n; ++j)
+    {
+      row.pushBack(i == j ? 1 : 0);
+    }
+
+    mat.pushBack(row);
+  }
+  return Matrix(mat);
+}
