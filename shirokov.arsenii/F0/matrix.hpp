@@ -1,7 +1,8 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
 #include <Vector.hpp>
-#include <iosfwd>
+#include <istream>
+#include <ostream>
 
 namespace shirokov
 {
@@ -9,39 +10,39 @@ namespace shirokov
   {
   public:
     Matrix() = default;
-    Matrix(const shirokov::Vector< shirokov::Vector< int > >&);
+    Matrix(const Vector< Vector< int > >&);
 
     int det() const;
     int tr() const;
 
-    int& at(int, int);
-    int at(int, int) const;
+    int& at(size_t, size_t);
+    int at(size_t, size_t) const;
 
     size_t getRows() const;
     size_t getCols() const;
     bool empty() const;
 
-    void addRow(const shirokov::Vector< int >&);
-    void addCol(const shirokov::Vector< int >&);
-    void delRow(int);
-    void delCol(int);
-    void resize(int, int, int = 0);
+    void addRow(const Vector< int >&);
+    void addCol(const Vector< int >&);
+    void delRow(size_t);
+    void delCol(size_t);
+    void resize(size_t, size_t, int = 0);
 
   private:
-    shirokov::Vector< shirokov::Vector< int > > matrix;
+    Vector< Vector< int > > matrix_;
   };
 
   Matrix operator+(const Matrix&, const Matrix&);
   Matrix operator-(const Matrix&, const Matrix&);
-  Matrix operator*(const Matrix&, int);
+  Matrix operator*(Matrix, int);
   Matrix operator*(int, const Matrix&);
   Matrix operator*(const Matrix&, const Matrix&);
   Matrix transpose(const Matrix&);
   Matrix pow(const Matrix&, int);
-  Matrix zeros(int, int);
-  Matrix ones(int, int);
-  Matrix eye(int);
-  Matrix fill(int, int, int);
+  Matrix zeros(size_t, size_t);
+  Matrix ones(size_t, size_t);
+  Matrix eye(size_t);
+  Matrix fill(size_t, size_t, int);
   Matrix concatH(const Matrix&, const Matrix&);
   Matrix concatV(const Matrix&, const Matrix&);
   Matrix concatDiag(const Matrix&, const Matrix&);
