@@ -210,13 +210,13 @@ int shirokov::Matrix::tr() const
   {
     throw std::invalid_argument("Matrix must be square and non-empty for trace calculation");
   }
-  int trace_val = 0;
+  int traceVal = 0;
   size_t n = getRows();
   for (size_t i = 0; i < n; ++i)
   {
-    trace_val += matrix_[i][i];
+    traceVal += matrix_[i][i];
   }
-  return trace_val;
+  return traceVal;
 }
 
 shirokov::Matrix shirokov::zeros(size_t n, size_t m)
@@ -491,4 +491,121 @@ std::ostream& shirokov::operator<<(std::ostream& out, const Matrix& matrix)
     out << "\n";
   }
   return out;
+}
+
+shirokov::Matrix shirokov::concatH(const Matrix& lhs, const Matrix& rhs)
+{
+  if (lhs.empty() || rhs.empty())
+  {
+    throw std::invalid_argument("Cannot concatenate empty matrices");
+  }
+  if (lhs.getRows() != rhs.getRows())
+  {
+    throw std::invalid_argument("Horizontal concatenation requires matrices to have the same number of rows");
+  }
+
+  size_t rows = lhs.getRows();
+  size_t lCols = lhs.getCols();
+  size_t rCols = rhs.getCols();
+  Vector< Vector< int > > mat;
+  mat.reserve(rows);
+  for (size_t i = 1; i <= rows; ++i)
+  {
+    Vector< int > row;
+    row.reserve(lCols + rCols);
+    for (size_t j = 1; j <= lCols; ++j)
+    {
+      row.pushBack(lhs.at(i, j));
+    }
+    for (size_t j = 1; j <= rCols; ++j)
+    {
+      row.pushBack(rhs.at(i, j));
+    }
+    mat.pushBack(row);
+  }
+  return Matrix(mat);
+}
+
+shirokov::Matrix shirokov::concatV(const Matrix& lhs, const Matrix& rhs)
+{
+  if (lhs.empty() || rhs.empty())
+  {
+    throw std::invalid_argument("Cannot concatenate empty matrices");
+  }
+  if (lhs.getCols() != rhs.getCols())
+  {
+    throw std::invalid_argument("Vertical concatenation requires matrices to have the same number of columns");
+  }
+
+  size_t lRows = lhs.getRows();
+  size_t rRows = rhs.getRows();
+  size_t cols = lhs.getCols();
+  Vector< Vector< int > > mat;
+  mat.reserve(lRows + rRows);
+  for (size_t i = 1; i <= lRows; ++i)
+  {
+    Vector< int > row;
+    row.reserve(cols);
+    for (size_t j = 1; j <= cols; ++j)
+    {
+      row.pushBack(lhs.at(i, j));
+    }
+    mat.pushBack(row);
+  }
+  for (size_t i = 1; i <= rRows; ++i)
+  {
+    Vector< int > row;
+    row.reserve(cols);
+    for (size_t j = 1; j <= cols; ++j)
+    {
+      row.pushBack(rhs.at(i, j));
+    }
+    mat.pushBack(row);
+  }
+  return Matrix(mat);
+}
+
+shirokov::Matrix shirokov::concatDiag(const Matrix& lhs, const Matrix& rhs)
+{
+  if (lhs.empty() || rhs.empty())
+  {
+    throw std::invalid_argument("Cannot concatenate empty matrices");
+  }
+
+  size_t lRows = lhs.getRows();
+  size_t lCols = lhs.getCols();
+  size_t rRows = rhs.getRows();
+  size_t rCols = rhs.getCols();
+  Vector< Vector< int > > mat;
+  mat.reserve(lRows + rRows);
+  for (size_t i = 1; i <= lRows; ++i)
+  {
+    Vector< int > row;
+    row.reserve(lCols + rCols);
+    for (size_t j = 1; j <= lCols; ++j)
+    {
+      row.pushBack(lhs.at(i, j));
+    }
+    for (size_t j = 1; j <= rCols; ++j)
+    {
+      row.pushBack(0);
+    }
+    mat.pushBack(row);
+  }
+  for (size_t i = 1; i <= rRows; ++i)
+  {
+    Vector< int > row;
+    row.reserve(lCols + rCols);
+
+    for (size_t j = 1; j <= lCols; ++j)
+    {
+      row.pushBack(0);
+    }
+    for (size_t j = 1; j <= rCols; ++j)
+    {
+      row.pushBack(rhs.at(i, j));
+    }
+    mat.pushBack(row);
+  }
+  return Matrix(mat);
 }
