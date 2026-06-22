@@ -239,3 +239,24 @@ shirokov::Matrix shirokov::zeros(size_t n, size_t m)
   }
   return Matrix(mat);
 }
+
+shirokov::Matrix shirokov::ones(size_t n, size_t m)
+{
+  if (n == 0 || m == 0)
+  {
+    throw std::invalid_argument("Matrix dimensions must be greater than zero");
+  }
+  Vector< Vector< int > > mat;
+  mat.reserve(n);
+  for (size_t i = 0; i < n; ++i)
+  {
+    Vector< int > row;
+    row.reserve(m);
+    for (size_t j = 0; j < m; ++j)
+    {
+      row.pushBack(1);
+    }
+    mat.pushBack(row);
+  }
+  return Matrix(mat);
+}
