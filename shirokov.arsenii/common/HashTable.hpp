@@ -389,9 +389,9 @@ shirokov::HashTable< Key, Value, Hash, Equal >::HashTable(HashTable&& rhs):
   slotsCount_(rhs.slotsCount_),
   slots_(rhs.slots_)
 {
-  rhs.slots_ = nullptr;
-  rhs.size_ = 0;
+  rhs.size_ = START_SIZE;
   rhs.slotsCount_ = 0;
+  rhs.slots_ = new Slot[START_SIZE]{};
 }
 
 template< class Key, class Value, class Hash, class Equal >
@@ -423,7 +423,16 @@ shirokov::HashTable< Key, Value, Hash, Equal >::operator=(HashTable&& rhs)
   {
     return *this;
   }
-  swap(rhs);
+
+  delete[] slots_;
+
+  size_ = rhs.size_;
+  slotsCount_ = rhs.slotsCount_;
+  slots_ = rhs.slots_;
+
+  rhs.size_ = START_SIZE;
+  rhs.slotsCount_ = 0;
+  rhs.slots_ = new Slot[START_SIZE]{};
   return *this;
 }
 

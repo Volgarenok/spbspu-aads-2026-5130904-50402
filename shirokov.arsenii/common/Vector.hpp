@@ -720,7 +720,9 @@ shirokov::Vector< T >& shirokov::Vector< T >::operator=(Vector< T >&& rhs) noexc
 
 template< class T >
 shirokov::Vector< T >::Vector(const Vector< T >& rhs):
-  Vector(rhs.getSize())
+  data_(static_cast< T* >(::operator new(rhs.getSize() * sizeof(T)))),
+  size_(0),
+  capacity_(rhs.getSize())
 {
   try
   {
@@ -732,6 +734,7 @@ shirokov::Vector< T >::Vector(const Vector< T >& rhs):
   catch (...)
   {
     clear(data_, size_);
+    ::operator delete(data_);
     throw;
   }
 }
@@ -743,6 +746,8 @@ shirokov::Vector< T >::Vector(Vector< T >&& rhs) noexcept:
   capacity_(rhs.capacity_)
 {
   rhs.data_ = nullptr;
+  rhs.size_ = 0;
+  rhs.capacity_ = 0;
 }
 
 template< class T >
