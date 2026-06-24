@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(splice_test)
   k2.insert(k2.end(), 4);
 
   k1.splice(k1.end(), k2, target);
-  
+
   lavrentev::LIter<size_t> res = k1.begin();
   BOOST_TEST(*res == 1);
   ++res;
@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE(merge_basic_test)
 {
   lavrentev::List<size_t> k1{}, k2{};
   lavrentev::LIter<size_t> it;
-  
+
   k1.insert(it, 3);
   k2.insert(it, 1);
 
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE(sort_basic_test)
 {
   lavrentev::List<size_t> k{};
   lavrentev::LIter<size_t> it;
-  
+
   it = k.insert(it, 4);
   it = k.insert(it, 2);
 
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE(partition_basic_test)
 {
   lavrentev::List<size_t> k{};
   lavrentev::LIter<size_t> it;
-  
+
   it = k.insert(it, 1);
   it = k.insert(it, 2);
 
