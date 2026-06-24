@@ -1,0 +1,67 @@
+#ifndef STACK_HPP
+#define STACK_HPP
+#include <list.hpp>
+
+namespace dirko
+{
+  template< class T >
+  class Stack
+  {
+  public:
+    void push(const T &rhs);
+    void push(T &&rhs);
+    T &get() noexcept;
+    void pop() noexcept;
+    bool empty() const noexcept;
+    size_t size() const noexcept;
+
+    template< class... Args >
+    void emplace(Args &&...args);
+
+  private:
+    List< T > data_;
+  };
+}
+
+template< class T >
+bool dirko::Stack< T >::empty() const noexcept
+{
+  return !data_.size();
+}
+
+template< class T >
+size_t dirko::Stack< T >::size() const noexcept
+{
+  return data_.size();
+}
+
+template< class T >
+void dirko::Stack< T >::push(const T &rhs)
+{
+  data_.push_back(rhs);
+}
+
+template< class T >
+void dirko::Stack< T >::push(T &&rhs)
+{
+  data_.push_back(std::move(rhs));
+}
+
+template< class T >
+T &dirko::Stack< T >::get() noexcept
+{
+  return data_.tail();
+}
+
+template< class T >
+void dirko::Stack< T >::pop() noexcept
+{
+  data_.pop_back();
+}
+template< class T >
+template< class... Args >
+void dirko::Stack< T >::emplace(Args &&...args)
+{
+  data_.emplace_back(std::forward< Args >(args)...);
+}
+#endif
