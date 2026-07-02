@@ -1,6 +1,7 @@
 #ifndef STACK_HPP
 #define STACK_HPP
 #include <List.hpp>
+#include <utility>
 
 namespace lavrentev
 {
@@ -9,6 +10,8 @@ namespace lavrentev
   {
   public:
     void push(const T &rhs);
+    template <class... Args>
+    void emplace(Args&&... args);
     void drop();
     bool empty() const noexcept;
     T &top();
@@ -22,6 +25,13 @@ template <class T>
 void lavrentev::Stack<T>::push(const T &rhs)
 {
   data.pushFront(rhs);
+}
+
+template <class T>
+template <class... Args>
+void lavrentev::Stack<T>::emplace(Args&&... args)
+{
+  data.emplaceFront(std::forward<Args>(args)...);
 }
 
 template <class T>

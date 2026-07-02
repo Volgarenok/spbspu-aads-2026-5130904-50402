@@ -1,6 +1,7 @@
 #ifndef LIST_HPP
 #define LIST_HPP
 #include <iostream>
+#include <utility>
 
 namespace lavrentev
 {
@@ -69,6 +70,12 @@ namespace lavrentev
     const T &front() const;
     bool empty() const;
     void pushFront(const T &v);
+
+    template <class... Args>
+    void emplaceFront(Args&&... args);
+
+    template <class... Args>
+    LIter<T> emplace(LIter<T> h, Args&&... args);
 
   private:
     Node *head;
@@ -487,6 +494,42 @@ template <class T> void lavrentev::List<T>::pushFront(const T &value)
 {
   Node *newNode = new Node{value, head};
   head = newNode;
+}
+
+template <class T>
+template <class... Args>
+void lavrentev::List<T>::emplaceFront(Args&&... args)
+{
+  head = new Node{T(std::forward<Args>(args)...), head};
+}
+
+template <class T>
+template <class... Args>
+lavrentev::LIter<T> lavrentev::List<T>::emplace(LIter<T> h, Args&&... args)
+{
+  Node *newNode = new Node{T(std::forward<Args>(args)...), nullptr};
+  if (h.curr == nullptr)
+  {
+    if (head == nullptr)
+    {
+      head = newNode;
+    }
+    else
+    {
+      Node *current = head;
+      while (current->next != nullptr)
+      {
+        current = current->next;
+      }
+      current->next = newNode;
+    }
+  }
+  else
+  {
+    newNode->next = h.curr->next;
+    h.curr->next = newNode;
+  }
+  return LIter<T>(newNode);
 }
 
 #endif

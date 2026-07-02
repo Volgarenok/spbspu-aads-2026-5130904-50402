@@ -2,6 +2,7 @@
 #define QUEUE_HPP
 #include <List.hpp>
 #include <stdexcept>
+#include <utility>
 
 namespace lavrentev
 {
@@ -11,6 +12,8 @@ namespace lavrentev
   public:
     void push(const T &rhs);
     void push(T &&rhs);
+    template <class... Args>
+    void emplace(Args&&... args);
     void drop();
     const T &back() const;
     T &back();
@@ -51,6 +54,22 @@ void lavrentev::Queue<T>::push(T&& rhs)
   {
     LIter<T> next = tail;
     tail = data.insert(next, std::move(rhs));
+  }
+}
+
+template <class T>
+template <class... Args>
+void lavrentev::Queue<T>::emplace(Args&&... args)
+{
+  if (data.empty())
+  {
+    data.emplace(data.begin(), std::forward<Args>(args)...);
+    tail = data.begin();
+  }
+  else
+  {
+    LIter<T> next = tail;
+    tail = data.emplace(next, std::forward<Args>(args)...);
   }
 }
 
