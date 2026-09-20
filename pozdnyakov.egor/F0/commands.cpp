@@ -1,357 +1,234 @@
-﻿#include "commands.hpp"
-#include <iostream>
+#include "commands.hpp"
+#include <istream>
+#include <ostream>
 #include <stdexcept>
 #include <utility>
+#include "operations.hpp"
+#include "output.hpp"
 
-namespace pozdnyakov
+namespace
 {
+  const char *const INVALID_COMMAND = "<INVALID COMMAND>";
 
-  static void addCmd(CmdList &cmds, const std::string &name, CommandFunc func)
+  std::string readToken(std::istream &in)
   {
-    std::pair< std::string, CommandFunc > p;
-    p.first = name;
-    p.second = func;
-    cmds.pushFront(p);
+    std::string token;
+    if (!(in >> token)) {
+      throw std::invalid_argument(INVALID_COMMAND);
+    }
+    return token;
   }
 
-  AvlDictionary *getDict(DictTable &dicts, const std::string &name)
+  std::size_t readCount(std::istream &in)
   {
-    for (auto it = dicts.begin(); !(it == dicts.end()); ++it) {
-      if ((*it).first == name) {
-        return (*it).second;
-      }
+    std::size_t count = 0;
+    if (!(in >> count) || count == 0) {
+      throw std::invalid_argument(INVALID_COMMAND);
     }
-    return nullptr;
+    return count;
   }
 
-  pozdnyakov::Vector< const AvlDictionary * > readDictList(DictTable &dicts, std::istream &in, std::size_t n)
+  pozdnyakov::AvlDictionary &requireDict(pozdnyakov::DictTable &dicts, const std::string &name)
   {
-    pozdnyakov::Vector< const AvlDictionary * > list;
-    for (std::size_t i = 0; i < n; ++i) {
-      std::string name;
-      if (!(in >> name)) {
-        throw std::invalid_argument("<INVALID COMMAND>");
-      }
-      AvlDictionary *d = getDict(dicts, name);
-      if (d != nullptr) {
-        list.pushBack(std::move(d));
-      } else {
-        throw std::invalid_argument("<dictionary '" + name + "' not found>");
-      }
+    pozdnyakov::AvlDictionary * const dict = dicts.find(name);
+    if (dict == nullptr) {
+      throw std::invalid_argument("<INVALID COMMAND: dictionary '" + name + "' does not exist>");
     }
-    return list;
+    return *dict;
   }
 
-  void cmdMake(DictTable &dicts, std::istream &in)
+  void requireFreeName(const pozdnyakov::DictTable &dicts, const std::string &name)
   {
-    std::string name;
-    if (!(in >> name)) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-    if (getDict(dicts, name) != nullptr) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-
-    AvlDictionary *newDict = new AvlDictionary();
-    try {
-      std::pair< std::string, AvlDictionary * > p;
-      p.first = name;
-      p.second = newDict;
-      dicts.pushFront(p);
-      std::cout << "<DICT: " << name << " CREATED>\n";
-    } catch (...) {
-      delete newDict;
-      throw;
+    if (dicts.find(name) != nullptr) {
+      throw std::invalid_argument("<INVALID COMMAND: dictionary '" + name + "' already exists>");
     }
   }
 
-  void cmdDrop(DictTable &dicts, std::istream &in)
+  void requireWord(const pozdnyakov::AvlDictionary &dict, const std::string &engWord)
   {
-    std::string name;
-    if (!(in >> name)) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-    AvlDictionary *d = getDict(dicts, name);
-    if (!d) {
-      throw std::invalid_argument("<dictionary not found>");
-    }
-    delete d;
-
-    pozdnyakov::List< std::pair< std::string, AvlDictionary * > > temp;
-    while (!dicts.empty()) {
-      std::pair< std::string, AvlDictionary * > p = dicts.front();
-      dicts.popFront();
-      if (p.first != name) {
-        temp.pushFront(p);
-      }
-    }
-    while (!temp.empty()) {
-      std::pair< std::string, AvlDictionary * > p = temp.front();
-      temp.popFront();
-      dicts.pushFront(p);
-    }
-
-    std::cout << "<DROPPED: " << name << ">\n";
-  }
-
-  void cmdAddWord(DictTable &dicts, std::istream &in)
-  {
-    std::string name, eng, rus, pos;
-    if (!(in >> name >> eng >> rus >> pos)) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-    AvlDictionary *d = getDict(dicts, name);
-    if (!d) {
-      throw std::invalid_argument("<dictionary not found>");
-    }
-    d->addWord(eng, rus, pos);
-  }
-
-  void cmdAddTrans(DictTable &dicts, std::istream &in)
-  {
-    std::string name, eng, rus;
-    if (!(in >> name >> eng >> rus)) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-    AvlDictionary *d = getDict(dicts, name);
-    if (!d) {
-      throw std::invalid_argument("<dictionary not found>");
-    }
-    d->addTrans(eng, rus);
-  }
-
-  void cmdDelWord(DictTable &dicts, std::istream &in)
-  {
-    std::string name, eng;
-    if (!(in >> name >> eng)) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-    AvlDictionary *d = getDict(dicts, name);
-    if (!d) {
-      throw std::invalid_argument("<dictionary not found>");
-    }
-    d->delWord(eng);
-  }
-
-  void cmdDelTrans(DictTable &dicts, std::istream &in)
-  {
-    std::string name, eng, rus;
-    if (!(in >> name >> eng >> rus)) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-    AvlDictionary *d = getDict(dicts, name);
-    if (!d) {
-      throw std::invalid_argument("<dictionary not found>");
-    }
-    d->delTrans(eng, rus);
-  }
-
-  void cmdTranslate(DictTable &dicts, std::istream &in)
-  {
-    std::string name, eng;
-    if (!(in >> name >> eng)) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-    AvlDictionary *d = getDict(dicts, name);
-    if (!d) {
-      throw std::invalid_argument("<dictionary not found>");
-    }
-    d->translate(eng);
-  }
-
-  void cmdReverse(DictTable &dicts, std::istream &in)
-  {
-    std::string name, rus;
-    if (!(in >> name >> rus)) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-    AvlDictionary *d = getDict(dicts, name);
-    if (!d) {
-      throw std::invalid_argument("<dictionary not found>");
-    }
-    reverseSearch(*d, rus);
-  }
-
-  void cmdShow(DictTable &dicts, std::istream &in)
-  {
-    std::string name;
-    if (!(in >> name)) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-    AvlDictionary *d = getDict(dicts, name);
-    if (!d) {
-      throw std::invalid_argument("<dictionary not found>");
-    }
-    d->show();
-  }
-
-  void cmdCount(DictTable &dicts, std::istream &in)
-  {
-    std::string name;
-    if (!(in >> name)) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-    AvlDictionary *d = getDict(dicts, name);
-    if (!d) {
-      throw std::invalid_argument("<dictionary not found>");
-    }
-    d->count();
-  }
-
-  void cmdFilter(DictTable &dicts, std::istream &in)
-  {
-    std::string newName, targetName, pos;
-    if (!(in >> newName >> targetName >> pos)) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-    AvlDictionary *d = getDict(dicts, targetName);
-    if (!d) {
-      throw std::invalid_argument("<dictionary not found>");
-    }
-    if (getDict(dicts, newName) != nullptr) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-
-    AvlDictionary *newDict = new AvlDictionary();
-    try {
-      filterDictionary(*d, *newDict, pos);
-
-      std::pair< std::string, AvlDictionary * > p;
-      p.first = newName;
-      p.second = newDict;
-      dicts.pushFront(p);
-
-      std::cout << "<FILTER: " << newName << " CREATED>\n";
-    } catch (...) {
-      delete newDict;
-      throw;
+    if (!dict.contains(engWord)) {
+      throw std::invalid_argument("<NOT FOUND: word '" + engWord + "' is not in the dictionary>");
     }
   }
 
-  void cmdUnion(DictTable &dicts, std::istream &in)
+  pozdnyakov::DictRefs readSources(pozdnyakov::DictTable &dicts, std::istream &in, std::size_t count)
   {
-    std::string targetName;
-    std::size_t n;
-    if (!(in >> targetName >> n)) {
-      throw std::invalid_argument("<INVALID COMMAND>");
+    pozdnyakov::DictRefs sources;
+    for (std::size_t i = 0; i < count; ++i) {
+      const std::string name = readToken(in);
+      sources.pushBack(std::addressof(requireDict(dicts, name)));
     }
-    pozdnyakov::Vector< const AvlDictionary * > sources = readDictList(dicts, in, n);
-    if (getDict(dicts, targetName) != nullptr) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
+    return sources;
+  }
+}
 
-    AvlDictionary *newDict = new AvlDictionary();
-    try {
-      unionDictionaries(*newDict, sources);
+void pozdnyakov::cmdMake(DictTable &dicts, std::istream &in, std::ostream &)
+{
+  const std::string name = readToken(in);
+  requireFreeName(dicts, name);
+  dicts.add(name, AvlDictionary());
+}
 
-      std::pair< std::string, AvlDictionary * > p;
-      p.first = targetName;
-      p.second = newDict;
-      dicts.pushFront(p);
+void pozdnyakov::cmdDrop(DictTable &dicts, std::istream &in, std::ostream &)
+{
+  const std::string name = readToken(in);
+  if (!dicts.drop(name)) {
+    throw std::invalid_argument("<INVALID COMMAND: dictionary '" + name + "' does not exist>");
+  }
+}
 
-      std::cout << "<UNION COMPLETED: " << targetName << ">\n";
-    } catch (...) {
-      delete newDict;
-      throw;
+void pozdnyakov::cmdAddWord(DictTable &dicts, std::istream &in, std::ostream &)
+{
+  const std::string name = readToken(in);
+  const std::string engWord = readToken(in);
+  const std::string rusWord = readToken(in);
+  const std::string partOfSpeech = readToken(in);
+  requireDict(dicts, name).addWord(engWord, rusWord, partOfSpeech);
+}
+
+void pozdnyakov::cmdAddTrans(DictTable &dicts, std::istream &in, std::ostream &)
+{
+  const std::string name = readToken(in);
+  const std::string engWord = readToken(in);
+  const std::string rusWord = readToken(in);
+
+  const AvlDictionary::AddTransStatus status = requireDict(dicts, name).addTranslation(engWord, rusWord);
+  if (status == AvlDictionary::AddTransStatus::NoWord) {
+    throw std::invalid_argument("<NOT FOUND: word '" + engWord + "' is not in the dictionary>");
+  }
+  if (status == AvlDictionary::AddTransStatus::AmbiguousPos) {
+    throw std::invalid_argument("<INVALID COMMAND: ambiguous part of speech for '" + engWord + "'>");
+  }
+}
+
+void pozdnyakov::cmdDelWord(DictTable &dicts, std::istream &in, std::ostream &)
+{
+  const std::string name = readToken(in);
+  const std::string engWord = readToken(in);
+  if (!requireDict(dicts, name).removeWord(engWord)) {
+    throw std::invalid_argument("<NOT FOUND: word '" + engWord + "' is not in the dictionary>");
+  }
+}
+
+void pozdnyakov::cmdDelTrans(DictTable &dicts, std::istream &in, std::ostream &)
+{
+  const std::string name = readToken(in);
+  const std::string engWord = readToken(in);
+  const std::string rusWord = readToken(in);
+
+  AvlDictionary &dict = requireDict(dicts, name);
+  requireWord(dict, engWord);
+  if (!dict.removeTranslation(engWord, rusWord)) {
+    throw std::invalid_argument("<NOT FOUND: translation '" + rusWord + "' for word '" + engWord + "'>");
+  }
+}
+
+void pozdnyakov::cmdTranslate(DictTable &dicts, std::istream &in, std::ostream &out)
+{
+  const std::string name = readToken(in);
+  const std::string engWord = readToken(in);
+  printTranslation(out, requireDict(dicts, name), engWord);
+}
+
+void pozdnyakov::cmdReverse(DictTable &dicts, std::istream &in, std::ostream &out)
+{
+  const std::string name = readToken(in);
+  const std::string rusWord = readToken(in);
+  printReverse(out, requireDict(dicts, name), rusWord);
+}
+
+void pozdnyakov::cmdShow(DictTable &dicts, std::istream &in, std::ostream &out)
+{
+  const std::string name = readToken(in);
+  printDictionary(out, requireDict(dicts, name), name);
+}
+
+void pozdnyakov::cmdCount(DictTable &dicts, std::istream &in, std::ostream &out)
+{
+  const std::string name = readToken(in);
+  printStats(out, requireDict(dicts, name), name);
+}
+
+void pozdnyakov::cmdFilter(DictTable &dicts, std::istream &in, std::ostream &)
+{
+  const std::string newName = readToken(in);
+  const std::string sourceName = readToken(in);
+  const std::string partOfSpeech = readToken(in);
+
+  const AvlDictionary &source = requireDict(dicts, sourceName);
+  requireFreeName(dicts, newName);
+
+  AvlDictionary result;
+  filterDictionary(result, source, partOfSpeech);
+  dicts.add(newName, std::move(result));
+}
+
+void pozdnyakov::cmdUnion(DictTable &dicts, std::istream &in, std::ostream &)
+{
+  const std::string newName = readToken(in);
+  const std::size_t count = readCount(in);
+  const DictRefs sources = readSources(dicts, in, count);
+  requireFreeName(dicts, newName);
+
+  AvlDictionary result;
+  mergeDictionaries(result, sources);
+  dicts.add(newName, std::move(result));
+}
+
+void pozdnyakov::cmdIntersect(DictTable &dicts, std::istream &in, std::ostream &)
+{
+  const std::string newName = readToken(in);
+  const std::size_t count = readCount(in);
+  const DictRefs sources = readSources(dicts, in, count);
+  requireFreeName(dicts, newName);
+
+  AvlDictionary result;
+  intersectDictionaries(result, sources);
+  dicts.add(newName, std::move(result));
+}
+
+void pozdnyakov::cmdDiff(DictTable &dicts, std::istream &in, std::ostream &)
+{
+  const std::string newName = readToken(in);
+  const std::size_t count = readCount(in);
+  const DictRefs sources = readSources(dicts, in, count);
+  requireFreeName(dicts, newName);
+
+  AvlDictionary result;
+  diffDictionaries(result, sources);
+  dicts.add(newName, std::move(result));
+}
+
+void pozdnyakov::cmdMerge(DictTable &dicts, std::istream &in, std::ostream &)
+{
+  const std::string targetName = readToken(in);
+  const std::size_t count = readCount(in);
+  const DictRefs sources = readSources(dicts, in, count);
+
+  AvlDictionary &target = requireDict(dicts, targetName);
+  for (std::size_t i = 0; i < sources.size(); ++i) {
+    if (sources[i] == std::addressof(target)) {
+      throw std::invalid_argument("<INVALID COMMAND: '" + targetName + "' is both target and source>");
     }
   }
+  mergeDictionaries(target, sources);
+}
 
-  void cmdIntersect(DictTable &dicts, std::istream &in)
-  {
-    std::string targetName;
-    std::size_t n;
-    if (!(in >> targetName >> n)) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-    pozdnyakov::Vector< const AvlDictionary * > sources = readDictList(dicts, in, n);
-    if (getDict(dicts, targetName) != nullptr) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-
-    AvlDictionary *newDict = new AvlDictionary();
-    try {
-      intersectDictionaries(*newDict, sources);
-
-      std::pair< std::string, AvlDictionary * > p;
-      p.first = targetName;
-      p.second = newDict;
-      dicts.pushFront(p);
-
-      std::cout << "<INTERSECT COMPLETED: " << targetName << ">\n";
-    } catch (...) {
-      delete newDict;
-      throw;
-    }
-  }
-
-  void cmdDiff(DictTable &dicts, std::istream &in)
-  {
-    std::string targetName;
-    std::size_t n;
-    if (!(in >> targetName >> n)) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-    pozdnyakov::Vector< const AvlDictionary * > sources = readDictList(dicts, in, n);
-    if (getDict(dicts, targetName) != nullptr) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-
-    AvlDictionary *newDict = new AvlDictionary();
-    try {
-      if (n > 0) {
-        pozdnyakov::Vector< const AvlDictionary * > others;
-        for (std::size_t i = 1; i < sources.size(); ++i) {
-          others.pushBack(std::move(sources[i]));
-        }
-        diffDictionaries(*newDict, *sources[0], others);
-      }
-
-      std::pair< std::string, AvlDictionary * > p;
-      p.first = targetName;
-      p.second = newDict;
-      dicts.pushFront(p);
-
-      std::cout << "<DIFF COMPLETED: " << targetName << ">\n";
-    } catch (...) {
-      delete newDict;
-      throw;
-    }
-  }
-
-  void cmdMerge(DictTable &dicts, std::istream &in)
-  {
-    std::string targetName;
-    std::size_t n;
-    if (!(in >> targetName >> n)) {
-      throw std::invalid_argument("<INVALID COMMAND>");
-    }
-    pozdnyakov::Vector< const AvlDictionary * > sources = readDictList(dicts, in, n);
-
-    AvlDictionary *target = getDict(dicts, targetName);
-    if (!target) {
-      throw std::invalid_argument("<dictionary not found>");
-    }
-    mergeDictionaries(*target, sources);
-    std::cout << "<MERGED>\n";
-  }
-
-  void initCommands(CmdList &cmds)
-  {
-    addCmd(cmds, "merge", &cmdMerge);
-    addCmd(cmds, "diff", &cmdDiff);
-    addCmd(cmds, "intersect", &cmdIntersect);
-    addCmd(cmds, "union", &cmdUnion);
-    addCmd(cmds, "filter", &cmdFilter);
-    addCmd(cmds, "count", &cmdCount);
-    addCmd(cmds, "show", &cmdShow);
-    addCmd(cmds, "reverse", &cmdReverse);
-    addCmd(cmds, "translate", &cmdTranslate);
-    addCmd(cmds, "del-trans", &cmdDelTrans);
-    addCmd(cmds, "del-word", &cmdDelWord);
-    addCmd(cmds, "add-trans", &cmdAddTrans);
-    addCmd(cmds, "add-word", &cmdAddWord);
-    addCmd(cmds, "drop", &cmdDrop);
-    addCmd(cmds, "make", &cmdMake);
-  }
-
+void pozdnyakov::initCommands(CmdTable &cmds)
+{
+  cmds.add("make", &cmdMake);
+  cmds.add("drop", &cmdDrop);
+  cmds.add("add-word", &cmdAddWord);
+  cmds.add("add-trans", &cmdAddTrans);
+  cmds.add("del-word", &cmdDelWord);
+  cmds.add("del-trans", &cmdDelTrans);
+  cmds.add("translate", &cmdTranslate);
+  cmds.add("reverse", &cmdReverse);
+  cmds.add("show", &cmdShow);
+  cmds.add("count", &cmdCount);
+  cmds.add("filter", &cmdFilter);
+  cmds.add("union", &cmdUnion);
+  cmds.add("intersect", &cmdIntersect);
+  cmds.add("diff", &cmdDiff);
+  cmds.add("merge", &cmdMerge);
 }

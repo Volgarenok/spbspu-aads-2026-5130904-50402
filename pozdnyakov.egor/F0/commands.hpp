@@ -1,41 +1,36 @@
-﻿#ifndef COMMANDS_HPP
+#ifndef COMMANDS_HPP
 #define COMMANDS_HPP
 
+#include <functional>
 #include <iosfwd>
 #include <string>
-#include <utility>
+#include "../common/hashTable.hpp"
 #include "dictionary.hpp"
-#include "../common/list.hpp"
-#include "vector.hpp"
 
 namespace pozdnyakov
 {
 
-  using DictTable = pozdnyakov::List< std::pair< std::string, pozdnyakov::AvlDictionary * > >;
-  using CommandFunc = void (*)(DictTable &, std::istream &);
+  using DictTable = HashTable< std::string, AvlDictionary, std::hash< std::string > >;
+  using CommandFunc = void (*)(DictTable &, std::istream &, std::ostream &);
+  using CmdTable = HashTable< std::string, CommandFunc, std::hash< std::string > >;
 
-  AvlDictionary *getDict(DictTable &dicts, const std::string &name);
-  pozdnyakov::Vector< const AvlDictionary * > readDictList(DictTable &dicts, std::istream &in, std::size_t n);
+  void cmdMake(DictTable &dicts, std::istream &in, std::ostream &out);
+  void cmdDrop(DictTable &dicts, std::istream &in, std::ostream &out);
+  void cmdAddWord(DictTable &dicts, std::istream &in, std::ostream &out);
+  void cmdAddTrans(DictTable &dicts, std::istream &in, std::ostream &out);
+  void cmdDelWord(DictTable &dicts, std::istream &in, std::ostream &out);
+  void cmdDelTrans(DictTable &dicts, std::istream &in, std::ostream &out);
+  void cmdTranslate(DictTable &dicts, std::istream &in, std::ostream &out);
+  void cmdReverse(DictTable &dicts, std::istream &in, std::ostream &out);
+  void cmdShow(DictTable &dicts, std::istream &in, std::ostream &out);
+  void cmdCount(DictTable &dicts, std::istream &in, std::ostream &out);
+  void cmdFilter(DictTable &dicts, std::istream &in, std::ostream &out);
+  void cmdUnion(DictTable &dicts, std::istream &in, std::ostream &out);
+  void cmdIntersect(DictTable &dicts, std::istream &in, std::ostream &out);
+  void cmdDiff(DictTable &dicts, std::istream &in, std::ostream &out);
+  void cmdMerge(DictTable &dicts, std::istream &in, std::ostream &out);
 
-  void cmdMake(DictTable &dicts, std::istream &in);
-  void cmdDrop(DictTable &dicts, std::istream &in);
-  void cmdAddWord(DictTable &dicts, std::istream &in);
-  void cmdAddTrans(DictTable &dicts, std::istream &in);
-  void cmdDelWord(DictTable &dicts, std::istream &in);
-  void cmdDelTrans(DictTable &dicts, std::istream &in);
-  void cmdTranslate(DictTable &dicts, std::istream &in);
-  void cmdReverse(DictTable &dicts, std::istream &in);
-  void cmdShow(DictTable &dicts, std::istream &in);
-  void cmdCount(DictTable &dicts, std::istream &in);
-  void cmdFilter(DictTable &dicts, std::istream &in);
-  void cmdUnion(DictTable &dicts, std::istream &in);
-  void cmdIntersect(DictTable &dicts, std::istream &in);
-  void cmdDiff(DictTable &dicts, std::istream &in);
-  void cmdMerge(DictTable &dicts, std::istream &in);
-
-  using CmdList = pozdnyakov::List< std::pair< std::string, CommandFunc > >;
-
-  void initCommands(CmdList &cmds);
+  void initCommands(CmdTable &cmds);
 
 }
 

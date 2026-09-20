@@ -1,32 +1,31 @@
-﻿#ifndef DICTIONARY_HPP
+#ifndef DICTIONARY_HPP
 #define DICTIONARY_HPP
 
 #include <cstddef>
 #include <string>
 #include "../common/list.hpp"
-#include "vector.hpp"
 
 namespace pozdnyakov
 {
   namespace detail
   {
 
-    struct Translation
+    struct PosGroup
     {
-      std::string rusWord_;
       std::string partOfSpeech_;
+      List< std::string > rusWords_;
     };
 
     class WordNode
     {
     public:
       std::string engWord_;
-      pozdnyakov::List< Translation > translations_;
+      List< PosGroup > groups_;
       std::size_t height_;
       WordNode *left_;
       WordNode *right_;
 
-      WordNode(const std::string &engWord);
+      explicit WordNode(const std::string &engWord);
       ~WordNode();
     };
 
@@ -35,87 +34,75 @@ namespace pozdnyakov
   class AvlDictionary
   {
   public:
-    AvlDictionary();
-    AvlDictionary(const AvlDictionary &other) = delete;
-    AvlDictionary &operator=(const AvlDictionary &other) = delete;
+    enum class AddTransStatus
+    {
+      Ok,
+      NoWord,
+      AmbiguousPos
+    };
+
+    AvlDictionary() noexcept;
+    AvlDictionary(const AvlDictionary &other);
+    AvlDictionary(AvlDictionary &&other) noexcept;
     ~AvlDictionary();
 
+    AvlDictionary &operator=(AvlDictionary other) noexcept;
+
+    void swap(AvlDictionary &other) noexcept;
+
     void addWord(const std::string &engWord, const std::string &rusWord, const std::string &partOfSpeech);
-    void addTrans(const std::string &engWord, const std::string &rusWord);
-    void delWord(const std::string &engWord);
-    void delTrans(const std::string &engWord, const std::string &rusWord);
-    void translate(const std::string &engWord) const;
-    void show() const;
-    void count() const;
+    AddTransStatus addTranslation(const std::string &engWord, const std::string &rusWord);
+    bool removeWord(const std::string &engWord);
+    bool removeTranslation(const std::string &engWord, const std::string &rusWord);
 
-    bool containsWord(const std::string &engWord) const;
-    bool containsTranslation(const std::string &engWord, const std::string &rusWord) const;
+    bool contains(const std::string &engWord) const;
+    bool containsTranslation(const std::string &engWord, const std::string &rusWord,
+      const std::string &partOfSpeech) const;
+    const List< detail::PosGroup > *groupsOf(const std::string &engWord) const;
 
-    template< typename Func >
-    void traverse(Func cb) const;
+    std::size_t size() const noexcept;
+    std::size_t translationCount() const noexcept;
+    bool empty() const noexcept;
+
+    template< class F >
+    F traverse(F f) const
+    {
+      traverseNode(root_, f);
+      return f;
+    }
 
   private:
     detail::WordNode *root_;
+    std::size_t size_;
+    std::size_t translationCount_;
 
-    std::size_t getHeight(const detail::WordNode *node) const;
-    int getBalanceFactor(const detail::WordNode *node) const;
-    void updateHeight(detail::WordNode *node);
+    std::size_t getHeight(const detail::WordNode *node) const noexcept;
+    int getBalanceFactor(const detail::WordNode *node) const noexcept;
+    void updateHeight(detail::WordNode *node) noexcept;
 
-    detail::WordNode *rotateRight(detail::WordNode *node);
-    detail::WordNode *rotateLeft(detail::WordNode *node);
-    detail::WordNode *balance(detail::WordNode *node);
+    detail::WordNode *rotateRight(detail::WordNode *node) noexcept;
+    detail::WordNode *rotateLeft(detail::WordNode *node) noexcept;
+    detail::WordNode *balance(detail::WordNode *node) noexcept;
 
-    detail::WordNode *insertWord(detail::WordNode *node, const std::string &engWord, const std::string &rusWord,
-                                 const std::string &partOfSpeech);
-
+    detail::WordNode *insertWord(detail::WordNode *node, const std::string &engWord,
+      const std::string &rusWord, const std::string &partOfSpeech);
     detail::WordNode *removeWordNode(detail::WordNode *node, const std::string &engWord);
-    detail::WordNode *findMin(detail::WordNode *node) const;
-    detail::WordNode *findNode(detail::WordNode *node, const std::string &engWord) const;
+    detail::WordNode *findMin(detail::WordNode *node) const noexcept;
+    detail::WordNode *findNode(detail::WordNode *node, const std::string &engWord) const noexcept;
 
-    void addTranslationToList(detail::WordNode *wordNode, const std::string &rusWord,
-                              const std::string &partOfSpeech) const;
+    void addToNode(detail::WordNode *node, const std::string &rusWord, const std::string &partOfSpeech);
 
-    void printInOrder(const detail::WordNode *node) const;
-    void countNodesAndTranslations(const detail::WordNode *node, std::size_t &wordsCount,
-                                   std::size_t &transCount) const;
-
-    template< typename Func >
-    void traverseNode(const detail::WordNode *node, Func cb) const;
-  };
-
-  template< typename Func >
-  void AvlDictionary::traverseNode(const detail::WordNode *node, Func cb) const
-  {
-    if (node == nullptr) {
-      return;
+    template< class F >
+    void traverseNode(const detail::WordNode *node, F &f) const
+    {
+      if (node == nullptr) {
+        return;
+      }
+      traverseNode(node->left_, f);
+      f(node->engWord_, node->groups_);
+      traverseNode(node->right_, f);
     }
-    traverseNode(node->left_, cb);
-    cb(node->engWord_, node->translations_);
-    traverseNode(node->right_, cb);
-  }
-
-  template< typename Func >
-  void AvlDictionary::traverse(Func cb) const
-  {
-    traverseNode(root_, cb);
-  }
-
-  void filterDictionary(const pozdnyakov::AvlDictionary &source, pozdnyakov::AvlDictionary &target,
-                        const std::string &partOfSpeech);
-
-  void mergeDictionaries(pozdnyakov::AvlDictionary &target,
-                         const pozdnyakov::Vector< const pozdnyakov::AvlDictionary * > &dicts);
-
-  void unionDictionaries(pozdnyakov::AvlDictionary &target,
-                         const pozdnyakov::Vector< const pozdnyakov::AvlDictionary * > &dicts);
-
-  void intersectDictionaries(pozdnyakov::AvlDictionary &target,
-                             const pozdnyakov::Vector< const pozdnyakov::AvlDictionary * > &dicts);
-
-  void diffDictionaries(pozdnyakov::AvlDictionary &target, const pozdnyakov::AvlDictionary &first,
-                        const pozdnyakov::Vector< const pozdnyakov::AvlDictionary * > &others);
-
-  void reverseSearch(const pozdnyakov::AvlDictionary &dict, const std::string &rusWord);
+  };
 
 }
 

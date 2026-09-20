@@ -1,53 +1,43 @@
-﻿#include <iostream>
+#include <iostream>
+#include <limits>
+#include <new>
 #include <stdexcept>
 #include <string>
-#include <utility>
 #include "commands.hpp"
-#include "dictionary.hpp"
-#include "../common/list.hpp"
 
-int main()
+int main(int argc, char **argv)
 {
+  if (argc > 1) {
+    std::cerr << "<INVALID ARGUMENTS: " << argv[0] << " takes no parameters>\n";
+    return 1;
+  }
+
   pozdnyakov::DictTable dicts;
-  pozdnyakov::CmdList cmds;
-  pozdnyakov::initCommands(cmds);
+  pozdnyakov::CmdTable cmds;
+
+  try {
+    pozdnyakov::initCommands(cmds);
+  } catch (const std::exception &e) {
+    std::cerr << e.what() << "\n";
+    return 2;
+  }
 
   std::string cmdName;
   while (std::cin >> cmdName) {
-    if (cmdName == "exit") {
-      break;
-    }
-
-    bool found = false;
-    for (auto it = cmds.begin(); !(it == cmds.end()); ++it) {
-      if ((*it).first == cmdName) {
-        found = true;
-        try {
-          (*it).second(dicts, std::cin);
-        } catch (const std::bad_alloc &) {
-          std::cout << "<memory allocation failed>\n";
-        } catch (const std::exception &e) {
-          std::cout << e.what() << "\n";
-          std::cin.clear();
-          char c;
-          while (std::cin.get(c) && c != '\n') {
-          }
-        }
-        break;
+    try {
+      pozdnyakov::CommandFunc * const command = cmds.find(cmdName);
+      if (command == nullptr) {
+        throw std::invalid_argument("<INVALID COMMAND>");
       }
-    }
-
-    if (!found) {
-      std::cout << "<INVALID COMMAND>\n";
+      (*command)(dicts, std::cin, std::cout);
+    } catch (const std::bad_alloc &) {
+      std::cerr << "<OUT OF MEMORY>\n";
+      return 2;
+    } catch (const std::exception &e) {
+      std::cout << e.what() << "\n";
       std::cin.clear();
-      char c;
-      while (std::cin.get(c) && c != '\n') {
-      }
+      std::cin.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
     }
-  }
-
-  for (auto it = dicts.begin(); !(it == dicts.end()); ++it) {
-    delete (*it).second;
   }
 
   return 0;

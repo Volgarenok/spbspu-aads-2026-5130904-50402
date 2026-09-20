@@ -9,25 +9,6 @@ namespace pozdnyakov
   template< class T >
   class Vector
   {
-  private:
-    T *data_;
-    std::size_t size_;
-    std::size_t capacity_;
-
-    void reallocate(std::size_t newCapacity)
-    {
-      if (newCapacity == 0) {
-        newCapacity = 1;
-      }
-      T *newData = new T[newCapacity];
-      for (std::size_t i = 0; i < size_; ++i) {
-        newData[i] = std::move(data_[i]);
-      }
-      delete[] data_;
-      data_ = newData;
-      capacity_ = newCapacity;
-    }
-
   public:
     using value_type = T;
     using iterator = T *;
@@ -35,13 +16,13 @@ namespace pozdnyakov
     using reference = T &;
     using const_reference = const T &;
 
-    Vector():
+    Vector() noexcept:
       data_(nullptr),
       size_(0),
       capacity_(0)
     {}
 
-    Vector(std::size_t count, const T &value = T()):
+    explicit Vector(std::size_t count, const T &value = T()):
       data_(nullptr),
       size_(0),
       capacity_(0)
@@ -60,8 +41,8 @@ namespace pozdnyakov
       size_(0),
       capacity_(0)
     {
-      if (other.capacity_ > 0) {
-        reallocate(other.capacity_);
+      if (other.size_ > 0) {
+        reallocate(other.size_);
         for (std::size_t i = 0; i < other.size_; ++i) {
           data_[i] = other.data_[i];
         }
@@ -79,33 +60,15 @@ namespace pozdnyakov
       other.capacity_ = 0;
     }
 
-    Vector &operator=(Vector other)
-    {
-      std::swap(data_, other.data_);
-      std::swap(size_, other.size_);
-      std::swap(capacity_, other.capacity_);
-      return *this;
-    }
-
     ~Vector()
     {
       delete[] data_;
     }
 
-    void pushBack(const T &value)
+    Vector &operator=(Vector other) noexcept
     {
-      if (size_ == capacity_) {
-        reallocate(capacity_ == 0 ? 1 : capacity_ * 2);
-      }
-      data_[size_++] = value;
-    }
-
-    void pushBack(T &&value)
-    {
-      if (size_ == capacity_) {
-        reallocate(capacity_ == 0 ? 1 : capacity_ * 2);
-      }
-      data_[size_++] = std::move(value);
+      swap(other);
+      return *this;
     }
 
     reference operator[](std::size_t index)
@@ -116,6 +79,59 @@ namespace pozdnyakov
     const_reference operator[](std::size_t index) const
     {
       return data_[index];
+    }
+
+    void swap(Vector &other) noexcept
+    {
+      std::swap(data_, other.data_);
+      std::swap(size_, other.size_);
+      std::swap(capacity_, other.capacity_);
+    }
+
+    void pushBack(const T &value)
+    {
+      if (size_ == capacity_) {
+        reallocate(capacity_ == 0 ? 1 : capacity_ * 2);
+      }
+      data_[size_] = value;
+      ++size_;
+    }
+
+    void pushBack(T &&value)
+    {
+      if (size_ == capacity_) {
+        reallocate(capacity_ == 0 ? 1 : capacity_ * 2);
+      }
+      data_[size_] = std::move(value);
+      ++size_;
+    }
+
+    void popBack()
+    {
+      if (size_ > 0) {
+        --size_;
+        data_[size_] = T();
+      }
+    }
+
+    void resize(std::size_t newSize)
+    {
+      if (newSize > capacity_) {
+        reallocate(newSize);
+      } else {
+        for (std::size_t i = size_; i < newSize; ++i) {
+          data_[i] = T();
+        }
+      }
+      for (std::size_t i = newSize; i < size_; ++i) {
+        data_[i] = T();
+      }
+      size_ = newSize;
+    }
+
+    void clear()
+    {
+      resize(0);
     }
 
     std::size_t size() const noexcept
@@ -133,22 +149,24 @@ namespace pozdnyakov
       return size_ == 0;
     }
 
-    void clear() noexcept
+    reference front()
     {
-      size_ = 0;
+      return data_[0];
     }
 
-    void resize(std::size_t newSize)
+    const_reference front() const
     {
-      if (newSize > capacity_) {
-        reallocate(newSize);
-      }
-      if (newSize > size_) {
-        for (std::size_t i = size_; i < newSize; ++i) {
-          data_[i] = T();
-        }
-      }
-      size_ = newSize;
+      return data_[0];
+    }
+
+    reference back()
+    {
+      return data_[size_ - 1];
+    }
+
+    const_reference back() const
+    {
+      return data_[size_ - 1];
     }
 
     iterator begin() noexcept
@@ -179,6 +197,30 @@ namespace pozdnyakov
     const_iterator cend() const noexcept
     {
       return data_ + size_;
+    }
+
+  private:
+    T *data_;
+    std::size_t size_;
+    std::size_t capacity_;
+
+    void reallocate(std::size_t newCapacity)
+    {
+      if (newCapacity == 0) {
+        newCapacity = 1;
+      }
+      T *newData = new T[newCapacity]();
+      try {
+        for (std::size_t i = 0; i < size_; ++i) {
+          newData[i] = std::move(data_[i]);
+        }
+      } catch (...) {
+        delete[] newData;
+        throw;
+      }
+      delete[] data_;
+      data_ = newData;
+      capacity_ = newCapacity;
     }
   };
 }
